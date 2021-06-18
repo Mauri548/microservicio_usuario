@@ -1,9 +1,9 @@
 <template>
    
   
-        <div class="column  container has-background-warning">
+        <div class="column is-5 container has-background-warning">
 
-            <div class="column">
+            <div class="column is-4 has-background-dark" >
 
                 <img src="../assets/logo_crenein.png" width="200" height="200" alt="">
 
