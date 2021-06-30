@@ -9,13 +9,8 @@ const store = createStore({
 
     mutations: {
         onResize(state) {
-            window.screen.width < 769 ? state.isMobile = true : state.isMobile = false;
-            console.log(state.isMobile)
-            // if (window.screen.width < 769) {
-            //     state.isMobile = true
-            // } else {
-            //     state.isMobile = false
-            // }
+            window.screen.width < 1024 ? state.isMobile = true : state.isMobile = false;
+            console.log(window.screen.width)
         }
     }
 });

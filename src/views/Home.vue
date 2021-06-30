@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <h1>Inicio</h1> -->
     <Navbar />
   </div>
 </template>
