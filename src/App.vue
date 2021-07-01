@@ -32,7 +32,9 @@ export default {
 </script>
 
 <style>
-  @import "https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css";
+
+@import "https://cdn.jsdelivr.net/npm/bulma@0.9.2/css/bulma.min.css";
+
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
