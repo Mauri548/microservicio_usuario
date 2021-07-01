@@ -27,7 +27,8 @@
             <div class="buttons" :class="{'buttons-mobile':isMobile}">
               <SelectCompany/>
               <button v-show="!isMobile" @click="showOption" class="button p-2 mr-4">
-                <img src="../assets/menu_apps.png" alt="">
+                <!-- <img src="../assets/menu_apps.png" alt=""> -->
+                <i class="fas fa-th menu-app"></i>
               </button>
               <a href="#">
                 <img class="circle" src="../assets/perfil.jpg" alt="">
@@ -97,5 +98,10 @@ export default {
   justify-content: flex-end;
   align-items: center;
   margin-left: auto;
+}
+
+.menu-app {
+  font-size: 23px;
+  color: #A9A9A9;
 }
 </style>
