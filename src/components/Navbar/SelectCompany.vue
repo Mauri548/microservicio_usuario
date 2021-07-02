@@ -1,10 +1,10 @@
 <template>
-    <div class="dropdown mx-4" :class="{'is-active':activo}">
+    <div class="dropdown mx-2" :class="{'is-active':activo}">
         <div class="dropdown-trigger">
             <button @click="activar" id="select-company" class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                <span>{{companyActual.name}}</span>
+                <span class="blue-crenein has-text-weight-semibold">{{companyActual.name}}</span>
                 <span class="icon is-small">
-                    <i id="select-company" class="fas fa-chevron-down" style="color: #074180"></i>
+                    <i id="select-company" class="fas fa-chevron-down blue-crenein"></i>
                 </span>
             </button>
         </div>
@@ -12,7 +12,7 @@
             <div class="dropdown-content">
 
                 <a v-for="item in data" :key="item.id" href="#" 
-                    @click="changeCompany(item.id)" class="dropdown-item" :class="{'is-active': item.id == companyActual.id}"
+                    @click="changeCompany(item.id)" class="dropdown-item blue-crenein has-text-weight-semibold" :class="{'is-active': item.id == companyActual.id}"
                     >{{item.name}}
                 </a>
             </div>
@@ -34,14 +34,14 @@ export default {
         const companyActual = ref({id: 1, name: 'Company Milkaut'})
         // *******************************
 
+        const activo = ref(false)
+
         const changeCompany = (id) => {
             let aux = data.value.find(element => element.id == id)
             console.log(aux)
             companyActual.value = aux
             activar()
         }
-
-        const activo = ref(false)
 
         const activar = () => {
             activo.value = !activo.value

@@ -43,4 +43,12 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+
+.blue-crenein {
+  color: #005395;
+}
+
+.fondo-crenein {
+  background-color: #005395;
+}
 </style>
