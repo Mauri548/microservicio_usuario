@@ -2,7 +2,7 @@
   <div>
     <nav class="navbar shadow-navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item" href="https://bulma.io">
+        <a class="navbar-item" href="#">
           <img src="@/assets/logo_crenein.png" style="max-height: 3rem">
         </a>
 
@@ -26,9 +26,6 @@
               <SelectCompany/>
               <MenuApp v-show="!isMobile"/>
               <MenuPerfil/>
-              <!-- <a class="mx-2" href="#">
-                <img class="circle" src="@/assets/perfil.jpg" alt="">
-              </a> -->
             </div>
           </div>
         </div>

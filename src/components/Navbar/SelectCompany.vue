@@ -8,7 +8,7 @@
                 </span>
             </button>
         </div>
-        <div class="dropdown-menu" id="dropdown-menu" role="menu" style="min-width: 10rem">
+        <div class="dropdown-menu shadow" id="dropdown-menu" role="menu" style="min-width: 10rem">
             <div class="dropdown-content">
 
                 <a v-for="item in data" :key="item.id" href="#" 

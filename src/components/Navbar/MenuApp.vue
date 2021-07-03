@@ -5,7 +5,7 @@
                 <span class="is-align-self-flex-start close-apps">
                     <i class="fas fa-th menu-app close-apps"></i>
                 </span>
-            </button>
+            </button>  
         </div>
         <div class="dropdown-menu shadow close-apps" id="dropdown-menu" role="menu" style="width: 18rem">
             <div class="dropdown-content close-apps">
@@ -13,12 +13,12 @@
                 <hr class="my-1 close-apps">
                 <div class="p-4 is-flex is-flex-direction-column is-align-items-flex-start close-apps">
                     <h5 class="blue-crenein has-text-weight-semibold close-apps">Switch to:</h5>
-                    <div class="columns is-multiline is-flex is-justify-content-space-between w-100 my-2 close-apps" style="margin: auto">
-                        <AppCrenein v-for="app in apps" :key="app.id" :name="app.name" :logo="app.logo" />
+                    <div class="columns is-multiline is-flex is-justify-content-space-between w-100 my-2 close-apps is-align-items-center" style="margin: auto">
+                        <AppCrenein v-for="app in apps" :key="app.id" :name="app.name" :logo="app.logo" :activo="app.activo" />
                     </div>
                     <h2 class="has-text-weight-semibold close-apps">Discover</h2>
                     <div class="is-flex is-flex-direction-column close-apps">
-                        <div class="is-flex my-2" v-for="item in discovers" :key="item.id">
+                        <div class="is-flex my-2 is-align-items-center discover" v-for="item in discovers" :key="item.id">
                             <img class="img-rounded" :src="item.image" :alt="item.name" width="35">
                             <p class="ml-3">{{item.name}}</p>
                         </div>
@@ -32,10 +32,11 @@
 <script>
 
 // ****** dato de prueba ******
-import ispb from '@/assets/ispb.jpg'
-import puwic from '@/assets/puwic.jpg'
-import geston from '@/assets/geston.jpg'
+import ispb from '@/assets/ispb2.png'
+import puwic from '@/assets/puwic2.png'
+import geston from '@/assets/geston2.png'
 import blog from '@/assets/blog.jpg'
+// import '../../assets/candado.png'
 // *****************************
 import AppCrenein from './AppsCrenein.vue'
 import { ref } from '@vue/reactivity'
@@ -49,13 +50,13 @@ export default {
 
         // ****** Datos de prueba ******
         const apps = ref([
-            {id: 1, name: 'ISPBrain', logo: ispb},
-            {id: 2, name: 'PuWiC', logo: puwic},
-            {id: 3, name: 'Geston', logo: geston},
-            {id: 3, name: 'Geston', logo: geston},
-            {id: 3, name: 'Geston', logo: geston},
-            {id: 3, name: 'Geston', logo: geston},
-            {id: 3, name: 'Geston', logo: geston}
+            {id: 1, name: 'ISPBrain', logo: ispb, activo: true},
+            {id: 2, name: 'PuWiC', logo: puwic, activo: true},
+            {id: 3, name: 'Geston', logo: geston, activo: true},
+            {id: 3, name: 'Geston', logo: geston, activo: false},
+            {id: 3, name: 'Geston', logo: geston, activo: false},
+            {id: 3, name: 'Geston', logo: geston, activo: false},
+            {id: 3, name: 'Geston', logo: geston, activo: false}
         ])
 
         const discovers = ref([
@@ -100,6 +101,16 @@ export default {
 
 .img-rounded {
     border-radius: 50%;
+}
+
+.discover {
+    padding-right: 1rem;
+}
+
+.discover:hover {
+    background-color: rgba(204,204,204,0.27);
+    border-radius: 15px;
+    cursor: pointer;;
 }
 
 </style>

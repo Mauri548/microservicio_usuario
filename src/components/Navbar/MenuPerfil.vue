@@ -1,5 +1,5 @@
 <template>
-    <div class="dropdown is-right mx-2 close-perfil" :class="{'is-active':activo}">
+    <div class="dropdown mx-2 close-perfil" :class="{'is-active':activo, 'is-right':!isMobile}">
         <div class="dropdown-trigger">
             <a @click="activar" href="#" class="close-perfil">
                 <img class="circle close-perfil" src="@/assets/perfil.jpg" alt="">
@@ -31,26 +31,29 @@
 
 <script>
 import { ref } from '@vue/reactivity'
+import { inject } from '@vue/runtime-core'
 export default {
     name: 'MenuPerfil',
 
     setup(){
+        const isMobile = inject('isMobile')
         const activo = ref(false)
 
         const activar = () => {
             activo.value = !activo.value
         }
 
+
         // Agrege una clase vacia llamada "close-perfil" que al hacer click fuera de esa clase se cierra el menu app
         document.addEventListener('click', function(e){
             let clic = e.target.className
-            console.log(e.target.className.includes('close-perfil'))
             if (!clic.includes('close-perfil')) {
                 activo.value = false
             }
         }, false)
 
         return{
+            isMobile,
             activo,
             activar,
         }
@@ -58,7 +61,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .buttons-perfil{
     width: 70%;
     margin: auto;
@@ -71,5 +74,5 @@ export default {
 .buttons-perfil button:hover {
     background-color: #0572ca;
 }
-   
+
 </style>
