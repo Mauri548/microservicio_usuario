@@ -7,7 +7,7 @@
                 </div>
                 <div class="column is-centered  cuadro-border">
                     <!-- <div class="column  mx-5  px-0 has-background-grey"> -->
-                        <form class="column  mx-5  px-0 ">
+                  <!--       <form class="column  mx-5  px-0 ">
                             <div class="form-row">
                                 <input type="text" required>
                                 <label alt="Label" data-placeholder="New password"></label>
@@ -17,9 +17,9 @@
                                 <label alt="Label" data-placeholder="Confirm password"></label>
                             </div>
                         
-                        </form>
-                       
-                     <Campo_form place="pepe" />
+                        </form> -->
+                    <CampoForm place="New password" type="text" />
+                    <CampoForm place="Confirm password" type="text" />
                    
 
                     <div class="column  mx-5">
@@ -41,21 +41,15 @@
 </template>
 
 <script>
-import Campo_form from '../../components/Campo_form.vue';
+import CampoForm from '../../components/CampoForm.vue';
 import {ref} from 'vue';
 export default {
     
     name:'RecoverPass3',
     components:{
-       Campo_form
+       CampoForm
     }, 
-    setup(){
-        const placeholder = ref('New password') ;
-
-        return {
-            placeholder
-        }
-    }
+ 
 }
 </script>
 

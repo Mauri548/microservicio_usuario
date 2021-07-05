@@ -2,8 +2,8 @@
        <div>
              <form class="column  mx-5  px-0 ">
                 <div class="form-row">
-                    <input type="text" required>
-                    <label alt="Label" data-placeholder={{place}}></label>
+                    <input  :type="type" required>
+                    <label alt="Label" :data-placeholder="place" ></label>
                 </div>
             </form>
        </div>
@@ -12,8 +12,8 @@
 <script>
 export default {
 
-    name:'Campo_form',
-    props: ['place'],
+    name:'CampoForm',
+    props: ['place','type'],
     
 
 
