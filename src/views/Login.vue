@@ -36,7 +36,7 @@
                     </div>      
 
                     <div class="column">
-                        <button class="button button2 has-text-white" style="font-weight:5px;">Login</button>
+                        <button @click="Logear" class="button button2 has-text-white" style="font-weight:5px;">Login</button>
                         <p style="color: #005395">¿Olvidaste tu contraseña?</p>
                     </div>
 
@@ -54,8 +54,20 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
 export default {
     name:'Login',
+
+    setup(){
+        const router = useRouter()
+        const Logear = () => {
+            router.push({name: 'Home'})
+        }
+
+        return{
+            Logear
+        }
+    }
 }
 </script>
 
