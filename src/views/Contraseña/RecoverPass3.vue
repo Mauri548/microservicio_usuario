@@ -18,8 +18,11 @@
                             </div>
                         
                         </form> -->
-                    <CampoForm place="New password" type="text" />
-                    <CampoForm place="Confirm password" type="text" />
+                    <form action="" class="column  mx-5  px-0 ">
+                        <CampoForm class="mb-3" place="New password" type="text" />
+                        <CampoForm  place="Confirm password" type="password" />
+                    </form>
+              
                    
 
                     <div class="column  mx-5">

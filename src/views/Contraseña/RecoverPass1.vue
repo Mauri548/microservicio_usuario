@@ -6,9 +6,9 @@
                     <h2 class="color-letras">Recover your password</h2>
                 </div>
                 <div class="column is-centered cuadro-border">
-                    <div class="column  mx-5  px-0">
-                        <input  class="input  " type="text" placeholder="Email"  />
-                    </div>
+                    <form class="column  mx-5  px-0">
+                        <CampoForm place="Email" type="text" />
+                    </form>
                     <div class="column mx-5 ">
                         <div class="columns">
                             <div class="column px-0 is-flex-grow-0 ">
@@ -26,8 +26,14 @@
 </template>
 
 <script>
+import CampoForm from '../../components/CampoForm.vue'
 export default {
-    name:'RecoverPass1'
+    
+    name:'RecoverPass1',
+    components:{
+        CampoForm
+    }
+
 }
 </script>
 
