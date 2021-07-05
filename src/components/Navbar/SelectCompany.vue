@@ -38,7 +38,6 @@ export default {
 
         const changeCompany = (id) => {
             let aux = data.value.find(element => element.id == id)
-            console.log(aux)
             companyActual.value = aux
             activar()
         }

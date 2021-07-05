@@ -51,4 +51,8 @@ export default {
 .fondo-crenein {
   background-color: #005395;
 }
+
+.w-100{
+  width: 100%;
+}
 </style>

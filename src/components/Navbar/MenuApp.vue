@@ -95,10 +95,6 @@ export default {
   color: #A9A9A9;
 }
 
-.w-100{
-    width: 100%;
-}
-
 .img-rounded {
     border-radius: 50%;
 }
