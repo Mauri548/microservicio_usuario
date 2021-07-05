@@ -2,14 +2,12 @@
   <div>
     <nav class="navbar shadow-navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <a class="navbar-item" href="https://bulma.io">
-          <img src="../assets/logo_crenein.png" >
+        <a class="navbar-item" href="#">
+          <img src="@/assets/logo_crenein.png" style="max-height: 3rem">
         </a>
 
         <div class="group-navbar">
-          <button v-show="isMobile" @click="showOption" class="button p-2 mr-4">
-            <img src="../assets/menu_apps.png" width="35" alt="">
-          </button>
+          <MenuApp v-show="isMobile" />
           <a @click="OpenMenuNavbar" role="button" class="navbar-burger" :class="{'is-active':menuNavbar}" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -26,12 +24,8 @@
           <div class="navbar-item">
             <div class="buttons" :class="{'buttons-mobile':isMobile}">
               <SelectCompany/>
-              <button v-show="!isMobile" @click="showOption" class="button p-2 mr-4">
-                <img src="../assets/menu_apps.png" alt="">
-              </button>
-              <a href="#">
-                <img class="circle" src="../assets/perfil.jpg" alt="">
-              </a>
+              <MenuApp v-show="!isMobile"/>
+              <MenuPerfil/>
             </div>
           </div>
         </div>
@@ -44,11 +38,15 @@
 import { ref } from '@vue/reactivity'
 import { inject } from '@vue/runtime-core'
 import SelectCompany from './SelectCompany.vue'
+import MenuApp from './MenuApp.vue'
+import MenuPerfil from './MenuPerfil.vue'
 export default {
   name: 'Navbar',
 
   components: {
     SelectCompany,
+    MenuApp,
+    MenuPerfil,
   },
 
   setup(){
@@ -79,6 +77,10 @@ export default {
 </script>
 
 <style>
+.navbar-item img {
+  max-height: 2.5rem;
+}
+
 .buttons-mobile {
   flex-direction: row-reverse;
   justify-content: flex-end;
@@ -97,5 +99,15 @@ export default {
   justify-content: flex-end;
   align-items: center;
   margin-left: auto;
+}
+
+.menu-app {
+  font-size: 23px;
+  color: #A9A9A9;
+}
+
+.shadow {
+  box-shadow: 0px 0px 12px 1px;
+  border-radius: 5px;
 }
 </style>

@@ -3,16 +3,10 @@ import Home from '../views/Home.vue'
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
     path: '/login',
     name: 'login',
     component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
-  } 
-  ,
+  },
   {
     path: '/register',
     name: 'register',
@@ -36,6 +30,17 @@ const routes = [
     name: 'RecoverPass3',
     component: () => import(/* webpackChunkName: "about" */ '../views/Contraseña/RecoverPass3.vue')
   } 
+  ,
+  {
+    path: '/',
+    name: 'Home',
+    component: Home,
+    children:[
+      
+    ]
+  },
+ 
+
 
 ]
 
