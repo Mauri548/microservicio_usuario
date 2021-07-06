@@ -55,4 +55,9 @@ export default {
 .w-100{
   width: 100%;
 }
+
+.shadow {
+  box-shadow: 0px 0px 12px 1px;
+  border-radius: 5px;
+}
 </style>

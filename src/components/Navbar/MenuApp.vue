@@ -89,7 +89,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .menu-app {
   font-size: 23px;
   color: #A9A9A9;

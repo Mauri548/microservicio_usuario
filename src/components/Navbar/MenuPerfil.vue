@@ -75,4 +75,8 @@ export default {
     background-color: #0572ca;
 }
 
+.circle{
+  border-radius: 50%;
+}
+
 </style>
