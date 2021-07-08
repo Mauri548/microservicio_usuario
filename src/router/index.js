@@ -32,6 +32,12 @@ const routes = [
   } 
   ,
   {
+    path: '/RecoverPass4',
+    name: 'RecoverPass4',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Contraseña/RecoverPass4.vue')
+  } 
+  ,
+  {
     path: '/',
     name: 'Home',
     component: Home,

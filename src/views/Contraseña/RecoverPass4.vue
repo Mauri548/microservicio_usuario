@@ -6,18 +6,25 @@
             <h2 class="color-letras">Recover your password</h2>
         </div>
         <div class="column is-centered cuadro-border">
-            <div class="column  ">
-                <button class=" button color-letras has-background-success ">You will instantly receive a link to retrieve your password</button>
+            <div class="column ">
+                <button class=" button tam-btn color-letras has-background-success ">You password has changed</button>
+            </div>
+             <div class="column ">
+                <button class=" button tam-btn color-letras title-box ">Accept</button>
             </div>
         </div>
+        
+
     </div>
 
 
 </template>
 
 <script>
+
 export default {
-    name:'RecoverPass2'
+    name:'RecoverPass2',
+   
 }
 </script>
 
@@ -26,10 +33,6 @@ export default {
 .cuadro-border{
 
     box-shadow:0px 5px 12px;
-}
-
-.tam-box{
-    width: 36rem;
 }
 
 .title-box{
@@ -52,7 +55,13 @@ export default {
 }
 .tam-btn{
     width: 17rem;
+  
 }
+
+.tam-box{
+    width: 28rem;
+}
+
 .color-btn:hover{
      color:white;
 }
@@ -65,6 +74,7 @@ export default {
    .tam-btn {
     width: 100%; /* The width is 100%, when the viewport is 800px or smaller */
   }
+ 
 }
 
 

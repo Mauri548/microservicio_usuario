@@ -1,7 +1,7 @@
 <template>
   
 
-    <div class="column is-4 mt-2 container is-centered  ">
+    <div class="column tam-box mt-2 container is-centered  ">
                 <div class="column title-box">
                     <h2 class="color-letras">Recover your password</h2>
                 </div>
@@ -68,8 +68,12 @@ export default {
 }
 .tam-btn{
     width: 17rem;
-  
 }
+
+.tam-box{
+    width: 28rem;
+}
+
 
 .color-btn:hover{
      color:white;

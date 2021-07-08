@@ -19,23 +19,24 @@
                         
                         </form> -->
                     <form action="" class="column  mx-5  px-0 ">
-                        <CampoForm class="mb-3" place="New password" type="text" />
-                        <CampoForm  place="Confirm password" type="password" />
-                    </form>
-              
-                   
-
-                    <div class="column  mx-5">
-
-                         <div class="columns ">
-                            <div class="column px-0 is-flex-grow-0 ">
-                                <button class=" button color-btn has-background-danger ">Cancel</button>
-                            </div>
-                            <div class="column   has-text-right px-0 ">
-                                <button class="button tam-btn color-btn title-box">Save</button>
+                        
+                        <CampoFormPass class="mb-3" place="New password" type="password" />
+                        <CampoFormPass  place="Confirm password" type="password" />
+                        <div class="column  ">
+                            <div class="columns ">
+                                <div class="column px-0 is-flex-grow-0 ">
+                                    <button class=" button color-btn has-background-danger ">Cancel</button>
+                                </div>
+                                <div class="column   has-text-right px-0 ">
+                                    <button class="button tam-btn color-btn title-box">Save</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+
+                    </form>
+              
+                
+                
                 </div>
     </div>
 
@@ -45,12 +46,14 @@
 
 <script>
 import CampoForm from '../../components/CampoForm.vue';
-import {ref} from 'vue';
+import CampoFormPass from '../../components/CampoFormPass.vue';
+
 export default {
     
     name:'RecoverPass3',
     components:{
-       CampoForm
+       CampoForm,
+       CampoFormPass
     }, 
  
 }
