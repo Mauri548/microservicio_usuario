@@ -11,8 +11,6 @@ export default {
     name:'CampoForm',
     props: ['place','type'],
     
-
-
 }
 </script>
 
