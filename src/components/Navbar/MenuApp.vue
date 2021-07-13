@@ -106,7 +106,7 @@ export default {
 .discover:hover {
     background-color: rgba(204,204,204,0.27);
     border-radius: 15px;
-    cursor: pointer;;
+    cursor: pointer;
 }
 
 </style>

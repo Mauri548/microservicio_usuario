@@ -31,19 +31,6 @@
                 </div>
 
                 <div class="page">
-                    <!-- <div class="carrousel" >
-                        <div class="conteiner-app">
-                            <div class="img-app" v-for="app in apps" :key="app.id" style="background: red">
-                                <img :src="app.logo" alt="">
-                                <h3>{{app.name}}</h3>
-                            </div>
-                        </div>
-                        <u class="puntos">
-                            <li class="punto"></li>
-                            <li class="punto"></li>
-                            <li class="punto"></li>
-                        </u>
-                    </div> -->
                     <SelectApp />
                     <div class="field is-grouped is-justify-content-space-evenly">
                         <button type="button" class="button btn-crenein prev-2 prev">Prev</button>
@@ -91,6 +78,7 @@ export default {
             const thirdPrevBtn = document.querySelector('.prev-2')
             const thirdNextBtn = document.querySelector('.next-2')
             const fourPrevBtn = document.querySelector('.prev-3')
+            const containerCarrousel = document.querySelector('.conteiner-carrousel')
 
             const progressText = document.querySelectorAll('.step p')
             const progressCheck = document.querySelectorAll('.step .check')
@@ -124,6 +112,7 @@ export default {
 
             thirdNextBtn.addEventListener('click', function(){
                 slidepage.style.marginLeft = '-60%'
+                // containerCarrousel.style.display = 'none'
                 next()
             })
 
@@ -134,11 +123,13 @@ export default {
 
             thirdPrevBtn.addEventListener('click', function(){
                 slidepage.style.marginLeft = '-20%'
+                // containerCarrousel.style.display = 'none'
                 prev()
             })
 
             fourPrevBtn.addEventListener('click', function(){
                 slidepage.style.marginLeft = '-40%'
+                // containerCarrousel.style.display = 'block'
                 prev()
             })
         })
@@ -154,7 +145,7 @@ export default {
     margin: auto;
 }
 
-.btn-crenein {
+/* .btn-crenein {
     background: #005395;
     color: #fff;
     font-weight: 600;
@@ -162,7 +153,7 @@ export default {
 
 .btn-crenein:hover {
     background: #0572ca;
-}
+} */
 
 .section-form {
     border-bottom: 2px solid #005395;
@@ -190,45 +181,5 @@ export default {
         width: 90%;
     }
 }
-/* 
-.carrousel {
-    width: 100%;
-}
-
-.carrousel .conteiner-app {
-    width: 300%;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: flex-start;
-    align-items: center;
-
-    transition: all .5s ease;
-    transform: translateX(0%)
-}
-
-.carrousel .img-app {
-    width: calc(33.3% / 3);
-    border: 1px solid #000;
-}
-
-.carrousel .puntos {
-    width: 100%;
-    background-color: blue;
-    padding: 0.4em;
-    list-style: none;
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: center;
-    align-items: center;
-}
-
-.carrousel .punto {
-    width: 1em;
-    height: 1em;
-    background-color: red;
-    margin: 0.4em;
-    border-radius: 50%;
-
-} */
 
 </style>
