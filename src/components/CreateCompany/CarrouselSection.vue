@@ -1,5 +1,5 @@
 <template>
-    <ul class="puntos">
+    <ul class="puntos mb-2">
         <li class="punto activo" :class="type"></li>
         <li v-for="i in cantSection -1" :key="i" class="punto" :class="type"></li>
     </ul>
@@ -33,7 +33,16 @@ export default {
             const punto = document.querySelectorAll(`.${props.type}`)
             console.log(punto)
             
-            carrousel.style.width = `${(cantSection * 100)}%`
+            if (window.screen.width <= 768) {
+                if (props.type == 'app') {
+                    carrousel.style.width = `${(cantSection * 100)}%`
+                } else {
+                    carrousel.style.width = '95%'
+                }
+            } else {
+                carrousel.style.width = `${(cantSection * 100)}%`
+            }
+
 
             punto.forEach((cadaPunto, i) => {
                 punto[i].addEventListener('click', () => {
@@ -85,6 +94,12 @@ export default {
 
 .punto:hover {
     cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .puntos {
+        display: none;
+    }
 }
 
 </style>

@@ -8,6 +8,7 @@
                 </div>
             </div>
             <CarrouselSection :size="apps.length" carrousel="conteiner-app" type="app"/>
+            
         </div>
         <div v-show="appSelect != ''" class="description-app">
             <p>{{appSelect.description}}</p>
@@ -121,13 +122,15 @@ export default {
 }
 
 .carrousel .img-app.activo {
-    border: 2px solid #005395;
+    /* border: 2px solid #005395; */
+    background-color: rgb(206 206 206 / 20%);
     border-radius: 10px;
 }
 
 .description-app {
     padding: 16px;
-    border: 2px solid #005395;
+    background-color: rgb(206 206 206 / 20%);
+    /* border: 2px solid #005395; */
     border-radius: 10px;
 }
 </style>

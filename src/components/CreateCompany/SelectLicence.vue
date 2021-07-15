@@ -29,7 +29,7 @@
                     <hr>
                     <p v-show="coinSelect.name == 'ARS'">{{licence.price.ars}} ARS</p>
                     <p v-show="coinSelect.name == 'USD'">{{licence.price.usd}} USD</p>
-                    <button class="button btn-crenein mt-2 is-size-7">I want</button>
+                    <button class="button btn-crenein my-2 is-size-7">I want</button>
                 </div>
             </div>
             <CarrouselSection :size="licences.length" carrousel="conteiner-licence" type="lic" />
@@ -74,7 +74,6 @@ export default {
 
         document.addEventListener('click', (e) => {
             let clic = e.target.getAttribute('id')
-            console.log(e.target)
             if (clic != 'select-coin') {
                 coinActivo.value = false
             }
@@ -119,5 +118,17 @@ export default {
 
 .licence hr {
     margin: 0.7em 0;
+}
+
+@media (max-width: 768px) {
+    .carrousel .conteiner-licence {
+        margin: auto;
+        flex-direction: column;
+    }
+
+    .carrousel .licence {
+        width: 100%;
+        margin: 5px 5px;
+    }
 }
 </style>
