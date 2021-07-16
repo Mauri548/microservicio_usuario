@@ -14,7 +14,7 @@
                     <CampoForm place="Email" type="email" />
                     <CampoForm place="Phone" type="number" />
                     <div class="" >
-                        <button type="button" class="button btn-crenein nextBtn" style="width:100%">Next</button>
+                        <button type="button" class="button btn-crenein next" style="width:100%">Next</button>
                     </div>
                 </div>
 
@@ -25,16 +25,16 @@
                     <CampoForm place="Province" type="text" />
                     <CampoForm place="Country" type="text" />
                     <div class="field is-grouped is-justify-content-space-between">
-                        <button type="button" class="button btn-crenein prev-1 prev">Prev</button>
-                        <button type="button" class="button btn-crenein next-1 next">Next</button>
+                        <button type="button" class="button btn-crenein prev">Prev</button>
+                        <button type="button" class="button btn-crenein next">Next</button>
                     </div>
                 </div>
 
                 <div class="page">
                     <SelectApp />
                     <div class="field is-grouped is-justify-content-space-between">
-                        <button type="button" class="button btn-crenein prev-2 prev">Prev</button>
-                        <button type="button" class="button btn-crenein next-2 next">Next</button>
+                        <button type="button" class="button btn-crenein prev">Prev</button>
+                        <button type="button" class="button btn-crenein next">Next</button>
                     </div>
                 </div>
 
@@ -56,7 +56,7 @@
                         </div>
                     </div>
                     <div class="field is-grouped is-justify-content-space-between">
-                        <button type="button" class="button btn-crenein prev-3 prev">Prev</button>
+                        <button type="button" class="button btn-crenein prev">Prev</button>
                         <button class="button btn-crenein submite">Submite</button>
                     </div>
                 </div>
@@ -95,18 +95,11 @@ export default {
 
         onMounted(() => {
             const slidepage = document.querySelector('.slidepage')
-            const firtNextBtn = document.querySelector('.nextBtn')
-            const secPrevBtn = document.querySelector('.prev-1')
-            const secNextBtn = document.querySelector('.next-1')
-            const thirdPrevBtn = document.querySelector('.prev-2')
-            const thirdNextBtn = document.querySelector('.next-2')
-            const fourPrevBtn = document.querySelector('.prev-3')
 
             const progressText = document.querySelectorAll('.step p')
             const progressCheck = document.querySelectorAll('.step .check')
             const bullet = document.querySelectorAll('.step .bullet')
             const form = document.querySelector('.form-outer')
-            let max = 4
             let current = 1
 
             const next = () => {
@@ -123,43 +116,31 @@ export default {
                 current -= 1
             }
 
-            firtNextBtn.addEventListener('click', function(){
-                slidepage.style.marginLeft = '-20%'
-                next()
+            const btnNext = document.querySelectorAll('.next')
+            const btnPrev = document.querySelectorAll('.prev')
+            console.log(btnPrev)
+
+            btnNext.forEach((btn, i) => {
+                btnNext[i].addEventListener('click', () => {
+                    let operacion = (i + 1) * -20
+                    slidepage.style.marginLeft = `${operacion}%`
+                    next()
+                    if (i == 1) {
+                        form.style.maxHeight = '100%'
+                    } else if (i == 2) {
+                        datas.value.length <= 6? form.style.maxHeight = '430px' : form.style.maxHeight = '100%'
+                    }
+                })
             })
 
-            secNextBtn.addEventListener('click', function(){
-                slidepage.style.marginLeft = '-40%'
-                next()
-                form.style.maxHeight = '100%'
-
-            })
-
-            thirdNextBtn.addEventListener('click', function(){
-                slidepage.style.marginLeft = '-60%'
-                next()
-                datas.value.length <= 6? form.style.maxHeight = '430px' : form.style.maxHeight = '100%'
-
-            })
-
-            secPrevBtn.addEventListener('click', function(){
-                slidepage.style.marginLeft = '0%'
-                prev()
-
-            })
-
-            thirdPrevBtn.addEventListener('click', function(){
-                slidepage.style.marginLeft = '-20%'
-                prev()
-                form.style.maxHeight = '430px'
-
-            })
-
-            fourPrevBtn.addEventListener('click', function(){
-                slidepage.style.marginLeft = '-40%'
-                prev()
-                form.style.maxHeight = '100%'
-
+            btnPrev.forEach((btn, i) => {
+                btnPrev[i].addEventListener('click', () => {
+                    let operacion = i * -20
+                    slidepage.style.marginLeft = `${operacion}%`
+                    prev()
+                    i == 1 ? form.style.maxHeight = '430px' : ''
+                    i == 2 ? form.style.maxHeight = '100%' : ''
+                })
             })
         })
 
