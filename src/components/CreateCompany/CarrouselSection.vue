@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { onMounted } from '@vue/runtime-core'
+import { onMounted, ref, watch } from '@vue/runtime-core'
 export default {
     name: 'CarrouselSection',
 
@@ -14,10 +14,12 @@ export default {
         size: Number,
         carrousel: String,
         type: String,
+        pos: Number
     },
 
     setup(props) {
         let cantSection = 0
+        const position = ref(0)
 
         // Calculamos la cantidad de secciones que tendra el carrousel
         if ((props.size % 3) > 0) {
@@ -31,6 +33,8 @@ export default {
         onMounted(() => {
             const carrousel = document.querySelector(`.${props.carrousel}`)
             const punto = document.querySelectorAll(`.${props.type}`)
+            const arrowNext = document.querySelectorAll('.arrow-next')
+            const arrowPrev = document.querySelectorAll('.arrow-prev')
             console.log(punto)
             
             if (window.screen.width <= 768) {
@@ -54,9 +58,16 @@ export default {
                         punto[i].classList.remove('activo')
                     })
                     punto[i].classList.add('activo')
+                    console.log(props.pos)
+
+                    i == 0 ? arrowPrev[props.pos].style.display = 'none' : arrowPrev[props.pos].style.display = 'flex'
+                    i == cantSection -1 ? arrowNext[props.pos].style.display = 'none' : arrowNext[props.pos].style.display = 'flex'
+
 
                 })
             })
+
+            
         })
 
         return{

@@ -1,13 +1,15 @@
 <template>
     <div class="conteiner-carrousel">
-        <div class="carrousel" >
+        <div class="carrousel">
+            <div class="arrow arrow-prev"><i class="fas fa-chevron-left"></i></div>
             <div class="conteiner-app">
                 <div @click="selectApp(app)" class="img-app" v-for="app in apps" :key="app.id">
                     <img :src="app.logo" width="120" alt="">
                     <h3>{{app.name}}</h3>
                 </div>
             </div>
-            <CarrouselSection :size="apps.length" carrousel="conteiner-app" type="app"/>
+            <div class="arrow arrow-next"><i class="fas fa-chevron-right"></i></div>
+            <CarrouselSection :size="apps.length" carrousel="conteiner-app" type="app" :pos="0"/>
             
         </div>
         <div v-show="appSelect != ''" class="description-app">
@@ -45,14 +47,13 @@ export default {
             {id: 8, name: 'Geston', logo: geston, activo: false, description : 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Odit provident qui ratione esse, sapiente itaque. Debitis, animi quia rerum voluptates molestias voluptatem recusandae maiores nihil odit. Autem saepe odio neque?'},
             {id: 9, name: 'Geston', logo: geston, activo: false, description : 'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nam saepe adipisci voluptatem cum et ipsam voluptas in consequatur veniam fuga eum quos hic, pariatur officia neque. Quae reprehenderit eos nostrum.'},
             {id: 10, name: 'Geston', logo: geston, activo: false, description : 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem, libero excepturi totam, deserunt quasi tempora quisquam natus nesciunt modi harum ea esse officiis ratione error molestiae quae aliquid quia distinctio.'},
-            // {id: 11, name: 'Geston', logo: geston, activo: false},
-            // {id: 12, name: 'Geston', logo: geston, activo: false},
-            // {id: 13, name: 'Geston', logo: geston, activo: false},
-            // {id: 14, name: 'Geston', logo: geston, activo: false},
 
         ])
         let cantSection = 0
         const appSelect = ref('')
+        const positionApp = ref(0)
+        const positionLic = ref(0)
+
 
         // Calculamos la cantidad de secciones que tendra el carrousel
         if ((apps.value.length % 3) > 0) {
@@ -60,6 +61,8 @@ export default {
         } else {
             cantSection = Math.trunc(apps.value.length / 3) 
         }
+        // Calculamos el desplazamiento que hara por seccion
+        let desplazamiento = -(100/cantSection).toFixed(1)
 
         onMounted(() =>  {
             const imgApp = document.querySelectorAll('.img-app')
@@ -73,6 +76,52 @@ export default {
                     imgApp[i].classList.add('activo')
                 })
             })
+
+            // Creamos las variables de los carruseles, puntos y flechas
+            const arrowNext = document.querySelectorAll('.arrow-next')
+            const arrowPrev = document.querySelectorAll('.arrow-prev')
+            const carrouselApp = document.querySelector('.conteiner-app')
+            const carrouselLicence = document.querySelector('.conteiner-licence')
+            const puntosApp = document.querySelectorAll('.app')
+
+
+            const moveCarrousel = (i) => {
+                // calculamos el desplazamiento que hara el carrousel
+                let operacion = positionApp.value * desplazamiento
+                // movemos la posicion x del carrousel correspondiente
+                
+                // i == 0 ? carrouselApp.style.transform = `translateX(${operacion}%)` : carrouselLicence.style.transform = `translateX(${operacion}%)`
+                carrouselApp.style.transform = `translateX(${operacion}%)`
+
+                // movemos los puntos y le ponemos la clase activa al punto actual
+                puntosApp.forEach((punto, i) => {
+                    puntosApp[i].classList.remove('activo')
+                })
+                puntosApp[positionApp.value].classList.add('activo')
+
+                console.log(cantSection, ' ', positionApp.value)
+                // ocultaran las flechas en el caso de que este en el final
+                positionApp.value == 0 ? arrowPrev[i].style.display = 'none' : arrowPrev[i].style.display = 'flex'
+                positionApp.value == cantSection -1 ? arrowNext[i].style.display = 'none' : arrowNext[i].style.display = 'flex'
+            }
+
+            console.log(arrowNext)
+            // Creamos una funcion para cada flecha next
+            arrowNext.forEach((element, i) => {
+                arrowNext[i].addEventListener('click', () => {
+                    positionApp.value += 1
+                    moveCarrousel(i)
+                })
+            })
+
+            // Creamos una funcion para cada flecha prev
+            arrowPrev.forEach((element, i) => {
+                arrowPrev[i].addEventListener('click', () => {
+                    positionApp.value -= 1
+                    moveCarrousel(i)
+                })
+            })
+
         })
  
         const selectApp = (e) => {
@@ -82,7 +131,7 @@ export default {
         return {
             apps,
             appSelect,
-            selectApp
+            selectApp,
         }
     }
 }
@@ -96,6 +145,7 @@ export default {
 
 .carrousel {
     width: 100%;
+    position: relative;
 }
 
 .carrousel .conteiner-app {
@@ -133,4 +183,39 @@ export default {
     /* border: 2px solid #005395; */
     border-radius: 10px;
 }
+
+/* .arrow {
+    display: flex;
+    align-items: center;
+    width: 25px;
+    min-height: 80%;
+    position: absolute;
+    background-color: rgba(204,204,204,0.13);
+    z-index: 1;
+}
+
+.arrow-next {
+    top:0%;
+    right: 0%;
+    border-radius: 0 5px 5px 0;
+}
+
+.arrow-prev {
+    display: none;
+    border-radius: 5px 0 0 5px;
+}
+
+i {
+    font-size: 35px;
+    color: rgba(128,128,128,0.38)
+}
+
+.arrow:hover {
+    cursor: pointer;
+    background-color: rgba(204,204,204,0.3);
+}
+
+.arrow:hover i {
+    color: #005395
+} */
 </style>

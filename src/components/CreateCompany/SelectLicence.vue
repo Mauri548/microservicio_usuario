@@ -1,6 +1,5 @@
 <template>
     <div>
-        <!-- is-active -->
         <div class="dropdown mt-4 mb-2" :class="{'is-active': coinActivo}">
             <div class="dropdown-trigger">
                 <button @click="openSelectCoin" id="select-coin" class="button" aria-haspopup="true" aria-controls="dropdown-menu">
@@ -21,6 +20,7 @@
         </div>
 
         <div class="carrousel my-2">
+            <div class="arrow arrow-prev"><i class="fas fa-chevron-left"></i></div>
             <div class="conteiner-licence">
                 <div class="licence" v-for="licence in licences" :key="licence.id" >
                     <h3 class="mt-2">{{licence.title}}</h3>
@@ -32,6 +32,7 @@
                     <button class="button btn-crenein my-2 is-size-7">I want</button>
                 </div>
             </div>
+            <div class="arrow arrow-next"><i class="fas fa-chevron-right"></i></div>
             <CarrouselSection :size="licences.length" carrousel="conteiner-licence" type="lic" />
         </div>
     </div>
@@ -95,6 +96,7 @@ export default {
 
 .carrousel {
     width: 100%;
+    position: relative;
 }
 
 .carrousel .conteiner-licence {
