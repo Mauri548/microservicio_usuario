@@ -20,7 +20,8 @@
         </div>
 
         <div class="carrousel my-2">
-            <div class="arrow arrow-prev"><i class="fas fa-chevron-left"></i></div>
+            <Arrow arrow="arrow-prev" icon="fa-chevron-left" conteiner="conteiner-licence" punto="lic"
+            :cantSection="cantSection" :desplazamiento="desplazamiento" />
             <div class="conteiner-licence">
                 <div class="licence" v-for="licence in licences" :key="licence.id" >
                     <h3 class="mt-2">{{licence.title}}</h3>
@@ -32,8 +33,12 @@
                     <button class="button btn-crenein my-2 is-size-7">I want</button>
                 </div>
             </div>
-            <div class="arrow arrow-next"><i class="fas fa-chevron-right"></i></div>
-            <CarrouselSection :size="licences.length" carrousel="conteiner-licence" type="lic" />
+            <!-- <div class="arrow arrow-next"><i class="fas fa-chevron-right"></i></div> -->
+            <Arrow arrow="arrow-next" icon="fa-chevron-right" conteiner="conteiner-licence" punto="lic"
+            :cantSection="cantSection" :desplazamiento="desplazamiento" />
+            <!-- <CarrouselArrow conteiner="conteiner-licence" punto="lic" :cantSection="cantSection" :desplazamiento="desplazamiento" /> -->
+
+            <CarrouselSection :size="licences.length" carrousel="conteiner-licence" type="lic" :pos="1" />
         </div>
     </div>
 </template>
@@ -41,11 +46,15 @@
 <script>
 import { ref } from '@vue/reactivity'
 import CarrouselSection from './CarrouselSection.vue'
+import CarrouselArrow from './CarrouselArrow.vue'
+import Arrow from './Arrow.vue'
 export default {
     name: 'SelectLicence',
 
     components: {
         CarrouselSection,
+        CarrouselArrow,
+        Arrow,
     },
     
     setup() {
@@ -62,6 +71,17 @@ export default {
         ])
         const coinActivo = ref(false)
         const coinSelect = ref({id: 1, name: 'ARS'})
+        const cantSection = ref(0)
+        const desplazamiento = ref(0)
+
+        // Calculamos la cantidad de secciones que tendra el carrousel
+        if ((licences.value.length % 3) > 0) {
+            cantSection.value = Math.trunc(licences.value.length / 3) + 1
+        } else {
+            cantSection.value = Math.trunc(licences.value.length / 3) 
+        }
+        // Calculamos el desplazamiento que hara por seccion
+        desplazamiento.value = -(100/cantSection.value).toFixed(1)
 
         const openSelectCoin = () => {
             coinActivo.value = !coinActivo.value
@@ -85,6 +105,8 @@ export default {
             coins,
             coinActivo,
             coinSelect,
+            cantSection,
+            desplazamiento,
             openSelectCoin,
             changeCoin,
         }

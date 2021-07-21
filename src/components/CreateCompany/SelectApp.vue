@@ -1,14 +1,20 @@
 <template>
     <div class="conteiner-carrousel">
         <div class="carrousel">
-            <div class="arrow arrow-prev"><i class="fas fa-chevron-left"></i></div>
+            <!-- <div class="arrow arrow-prev"><i class="fas fa-chevron-left"></i></div> -->
+            <Arrow arrow="arrow-prev" icon="fa-chevron-left" conteiner="conteiner-app" punto="app"
+                :cantSection="cantSection" :desplazamiento="desplazamiento" />
             <div class="conteiner-app">
                 <div @click="selectApp(app)" class="img-app" v-for="app in apps" :key="app.id">
                     <img :src="app.logo" width="120" alt="">
                     <h3>{{app.name}}</h3>
                 </div>
             </div>
-            <div class="arrow arrow-next"><i class="fas fa-chevron-right"></i></div>
+            <Arrow arrow="arrow-next" icon="fa-chevron-right" conteiner="conteiner-app" punto="app"
+                :cantSection="cantSection" :desplazamiento="desplazamiento" />
+            <!-- <CarrouselArrow conteiner="conteiner-app" punto="app" :cantSection="cantSection" :desplazamiento="desplazamiento"/> -->
+
+            <!-- <div class="arrow arrow-next"><i class="fas fa-chevron-right"></i></div> -->
             <CarrouselSection :size="apps.length" carrousel="conteiner-app" type="app" :pos="0"/>
             
         </div>
@@ -27,12 +33,16 @@ import { ref } from '@vue/reactivity'
 import { onMounted } from '@vue/runtime-core'
 import SelectLicence from './SelectLicence.vue'
 import CarrouselSection from './CarrouselSection.vue'
+import CarrouselArrow from './CarrouselArrow.vue'
+import Arrow from './Arrow.vue'
 
 export default {
     name: 'SelectApp',
     components: {
         CarrouselSection,
-        SelectLicence
+        SelectLicence,
+        CarrouselArrow,
+        Arrow,
     },
 
     setup() {
@@ -49,7 +59,8 @@ export default {
             {id: 10, name: 'Geston', logo: geston, activo: false, description : 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Quidem, libero excepturi totam, deserunt quasi tempora quisquam natus nesciunt modi harum ea esse officiis ratione error molestiae quae aliquid quia distinctio.'},
 
         ])
-        let cantSection = 0
+        const cantSection = ref(0)
+        const desplazamiento = ref(0)
         const appSelect = ref('')
         const positionApp = ref(0)
         const positionLic = ref(0)
@@ -57,18 +68,19 @@ export default {
 
         // Calculamos la cantidad de secciones que tendra el carrousel
         if ((apps.value.length % 3) > 0) {
-            cantSection = Math.trunc(apps.value.length / 3) + 1
+            cantSection.value = Math.trunc(apps.value.length / 3) + 1
         } else {
-            cantSection = Math.trunc(apps.value.length / 3) 
+            cantSection.value = Math.trunc(apps.value.length / 3) 
         }
         // Calculamos el desplazamiento que hara por seccion
-        let desplazamiento = -(100/cantSection).toFixed(1)
+        desplazamiento.value = -(100/cantSection.value).toFixed(1)
+
 
         onMounted(() =>  {
             const imgApp = document.querySelectorAll('.img-app')
 
             imgApp.forEach((cadaImage, i) => {
-                imgApp[i].style.width = `calc(33.3% / ${cantSection})`
+                imgApp[i].style.width = `calc(33.3% / ${cantSection.value})`
                 imgApp[i].addEventListener('click', () => {
                     imgApp.forEach((cadaImage, i) => {
                         imgApp[i].classList.remove('activo')
@@ -78,49 +90,60 @@ export default {
             })
 
             // Creamos las variables de los carruseles, puntos y flechas
-            const arrowNext = document.querySelectorAll('.arrow-next')
-            const arrowPrev = document.querySelectorAll('.arrow-prev')
-            const carrouselApp = document.querySelector('.conteiner-app')
-            const carrouselLicence = document.querySelector('.conteiner-licence')
-            const puntosApp = document.querySelectorAll('.app')
+            // const arrowNext = document.querySelectorAll('.arrow-next')
+            // const arrowPrev = document.querySelectorAll('.arrow-prev')
+            // const carrouselApp = document.querySelector('.conteiner-app')
+            // const carrouselLicence = document.querySelector('.conteiner-licence')
+            // const puntosApp = document.querySelectorAll('.app')
+            // const puntosLic = document.querySelectorAll('.lic')
 
 
-            const moveCarrousel = (i) => {
-                // calculamos el desplazamiento que hara el carrousel
-                let operacion = positionApp.value * desplazamiento
-                // movemos la posicion x del carrousel correspondiente
+            // const moveCarrousel = (i) => {
+            //     // calculamos el desplazamiento que hara el carrousel
+            //     let operacion = positionApp.value * desplazamiento
+            //     // movemos la posicion x del carrousel correspondiente
                 
-                // i == 0 ? carrouselApp.style.transform = `translateX(${operacion}%)` : carrouselLicence.style.transform = `translateX(${operacion}%)`
-                carrouselApp.style.transform = `translateX(${operacion}%)`
+            //     i == 0 ? carrouselApp.style.transform = `translateX(${operacion}%)` : carrouselLicence.style.transform = `translateX(${operacion}%)`
+            //     // carrouselApp.style.transform = `translateX(${operacion}%)`
 
-                // movemos los puntos y le ponemos la clase activa al punto actual
-                puntosApp.forEach((punto, i) => {
-                    puntosApp[i].classList.remove('activo')
-                })
-                puntosApp[positionApp.value].classList.add('activo')
+            //     // movemos los puntos y le ponemos la clase activa al punto actual
+            //     if (i == 0) {
+            //         puntosApp.forEach((punto, i) => {
+            //             puntosApp[i].classList.remove('activo')
+            //         })
+            //         puntosApp[positionApp.value].classList.add('activo')
+    
+            //         // ocultaran las flechas en el caso de que este en el final
+            //         positionApp.value == 0 ? arrowPrev[i].style.display = 'none' : arrowPrev[i].style.display = 'flex'
+            //         positionApp.value == cantSection -1 ? arrowNext[i].style.display = 'none' : arrowNext[i].style.display = 'flex'
+            //     } else {
+            //         puntosLic.forEach((punto, i) => {
+            //             puntosLic[i].classList.remove('activo')
+            //         })
+            //         puntosLic[positionLic.value].classList.add('activo')
+    
+            //         // ocultaran las flechas en el caso de que este en el final
+            //         positionLic.value == 0 ? arrowPrev[i].style.display = 'none' : arrowPrev[i].style.display = 'flex'
+            //         positionLic.value == cantSection -1 ? arrowNext[i].style.display = 'none' : arrowNext[i].style.display = 'flex'
+            //     }
+            // }
 
-                console.log(cantSection, ' ', positionApp.value)
-                // ocultaran las flechas en el caso de que este en el final
-                positionApp.value == 0 ? arrowPrev[i].style.display = 'none' : arrowPrev[i].style.display = 'flex'
-                positionApp.value == cantSection -1 ? arrowNext[i].style.display = 'none' : arrowNext[i].style.display = 'flex'
-            }
+            // console.log(arrowNext)
+            // // Creamos una funcion para cada flecha next
+            // arrowNext.forEach((element, i) => {
+            //     arrowNext[i].addEventListener('click', () => {
+            //         i == 0 ? positionApp.value += 1 : positionLic.value += 1 
+            //         moveCarrousel(i)
+            //     })
+            // })
 
-            console.log(arrowNext)
-            // Creamos una funcion para cada flecha next
-            arrowNext.forEach((element, i) => {
-                arrowNext[i].addEventListener('click', () => {
-                    positionApp.value += 1
-                    moveCarrousel(i)
-                })
-            })
-
-            // Creamos una funcion para cada flecha prev
-            arrowPrev.forEach((element, i) => {
-                arrowPrev[i].addEventListener('click', () => {
-                    positionApp.value -= 1
-                    moveCarrousel(i)
-                })
-            })
+            // // Creamos una funcion para cada flecha prev
+            // arrowPrev.forEach((element, i) => {
+            //     arrowPrev[i].addEventListener('click', () => {
+            //         i == 0 ? positionApp.value -= 1 : positionLic.value -= 1 
+            //         moveCarrousel(i)
+            //     })
+            // })
 
         })
  
@@ -132,6 +155,8 @@ export default {
             apps,
             appSelect,
             selectApp,
+            cantSection,
+            desplazamiento
         }
     }
 }
@@ -218,4 +243,6 @@ i {
 .arrow:hover i {
     color: #005395
 } */
+
+
 </style>
