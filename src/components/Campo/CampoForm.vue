@@ -1,20 +1,19 @@
 <template>
-       <div>
-            <div class="form-row">
-                <input class="input" :type="type" required>
-                <label alt="Label" :data-placeholder="place" ></label>
-            </div>
-       </div>
+    <div class="form-row">
+        <input class="input" :type="type" required>
+        <label alt="Label" :data-placeholder="place" ></label>
+    </div>
 </template>
 
 <script>
 export default {
 
     name:'CampoForm',
-    props: ['place','type'],
+    props: {
+      place:String,
+      type:String
+    },
     
-
-
 }
 </script>
 

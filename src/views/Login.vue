@@ -30,7 +30,9 @@
                                 <div class="control ">
                                     <input class="input" type="text" placeholder="Password">
                                 </div>
-                            </div>    
+                            </div>   
+
+                           
                         </div> 
                         
                     </div>      
@@ -54,8 +56,10 @@
 </template>
 
 <script>
+
 export default {
     name:'Login',
+    
 }
 </script>
 

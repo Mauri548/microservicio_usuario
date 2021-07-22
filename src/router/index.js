@@ -38,6 +38,18 @@ const routes = [
   } 
   ,
   {
+    path: '/PersonalForm',
+    name: 'PersonalForm',
+    component: () => import(/* webpackChunkName: "about" */ '../components/PersonalInfo/PersonalForm.vue')
+  } 
+  ,
+  {
+    path: '/Action',
+    name: 'ActionsModal',
+    component: () => import(/* webpackChunkName: "about" */ '../components/Modals/ActionsModal.vue')
+  } 
+  ,
+  {
     path: '/',
     name: 'Home',
     component: Home,

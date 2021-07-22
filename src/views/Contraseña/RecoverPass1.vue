@@ -1,32 +1,30 @@
 <template>
   
-
     <div class="column tam-box mt-2 container is-centered  ">
-                <div class="column title-box">
-                    <h2 class="color-letras">Recover your password</h2>
-                </div>
-                <div class="column is-centered cuadro-border">
-                    <form class="column  mx-5  px-0">
-                        <CampoForm place="Email" type="text" />
-                    </form>
-                    <div class="column mx-5 ">
-                        <div class="columns">
-                            <div class="column px-0 is-flex-grow-0 ">
-                                <button class=" button color-btn has-background-danger ">Cancel</button>
-                            </div>
-                            <div class="column has-text-right  px-0  " >
-                                    <button class="button tam-btn color-btn title-box">Send</button>
-                            </div>
-                        </div>
+        <div class="column title-box">
+            <h2 class="color-letras">Recover your password</h2>
+        </div>
+        <div class="column is-centered cuadro-border">
+            <form class="column  mx-5  px-0">
+                <CampoForm place="Email" type="text" />
+            </form>
+            <div class="column mx-5 ">
+                <div class="columns">
+                    <div class="column px-0 is-flex-grow-0 ">
+                        <button class=" button color-btn has-background-danger ">Cancel</button>
+                    </div>
+                    <div class="column has-text-right  px-0  " >
+                            <button class="button tam-btn color-btn title-box">Send</button>
                     </div>
                 </div>
+            </div>
+        </div>
     </div>
-
 
 </template>
 
 <script>
-import CampoForm from '../../components/CampoForm.vue'
+import CampoForm from '../../components/Campo/CampoForm.vue'
 export default {
     
     name:'RecoverPass1',
