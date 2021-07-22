@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import CampoForm from '../../components/Campo/CampoForm.vue'
+import CampoForm from '../../components/CampoForm.vue'
 export default {
     
     name:'RecoverPass1',

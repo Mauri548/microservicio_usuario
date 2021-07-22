@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import CampoForm from '../../components/Campo/CampoForm.vue'
+import CampoForm from '../CampoForm.vue'
 import { inject } from '@vue/runtime-core'
 import Action from '../../components/Modals/ActionsModal.vue'
 import {ref} from '@vue/reactivity'
