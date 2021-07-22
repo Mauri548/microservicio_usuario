@@ -54,7 +54,11 @@ const routes = [
     name: 'Home',
     component: Home,
     children:[
-      
+      {
+        path: '/CreateCompany',
+        name: 'CreateCompany',
+        component: () => import(/* webpackChunkName: "CreateCompany" */ '../views/CreateCompany.vue')
+      }
     ]
   },
  

@@ -1,7 +1,7 @@
 <template>
     <div class="form-row">
-        <input class="input" :type="type" required>
-        <label alt="Label" :data-placeholder="place" ></label>
+      <input class="input" :type="type" required>
+      <label alt="Label" :data-placeholder="place" style="color: grey"></label>
     </div>
 </template>
 
@@ -28,13 +28,14 @@ form {
   width: 22rem;
   /* End Temp */
 }
-form .form-row {
+.form-row {
   margin-bottom: 1rem;
   position: relative;
 }
-form .form-row:last-child {
+.form-row:last-child {
   margin-bottom: 0;
 }
+
 form .form-row input {
   box-sizing: border-box;
   width: 100%;
@@ -44,6 +45,7 @@ form .form-row input {
   transition: all 0.5s ease-in-out;
   outline: 0;
 }
+
 form .form-row input + label[data-placeholder] {
   pointer-events: none;
 }
@@ -58,6 +60,7 @@ form .form-row input + label[data-placeholder]:after {
   padding: 0 0.25rem;
   background-color: rgba(255, 255, 255, 0);
 }
+
 form .form-row input:focus, form .form-row input:valid {
   border: 1px solid #005395;
 }

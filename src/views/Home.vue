@@ -1,9 +1,10 @@
 <template>
   <div>
     <Navbar />
+
     <NavbarV />
     
-
+    <router-view/>
 
   </div>
 </template>
