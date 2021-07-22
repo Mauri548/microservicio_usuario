@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import CampoForm from '../../components/Campo/CampoForm.vue';
+import CampoForm from '../../components/CampoForm.vue';
 import CampoFormPass from '../../components/CampoFormPass.vue';
 
 export default {
