@@ -72,38 +72,4 @@ export default {
   color: #fff;
 }
 
-/* .arrow {
-  display: flex;
-  align-items: center;
-  width: 25px;
-  min-height: 80%;
-  position: absolute;
-  background-color: rgba(204,204,204,0.13);
-  z-index: 1;
-}
-
-.arrow-next {
-  top:0%;
-  right: 0%;
-  border-radius: 0 5px 5px 0;
-}
-
-.arrow-prev {
-  display: none;
-  border-radius: 5px 0 0 5px;
-}
-
-.arrow i{
-  font-size: 35px;
-  color: rgba(128,128,128,0.38)
-}
-
-.arrow:hover {
-  cursor: pointer;
-  background-color: rgba(204,204,204,0.3);
-}
-
-.arrow:hover i {
-  color: #005395
-} */
 </style>

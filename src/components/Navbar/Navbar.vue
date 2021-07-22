@@ -98,13 +98,4 @@ export default {
   margin-left: auto;
 }
 
-/* .menu-app {
-  font-size: 23px;
-  color: #A9A9A9;
-} */
-
-/* .shadow {
-  box-shadow: 0px 0px 12px 1px;
-  border-radius: 5px;
-} */
 </style>

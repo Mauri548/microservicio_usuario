@@ -4,7 +4,7 @@
 
         <ProgressBar/>
 
-        <div class="form-outer">
+        <div class="form-outer pt-3">
             <form action="">
                 <div class="page slidepage">    
                     <CampoForm place="Name fantasy" type="text" />
@@ -54,7 +54,7 @@
                                     <p>${{data.price}}</p>
                                 </div>
                                 <div class="ml-2">
-                                    <i class="fas fa-times mt-1"></i>
+                                    <i @click="removeResumen(data.id)" class="fas fa-times mt-1"></i>
                                 </div>
                             </div>
                         </div>
@@ -148,8 +148,15 @@ export default {
             })
         })
 
+        // Elimino una app de resumen
+        const removeResumen = (id) => {
+            let pos = datas.value.findIndex(element => element.id == id)
+            datas.value.splice(pos, 1)
+        }
+
         return {
-            datas
+            datas,
+            removeResumen
         }
 
     }
