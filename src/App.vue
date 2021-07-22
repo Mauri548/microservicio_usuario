@@ -72,7 +72,7 @@ export default {
   color: #fff;
 }
 
-.arrow {
+/* .arrow {
   display: flex;
   align-items: center;
   width: 25px;
@@ -105,5 +105,5 @@ export default {
 
 .arrow:hover i {
   color: #005395
-}
+} */
 </style>

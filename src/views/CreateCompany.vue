@@ -38,6 +38,7 @@
                     </div>
                 </div>
 
+                <!-- Probablemente se pueda hacer en un componente -->
                 <div class="page">
                     <div class="mb-5">
                         <div v-for="data in datas" :key="data.id" class="is-flex is-align-items-center">
@@ -51,6 +52,9 @@
                                 </div>
                                 <div class="has-text-right" style="width: 20%">
                                     <p>${{data.price}}</p>
+                                </div>
+                                <div class="ml-2">
+                                    <i class="fas fa-times mt-1"></i>
                                 </div>
                             </div>
                         </div>
@@ -196,10 +200,21 @@ export default {
     width: 69%;
 }
 
+.fa-times{
+    font-size: 1.25rem;
+}
+.fa-times:hover {
+    cursor: pointer;
+}
+
 
 @media (max-width: 768px) {
     p{
         font-size: 12px;
+    }
+
+    .fa-times {
+        font-size: 0.85rem;
     }
 }
 

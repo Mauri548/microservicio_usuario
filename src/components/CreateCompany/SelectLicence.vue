@@ -33,10 +33,8 @@
                     <button class="button btn-crenein my-2 is-size-7">I want</button>
                 </div>
             </div>
-            <!-- <div class="arrow arrow-next"><i class="fas fa-chevron-right"></i></div> -->
             <Arrow arrow="arrow-next" icon="fa-chevron-right" conteiner="conteiner-licence" punto="lic"
             :cantSection="cantSection" :desplazamiento="desplazamiento" />
-            <!-- <CarrouselArrow conteiner="conteiner-licence" punto="lic" :cantSection="cantSection" :desplazamiento="desplazamiento" /> -->
 
             <CarrouselSection :size="licences.length" carrousel="conteiner-licence" type="lic" :pos="1" />
         </div>
@@ -46,14 +44,12 @@
 <script>
 import { ref } from '@vue/reactivity'
 import CarrouselSection from './CarrouselSection.vue'
-import CarrouselArrow from './CarrouselArrow.vue'
 import Arrow from './Arrow.vue'
 export default {
     name: 'SelectLicence',
 
     components: {
         CarrouselSection,
-        CarrouselArrow,
         Arrow,
     },
     
