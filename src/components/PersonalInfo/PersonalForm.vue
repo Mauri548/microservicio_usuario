@@ -2,9 +2,8 @@
 
 
     <div v-show="isMobile==false">
-        <form action="" class="column is-half is-offset-one-quarter mt-1 is-mobile">
-            
-            <div class="column has-background-primary">
+        <form action="" class="column is-half is-offset-one-quarter mt-1 is-mobile" style="width:600px">   
+            <div class="column ">
                 <div class="columns">
                     <div class="column  has-text-left label ">Avatar</div>
                     <div class="column  ">
@@ -15,30 +14,30 @@
                 </div>
             </div>
          
-        
-          <!--   <div class="file has-background-info  has-name is-right">
-                <label class=" file-label   ">
-                    <input class="file-input " type="file" name="resume">
-                    <span class="file-cta ">
-                        <span class="file-icon">
-                            <i class="fas fa-upload"></i>
-                        </span>
-                        <span class="file-label">
-                            Choose a file…
-                        </span>
+            <div class="file column has-name is-fullwidth is-right">
+                <label class="file-label">
+                    <input class="file-input" type="file" name="resume">
+                    <span class="file-cta">
+                    <span class="file-icon">
+                        <i class="fas fa-upload"></i>
+                    </span>
+                    <span class="file-label">
+                        Choose a file…
+                    </span>
                     </span>
                     <span class="file-name">
-                         Screen Shot 2017-07-29 at 15.54.25.png
+                    Screen Shot 2017-07-29 at 15.54.25.png
                     </span>
                 </label>
-            </div> -->
-            <div class="column has-background-danger">
+            </div>
+
+            <div class="column ">
                 <CampoForm   type="text" place="Email" />
                 <CampoForm   type="text" place="Full name"/>
                 <CampoForm   type="password" place="Password"/> 
             </div>
             
-            <div class="column has-background-info">
+            <div class="column ">
                 <div class="columns  ">
                     <div class="column  is-flex-grow-0">
                         <button class=" button  has-text-white has-background-danger " style="font-weight:bold;">Cancel</button>
@@ -53,56 +52,41 @@
     
     <div v-show="isMobile==true">
         <form action="" class="column mt-1">
-            
-                <div class="columns ">
-                    <div class="column  label ">Avatar</div>
-
-                    <div class="column  has-background-danger " style="font">
-                        
-                            <img class=" is-rounded " width="200" height="200" src="https://bulma.io/images/placeholders/128x128.png">
-                         
-                    </div>
-
+            <div class="columns ">
+                <div class="column  label ">Avatar</div>
+                <div class="column  " style="font">
+                        <img class=" iamge  imgred" width="200" height="200" src="https://bulma.io/images/placeholders/128x128.png">
                 </div>
-            
-          
-         <!--    <div class=" ">
-                <div class="file  has-name is-right">
-                    <label class="file-label   ">
-                        <input class="file-input " type="file" name="resume">
-                        <span class="file-cta ">
-                        <span class="file-icon">
-                            <i class="fas fa-upload"></i>
-                        </span>
-                        <span class="file-label">
-                            Choose a file…
-                        </span>
-                        </span>
-                        <span class="file-name">
-                        Screen Shot 2017-07-29 at 15.54.25.png
-                        </span>
-                    </label>
-                </div>   
-            </div> -->
+            </div>
+            <div class="file column has-name is-fullwidth is-right">
+                <label class="file-label">
+                    <input class="file-input" type="file" name="resume">
+                    <span class="file-cta">
+                    <span class="file-icon">
+                        <i class="fas fa-upload"></i>
+                    </span>
+                    <span class="file-label">
+                        Choose a file…
+                    </span>
+                    </span>
+                    <span class="file-name">
+                    Screen Shot 2017-07-29 at 15.54.25.png
+                    </span>
+                </label>
+            </div>
             <div class="column ">
-                <CampoForm type="text" place="Email" />
+                <CampoForm  type="text" place="Email" />
                 <CampoForm   type="text" place="Full name"/>
                 <CampoForm   type="password" place="Password"/> 
             </div>
-            
-            
-                <div class="column  ">
-                    <div class="column    ">
-                        <button class=" button has-text-white button1 "  style="background-color:#005395; font-weight:bold;">Save</button>
-                    </div>  
-                    <div class="column  ">
-                        <button class=" button  button1 has-text-white has-background-danger "  style="font-weight:bold;">Cancel</button>
-                    </div>
+            <div class="column    ">
+                <button class=" button has-text-white button1 "  style="background-color:#005395; font-weight:bold;">Save</button>
+            </div>  
+            <div class="column  ">
+                <button class=" button  button1 has-text-white has-background-danger "  style="font-weight:bold;">Cancel</button>
+            </div>
                       
-                </div>
-            
         </form>
-
     </div>
 
 
@@ -145,6 +129,9 @@ export default {
     width:100%;
 }
 
+.imgred{
+    border-radius: 100px;
+}
 
 
 @media screen and (max-width: 1200px) {

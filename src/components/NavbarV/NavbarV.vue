@@ -5,29 +5,31 @@
 
     <div v-show="isMobile==false">
         <div class="columns  is-mobile">
-            <div class="column is-flex-grow-0  has-text-left mx-5 mt-5">
+            <div class="column is-flex-grow-0  has-text-left ml-5 mt-5">
                 <ButtonMenu  @click="Act()" nombre="Home" class="mt-2" />
                 <ButtonMenu  @click="Act()" nombre="Personal info" class="mt-2" />
                 <ButtonMenu  @click="Act()" nombre="Permissions management" class="mt-2" />
                 <ButtonMenuDesp @click="Des()"  :desplegar="avisar" class="mt-2"  />
             </div>
-            <div class="column mx-6 mt-5 " >
+         <!--    <div class="column mx-6 mt-5 " >
                 <PersonalForm  />
-            </div>
+            </div> -->
         </div>
     </div>
     <div v-show="isMobile==true">
-        <div class="column">
-            <div class="column is-flex-grow-0  has-text-left mx-5 mt-5">
-                <ButtonMenu  @click="Act()" nombre="Home" class="mt-2" />
-                <ButtonMenu  @click="Act()" nombre="Personal info" class="mt-2" />
-                <ButtonMenu  @click="Act()" nombre="Permissions management" class="mt-2" />
-                <ButtonMenuDesp @click="Des()"  :desplegar="avisar" class="mt-2 "  />
+        
+
+            <div class="column btns is-flex-grow-0  has-text-left" style="padding:0;">
+                <ButtonMenu  @click="Act()" nombre="Home" class="button1 mt-2" />
+                <ButtonMenu  @click="Act()" nombre="Personal info" class="button1 mt-2" />
+                <ButtonMenu  @click="Act()" nombre="Permissions management" class="button1 mt-2" />
+                <ButtonMenuDesp @click="Des()"  :desplegar="avisar" class="button1 mt-2 "  />
             </div>
-            <div class="column  " >
+
+            <!-- <div class="column  " > -->
                <!--  <PersonalForm  /> -->
-            </div>
-        </div>
+           <!--  </div> -->
+        
     </div>
    
         
@@ -74,9 +76,26 @@ export default {
 }
 </script>
 
-<style >
+<style scoped>
 
 
+.button1 {
 
+    display:flex;
+}
+.btns{
+    display:inline-flex;
+    width:100%;
+    overflow-x: hidden;
+}
+
+@media screen and (max-width: 1000px) {
+
+   .btns{
+        overflow-x: scroll;
+        width:100%;
+    }
+    
+}
 
 </style>

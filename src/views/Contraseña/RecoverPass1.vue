@@ -1,6 +1,6 @@
 <template>
   
-    <div class="column tam-box mt-2 container is-centered  ">
+    <div v-show="isMobile==false" class="column tam-box mt-2 container is-centered  ">
         <div class="column title-box">
             <h2 class="color-letras">Recover your password</h2>
         </div>
@@ -21,15 +21,43 @@
         </div>
     </div>
 
+    <div v-show="isMobile==true" class="column tam-box mt-2 container is-centered  ">
+        <div class="column title-box">
+            <h2 class="color-letras">Recover your password</h2>
+        </div>
+        <div class="column  cuadro-border" >
+            <form class="column  mx-5  px-0" >
+                <CampoForm place="Email" type="text" />
+
+                <div class="column">
+                    <button class="button  color-btn title-box " style="width:100%">Send</button>
+                    <button class="button color-btn has-background-danger mt-2 " style="width:100%">Cancel</button>
+                </div>
+              
+                
+                
+            </form>
+        </div>
+    </div>
+
+
 </template>
 
 <script>
 import CampoForm from '../../components/CampoForm.vue'
+import { inject } from '@vue/runtime-core'
 export default {
     
     name:'RecoverPass1',
     components:{
         CampoForm
+    }, 
+    setup(){
+        const isMobile = inject('isMobile')
+
+        return { 
+            isMobile
+        }
     }
 
 }
