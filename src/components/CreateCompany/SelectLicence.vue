@@ -134,6 +134,7 @@ export default {
     padding: 4px;
     border-radius: 15px;
     box-shadow: 0px 0px 8px 2px #ccc;
+    font-size: 0.85rem;
 }
 
 .licence hr {

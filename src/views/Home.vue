@@ -2,9 +2,10 @@
   <div>
     <Navbar />
 
-    <NavbarV />
-    
-    <router-view/>
+    <div class="is-flex mt-5">
+      <NavbarV />
+      <router-view/>
+    </div>
 
   </div>
 </template>

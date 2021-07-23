@@ -1,5 +1,5 @@
 <template>
-    <div class="my-6 shadow container-form">
+    <div class="mb-5 mt-2 shadow container-form">
         <h1 class="pt-2 has-text-weight-bold is-size-4">Create Company</h1>
 
         <ProgressBar/>

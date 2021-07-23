@@ -38,12 +38,6 @@ const routes = [
   } 
   ,
   {
-    path: '/PersonalForm',
-    name: 'PersonalForm',
-    component: () => import(/* webpackChunkName: "about" */ '../components/PersonalInfo/PersonalForm.vue')
-  } 
-  ,
-  {
     path: '/Action',
     name: 'ActionsModal',
     component: () => import(/* webpackChunkName: "about" */ '../components/Modals/ActionsModal.vue')
@@ -54,6 +48,11 @@ const routes = [
     name: 'Home',
     component: Home,
     children:[
+      {
+        path: '/PersonalForm',
+        name: 'PersonalForm',
+        component: () => import(/* webpackChunkName: "about" */ '../components/PersonalInfo/PersonalForm.vue')
+      },
       {
         path: '/CreateCompany',
         name: 'CreateCompany',

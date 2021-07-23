@@ -1,18 +1,12 @@
 <template>
   
-
-
-
     <div v-show="isMobile==false">
-        <div class="columns  is-mobile">
-            <div class="column is-flex-grow-0  has-text-left mx-5 mt-5">
+        <div class="columns is-mobile">
+            <div class="column is-flex-grow-0  has-text-left ml-5 ">
                 <ButtonMenu  @click="Act()" nombre="Home" class="mt-2" />
                 <ButtonMenu  @click="Act()" nombre="Personal info" class="mt-2" />
                 <ButtonMenu  @click="Act()" nombre="Permissions management" class="mt-2" />
                 <ButtonMenuDesp @click="Des()"  :desplegar="avisar" class="mt-2"  />
-            </div>
-            <div class="column mx-6 mt-5 " >
-                <PersonalForm  />
             </div>
         </div>
     </div>
