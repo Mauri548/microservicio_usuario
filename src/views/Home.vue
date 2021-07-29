@@ -1,8 +1,8 @@
 <template>
   <div>
     <Navbar />
-    <NavbarV />
-    
+ <!--    <NavbarV /> -->
+    <InviteUser />
 
 
   </div>
@@ -12,11 +12,13 @@
 // @ is an alias to /src
 import Navbar from '../components/Navbar/Navbar.vue'
 import NavbarV from '../components/NavbarV/NavbarV.vue'
+import InviteUser from '../views/InviteUser/InviteUser.vue'
 export default {
   name: 'Home',
   components: {
     Navbar,
     NavbarV,
+    InviteUser
   }
 }
 </script>

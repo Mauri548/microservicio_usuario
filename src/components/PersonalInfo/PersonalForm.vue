@@ -90,21 +90,21 @@
     </div>
 
 
-    <Action activo=activo />
+   <!--  <Action activo=activo /> -->
 
 </template>
 
 <script>
 import CampoForm from '../../components/CampoForm.vue'
 import { inject } from '@vue/runtime-core'
-import Action from '../../components/Modals/ActionsModal.vue'
+/* import Action from '../../components/Modals/ActionsModal.vue' */
 import {ref} from '@vue/reactivity'
 
 export default {
     name:'PersonalForm',
     components: {
         CampoForm,
-        Action
+       /*  Action */
     }, 
     setup(){
         const isMobile = inject('isMobile')

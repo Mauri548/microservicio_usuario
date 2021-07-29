@@ -1,13 +1,26 @@
 <template>
-  <div>
-      <a href="#" class="button btn btn-letter" >{{nombre}}</a>
-  </div>
+    <div v-show="isMobile==false">
+        <a href="#" class="button btn btn-letter mb-1" >{{nombre}}</a>
+    </div>
+    <div v-show="isMobile==true">
+      <a href="#" class="button btn btn-letter " style="justify-content: center;">{{nombre}}</a>
+    </div>
+  
 </template>
 
 <script>
+
+import { inject } from '@vue/runtime-core'
 export default {
     name:"ButtonMenu",
-    props:['nombre']
+    props:['nombre'],
+    setup(){
+        const isMobile = inject('isMobile')
+
+        return { 
+            isMobile
+        }
+    }
 }
 </script>
 

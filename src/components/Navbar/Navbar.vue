@@ -63,7 +63,7 @@ export default {
 
     const OpenMenuNavbar = () => {
       menuNavbar.value = !menuNavbar.value
-      console.log(menuNavbar.value)
+      /* console.log(menuNavbar.value) */
     }
 
     return{

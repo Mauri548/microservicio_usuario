@@ -1,37 +1,61 @@
 <template>
-  <div>
-    <div class="dropdown " :class="{'is-active':  activo && desplegar == true}" >
-        <div class="dropdown-trigger">
-            <button @click="activar" id="select-company" class="button btn btn-letter" aria-haspopup="true" aria-controls="dropdown-menu">
-                
-                <span class="column pl-0 has-text-left ">{{companyActual.name}}</span>
-                <span class="columns   icon is-small">
-                    <i id="select-company" class="  fas fa-chevron-down "></i>
-                </span>
-            </button>
-        </div>
-        <div class="dropdown-menu  ml-4" id="dropdown-menu" role="menu" style="min-width: 10rem ">
-            <div class="dropdown-content has-background-none"> 
-                <a v-for="item in data" :key="item.id" href="#" 
-                     id="select-company" class="dropdown-item  btn btn-letter mt-1 column has-text-left" :class="{'is-active': item.id == companyActual.id}"
-                    >{{item.name}}
-                </a>
+    <div v-show="isMobile==false">
+        <div class="dropdown " :class="{'is-active':  activo }" >
+            <div class="dropdown-trigger">
+                <button @click="activar" id="select-company" class="button btn btn-letter" aria-haspopup="true" aria-controls="dropdown-menu">
+                    
+                    <span class="column pl-0 has-text-left ">{{companyActual.name}}</span>
+                    <span class="columns   icon is-small">
+                        <i id="select-company" class="  fas fa-chevron-down "></i>
+                    </span>
+                </button>
+            </div>
+            <div class="dropdown-menu  ml-4" id="dropdown-menu" role="menu" style="min-width: 10rem ">
+                <div class="dropdown-content has-background-none"> 
+                    <a v-for="item in data" :key="item.id" href="#" 
+                        id="select-company" class="dropdown-item  btn btn-letter mt-1 column has-text-left" :class="{'is-active': item.id == companyActual.id}"
+                        >{{item.name}}
+                    </a>
+                </div>
             </div>
         </div>
     </div>
+
+    <div v-show="isMobile==true">
+        <div class="dropdown"  :class="{'is-active ':  activo }" >
+            <div class="dropdown-trigger ">
+                <button @click="activar" id="select-company" class="button btn btn-letter" style="justify-content: center;" aria-haspopup="true" aria-controls="dropdown-menu">
+                    
+                    <span class="column pl-0 has-text-left ">{{companyActual.name}}</span>
+                    <span class="columns   icon is-small">
+                        <i id="select-company" class="  fas fa-chevron-down "></i>
+                    </span>
+                </button>
+            </div>
+            <div class="dropdown-menu  ml-4 " id="dropdown-menu" role="menu" style=" min-width: 10rem ">
+                <div class=" dropdown-content has-background-none "> 
+                    <a v-for="item in data" :key="item.id" href="#" 
+                        id="select-company" class="dropdown-item  btn btn-letter mt-1 column has-text-left" :class="{'is-active ': item.id == companyActual.id}"
+                        >{{item.name}}
+                    </a>
+                </div>
+            </div>
+        </div>
   </div>
 </template>
 
 <script>
 import { ref } from '@vue/reactivity'
+import { inject } from '@vue/runtime-core'
+
 export default {
     name:"ButtonMenuDesp",
-    props:{
+  /*   props:{
         desplegar:Boolean
-    },
+    }, */
  
     setup(){
-   
+        const isMobile = inject('isMobile')
         const activo = ref(false)
        
         // ******* Datos de prueba *******
@@ -65,6 +89,7 @@ export default {
             changeCompany,
             data,
             companyActual,
+            isMobile
          
         }
     }
@@ -86,7 +111,9 @@ export default {
     border-radius: 5px;
     box-shadow: 2px 2px 5px grey;
 }
-
+.tam{
+    height:250px;
+}   
 
 .btn:focus{
     background-color:#005395;
