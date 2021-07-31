@@ -1,7 +1,7 @@
 <template>
-    <div class="conteiner mt-2 py-4">
+    <div class="conteiner mt-2 py-2">
         <div class="head-tablero">
-            <TitleBoard title="Users" />
+            <TitleBoard title="Apps" />
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard/>
@@ -20,7 +20,11 @@ import TitleBoard from '../../components/Board/TitleBoard.vue'
 import HeadBoard from '../../components/Board/HeadBoard.vue'
 import Board from '../../components/Board/Board.vue'
 import Pagination from '../../components/Board/Pagination.vue'
+import ispb from '@/assets/ispb2.png'
+import puwic from '@/assets/puwic2.png'
+import geston from '@/assets/geston2.png'
 import { ref } from '@vue/reactivity'
+
 export default {
     components: {
         TitleBoard,
@@ -33,46 +37,41 @@ export default {
         this.cargarData()
     },
 
-    setup () {
+    setup() {
         const datas = ref([
-            {id: 1, avatar: 'foto', fullName: 'Mauricio Ferreyra', email: 'mauricioferreyra548@gmail.com', created: '24/07/2021', enable: 'yes', activo: false},
-            {id: 2, avatar: 'foto', fullName: 'Luis Ferreyra', email: 'luis548@gmail.com', created: '24/07/2021', enable: 'yes', activo: false},
-            {id: 3, avatar: 'foto', fullName: 'Ema Ferreyra', email: 'emaCorreo@gmail.com', created: '24/07/2021', enable: 'yes', activo: false},
-            {id: 4, avatar: 'foto', fullName: 'Glo Ferreyra', email: 'gloquita@gmail.com', created: '24/07/2021', enable: 'yes', activo: false},
-            {id: 5, avatar: 'foto', fullName: 'Leonardo Ferreyra', email: 'loreto@gmail.com', created: '24/07/2021', enable: 'yes', activo: false},
+           {id: 1, name: 'ISPB', logo: ispb, obvservation: 'Licencia x de ISPB', activo: false},
+           {id: 2, name: 'PuWiC', logo: puwic, obvservation: 'Licencia x de PuWiC', activo: false},
+           {id: 3, name: 'Geston', logo: geston, obvservation: 'Licencia x de Geston', activo: false},
         ])
 
         const datas_aux = ref([])
-        const titles = ref(['Avatar','Full name','Email','Created','Enable'])
+        const titles = ['Name','Logo','Obvservation']
 
-        // Creamos un data auxiliar para pasarlo en el componente como parametro
         const cargarData = () => {
             datas.value.forEach(element => {
-                datas_aux.value.push({valor1: element.id, valor2: element.avatar, valor3: element.fullName,
-                valor4: element.email, valor5: element.created, valor6: element.enable, activo: element.activo})
+                datas_aux.value.push({valor1: element.id, valor2: element.name, valor13: element.logo, valor14: element.obvservation, activo: element.activo})
             })
         }
 
         const modalChildren = (dato) => {
             let aux = datas.value.find(element => element.id == dato.id)
+            console.log(aux)
             aux.activo = dato.valor
             updateRow(aux)
         }
 
         const updateRow = (e) => {
             let aux = datas_aux.value.find(element => element.valor1 == e.id)
-            aux.avatar = e.avatar
-            aux.fullName = e.fullName
-            aux.email = e.email
-            aux.created = e.created
-            aux.enable = e.enable
+            aux.name = e.name
+            aux.logo = e.logo
+            aux.obvservation = e.obvservation
             aux.activo = e.activo
         }
 
         return {
             datas,
-            titles,
             datas_aux,
+            titles,
             cargarData,
             modalChildren,
         }
@@ -81,7 +80,6 @@ export default {
 </script>
 
 <style scoped>
-
 .conteiner {
     width: 76%;
     border: 1px solid #eeeeee;
@@ -95,9 +93,4 @@ export default {
     margin: 5px 0;
     background: #005395;
 }
-
-/* .is-current {
-    background-color: #005395;
-} */
-
 </style>

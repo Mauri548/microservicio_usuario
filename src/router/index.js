@@ -67,6 +67,16 @@ const routes = [
         path: '/PermissionsDashboard',
         name: 'PermissionsDashboard',
         component: () => import(/* webpackChunkName: "PermissionsDashboard" */ '../views/Permissions/PermissionsDashboard.vue')
+      },
+      {
+        path: '/CompaniesDashboard',
+        name: 'CompaniesDashboard',
+        component: () => import(/* webpackChunkName: "CompaniesDashboard" */ '../views/Companies/CompaniesDashboard.vue')
+      },
+      {
+        path: '/AppDashboard',
+        name: 'AppDashboard',
+        component: () => import(/* webpackChunkName: "AppDashboard" */ '../views/Apps/AppDashboard.vue')
       }
     ]
   },
