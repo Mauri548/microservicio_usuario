@@ -8,7 +8,18 @@
             </div>
         </div>
         <div class="body-tablero px-4">
-            <Board :datas="datas_aux" :titles="titles" @onOpenModal="modalChildren" @onCloseModal="modalChildren" />
+            <Board :datas="datas" :titles="titles" >
+                <tr class="has-text-centered" v-for="data in datas" :key="data.id">
+                    <th @click="actionModal(data)">{{data.id}}</th>
+                    <td @click="actionModal(data)">{{data.avatar}}</td>
+                    <td @click="actionModal(data)">{{data.fullName}}</td>
+                    <td @click="actionModal(data)">{{data.email}}</td>
+                    <td @click="actionModal(data)">{{data.created}}</td>
+                    <td @click="actionModal(data)">{{data.enable}}</td>
+                    <Modal :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
+                    <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
+                </tr>
+            </Board>
         </div>
 
         <Pagination/>
@@ -20,6 +31,8 @@ import TitleBoard from '../../components/Board/TitleBoard.vue'
 import HeadBoard from '../../components/Board/HeadBoard.vue'
 import Board from '../../components/Board/Board.vue'
 import Pagination from '../../components/Board/Pagination.vue'
+import Modal from '../../components/Modal.vue'
+import ActionModal from '../../components/Modals/ActionsModal.vue'
 import { ref } from '@vue/reactivity'
 export default {
     components: {
@@ -27,10 +40,8 @@ export default {
         HeadBoard,
         Board,
         Pagination,
-    },
-
-    created() {
-        this.cargarData()
+        Modal,
+        ActionModal,
     },
 
     setup () {
@@ -42,39 +53,25 @@ export default {
             {id: 5, avatar: 'foto', fullName: 'Leonardo Ferreyra', email: 'loreto@gmail.com', created: '24/07/2021', enable: 'yes', activo: false},
         ])
 
-        const datas_aux = ref([])
         const titles = ref(['Avatar','Full name','Email','Created','Enable'])
 
-        // Creamos un data auxiliar para pasarlo en el componente como parametro
-        const cargarData = () => {
-            datas.value.forEach(element => {
-                datas_aux.value.push({valor1: element.id, valor2: element.avatar, valor3: element.fullName,
-                valor4: element.email, valor5: element.created, valor6: element.enable, activo: element.activo})
-            })
+        const actionModal = (data) => {
+            let aux = datas.value.find(element => element.id == data.id)
+            aux.activo = !aux.activo
         }
 
-        const modalChildren = (dato) => {
-            let aux = datas.value.find(element => element.id == dato.id)
-            aux.activo = dato.valor
-            updateRow(aux)
+        const actionModalDelete = (data) => {
+            let aux = datas.value.find(element => element.id == data)
+            aux.activo = false
+            aux.modalDelete = !aux.modalDelete
         }
-
-        const updateRow = (e) => {
-            let aux = datas_aux.value.find(element => element.valor1 == e.id)
-            aux.avatar = e.avatar
-            aux.fullName = e.fullName
-            aux.email = e.email
-            aux.created = e.created
-            aux.enable = e.enable
-            aux.activo = e.activo
-        }
+        
 
         return {
             datas,
             titles,
-            datas_aux,
-            cargarData,
-            modalChildren,
+            actionModal,
+            actionModalDelete
         }
     }
 }

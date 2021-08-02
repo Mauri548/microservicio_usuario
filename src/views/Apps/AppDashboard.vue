@@ -8,8 +8,17 @@
             </div>
         </div>
         <div class="body-tablero px-4">
-            <Board :datas="datas_aux" :titles="titles" @onOpenModal="modalChildren" @onCloseModal="modalChildren" 
-            @openModalDelete="modalChildrenDelete">
+            <Board :datas="datas" :titles="titles">
+                <tr class="has-text-centered" v-for="data in datas" :key="data.id">
+                    <th @click="actionModal(data)" >{{data.id}}</th>
+                    <td @click="actionModal(data)">{{data.name}}</td>
+                    <td @click="actionModal(data)">
+                        <img :src="data.logo" width="40" alt="">
+                    </td>
+                    <td @click="actionModal(data)">{{data.obvservation}}</td>
+                    <Modal :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
+                    <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
+                </tr>
             </Board>
         </div>
 
@@ -22,6 +31,8 @@ import TitleBoard from '../../components/Board/TitleBoard.vue'
 import HeadBoard from '../../components/Board/HeadBoard.vue'
 import Board from '../../components/Board/Board.vue'
 import Pagination from '../../components/Board/Pagination.vue'
+import Modal from '../../components/Modal.vue'
+import ActionModal from '../../components/Modals/ActionsModal.vue'
 import ispb from '@/assets/ispb2.png'
 import puwic from '@/assets/puwic2.png'
 import geston from '@/assets/geston2.png'
@@ -33,10 +44,8 @@ export default {
         HeadBoard,
         Board,
         Pagination,
-    },
-
-    created() {
-        this.cargarData()
+        Modal,
+        ActionModal,
     },
 
     setup() {
@@ -46,45 +55,26 @@ export default {
            {id: 3, name: 'Geston', logo: geston, obvservation: 'Licencia x de Geston', activo: false, modalDelete: false},
         ])
 
-        const datas_aux = ref([])
         const titles = ['Name','Logo','Obvservation']
 
-        const cargarData = () => {
-            datas.value.forEach(element => {
-                datas_aux.value.push({valor1: element.id, valor2: element.name, valor13: element.logo, valor14: element.obvservation, activo: element.activo, modalDelete: element.modalDelete})
-            })
+        const actionModal = (data) => {
+            let aux = datas.value.find(element => element.id == data.id)
+            aux.activo = !aux.activo
         }
 
-        const modalChildren = (dato) => {
-            let aux = datas.value.find(element => element.id == dato.id)
-            aux.activo = dato.valor
-            updateRow(aux)
-        }
-
-        const modalChildrenDelete = (dato) => {
-            console.log(dato + ' abrir3')
-            let aux = datas.value.find(element => element.id == dato.id)
+        const actionModalDelete = (data) => {
+            let aux = datas.value.find(element => element.id == data)
             aux.activo = false
-            aux.modalDelete = dato.valor
-            updateRow(aux)
+            aux.modalDelete = !aux.modalDelete
         }
 
-        const updateRow = (e) => {
-            let aux = datas_aux.value.find(element => element.valor1 == e.id)
-            aux.name = e.name
-            aux.logo = e.logo
-            aux.obvservation = e.obvservation
-            aux.activo = e.activo
-            aux.modalDelete = e.modalDelete
-        }
 
         return {
             datas,
-            datas_aux,
             titles,
-            cargarData,
-            modalChildren,
-            modalChildrenDelete,
+
+            actionModal,
+            actionModalDelete
         }
     }
 }

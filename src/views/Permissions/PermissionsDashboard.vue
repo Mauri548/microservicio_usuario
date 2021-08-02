@@ -8,7 +8,16 @@
             </div>
         </div>
         <div class="body-tablero px-4">
-            <Board :datas="datas_aux" :titles="titles" @onOpenModal="modalChildren" @onCloseModal="modalChildren" />
+            <Board :datas="datas" :titles="titles" >
+                <tr class="has-text-centered" v-for="data in datas" :key="data.id">
+                    <th @click="actionModal(data)">{{data.id}}</th>
+                    <td @click="actionModal(data)">{{data.app}}</td>
+                    <td @click="actionModal(data)">{{data.key}}</td>
+                    <td @click="actionModal(data)">{{data.detail}}</td>
+                    <Modal :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
+                    <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
+                </tr>
+            </Board>
         </div>
         <Pagination/>
     </div>
@@ -19,6 +28,8 @@ import TitleBoard from '../../components/Board/TitleBoard.vue'
 import HeadBoard from '../../components/Board/HeadBoard.vue'
 import Board from '../../components/Board/Board.vue'
 import Pagination from '../../components/Board/Pagination.vue'
+import Modal from '../../components/Modal.vue'
+import ActionModal from '../../components/Modals/ActionsModal.vue'
 import { ref } from '@vue/reactivity'
 export default {
     components: {
@@ -26,10 +37,8 @@ export default {
         HeadBoard,
         Board,
         Pagination,
-    },
-
-    created() {
-        this.cargarData()
+        Modal,
+        ActionModal,
     },
 
     setup() {
@@ -47,35 +56,24 @@ export default {
             
         ])
 
-        const datas_aux = ref([])
         const titles = ref(['App','Key','Detail'])
 
-        const cargarData = () => {
-            datas.value.forEach(element => {
-                datas_aux.value.push({valor1: element.id, valor2: element.app, valor3: element.key, valor4: element.detail})
-            })
+        const actionModal = (data) => {
+            let aux = datas.value.find(element => element.id == data.id)
+            aux.activo = !aux.activo
         }
 
-        const modalChildren = (dato) => {
-            let aux = datas.value.find(element => element.id == dato.id)
-            aux.activo = dato.valor
-            updateRow(aux)
-        }
-
-        const updateRow = (e) => {
-            let aux = datas_aux.value.find(element => element.valor1 == e.id)
-            aux.app = e.app,
-            aux.key = e.key,
-            aux.detail = e.detail,
-            aux.activo = e.activo
+        const actionModalDelete = (data) => {
+            let aux = datas.value.find(element => element.id == data)
+            aux.activo = false
+            aux.modalDelete = !aux.modalDelete
         }
 
         return {
             datas,
             titles,
-            datas_aux,
-            cargarData,
-            modalChildren,
+            actionModal,
+            actionModalDelete
         }
     }
 }

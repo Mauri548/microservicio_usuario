@@ -2,7 +2,7 @@
     <div class="modal" :class="{'is-active':data.activo}">
         <div class="modal-background" @click="closeModal(data)"></div>
         <div class="modal-content has-background-white">
-            <h1 class="has-text-centered has-text-weight-semibold is-size-4">Actions</h1>
+            <h1 class="has-text-centered has-text-weight-semibold is-size-4">Actions </h1>
             <hr class="my-3">
             <button class="button btn-crenein w-100 my-1">
                 <span class="icon is-small">
@@ -25,18 +25,15 @@
 export default {
     name: 'Modal',
     props: ['data'],
-    emits: ['onCloseModal','onOpenModal'],
+    emits: ['onCloseModal','onOpenModalDelete'],
 
     setup(props, { emit }) {
-        // console.log(props.data)
         const closeModal = (e) => {
-            console.log('close ' + e.valor1)
-            emit("onCloseModal", {id: e.valor1, valor: false})
+            emit("onCloseModal", {id: e.id, valor: false})
         }
 
         const openModalDelete = (e) => {
-            console.log('abrir')
-            emit("onOpenModal", {id: e.valor1, valor: true})
+            emit("onOpenModalDelete", e.id)
         }
 
         return {
