@@ -10,11 +10,11 @@
                 </span>
                 <span>Edit</span>
             </button>
-            <button class="button btn-delete w-100 my-1" >
-            <span class="icon is-small">
-                <i class="fas fa-trash-alt"></i>
-            </span>
-            <span>Delete</span>
+            <button @click="openModalDelete(data)" class="button btn-delete w-100 my-1">
+                <span class="icon is-small">
+                    <i class="fas fa-trash-alt"></i>
+                </span>
+                <span>Delete</span>
             </button>
         </div>
         <button @click="closeModal(data)" class="modal-close is-large" aria-label="close"></button>
@@ -25,7 +25,7 @@
 export default {
     name: 'Modal',
     props: ['data'],
-    emits: ['onCloseModal'],
+    emits: ['onCloseModal','onOpenModal'],
 
     setup(props, { emit }) {
         // console.log(props.data)
@@ -34,8 +34,14 @@ export default {
             emit("onCloseModal", {id: e.valor1, valor: false})
         }
 
+        const openModalDelete = (e) => {
+            console.log('abrir')
+            emit("onOpenModal", {id: e.valor1, valor: true})
+        }
+
         return {
-            closeModal
+            closeModal,
+            openModalDelete,
         }
     }
 }

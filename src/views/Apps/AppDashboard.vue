@@ -8,7 +8,9 @@
             </div>
         </div>
         <div class="body-tablero px-4">
-            <Board :datas="datas_aux" :titles="titles" @onOpenModal="modalChildren" @onCloseModal="modalChildren" />
+            <Board :datas="datas_aux" :titles="titles" @onOpenModal="modalChildren" @onCloseModal="modalChildren" 
+            @openModalDelete="modalChildrenDelete">
+            </Board>
         </div>
 
         <Pagination/>
@@ -39,9 +41,9 @@ export default {
 
     setup() {
         const datas = ref([
-           {id: 1, name: 'ISPB', logo: ispb, obvservation: 'Licencia x de ISPB', activo: false},
-           {id: 2, name: 'PuWiC', logo: puwic, obvservation: 'Licencia x de PuWiC', activo: false},
-           {id: 3, name: 'Geston', logo: geston, obvservation: 'Licencia x de Geston', activo: false},
+           {id: 1, name: 'ISPB', logo: ispb, obvservation: 'Licencia x de ISPB', activo: false, modalDelete: false},
+           {id: 2, name: 'PuWiC', logo: puwic, obvservation: 'Licencia x de PuWiC', activo: false, modalDelete: false},
+           {id: 3, name: 'Geston', logo: geston, obvservation: 'Licencia x de Geston', activo: false, modalDelete: false},
         ])
 
         const datas_aux = ref([])
@@ -49,14 +51,21 @@ export default {
 
         const cargarData = () => {
             datas.value.forEach(element => {
-                datas_aux.value.push({valor1: element.id, valor2: element.name, valor13: element.logo, valor14: element.obvservation, activo: element.activo})
+                datas_aux.value.push({valor1: element.id, valor2: element.name, valor13: element.logo, valor14: element.obvservation, activo: element.activo, modalDelete: element.modalDelete})
             })
         }
 
         const modalChildren = (dato) => {
             let aux = datas.value.find(element => element.id == dato.id)
-            console.log(aux)
             aux.activo = dato.valor
+            updateRow(aux)
+        }
+
+        const modalChildrenDelete = (dato) => {
+            console.log(dato + ' abrir3')
+            let aux = datas.value.find(element => element.id == dato.id)
+            aux.activo = false
+            aux.modalDelete = dato.valor
             updateRow(aux)
         }
 
@@ -66,6 +75,7 @@ export default {
             aux.logo = e.logo
             aux.obvservation = e.obvservation
             aux.activo = e.activo
+            aux.modalDelete = e.modalDelete
         }
 
         return {
@@ -74,6 +84,7 @@ export default {
             titles,
             cargarData,
             modalChildren,
+            modalChildrenDelete,
         }
     }
 }

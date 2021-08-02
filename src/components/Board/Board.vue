@@ -22,12 +22,14 @@
                     <td v-if="data.valor11" @click="openModal(data)" >{{data.valor11}}</td>
                     <td v-if="data.valor12" @click="openModal(data)" >{{data.valor12}}</td>
                     <td v-if="data.valor13" @click="openModal(data)" >
-                        <img :src="data.valor13" width="45" alt="">
+                        <img :src="data.valor13" width="40" alt="">
                     </td>
                     <td v-if="data.valor14" @click="openModal(data)" >{{data.valor14}}</td>
 
 
-                    <Modal :data="data" @onCloseModal="closeModal" />
+                    <Modal :data="data" @onCloseModal="closeModal" @onOpenModal="openModalDelete" />
+                    <ActionModal :data="data" />
+
                 </tr>
             </tbody>
         </table>
@@ -36,19 +38,26 @@
 
 <script>
 import Modal from '../Modal.vue'
+import ActionModal from '../Modals/ActionsModal.vue'
 
 export default {
     name: 'Board',
     components: {
-        Modal
+        Modal,
+        ActionModal,
     },
 
     props: ['datas','titles'],
-    emits: ['onOpenModal','onCloseModal'],
+    emits: ['onOpenModal','onCloseModal','openModalDelete'],
 
     setup(props, { emit }) {
         const openModal = (e) => {
             emit("onOpenModal", {id: e.valor1, valor: true})
+        }
+
+        const openModalDelete = (e) => {
+            console.log('abrir2')
+            emit("openModalDelete", e)
         }
 
         const closeModal = (e) => {
@@ -58,6 +67,7 @@ export default {
         return{
             openModal,
             closeModal,
+            openModalDelete,
         }
     }
 }
