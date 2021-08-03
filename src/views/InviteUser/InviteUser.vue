@@ -2,8 +2,7 @@
   
         <div class="column  is-half is-offset-one-quarter mt-5 " >
 
-          
-            <div class="column">
+            <div class="column has-text-centered " >
 
                 <h2  style="font-weight:bold; font-size:1.6em">There is only one more step left!
                 invite users to your company to 
@@ -17,37 +16,12 @@
                    
                 </div>
                 <button class=" mt-4 px-6 button btn">Continue</button>
+
             </div>
+    
+
         
         </div>
-
-
-     <!--    <div v-show="isMobile==true" class="column  is-half is-offset-one-quarter mt-5 ancho" >
-
-            <h2 class="column" style="font-weight:bold;">There is only one more step left!
-                invite users to your company to 
-                help you manage it</h2>
-            <div class="column is-mobile ">
-
-                <h3 class="mt-2">Ingrese el email de la persona que deseas invitar</h3>
-
-                <div class=" field has-addons margen-campo "  >
-                    <div class="control ancho-campo" >
-                        <input class="input" type="text" placeholder="Email">
-                    </div>
-                    <div class="control">
-                        <button class="button is-info">
-                            Send
-                        </button>
-                    </div>   
-                
-                </div>
-
-                <button class=" mt-4 px-6 button btn">Continue</button>
-
-            </div>
-        
-        </div> -->
 
 
 </template>
