@@ -1,15 +1,16 @@
 <template>
   <div>
     <Navbar />
-   <!--  <NavbarV /> -->
-    <InviteUser />
+  
+  <!--   <InviteUser /> -->
 
 
-
-    <div class="is-flex mt-5">
+ <div class="is-flex mt-5">
       <NavbarV />
+     
+
       <router-view/>
-    </div>
+    </div> 
 
   </div>
 </template>
