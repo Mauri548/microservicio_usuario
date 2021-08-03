@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navbar />
- <!--    <NavbarV /> -->
+   <!--  <NavbarV /> -->
     <InviteUser />
 
 

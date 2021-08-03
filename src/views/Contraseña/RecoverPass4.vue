@@ -1,6 +1,5 @@
 <template>
   
-
     <div class="column tam-box mt-2 container is-centered  ">
         <div class="column title-box">
             <h2 class="color-letras">Recover your password</h2>
@@ -13,10 +12,7 @@
                 <button class=" button tam-btn color-letras title-box ">Accept</button>
             </div>
         </div>
-        
-
     </div>
-
 
 </template>
 
