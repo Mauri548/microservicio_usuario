@@ -40,7 +40,7 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  /* text-align: center; */
   color: #2c3e50;
 }
 
@@ -55,4 +55,21 @@ export default {
 .w-100{
   width: 100%;
 }
+
+.shadow {
+  box-shadow: 0px 0px 12px 1px;
+  border-radius: 5px;
+}
+
+.btn-crenein {
+  background: #005395;
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn-crenein:hover {
+  background: #0572ca;
+  color: #fff;
+}
+
 </style>

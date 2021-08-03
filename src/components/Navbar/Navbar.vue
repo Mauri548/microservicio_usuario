@@ -78,7 +78,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .navbar-item img {
   max-height: 2.5rem;
 }
@@ -92,9 +92,6 @@ export default {
   box-shadow: 0px 4px 4px 0px rgb(0, 0, 0, 25%);
 }
 
-.circle{
-  border-radius: 50%;
-}
 
 .group-navbar{
   display: flex;
@@ -103,13 +100,4 @@ export default {
   margin-left: auto;
 }
 
-.menu-app {
-  font-size: 23px;
-  color: #A9A9A9;
-}
-
-.shadow {
-  box-shadow: 0px 0px 12px 1px;
-  border-radius: 5px;
-}
 </style>

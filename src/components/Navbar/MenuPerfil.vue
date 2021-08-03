@@ -14,7 +14,8 @@
                 <p class="is-size-7 has-text-grey close-perfil">Company: Crenein</p>
                 <div class="buttons-perfil my-1 close-perfil">
                     <button class="button fondo-crenein has-text-white is-size-7 w-100 my-2 has-text-weight-bold">Manage your Crenein Acount</button>
-                    <button class="button fondo-crenein has-text-white is-size-7 w-100 my-1 has-text-weight-bold">Create Company</button>
+                    <router-link :to="{name: 'CreateCompany'}" class="button fondo-crenein has-text-white is-size-7 w-100 my-1 has-text-weight-bold">Create Company</router-link>
+                    <!-- <button class="button fondo-crenein has-text-white is-size-7 w-100 my-1 has-text-weight-bold">Create Company</button> -->
                 </div>
                 <hr>
                 <div>
@@ -67,12 +68,16 @@ export default {
     margin: auto;
 }
 
-.buttons-perfil button {
+.buttons-perfil .button {
     border-radius: 15px;
 }
 
-.buttons-perfil button:hover {
+.buttons-perfil .button:hover {
     background-color: #0572ca;
+}
+
+.circle{
+  border-radius: 50%;
 }
 
 </style>

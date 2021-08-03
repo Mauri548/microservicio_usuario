@@ -38,12 +38,6 @@ const routes = [
   } 
   ,
   {
-    path: '/PersonalForm',
-    name: 'PersonalForm',
-    component: () => import(/* webpackChunkName: "about" */ '../components/PersonalInfo/PersonalForm.vue')
-  } 
-  ,
-  {
     path: '/Action',
     name: 'ActionsModal',
     component: () => import(/* webpackChunkName: "about" */ '../components/Modals/ActionsModal.vue')
@@ -54,7 +48,36 @@ const routes = [
     name: 'Home',
     component: Home,
     children:[
-      
+      {
+        path: '/PersonalForm',
+        name: 'PersonalForm',
+        component: () => import(/* webpackChunkName: "about" */ '../components/PersonalInfo/PersonalForm.vue')
+      },
+      {
+        path: '/CreateCompany',
+        name: 'CreateCompany',
+        component: () => import(/* webpackChunkName: "CreateCompany" */ '../views/CreateCompany.vue')
+      },
+      {
+        path: '/UserDashboard',
+        name: 'UserDashboard',
+        component: () => import(/* webpackChunkName: "UserDashboard" */ '../views/Users/UserDashboard.vue')
+      },
+      {
+        path: '/PermissionsDashboard',
+        name: 'PermissionsDashboard',
+        component: () => import(/* webpackChunkName: "PermissionsDashboard" */ '../views/Permissions/PermissionsDashboard.vue')
+      },
+      {
+        path: '/CompaniesDashboard',
+        name: 'CompaniesDashboard',
+        component: () => import(/* webpackChunkName: "CompaniesDashboard" */ '../views/Companies/CompaniesDashboard.vue')
+      },
+      {
+        path: '/AppDashboard',
+        name: 'AppDashboard',
+        component: () => import(/* webpackChunkName: "AppDashboard" */ '../views/Apps/AppDashboard.vue')
+      }
     ]
   },
  

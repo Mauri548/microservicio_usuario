@@ -1,15 +1,13 @@
 <template>
   
 
-
-
-    <div v-show="isMobile==false">
-        <div class="columns ">
-            <div class="column is-flex-grow-0  has-text-left ml-5 mt-5">
-                <ButtonMenu nombre="Home"  />
-                <ButtonMenu nombre="Personal info"  />
-                <ButtonMenu nombre="Permissions management"  />
-                <ButtonMenuDesp  />
+    <div v-show="isMobile==false" style="width: 22%">
+        <div class="columns is-mobile">
+            <div class="column is-flex-grow-0  has-text-left mx-5 ">
+                <ButtonMenu   nombre="Home" class="mt-2" />
+                <ButtonMenu   nombre="Personal info" class="mt-2" />
+                <ButtonMenu   nombre="Permissions management" class="mt-2" />
+                <ButtonMenuDesp    class="mt-2"  />
             </div>
 
         </div>

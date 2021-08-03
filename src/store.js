@@ -10,7 +10,7 @@ const store = createStore({
     mutations: {
         onResize(state) {
             window.screen.width < 1024 ? state.isMobile = true : state.isMobile = false;
-        }
+        },
     }
 });
 
