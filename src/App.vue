@@ -72,4 +72,26 @@ export default {
   color: #fff;
 }
 
+/* style de tablero */
+.conteiner-tablero {
+  width: 79%;
+  border: 1px solid #eeeeee;
+}
+
+.conteiner-tablero .head-tablero, .conteiner-tablero .body-tablero, .conteiner-tablero .conteiner-pagination {
+  width: 100%;
+}
+
+.conteiner-tablero div hr {
+  margin: 5px 0;
+  background: #005395;
+}
+
+@media (max-width: 1024px) {
+  .conteiner-tablero {
+    width: 98%;
+    margin: auto;
+  }
+}
+
 </style>

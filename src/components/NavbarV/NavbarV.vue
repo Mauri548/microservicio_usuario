@@ -4,7 +4,8 @@
         <aside class="menu mx-3">
             <ul class="menu-list">
                 <li><a class="is-active">Home</a></li>
-                <li><a>Personal Info</a></li>
+                <!-- <li><a>Personal Info</a></li> -->
+                <li><router-link :to="{name: 'PersonalForm'}" >Personal Info</router-link></li>
                 <li><a>Permissions management</a></li>
                 <li><a class="companyOption btn-company" @click="ActionShowCompanyOption">
                     <span class="column has-text-left ">Company</span>
@@ -13,9 +14,12 @@
                     </span>
                 </a>
                     <ul v-show="showCompanyOption" >
-                        <li><a class="companyOption">Companies management</a></li>
-                        <li><a class="companyOption">Apps management</a></li>
-                        <li><a class="companyOption">Permissions management</a></li>
+                        <!-- <li><a class="companyOption">Companies management</a></li> -->
+                        <li><router-link :to="{name: 'CompaniesDashboard'}">Companies management</router-link></li>
+                        <!-- <li><a class="companyOption">Apps management</a></li> -->
+                        <li><router-link :to="{name: 'AppDashboard'}">Apps management</router-link></li>
+                        <!-- <li><a class="companyOption">Permissions management</a></li> -->
+                        <li><router-link :to="{name: 'PermissionsDashboard'}">Permissions management</router-link></li>
                     </ul>
                 </li>
             </ul>
