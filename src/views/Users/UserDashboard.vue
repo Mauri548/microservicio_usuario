@@ -80,7 +80,7 @@ export default {
 <style scoped>
 
 .conteiner {
-    width: 76%;
+    width: 79%;
     border: 1px solid #eeeeee;
 }
 
@@ -91,6 +91,12 @@ export default {
 .conteiner div hr {
     margin: 5px 0;
     background: #005395;
+}
+
+@media (max-width: 1024px) {
+    .conteiner {
+        width: 100%;
+    }
 }
 
 /* .is-current {

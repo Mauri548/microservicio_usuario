@@ -2,13 +2,11 @@
   <div>
     <Navbar />
   
-  <!--   <InviteUser /> -->
+    <!-- <InviteUser /> -->
 
-
- <div class="is-flex mt-5">
+    <div class="contenedor-principal mt-5">
       <NavbarV />
      
-
       <router-view/>
     </div> 
 
@@ -29,3 +27,16 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.contenedor-principal {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* @media (max-width: 1024px) {
+  .contenedor-principal {
+    width: 100%;
+  }
+} */
+</style>

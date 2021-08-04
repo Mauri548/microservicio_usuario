@@ -26,6 +26,16 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+
+.columns {
+    display: flex;
+}
+
+@media (max-width: 425px) {
+    .columns {
+        flex-direction: column;
+    }
+}
 
 </style>

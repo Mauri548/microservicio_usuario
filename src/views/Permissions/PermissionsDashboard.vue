@@ -81,7 +81,7 @@ export default {
 
 <style scoped>
 .conteiner {
-    width: 76%;
+    width: 79%;
     border: 1px solid #eeeeee;
 }
 
