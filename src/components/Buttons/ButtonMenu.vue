@@ -26,6 +26,13 @@ export default {
 
 <style scoped>
 
+div {
+    width: 100%;
+}
+
+.button {
+    white-space: normal;
+}
 
 .btn-letter{
     color:#005395;
@@ -33,11 +40,14 @@ export default {
 
 .btn {
     justify-content: flex-start;
-    width:240px;
-    height:50px;
+    width: 100%;
+    /* width:240px;
+    height:50px; */
     background-color:white;
     border-radius: 5px;
     box-shadow: 2px 2px 5px grey;
+    text-align: start;
+    line-height: normal;
 }
 
 .btn:focus{

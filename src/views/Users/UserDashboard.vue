@@ -1,5 +1,5 @@
 <template>
-    <div class="conteiner mt-2 py-4">
+    <div class="conteiner-tablero mt-2 py-4">
         <div class="head-tablero">
             <TitleBoard title="Users" />
             <hr>
@@ -77,21 +77,9 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 
-.conteiner {
-    width: 76%;
-    border: 1px solid #eeeeee;
-}
 
-.conteiner .head-tablero, .conteiner .body-tablero, .conteiner .conteiner-pagination {
-    width: 100%;
-}
-
-.conteiner div hr {
-    margin: 5px 0;
-    background: #005395;
-}
 
 /* .is-current {
     background-color: #005395;

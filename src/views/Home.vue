@@ -7,9 +7,10 @@
       <AddPermission />
      <!--  <InviteUser />  -->
 
-   <!--    <div class="is-flex mt-5">
-        <NavbarV />
-        <router-view/>
+
+  <!--<div class="contenedor-principal mt-5">
+          <NavbarV />
+          <router-view/>
       </div>  -->
   </div>
 </template>
@@ -38,3 +39,16 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.contenedor-principal {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* @media (max-width: 1024px) {
+  .contenedor-principal {
+    width: 100%;
+  }
+} */
+</style>
