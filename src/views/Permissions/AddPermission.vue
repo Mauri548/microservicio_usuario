@@ -30,9 +30,9 @@
             
         </section>
         <footer class="modal-card-foot  has-background-white">
-            <div class="column has-text-centered">
-                <button class="button  blue-crenein">Save changes</button>
-                <button class="button has-background-danger has-text-white" @click="activar">Cancel</button>
+            <div class="column has-text-centered" >
+                <button class="button  has-text-white " style="background-color:#005395; font-weight:bold;" >Save changes</button>
+                <button class="button has-background-danger has-text-white"  style="font-weight:bold;" @click="activar">Cancel</button>
             </div>
         </footer>
     </div>
