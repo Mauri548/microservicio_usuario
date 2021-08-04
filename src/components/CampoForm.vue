@@ -20,13 +20,11 @@ export default {
 <style scoped>
 
 form {
-  /* Temp */
+
   padding: 1rem;
   background-color: #fff;
-/*   border: 1px solid #ddd;
-  border-radius: 4px; */
   width: 22rem;
-  /* End Temp */
+
 }
 .form-row {
   margin-bottom: 1rem;
