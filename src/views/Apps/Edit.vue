@@ -56,20 +56,20 @@
     </div>
     
     <div v-show="isMobile==true">
-        <form action="" class="column mt-1">
+        <form action="" class="column has-text-centered  mt-5 ml-6">
 
             <div class="column has-text-centered blue-crenein">
                <h2 style="font-size:1.5em; font-weight:bold;" >Edit App</h2>
             </div>    
 
-            <div class="columns ">
+            
                 <div class="column  label ">Logo</div>
                 <div class="column  " style="font">
                         <img class=" iamge  imgred" width="200" height="200" src="https://bulma.io/images/placeholders/128x128.png">
                 </div>
-            </div>
-            <div class="file column has-name is-fullwidth is-right">
-                <label class="file-label">
+            
+            <div class="file columns has-name  is-right">
+                <label class="column file-label">
                     <input class="file-input" type="file" name="resume">
                     <span class="file-cta">
                     <span class="file-icon">
