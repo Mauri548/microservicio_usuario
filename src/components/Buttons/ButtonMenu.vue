@@ -1,67 +1,41 @@
 <template>
-    <div v-show="isMobile==false">
-        <a href="#" class="button btn btn-letter mb-1" >{{nombre}}</a>
-    </div>
-    <div v-show="isMobile==true">
-      <a href="#" class="button btn btn-letter " style="justify-content: center;">{{nombre}}</a>
-    </div>
-  
+    <li>
+        <!-- <a :class="{'is-active':data.activo}" :to="{name: data.path}" >{{data.name}}</a> -->
+    </li>
 </template>
 
 <script>
-
-import { inject } from '@vue/runtime-core'
 export default {
-    name:"ButtonMenu",
-    props:['nombre'],
-    setup(){
-        const isMobile = inject('isMobile')
+    name: 'ButtonMenu',
+    props: ['data'],
+    emits: ['onActive'],
 
-        return { 
-            isMobile
+    setup(props, {emits}) {
+        const activar = (data) => {
+            emits("onActive", data.id)
         }
     }
 }
 </script>
 
 <style scoped>
-
-div {
-    width: 100%;
+a:hover {
+    border: 1px solid #005395;
+    color: #005395;
 }
-
-.button {
-    white-space: normal;
-}
-
-.btn-letter{
-    color:#005395;
-}
-
-.btn {
-    justify-content: flex-start;
-    width: 100%;
-    /* width:240px;
-    height:50px; */
-    background-color:white;
-    border-radius: 5px;
-    box-shadow: 2px 2px 5px grey;
-    text-align: start;
-    line-height: normal;
-}
-
-.btn:focus{
-    background-color:#005395;
-    color:white;
-}
-
-.btn:hover{
-    background-color:white;
-    color:#005395;
-    border-color: #005395;
+a.is-active {
+    background-color: #005395;
+    color: #fff
 }
 
 
-
-
+@media screen and (min-width: 1025px) {
+    a {
+        margin: 0 0 8px 0;
+        box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        color: #005395;
+        border: 1px solid #fff
+    }
+}
 </style>

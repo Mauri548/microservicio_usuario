@@ -6,7 +6,7 @@
             </a>
         </div>
         <div class="dropdown-menu shadow close-perfil" id="dropdown-menu" role="menu" style="width: 18rem">
-            <div class="dropdown-content close-perfil">
+            <div class="dropdown-content close-perfil has-text-centered">
                 <div class="mt-5 mb-2 close-perfil">
                     <img class="circle close-perfil" src="@/assets/perfil.jpg" alt="" style="max-height: 6rem;">
                 </div>

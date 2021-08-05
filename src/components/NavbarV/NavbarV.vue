@@ -3,23 +3,19 @@
     <div class="conteiner-nabvarV">
         <aside class="menu mx-3">
             <ul class="menu-list">
-                <li><a class="is-active">Home</a></li>
-                <!-- <li><a>Personal Info</a></li> -->
-                <li><router-link :to="{name: 'PersonalForm'}" >Personal Info</router-link></li>
-                <li><a>Permissions management</a></li>
-                <li><a class="companyOption btn-company" @click="ActionShowCompanyOption">
+                <li><a class="menu-link is-active">Home</a></li>
+                <li><a class="menu-link" @click="push('PersonalForm')">Personal Info</a></li>
+                <li><a class="menu-link">Permissions management</a></li>
+                <li><a class="menu-link companyOption btn-company" @click="ActionShowCompanyOption">
                     <span class="column has-text-left ">Company</span>
-                    <span class="column  has-text-right  icon is-small">
+                    <span class="column has-text-right  icon is-small">
                         <i  class="fas fa-chevron-down"></i>
                     </span>
                 </a>
                     <ul v-show="showCompanyOption" >
-                        <!-- <li><a class="companyOption">Companies management</a></li> -->
-                        <li><router-link :to="{name: 'CompaniesDashboard'}">Companies management</router-link></li>
-                        <!-- <li><a class="companyOption">Apps management</a></li> -->
-                        <li><router-link :to="{name: 'AppDashboard'}">Apps management</router-link></li>
-                        <!-- <li><a class="companyOption">Permissions management</a></li> -->
-                        <li><router-link :to="{name: 'PermissionsDashboard'}">Permissions management</router-link></li>
+                        <li><a class="menu-link" @click="push('CompaniesDashboard')">Companies management</a></li>
+                        <li><a class="menu-link" @click="push('AppDashboard')">Apps management</a></li>
+                        <li><a class="menu-link" @click="push('PermissionsDashboard')">Permissions management</a></li>
                     </ul>
                 </li>
             </ul>
@@ -30,31 +26,43 @@
 
 <script>
 
-import ButtonMenu from '../../components/Buttons/ButtonMenu.vue'
-import ButtonMenuDesp from '../../components/Buttons/ButtonMenuDesp.vue'
-import PersonalForm from '../../components/PersonalInfo/PersonalForm.vue'
 import {ref} from '@vue/reactivity' 
 import { onMounted } from '@vue/runtime-core'
+import { useRouter } from 'vue-router'
 
 
 export default {
     name:'NavbarV',
-    components: {
-        ButtonMenu,
-        ButtonMenuDesp,
-        PersonalForm,
-    },
-    setup(){
 
-        // ************ Prueba ************
+    setup(){
+        // const paths = ref([
+        //     {id: 1, name: 'Home', namePath: '', activo: true, padre: false},
+        //     {id: 2, name: 'Personal Info', namePath: 'PersonalForm', activo: false, padre: false},
+        //     {id: 3, name: 'Permissions management', namePath: '', activo: false, padre: false},
+        //     {id: 4, name: 'Company', activo: false, padre: true, paths: [
+        //         {id: 5, name: 'Companies management', namePath: 'CompaniesDashboard', activo: false},
+        //         {id: 6, name: 'Apps management', namePath: 'AppDashboard', activo: false},
+        //         {id: 7, name: 'Permissions management', namePath: 'PermissionsDashboard', activo: false},
+        //     ]}
+        // ])
+
+        const router = useRouter()
+
+        const push = (path) => {
+            router.push({name: path})
+        }
+
         const showCompanyOption = ref(false)
 
         const ActionShowCompanyOption = () => {
             showCompanyOption.value = !showCompanyOption.value
         }
 
+        // Le damos una funcion a cada etiqueta "a" para que pueda agregar o quitar la clase "is-active"
+        // esta funcion se crea dentro de onMounted() porque el template no se carga todavia entonces debe de 
+        // esperar a que este cargado para agregar los elementos del html
         onMounted(() => {
-            const item = document.querySelectorAll('a')
+            const item = document.querySelectorAll('.menu-link')
             console.log(item)
             item.forEach((element, index) => {
                 item[index].addEventListener('click', () => {
@@ -68,66 +76,18 @@ export default {
         })
 
         // document.addEventListener('click', function(e) {
-        //     let clic = e.target.className
-        //     if (!clic.includes('companyOption')) {
-        //         showCompanyOption.value = false
-        //     }
+            // let clic = e.target
+            // console.log(e.target)
+            // if (!clic.includes('companyOption')) {
+            //     showCompanyOption.value = false
+            // }
         // }, false)
-
-        // ********************************
-        
-      
-        // const data = ref([
-        //     {id: 1, name: 'Companies management'},{id: 2, name: 'User management'}, {id: 3, name: 'Apps management'},
-        //     {id: 4, name: 'Permissions management'}
-        // ])
-        // const companyActual = ref({id: 0, name: 'Company'})
-     
-
-        // const activo = ref(false)
-
-        // const changeCompany = (id) => {
-        //     let aux = data.value.find(element => element.id == id)
-        //     companyActual.value = aux
-        // }
-
-        // const activar = () => {
-        //     activo.value = !activo.value
-        // }
-        // const Desact = () => {
-        //     activo.value = false
-        //     document.getElementById("menu-desp").style.display = 'none'; 
-        // }
-
-
-        // const  Ocultar = () => 
-        // {
-            
-        //     if(activo.value == true){
-        //         document.getElementById("menu-desp").style.display = 'none'; 
-        //         activo.value = !activo.value
-        //     }else{
-        //         activo.value = !activo.value
-        //         document.getElementById("menu-desp").style.display = 'block'; 
-        //     }
-            
-        // }
 
        
         return {
             showCompanyOption,
             ActionShowCompanyOption,
-
-        //  Ocultar,
-        //     isMobile,
-        //     activo,
-        //     activar,
-        //     changeCompany,
-        //     Desact ,
-        //     data,
-        //     companyActual,
-
-          
+            push,
         }
     } 
 }

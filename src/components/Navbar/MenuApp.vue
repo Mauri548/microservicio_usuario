@@ -8,7 +8,7 @@
             </button>  
         </div>
         <div class="dropdown-menu shadow close-apps" id="dropdown-menu" role="menu" style="width: 18rem">
-            <div class="dropdown-content close-apps">
+            <div class="dropdown-content close-apps has-text-centered">
                 <h2 class="blue-crenein has-text-weight-medium close-apps">Crenein products</h2>
                 <hr class="my-1 close-apps">
                 <div class="p-4 is-flex is-flex-direction-column is-align-items-flex-start close-apps">
