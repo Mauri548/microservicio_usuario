@@ -7,7 +7,8 @@
             <Searcher/>
         </div>
         <div class="column has-text-right">
-            <button @click="push" class="button btn-crenein">+ Add</button>
+            <button v-if="buttonDefault" @click="push" class="button btn-crenein">+ Add</button>
+            <slot></slot>
             <button class="button btn-crenein">More options</button>
         </div>
     </div>
@@ -24,10 +25,18 @@ export default {
         ShowRows,
         Searcher,
     },
-    props: ['namePath'],
+    // props: ['namePath'],
+    props: {
+        namePath: String,
+        buttonDefault: {
+            type: Boolean,
+            default: true
+        }
+    },
 
     setup(props) {
         const router = useRouter()
+        console.log(props.buttonDefault)
 
         const push = () => {
             router.push({name: props.namePath})
