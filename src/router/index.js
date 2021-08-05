@@ -77,6 +77,16 @@ const routes = [
         path: '/AppDashboard',
         name: 'AppDashboard',
         component: () => import(/* webpackChunkName: "AppDashboard" */ '../views/Apps/AppDashboard.vue')
+      },
+      {
+        path: '/EditApp/:id',
+        name: 'EditApp',
+        component: () => import(/* webpackChunkName: "EditApp" */ '../views/Apps/Edit.vue')
+      },
+      {
+        path: '/AddApp',
+        name: 'AddApp',
+        component: () => import(/* webpackChunkName: "AddApp" */ '../views/Apps/Add.vue')
       }
     ]
   },

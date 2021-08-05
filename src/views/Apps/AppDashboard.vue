@@ -4,7 +4,7 @@
             <TitleBoard title="Apps" />
             <hr>
             <div class="body-tablero my-3 px-4">
-                <HeadBoard/>
+                <HeadBoard namePath="AddApp" />
             </div>
         </div>
         <div class="body-tablero px-4">
@@ -16,7 +16,7 @@
                         <img :src="data.logo" width="40" alt="">
                     </td>
                     <td @click="actionModal(data)">{{data.obvservation}}</td>
-                    <Modal :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
+                    <Modal namePath="EditApp" :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>

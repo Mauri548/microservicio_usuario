@@ -7,7 +7,7 @@
             <Searcher/>
         </div>
         <div class="column has-text-right">
-            <button class="button btn-crenein">+ Add</button>
+            <button @click="push" class="button btn-crenein">+ Add</button>
             <button class="button btn-crenein">More options</button>
         </div>
     </div>
@@ -16,12 +16,24 @@
 <script>
 import ShowRows from './ShowRows.vue'
 import Searcher from './Searcher.vue'
+import { useRouter } from 'vue-router'
 
 export default {
     name: 'HeadBoard',
     components: {
         ShowRows,
         Searcher,
+    },
+    props: ['namePath'],
+
+    setup(props) {
+        const router = useRouter()
+
+        const push = () => {
+            router.push({name: props.namePath})
+        }
+
+        return {push}
     }
 }
 </script>

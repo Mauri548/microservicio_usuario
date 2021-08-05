@@ -4,7 +4,7 @@
         <div class="modal-content has-background-white">
             <h1 class="has-text-centered has-text-weight-semibold is-size-4">Actions </h1>
             <hr class="my-3">
-            <button class="button btn-crenein w-100 my-1">
+            <button @click="push(data)" class="button btn-crenein w-100 my-1">
                 <span class="icon is-small">
                     <i class="fas fa-pencil-alt"></i>
                 </span>
@@ -22,9 +22,10 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
 export default {
     name: 'Modal',
-    props: ['data'],
+    props: ['data','namePath'],
     emits: ['onCloseModal','onOpenModalDelete'],
 
     setup(props, { emit }) {
@@ -36,9 +37,16 @@ export default {
             emit("onOpenModalDelete", e.id)
         }
 
+        const router = useRouter()
+        const push = (data) => {
+            console.log('click')
+            router.push({name: props.namePath, params: {id: data.id}})
+        }
+
         return {
             closeModal,
             openModalDelete,
+            push,
         }
     }
 }

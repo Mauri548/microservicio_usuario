@@ -1,6 +1,6 @@
 <template>
   
-        <div v-show="isMobile==false">
+    <div v-show="isMobile==false">
 
 
           
@@ -10,11 +10,11 @@
                <h2 style="font-size:1.5em; font-weight:bold;" >Edit App</h2>
             </div>
             
-            <div class="column mt-1">
+            <div class="column mt-1 is-relative">
                 <div class="columns">
-                    <div class="column  has-text-left label ">Logo</div>
+                    <div class="column  has-text-left label " style="position: absolute">Logo</div>
                     <div class="column  ">
-                        <figure class="image is-128x128">
+                        <figure class="image is-128x128" style="margin: auto">
                             <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
                         </figure>
                     </div>
