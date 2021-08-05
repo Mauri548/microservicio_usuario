@@ -16,13 +16,21 @@
                     <td @click="actionModal(data)">{{data.app}}</td>
                     <td @click="actionModal(data)">{{data.key}}</td>
                     <td @click="actionModal(data)">{{data.detail}}</td>
-                    <Modal :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
+                    <Modal :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" :buttonDefault="false">
+                        <button @click="actionModalEditPermission" class="button btn-crenein w-100 my-1">
+                            <span class="icon is-small">
+                                <i class="fas fa-pencil-alt"></i>
+                            </span>
+                            <span>Edit</span>
+                        </button>
+                    </Modal>
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
         </div>
         <Pagination/>
         <AddPermission :data="addPermission" @onCloseModal="actionModalAddPermission" />
+        <EditPermission :data="editPermission" @onCloseModal="actionModalEditPermission" />
     </div>
 </template>
 
@@ -33,6 +41,7 @@ import Board from '../../components/Board/Board.vue'
 import Pagination from '../../components/Board/Pagination.vue'
 import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
+import EditPermission from './EditPermission.vue'
 import AddPermission from './AddPermission.vue'
 import { ref } from '@vue/reactivity'
 export default {
@@ -43,7 +52,8 @@ export default {
         Pagination,
         Modal,
         ActionModal,
-        AddPermission
+        AddPermission,
+        EditPermission,
     },
 
     setup() {
@@ -61,6 +71,8 @@ export default {
             
         ])
         const addPermission = ref(false)
+        const editPermission = ref(false)
+
 
         const titles = ref(['App','Key','Detail'])
 
@@ -79,13 +91,21 @@ export default {
             addPermission.value = !addPermission.value
         }
 
+        const actionModalEditPermission = () => {
+            datas.value.forEach(element => element.activo = false)
+            editPermission.value = !editPermission.value
+        }
+
         return {
             datas,
             titles,
             actionModal,
             actionModalDelete,
             addPermission,
-            actionModalAddPermission
+            editPermission,
+            actionModalAddPermission,
+            actionModalEditPermission
+
         }
     }
 }
