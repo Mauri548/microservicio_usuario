@@ -2,15 +2,13 @@
   
 
 <div>
-    <button @click="activar" class="button">Hola</button>
-
-
-    <div class="modal " :class="{'is-active':activo}" >
-    <div class="modal-background "></div>
+  
+    <div class="modal " :class="{'is-active':data.activo}" >
+    <div class="modal-background  " @click="closeModal(data)"></div>
     <div class="modal-card " >
-        <header class="modal-card-head has-background-white">
+        <header class="modal-card-head has-background-white " >
         <p class="modal-card-title has-text-centered blue-crenein" style="font-size:1.5em; font-weight:bold;">Add Permissions</p>
-        <button class="delete" @click="activar"  aria-label="close"></button>
+        <button class="delete" @click="closeModal(data)"  aria-label="close"></button>
         </header>
         <section class="modal-card-body">
             <form action="" class="column">
@@ -25,8 +23,8 @@
                 <textarea class="textarea " placeholder="Details"></textarea>
               
                 <div class="column has-text-centered" >
-                    <button class="button has-background-danger has-text-white mr-2"  style="font-weight:bold;" @click="activar">Cancel</button>
-                    <button class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;" >Save changes</button>
+                    <button class="button has-background-danger has-text-white mr-2"  style="font-weight:bold;" @click="openModalDelete(data)" >Cancel</button>
+                    <button class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;"   >Save changes</button>
                 </div>
             </form>
         </section>
@@ -45,19 +43,27 @@ import {ref} from '@vue/reactivity'
 import CampoForm from '../../components/CampoForm.vue'
 export default {
     name:'AddPermission',
+    props: ['data'],
+    emits: ['onCloseModal','onOpenModalDelete'],
     components: {
         CampoForm
     },
-    setup(){
-        const activo = ref(false)
+    setup(props, { emit }){
+       
 
-        const activar = () => {
-            activo.value = !activo.value
+
+        const closeModal = (e) => {
+            emit("onCloseModal", {id: e.id, valor: false})
+        }
+
+        const openModalDelete = (e) => {
+            emit("onOpenModalDelete", e.id)
         }
 
         return{
-            activo,
-            activar 
+            closeModal,
+            openModalDelete,
+       
         }
     }
 }
