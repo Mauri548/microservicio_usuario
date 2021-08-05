@@ -13,28 +13,24 @@
         <button class="delete" @click="activar"  aria-label="close"></button>
         </header>
         <section class="modal-card-body">
-
             <form action="" class="column">
-                <select class=" select1 mb-4" id="country" name="country">
+                <select class="column  select1 mb-4 " id="country" name="country">
                     <option value="ISPb">ISPb</option>
                     <option value="PuWiC">PuWiC</option>
                     <option value="Geston">Geston</option>
                 </select>
+
                 <CampoForm place="Key" type="text"/>
-        
+
+                <textarea class="textarea " placeholder="Details"></textarea>
+              
+                <div class="column has-text-centered" >
+                    <button class="button has-background-danger has-text-white mr-2"  style="font-weight:bold;" @click="activar">Cancel</button>
+                    <button class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;" >Save changes</button>
+                </div>
             </form>
-        
-            <div class="column ">
-                <textarea class="textarea" placeholder="Details"></textarea>
-            </div>
-            
         </section>
-        <footer class="modal-card-foot  has-background-white">
-            <div class="column has-text-centered" >
-                <button class="button  has-text-white " style="background-color:#005395; font-weight:bold;" >Save changes</button>
-                <button class="button has-background-danger has-text-white"  style="font-weight:bold;" @click="activar">Cancel</button>
-            </div>
-        </footer>
+   
     </div>
     </div>
 
@@ -70,12 +66,19 @@ export default {
 <style scoped>
 
 .select1 {
+
+    font-family: Arial, Helvetica, sans-ser;
+    color: #777474;
     width: 100%;
     padding: 10px ;
     border: 1px solid #ddd;
     border-radius: 4px;
     background-color: none;
-    background-position-x: 204px;
+    font-size: 0.9rem;
 }
+
+
+
+
 
 </style>
