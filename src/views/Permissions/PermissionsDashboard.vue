@@ -4,7 +4,9 @@
             <TitleBoard title="Permissions"/>
             <hr>
             <div class="body-tablero my-3 px-4">
-                <HeadBoard/>
+                <HeadBoard :buttonDefault="false">
+                    <button @click="actionModalAddPermission" class="button btn-crenein">+ Add</button>
+                </HeadBoard>
             </div>
         </div>
         <div class="body-tablero px-4">
@@ -20,6 +22,7 @@
             </Board>
         </div>
         <Pagination/>
+        <AddPermission :data="addPermission" @onCloseModal="actionModalAddPermission" />
     </div>
 </template>
 
@@ -30,6 +33,7 @@ import Board from '../../components/Board/Board.vue'
 import Pagination from '../../components/Board/Pagination.vue'
 import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
+import AddPermission from './AddPermission.vue'
 import { ref } from '@vue/reactivity'
 export default {
     components: {
@@ -39,6 +43,7 @@ export default {
         Pagination,
         Modal,
         ActionModal,
+        AddPermission
     },
 
     setup() {
@@ -55,6 +60,7 @@ export default {
             {id: 10, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
             
         ])
+        const addPermission = ref(false)
 
         const titles = ref(['App','Key','Detail'])
 
@@ -69,11 +75,17 @@ export default {
             aux.modalDelete = !aux.modalDelete
         }
 
+        const actionModalAddPermission = () => {
+            addPermission.value = !addPermission.value
+        }
+
         return {
             datas,
             titles,
             actionModal,
-            actionModalDelete
+            actionModalDelete,
+            addPermission,
+            actionModalAddPermission
         }
     }
 }

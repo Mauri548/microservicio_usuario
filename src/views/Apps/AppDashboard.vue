@@ -4,7 +4,7 @@
             <TitleBoard title="Apps" />
             <hr>
             <div class="body-tablero my-3 px-4">
-                <HeadBoard namePath="AddApp" />
+                <HeadBoard namePath="AddApp"  />
             </div>
         </div>
         <div class="body-tablero px-4">
