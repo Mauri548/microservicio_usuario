@@ -4,10 +4,9 @@
       
 
 
-     <!--  <AddPermission /> -->
      <!--  <InviteUser />  -->
 
-
+      
       <div class="contenedor-principal mt-5">
           <NavbarV />
           <router-view/>
