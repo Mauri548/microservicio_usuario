@@ -1,11 +1,19 @@
 <template>
-
-
+  
+  
     <div v-show="isMobile==false">
-        <form action="" class="column is-half is-offset-one-quarter mt-1 is-mobile" style="width:600px">   
+        <form action="" class="column is-half is-offset-one-quarter mt-1 is-mobile" style="width:560px">   
+            
+            <div class="column has-text-centered blue-crenein">
+               <h2 style="font-size:1.5em; font-weight:bold;" >Add App</h2>
+            </div>    
+            
+            
+            
+            
             <div class="column ">
                 <div class="columns">
-                    <div class="column  has-text-left label ">Avatar</div>
+                    <div class="column  has-text-left label ">Logo</div>
                     <div class="column  ">
                         <figure class="image is-128x128">
                             <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
@@ -32,9 +40,7 @@
             </div>
 
             <div class="column ">
-                <CampoForm   type="text" place="Email" />
-                <CampoForm   type="text" place="Full name"/>
-                <CampoForm   type="password" place="Password"/> 
+                <textarea class="textarea" placeholder="Observation"></textarea>
             </div>
             
             <div class="column ">
@@ -51,18 +57,20 @@
     </div>
     
     <div v-show="isMobile==true">
-        <form action="" class="column has-text-centered  mt-5 ml-6"  >
-           
-                <div class="label column ">Avatar</div>
-                <div class="column ml-1" >
-                        <img class=" image  imgred" width="200" height="200" src="https://bulma.io/images/placeholders/128x128.png">
+        <form action="" class="column mt-1">
+            <div class="column has-text-centered blue-crenein">
+               <h2 style="font-size:1.5em; font-weight:bold;" >Add App</h2>
+            </div>    
+            
+            
+            <div class="columns ">
+                <div class="column  label ">Logo</div>
+                <div class="column  " style="font">
+                        <img class=" iamge  imgred" width="200" height="200" src="https://bulma.io/images/placeholders/128x128.png">
                 </div>
-           
-
-
-
-            <div class="file columns  has-name  is-right">
-                <label class="column file-label">
+            </div>
+            <div class="file column has-name is-fullwidth is-right">
+                <label class="file-label">
                     <input class="file-input" type="file" name="resume">
                     <span class="file-cta">
                     <span class="file-icon">
@@ -76,27 +84,20 @@
                     Screen Shot 2017-07-29 at 15.54.25.png
                     </span>
                 </label>
-            </div> 
-
-
-
+            </div>
             <div class="column ">
-                <CampoForm  type="text" place="Email" />
-                <CampoForm   type="text" place="Full name"/>
-                <CampoForm   type="password" place="Password"/> 
+                <textarea class="textarea" placeholder="Observation"></textarea>
             </div>
             <div class="column    ">
                 <button class=" button has-text-white button1 "  style="background-color:#005395; font-weight:bold;">Save</button>
             </div>  
             <div class="column  ">
                 <button class=" button  button1 has-text-white has-background-danger "  style="font-weight:bold;">Cancel</button>
-            </div> 
+            </div>
                       
         </form>
     </div>
 
-
-   <!--  <Action activo=activo /> -->
 
 </template>
 
@@ -105,12 +106,11 @@ import CampoForm from '../../components/CampoForm.vue'
 import { inject } from '@vue/runtime-core'
 /* import Action from '../../components/Modals/ActionsModal.vue' */
 import {ref} from '@vue/reactivity'
-
 export default {
-    name:'PersonalForm',
+    name:'AddApp',
     components: {
         CampoForm,
-       /*  Action */
+       
     }, 
     setup(){
         const isMobile = inject('isMobile')
@@ -131,6 +131,7 @@ export default {
 </script>
 
 <style scoped>
+
 .button1{
     width:100%;
 }
@@ -147,7 +148,4 @@ export default {
     width: 100%; /* The width is 100%, when the viewport is 800px or smaller */
   }
 }
-
-
-
 </style>
