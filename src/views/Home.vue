@@ -3,15 +3,15 @@
       <Navbar />
       
 
-
-      <AddPermission />
+<!-- 
+      <AddPermission /> -->
      <!--  <InviteUser />  -->
 
 
-  <!--<div class="contenedor-principal mt-5">
+  <div class="contenedor-principal mt-5">
           <NavbarV />
           <router-view/>
-      </div>  -->
+      </div> 
   </div>
 </template>
 

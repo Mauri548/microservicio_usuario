@@ -51,15 +51,18 @@
     </div>
     
     <div v-show="isMobile==true">
-        <form action="" class="column mt-1">
-            <div class="columns ">
-                <div class="column  label ">Avatar</div>
-                <div class="column  " style="font">
-                        <img class=" iamge  imgred" width="200" height="200" src="https://bulma.io/images/placeholders/128x128.png">
+        <form action="" class="column has-text-centered  mt-5 ml-6"  >
+           
+                <div class="label column ">Avatar</div>
+                <div class="column ml-1" >
+                        <img class=" image  imgred" width="200" height="200" src="https://bulma.io/images/placeholders/128x128.png">
                 </div>
-            </div>
-            <div class="file column has-name is-fullwidth is-right">
-                <label class="file-label">
+           
+
+
+
+            <div class="file columns  has-name  is-right">
+                <label class="column file-label">
                     <input class="file-input" type="file" name="resume">
                     <span class="file-cta">
                     <span class="file-icon">
@@ -73,7 +76,10 @@
                     Screen Shot 2017-07-29 at 15.54.25.png
                     </span>
                 </label>
-            </div>
+            </div> 
+
+
+
             <div class="column ">
                 <CampoForm  type="text" place="Email" />
                 <CampoForm   type="text" place="Full name"/>
@@ -84,7 +90,7 @@
             </div>  
             <div class="column  ">
                 <button class=" button  button1 has-text-white has-background-danger "  style="font-weight:bold;">Cancel</button>
-            </div>
+            </div> 
                       
         </form>
     </div>
