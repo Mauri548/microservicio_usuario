@@ -3,14 +3,14 @@
       <Navbar />
       
 
-
+      <EditCompany />
      <!--  <InviteUser />  -->
 
       
-      <div class="contenedor-principal mt-5">
+   <!--    <div class="contenedor-principal mt-5">
           <NavbarV />
           <router-view/>
-      </div> 
+      </div>  -->
   </div>
 </template>
 
@@ -19,7 +19,7 @@
 import Navbar from '../components/Navbar/Navbar.vue'
 import NavbarV from '../components/NavbarV/NavbarV.vue'
 /* import InviteUser from '../views/InviteUser/InviteUser.vue' */
-
+import EditCompany from '../views/Companies/EditCompany.vue'
 import AddPermission from '../views/Permissions/AddPermission.vue'
 import AddApp from '../views/Apps/Add.vue'
 import EditApp from '../views/Apps/Edit.vue'
@@ -30,6 +30,7 @@ export default {
     Navbar,
     NavbarV,
     AddPermission,
+    EditCompany
    
 /*     InviteUser */
     /* AddApp,
