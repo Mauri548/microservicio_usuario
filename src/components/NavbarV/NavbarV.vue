@@ -13,6 +13,7 @@
                     </span>
                 </a>
                     <ul v-show="showCompanyOption" >
+                        <li><a class="menu-link" @click="push('UserDashboard')">User management</a></li>
                         <li><a class="menu-link" @click="push('CompaniesDashboard')">Companies management</a></li>
                         <li><a class="menu-link" @click="push('AppDashboard')">Apps management</a></li>
                         <li><a class="menu-link" @click="push('PermissionsManagement')">Permissions management</a></li>

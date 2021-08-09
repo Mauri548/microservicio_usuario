@@ -22,7 +22,7 @@
                     <td @click="actionModal(data)">{{data.location}}</td>
                     <td @click="actionModal(data)">{{data.province}}</td>
                     <td @click="actionModal(data)">{{data.country}}</td>
-                    <Modal namePath="EditApp" :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
+                    <Modal namePath="EditCompany" :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
