@@ -1,5 +1,5 @@
 <template>
-    <div class="column is-one-third">
+    <div class="column is-half-touch is-one-third-desktop ">
         <li>
             <span>{{item.name}}</span>
             <div class="buttons ml-3">
@@ -49,5 +49,11 @@ li span {
     background-color: #48c774;
     color: #fff;
     border: none
+}
+
+@media (max-width: 425px) {
+    .column {
+        width: 100%;
+    }
 }
 </style>

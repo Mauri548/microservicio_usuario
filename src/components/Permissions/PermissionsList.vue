@@ -1,7 +1,7 @@
 <template>
     <div>
-        <button @click="activePermissionApp(data.id)" class="button btn-crenein">
-            <span>{{data.app}} permissions</span>
+        <button @click="activePermissionApp(data.id)" class="button btn-crenein button-permission-app ">
+            <span >{{data.app}} permissions</span>
             <span class="icon is-small">
                 <i class="fas fa-chevron-down"></i>
             </span>
@@ -80,14 +80,14 @@ export default {
     justify-content: space-between;
     align-items: center;
 }
-/* .conteiner-head2 {
-    background-color: #F7F7F7;
-} */
 .conteiner-head .buttons, .conteiner-head .buttons .button {
     margin-bottom: 0;
 }
 .conteiner-head input {
     width: 40%;
+}
+.conteiner-head h3 {
+    width: 20%;
 }
 .conteiner-body div .conteiner-head:hover {
     cursor: pointer;
@@ -95,6 +95,20 @@ export default {
 
 .color-succes {
     background: #28A745;
+}
+.button-permission-app {
+    width: 30%;
+}
+
+@media (max-width: 670px) {
+    .button-permission-app {
+        width: 60%;
+    }
+}
+@media (max-width: 425px) {
+    .button-permission-app {
+        width: 100%;
+    }
 }
 
 

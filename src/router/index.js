@@ -91,7 +91,7 @@ const routes = [
       {
         path: '/PermissionsManagement',
         name: 'PermissionsManagement',
-        component: () => import(/* webpackChunkName: PermissionsManagement */ '../views/Permissions/PermissionsManagement.vue')
+        component: () => import(/* webpackChunkName: "PermissionsManagement" */ '../views/Permissions/PermissionsManagement.vue')
       }
     ]
   },

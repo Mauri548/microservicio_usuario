@@ -6,7 +6,7 @@
         </div>
         <div class="columns m-0 mx-2">
             <div class="column is-3">
-                <UserList/>
+                <UserList :users="users"/>
             </div>
             <div class="column">
                 <PermissionsList v-for="data in datas" :key="data.id" :data="data"
@@ -119,6 +119,15 @@ export default {
                 ]} 
             ]}
         ])
+        const users = ref([
+            {id: 1, name: 'Marcos Barrios'},
+            {id: 2, name: 'Jesica Ruizdias'},
+            {id: 3, name: 'Jose Alberto'},
+            {id: 4, name: 'Mauricio Ferreyra'},
+            {id: 5, name: 'Manuel Rodriguez'},
+            {id: 6, name: 'Javier Rizzoli'},
+            {id: 7, name: 'Charles Torres Troches'},
+        ])
 
         const activeButton = (data) => {
             console.log(data)
@@ -128,7 +137,6 @@ export default {
             aux.activo = data.valor
             console.log(permission)
             data.valor ? permission.permissions_activo+= 1 : permission.permissions_activo -= 1
-            
         }
 
         const activePermissionApp = (id) => {
@@ -146,6 +154,7 @@ export default {
 
         return {
             datas,
+            users,
             activeButton,
             activePermissionApp,
             activeList,
