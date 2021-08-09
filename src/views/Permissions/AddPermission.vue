@@ -23,7 +23,7 @@
                 
                     <div class="column has-text-centered" >
                         <button class="button has-background-danger has-text-white mr-2"  style="font-weight:bold;" @click="closeModal" >Cancel</button>
-                        <button class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;">Save changes</button>
+                        <button class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;" @click="verificar">Save changes</button>
                     </div>
                 </form>
             </section>
@@ -37,6 +37,7 @@
 
 <script>
 import CampoForm from '../../components/CampoForm.vue'
+import store from '@/store';
 export default {
     name:'AddPermission',
     props: ['data'],
@@ -50,7 +51,14 @@ export default {
             emit("onCloseModal")
         }
 
+        const verificar = () => {
+            router.push({name: 'PermissionsDashboard'})
+            let accion = "cargarPermission"
+            store.commit('verificar_carga',accion)
+        }
+
         return{
+            verificar ,
             closeModal,
        
         }
