@@ -87,6 +87,11 @@ const routes = [
         path: '/AddApp',
         name: 'AddApp',
         component: () => import(/* webpackChunkName: "AddApp" */ '../views/Apps/Add.vue')
+      },
+      {
+        path: '/PermissionsManagement',
+        name: 'PermissionsManagement',
+        component: () => import(/* webpackChunkName: "PermissionsManagement" */ '../views/Permissions/PermissionsManagement.vue')
       }
     ]
   },
