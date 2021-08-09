@@ -61,7 +61,8 @@
                     </div>
                     <div class="field is-grouped is-justify-content-space-between">
                         <button type="button" class="button btn-crenein prev">Prev</button>
-                        <button class="button btn-crenein submite">Submite</button>
+                        <!-- <button class="button btn-crenein submite">Submite</button> -->
+                        <router-link class="button btn-crenein submite" :to="{name: 'InviteUser'}">Submite</router-link>
                     </div>
                 </div>
             </form>
