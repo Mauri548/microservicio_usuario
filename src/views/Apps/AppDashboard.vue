@@ -55,6 +55,7 @@ import puwic from '@/assets/puwic2.png'
 import geston from '@/assets/geston2.png'
 import { ref } from '@vue/reactivity'
 import store from '@/store';
+import { inject } from '@vue/runtime-core'
 
 export default {
     components: {
@@ -71,6 +72,7 @@ export default {
     },
 
     setup() {
+        const isMobile = inject('isMobile')
         const carga_exitosa = ref(false)
         const comprobar = store.state.carga_exitosa
         const comprobar_edi = store.state.edicion_exitosa
@@ -115,6 +117,7 @@ export default {
 
 
         return {
+            isMobile,
             carga_exitosa,
             comprobar,
             comprobar_edi,

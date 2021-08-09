@@ -11,7 +11,7 @@
             </header>
             <section class="modal-card-body">
                 <form action="" class="column">
-                    <select class="column  select1 mb-4 " id="country" name="country">
+                    <select class="column  select1 mb-4 " >
                         <option value="ISPb">ISPb</option>
                         <option value="PuWiC">PuWiC</option>
                         <option value="Geston">Geston</option>

@@ -57,6 +57,7 @@ import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
 import { ref } from '@vue/reactivity'
 import store from '@/store';
+import { inject } from '@vue/runtime-core'
 
 export default {
     components: {
@@ -73,7 +74,7 @@ export default {
     },
 
     setup() {
-
+        const isMobile = inject('isMobile')
         const carga_exitosa = ref(false)
         const comprobar = store.state.carga_exitosa
         const comprobar_edi = store.state.edicion_exitosa
@@ -128,6 +129,7 @@ export default {
         }
 
         return {
+            isMobile ,
             comprobar_carga ,
             comprobar_edicion ,
             carga_exitosa,
