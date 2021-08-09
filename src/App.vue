@@ -71,6 +71,9 @@ export default {
   background: #0572ca;
   color: #fff;
 }
+.btn-crenein:focus {
+  color: #fff
+}
 
 /* style de tablero */
 .conteiner-tablero {
