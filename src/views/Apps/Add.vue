@@ -46,10 +46,10 @@
             <div class="column ">
                 <div class="columns  ">
                     <div class="column  is-flex-grow-0">
-                        <button class=" button  has-text-white has-background-danger " style="font-weight:bold;">Cancel</button>
+                        <button class=" button  has-text-white has-background-danger " @click="volver" style="font-weight:bold;">Cancel</button>
                     </div>
                     <div class="column   pl-0  ">
-                        <button class=" button has-text-white button1 "  @click="Activar" style="background-color:#005395; font-weight:bold;">Save</button>
+                        <button class=" button has-text-white button1 "  @click="verificar " style="background-color:#005395; font-weight:bold;">Save</button>
                     </div>     
                 </div>
             </div>
@@ -89,10 +89,10 @@
                 <textarea class="textarea" placeholder="Observation"></textarea>
             </div>
             <div class="column    ">
-                <button class=" button has-text-white button1 "  style="background-color:#005395; font-weight:bold;">Save</button>
+                <button class=" button has-text-white button1 "  @click="verificar" style="background-color:#005395; font-weight:bold;">Save</button>
             </div>  
             <div class="column  ">
-                <button class=" button  button1 has-text-white has-background-danger "  style="font-weight:bold;">Cancel</button>
+                <button class=" button  button1 has-text-white has-background-danger " @click="volver" style="font-weight:bold;">Cancel</button>
             </div>
                       
         </form>
@@ -106,6 +106,9 @@ import CampoForm from '../../components/CampoForm.vue'
 import { inject } from '@vue/runtime-core'
 /* import Action from '../../components/Modals/ActionsModal.vue' */
 import {ref} from '@vue/reactivity'
+import { useRouter } from 'vue-router';
+import store from '@/store';
+
 export default {
     name:'AddApp',
     components: {
@@ -113,6 +116,7 @@ export default {
        
     }, 
     setup(){
+        const router = useRouter()
         const isMobile = inject('isMobile')
         const activo = ref(false)
 
@@ -120,11 +124,24 @@ export default {
             activo.value = !activo.value
             console.log(activo.value)
         }
+        const volver = () => {
+            router.go(-1)
+        }
+       const verificar = () => {
+                router.push({name: 'AppDashboard'})
+                let accion = "cargarApp"
+                store.commit('verificar_carga',accion)
+        }
+
+
+
 
         return{ 
-             isMobile,
-             activo,
-             Activar
+            verificar ,
+            volver,
+            isMobile,
+            activo,
+            Activar
          }
     }
 }
