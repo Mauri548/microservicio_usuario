@@ -18,7 +18,7 @@
                      </div>
                      <div class="column pl-0">
                         <div class="control">
-                            <input class="input" :type="type"  v-model="password" required>
+                            <input class="input" :type="type"  v-model="password">
                             <label alt="Label" :data-placeholder="place" ></label>
                         </div>
                      </div>

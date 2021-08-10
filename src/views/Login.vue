@@ -28,7 +28,7 @@
                             </div>
                             <div class="column px-0 ">
                                 <div class="control ">
-                                    <input class="input" type="text" placeholder="Password">
+                                    <input class="input" type="password" placeholder="Password">
                                 </div>
                             </div>   
 
@@ -37,12 +37,12 @@
                         
                     </div>      
 
-                    <div class="column">
+                    <div class="column has-text-centered">
                         <button @click="Logear" class="button button2 has-text-white" style="font-weight:5px;">Login</button>
-                        <p style="color: #005395">¿Olvidaste tu contraseña?</p>
+                        <p  style="color: #005395">¿Olvidaste tu contraseña?</p>
                     </div>
 
-                    <div class="column">
+                    <div class="column has-text-centered">
                         <p >o inicia sesion usando: </p>
                         <button class="button button2 has-background-info has-text-white" ><i class="fab fa-facebook-f"></i></button>
                         <button class="button mt-1 button2 has-background-danger has-text-white" ><i class="fab fa-google-plus-g"></i></button>
@@ -91,9 +91,12 @@ export default {
 }
 
 .button2{
+
     width:15rem;
     background-color:#005395;
+
 }
+
 
 .input2{
      width:12.49rem;
