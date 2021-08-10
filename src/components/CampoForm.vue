@@ -1,6 +1,6 @@
 <template>
     <div class="form-row">
-      <input class="input" :type="type" >
+      <input class="input" :type="type" required>
       <label alt="Label" :data-placeholder="place" style="color: grey"></label>
     </div>
 </template>
