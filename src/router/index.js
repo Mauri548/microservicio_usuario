@@ -79,6 +79,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "EditCompany" */ '../views/Companies/EditCompany.vue')
       },
       {
+        path: '/InviteUser',
+        name: 'InviteUser',
+        component: () => import(/* webpackChunkName: "InviteUser" */ '../views/InviteUser/InviteUser.vue')
+      },
+      {
         path: '/AppDashboard',
         name: 'AppDashboard',
         component: () => import(/* webpackChunkName: "AppDashboard" */ '../views/Apps/AppDashboard.vue')
