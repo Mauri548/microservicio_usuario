@@ -6,7 +6,7 @@
         <div class="modal-background  "></div>
         <div class="modal-card " >
             <header class="modal-card-head has-background-white " >
-            <p class="modal-card-title has-text-centered blue-crenein" style="font-size:1.5em; font-weight:bold;">Add Permissions</p>
+            <p class="modal-card-title has-text-centered blue-crenein" style="font-size:1.5em; font-weight:bold;">Add Permission</p>
             <button class="delete" @click="closeModal"  aria-label="close"></button>
             </header>
             <section class="modal-card-body">
@@ -37,27 +37,35 @@
 
 <script>
 import CampoForm from '../../components/CampoForm.vue'
-import store from '@/store';
+import { ref } from '@vue/reactivity'
 export default {
     name:'AddPermission',
     props: ['data'],
-    emits: ['onCloseModal','onOpenModalDelete'],
+    emits: ['onCloseModal','onOpenModalDelete','tengoAct'],
     components: {
         CampoForm
     },
     setup(props, { emit }){
        
+
+        const act = ref({activo:false ,cargar:false})
+
         const closeModal = () => {
+            act.value.activo = false
+            act.value.cargar = false
             emit("onCloseModal")
         }
 
         const verificar = () => {
-            router.push({name: 'PermissionsDashboard'})
-            let accion = "cargarPermission"
-            store.commit('verificar_carga',accion)
+          
+            emit("onCloseModal")
+            act.value.activo = true
+            act.value.cargar = true
+            emit('tengoAct', act) 
         }
 
         return{
+            act,
             verificar ,
             closeModal,
        

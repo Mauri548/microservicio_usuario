@@ -97,7 +97,7 @@ export default {
 
         const verificar = () => {
             router.push({name: 'CompaniesDashboard'})
-            let accion = "editarCompany"
+            let accion = "edicionCompany"
             store.commit('verificar_carga',accion)
         }
 
