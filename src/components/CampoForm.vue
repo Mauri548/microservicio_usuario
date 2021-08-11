@@ -13,7 +13,6 @@ export default {
       place:String,
       type:String
     },
-    
 }
 </script>
 
