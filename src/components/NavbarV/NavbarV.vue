@@ -3,7 +3,6 @@
     <div class="conteiner-nabvarV">
         <aside class="menu mx-3">
             <ul class="menu-list">
-                <li><a class="menu-link is-active">Home</a></li>
                 <li><a class="menu-link" @click="push('PersonalForm')">Personal Info</a></li>
                 <li><a class="menu-link" @click="push('PermissionsDashboard')">Permissions</a></li>
                 <li><a class="menu-link companyOption btn-company" @click="ActionShowCompanyOption">

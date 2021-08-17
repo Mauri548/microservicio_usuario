@@ -1,8 +1,8 @@
 <template>
   
-        <div class="column  is-half is-offset-one-quarter mt-5 " >
+        <div class="column  ancho is-half is-offset-one-quarter mt-5 " >
 
-            <div class="column has-text-centered " >
+            <div class="column has-text-centered " style="margin:auto;">
 
                 <h2  style="font-weight:bold; font-size:1.6em">There is only one more step left!
                 invite users to your company to 
@@ -15,7 +15,7 @@
                         <button class="button is-info">Send</button>
                    
                 </div>
-                <button class=" mt-4 px-6 button btn">Continue</button>
+                <button class=" mt-4 px-6 button btn" @click="irPermisos">Continue</button>
 
             </div>
     
@@ -28,12 +28,19 @@
 
 <script>
 import { inject } from '@vue/runtime-core'
-
+import { useRouter } from 'vue-router';
 export default {
     name:'InviteUser',
     setup(){
+        const router = useRouter()
         const isMobile = inject('isMobile')
+
+        const irPermisos = () => {
+                 router.push({name: 'PermissionsManagement'})
+        }
+
         return{ 
+            irPermisos,
             isMobile
         }
     }
@@ -52,18 +59,18 @@ export default {
 }
 
 .ancho{
-    width:600px ;
+    margin:auto;
 }
 
 
 .margen-campo{
-    margin-left:103px;
+    margin:auto;
     
 }
 
 .ancho-campo{
     width:278px;
-    margin-left:140px;
+    margin:auto;
 }
 
 
