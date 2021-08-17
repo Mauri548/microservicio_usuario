@@ -1,5 +1,5 @@
 <template>
-    <div class="conteiner-tablero mt-2 py-4">
+    <div class="conteiner-tablero mt-2 mb-4 py-4">
         <div class="head-tablero">
             <TitleBoard title="Permissions" />
             <hr>
@@ -8,11 +8,23 @@
             <div class="column is-3">
                 <UserList :users="users"/>
             </div>
-            <div class="column">
-                <PermissionsList v-for="data in datas" :key="data.id" :data="data"
-                 @onActiveButton="activeButton"
-                 @onActivePermissionApp="activePermissionApp"
-                 @onActiveList="activeList"
+            <div style="width: 100%">
+                <div class="column is-flex">
+                    <PermissionsList v-for="data in datas" :key="data.id" :data="data"
+                        @onActiveButton="activeButton"
+                        @onActivePermissionApp="activePermissionApp"
+                        @onActiveList="activeList"
+                        @onMovePermission="moveAvailableToAssigned"
+                    />
+                </div>
+                <ActionPermission v-for="data in datas" :key="data.id" :data="data"
+                    @onActiveButton="activeButton"
+                    @onActivePermissionApp="activePermissionApp"
+                    @onActiveList="activeList"
+                    @onMoveAvailableToAssigned="moveAvailableToAssigned"
+                    @onMoveAssignedToAvailable="moveAssignedToAvailable"
+                    @onMoveAllAvailableToAssigned="moveAllAvailableToAssigned"
+                    @onMoveAllAssignedToAvailable="moveAllAssignedToAvailable"
                 />
             </div>
             
@@ -23,13 +35,15 @@
 <script>
 import TitleBoard from '../../components/Board/TitleBoard.vue'
 import UserList from '../../components/Permissions/UserList.vue'
-import PermissionsList from '../../components/Permissions/PermissionsList.vue'
+import PermissionsList from '../../components/Permissions/PermissionsListV2.vue'
+import ActionPermission from '../../components/Permissions/ActionPermission.vue'
 import { ref } from '@vue/reactivity'
 export default {
     components: {
         TitleBoard,
         UserList,
-        PermissionsList
+        PermissionsList,
+        ActionPermission,
     },
 
     setup() {
@@ -41,7 +55,7 @@ export default {
                     {id: 3, name: 'See customer file', activo: false},
                     {id: 4,name: 'Export client', activo: false},
                     {id: 5,name: 'Archive client', activo: false},
-                    {id: 6, name: 'See customer file', activo: false},
+                    {id: 6, name: 'See customer fileses', activo: false},
                     {id: 7, name: 'tag individually', activo: false},
                 ]},
                 {id: 2, name: 'Mail', total: 2, permissions_activo: 0, activo: false, lista: [
@@ -129,6 +143,7 @@ export default {
             {id: 7, name: 'Charles Torres Troches'},
         ])
 
+        // Activa el booleano de la lista para pasarlo al lado contrario
         const activeButton = (data) => {
             console.log(data)
             let aux = datas.value.find(element => element.id == data.appId)
@@ -138,12 +153,64 @@ export default {
             console.log(permission)
             data.valor ? permission.permissions_activo+= 1 : permission.permissions_activo -= 1
         }
+        
+        // ************************************************************************************
+        // Estas functiones moveran el permiso al sector contrario de la tabla
+
+        // recibe por parametro las id de la app, el permiso principal y su lista de items
+        const moveAvailableToAssigned = (id_app, id_permission, permissions) => {
+            let aux = searchListPermission(id_app, id_permission)
+            let permiso
+            // Si el id de la lista existe dentro del array de permission entonces cambiaremos su valor
+            permissions.forEach(element => {
+                permiso = aux.lista.find(e => e.id == element)
+                permiso.activo = true
+            })
+        }
+
+        // recibe por parametro las id de la app, el permiso principal y su lista de items
+        const moveAssignedToAvailable = (id_app, id_permission, permissions) => {
+            let aux = searchListPermission(id_app, id_permission)
+            let permiso
+            // Si el id de la lista existe dentro del array de permission entonces cambiaremos su valor
+            permissions.forEach(element => {
+                permiso = aux.lista.find(e => e.id == element)
+                permiso.activo = false
+            })
+        }
+
+        // Recibe por parametro la id de la app y el id de permiso principal
+        // Cambia el valor de activo de todos los elemento a True para que se pasen a la lista de assigned
+        const moveAllAvailableToAssigned = (id_app, id_permission) => {
+            let aux = searchListPermission(id_app, id_permission)
+            aux.lista.forEach(element => {
+                element.activo = true
+            })
+        }
+
+        // Recibe por parametro la id de la app y el id de permiso principal
+        // Cambia el valor de activo de todos los elemento a False para que se pasen a la lista de Available
+        const moveAllAssignedToAvailable = (id_app, id_permission) => {
+            let aux = searchListPermission(id_app, id_permission)
+            aux.lista.forEach(element => {
+                element.activo = false
+            })
+        }
+
+        // buscamos la app correspondiente y luego el permiso principal al que corresponde las id
+        const searchListPermission = (id_app, id_permission) => {
+            let aux = datas.value.find(element => element.id == id_app)
+            aux = aux.permissions.find(element => element.id == id_permission)
+            return aux
+        }
+        // ************************************************************************************************
 
         const activePermissionApp = (id) => {
-            let aux = datas.value.find(element => element.id == id)
-            console.log(aux)
-            aux.activo = !aux.activo
+            datas.value.forEach(element => {
+                element.id == id ? element.activo = !element.activo : element.activo = false
+            })
         }
+
 
         // Modifica el valor para que se visualize el tablero con los permisos activables
         const activeList = (id_app, id_permission) => {
@@ -158,6 +225,10 @@ export default {
             activeButton,
             activePermissionApp,
             activeList,
+            moveAvailableToAssigned,
+            moveAssignedToAvailable,
+            moveAllAvailableToAssigned,
+            moveAllAssignedToAvailable,
         }
     }
 }
@@ -165,6 +236,8 @@ export default {
 
 <style scoped>
 
-
+.conteiner-permissions {
+    display: flex;
+}
 
 </style>
