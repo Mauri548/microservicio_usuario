@@ -15,7 +15,7 @@
                     <td @click="actionModal(data)">{{data.fullName}}</td>
                     <td @click="actionModal(data)">{{data.email}}</td>
                     <td @click="actionModal(data)">{{data.created}}</td>
-                    <td @click="actionModal(data)">{{data.enable}}</td>
+                    <td @click="actionModal(data)">{{data.state}}</td>
                     <Modal :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
@@ -46,14 +46,14 @@ export default {
 
     setup () {
         const datas = ref([
-            {id: 1, avatar: 'foto', fullName: 'Mauricio Ferreyra', email: 'mauricioferreyra548@gmail.com', created: '24/07/2021', enable: 'yes', activo: false},
-            {id: 2, avatar: 'foto', fullName: 'Luis Ferreyra', email: 'luis548@gmail.com', created: '24/07/2021', enable: 'yes', activo: false},
-            {id: 3, avatar: 'foto', fullName: 'Ema Ferreyra', email: 'emaCorreo@gmail.com', created: '24/07/2021', enable: 'yes', activo: false},
-            {id: 4, avatar: 'foto', fullName: 'Glo Ferreyra', email: 'gloquita@gmail.com', created: '24/07/2021', enable: 'yes', activo: false},
-            {id: 5, avatar: 'foto', fullName: 'Leonardo Ferreyra', email: 'loreto@gmail.com', created: '24/07/2021', enable: 'yes', activo: false},
+            {id: 1, avatar: 'foto', fullName: 'Mauricio Ferreyra', email: 'mauricioferreyra548@gmail.com', created: '24/07/2021', state: 'Habilitado', activo: false},
+            {id: 2, avatar: 'foto', fullName: 'Luis Ferreyra', email: 'luis548@gmail.com', created: '24/07/2021', state: 'Habilitado', activo: false},
+            {id: 3, avatar: 'foto', fullName: 'Ema Ferreyra', email: 'emaCorreo@gmail.com', created: '24/07/2021', state: 'Deshabilitado', activo: false},
+            {id: 4, avatar: 'foto', fullName: 'Glo Ferreyra', email: 'gloquita@gmail.com', created: '24/07/2021', state: 'Habilitado', activo: false},
+            {id: 5, avatar: 'foto', fullName: 'Leonardo Ferreyra', email: 'loreto@gmail.com', created: '24/07/2021', state: 'Pendiente', activo: false},
         ])
 
-        const titles = ref(['Avatar','Full name','Email','Created','Enable'])
+        const titles = ref(['Avatar','Full name','Email','Created','State'])
 
         const actionModal = (data) => {
             let aux = datas.value.find(element => element.id == data.id)
