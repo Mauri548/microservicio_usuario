@@ -23,6 +23,8 @@
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons" :class="{'buttons-mobile':isMobile}">
+              <!-- <button @click="cambiar" class="button blue-crenein has-text-weight-semibold">{{text}}</button> -->
+              <ButtonLang @pasarLan="revisar" />
               <SelectCompany/>
               <MenuApp v-show="!isMobile"/>
               <MenuPerfil/>
@@ -40,6 +42,9 @@ import { inject } from '@vue/runtime-core'
 import SelectCompany from './SelectCompany.vue'
 import MenuApp from './MenuApp.vue'
 import MenuPerfil from './MenuPerfil.vue'
+import store from '@/store'
+import ButtonLang from '../../components/Buttons/ButtonLang.vue'
+
 
 export default {
   name: 'Navbar',
@@ -48,18 +53,27 @@ export default {
     SelectCompany,
     MenuApp,
     MenuPerfil,
+    ButtonLang,
     
   },
+
 
   setup(){
     const optionActive = ref(false)
     const menuNavbar = ref(false)
     const isMobile = inject('isMobile')
+    let Lan = store.state.cambio_lang
+
 
     const showOption = () => {
       optionActive.value = !optionActive.value
       console.log(optionActive.value)
     }
+
+    const revisar = (cambiar) => {
+          console.log(cambiar.value)
+    }
+
 
     const OpenMenuNavbar = () => {
       menuNavbar.value = !menuNavbar.value
@@ -67,6 +81,8 @@ export default {
     }
 
     return{
+      revisar,
+      Lan,
       optionActive,
       isMobile,
       menuNavbar,

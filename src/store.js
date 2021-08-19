@@ -6,6 +6,7 @@ const store = createStore({
             isMobile: false,
             carga_exitosa: false,
             edicion_exitosa: false,
+            cambio_lang: false,
         }
     },
 
@@ -13,6 +14,17 @@ const store = createStore({
         onResize(state) {
             window.screen.width < 1024 ? state.isMobile = true : state.isMobile = false;
         },
+
+        cambiarLan(state){
+              if(state.cambio_lang == false)  {
+                    state.cambio_lang = true
+              }else{
+                    state.cambio_lang = false
+              }
+
+              console.log(state.cambio_lang)
+        },
+
 
 
         verificar_carga(state,accion){

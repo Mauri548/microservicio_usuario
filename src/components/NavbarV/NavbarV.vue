@@ -1,39 +1,65 @@
 <template>
   
-    <div class="conteiner-nabvarV">
-        <aside class="menu mx-3">
-            <ul class="menu-list">
-                <li><a class="menu-link" @click="push('PersonalForm')">Personal Info</a></li>
-                <li><a class="menu-link" @click="push('PermissionsDashboard')">Permissions</a></li>
-                <li><a class="menu-link companyOption btn-company" @click="ActionShowCompanyOption">
-                    <span class="column has-text-left ">Company</span>
-                    <span class="column has-text-right  icon is-small">
-                        <i  class="fas fa-chevron-down"></i>
-                    </span>
-                </a>
-                    <ul v-show="showCompanyOption" >
-                        <li><a class="menu-link" @click="push('UserDashboard')">User management</a></li>
-                        <li><a class="menu-link" @click="push('CompaniesDashboard')">Companies management</a></li>
-                        <li><a class="menu-link" @click="push('AppDashboard')">Apps management</a></li>
-                        <li><a class="menu-link" @click="push('PermissionsManagement')">Permissions management</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </aside>
+    <div  class="conteiner-nabvarV">
+        <div v-show="Lan==false">
+            <aside class="menu mx-3">
+                <ul class="menu-list">
+                    <li><a class="menu-link" @click="push('PersonalForm')">Personal Info</a></li>
+                    <li><a class="menu-link" @click="push('PermissionsDashboard')">Permissions</a></li>
+                    <li><a class="menu-link companyOption btn-company" @click="ActionShowCompanyOption">
+                        <span class="column has-text-left ">Company</span>
+                        <span class="column has-text-right  icon is-small">
+                            <i  class="fas fa-chevron-down"></i>
+                        </span>
+                    </a>
+                        <ul v-show="showCompanyOption" >
+                            <li><a class="menu-link" @click="push('UserDashboard')">User management</a></li>
+                            <li><a class="menu-link" @click="push('CompaniesDashboard')">Companies management</a></li>
+                            <li><a class="menu-link" @click="push('AppDashboard')">Apps management</a></li>
+                            <li><a class="menu-link" @click="push('PermissionsManagement')">Permissions management</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </aside>
+        </div>
+
+        <div v-show="Lan==true">
+            <aside class="menu mx-3">
+                <ul class="menu-list">
+                    <li><a class="menu-link" @click="push('PersonalForm')">Informacion personal</a></li>
+                    <li><a class="menu-link" @click="push('PermissionsDashboard')">Permisos</a></li>
+                    <li><a class="menu-link companyOption btn-company" @click="ActionShowCompanyOption">
+                        <span class="column has-text-left ">Empresa</span>
+                        <span class="column has-text-right  icon is-small">
+                            <i  class="fas fa-chevron-down"></i>
+                        </span>
+                    </a>
+                        <ul v-show="showCompanyOption" >
+                            <li><a class="menu-link" @click="push('UserDashboard')">Gestion de usuarios</a></li>
+                            <li><a class="menu-link" @click="push('CompaniesDashboard')">Gestion de empresas</a></li>
+                            <li><a class="menu-link" @click="push('AppDashboard')">Gestion de Apps</a></li>
+                            <li><a class="menu-link" @click="push('PermissionsManagement')">Gestion de permisos</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </aside>
+        </div>
+
+    
     </div>
-   
+  
+    
 </template>
 
 <script>
 
 import {ref} from '@vue/reactivity' 
-import { onMounted } from '@vue/runtime-core'
+import { onMounted, watch, watchEffect } from '@vue/runtime-core'
 import { useRouter } from 'vue-router'
-
+import store from '@/store'
 
 export default {
     name:'NavbarV',
-
     setup(){
         // const paths = ref([
         //     {id: 1, name: 'Home', namePath: '', activo: true, padre: false},
@@ -47,11 +73,22 @@ export default {
         // ])
 
         const router = useRouter()
+        const Lan = ref(false)
 
+        
         const push = (path) => {
             router.push({name: path})
         }
 
+
+
+    watchEffect(()=>{
+
+        Lan.value = store.state.cambio_lang
+    /*     console.log(Lan.value ) */
+
+    })
+       
         const showCompanyOption = ref(false)
 
         const ActionShowCompanyOption = () => {
@@ -63,7 +100,7 @@ export default {
         // esperar a que este cargado para agregar los elementos del html
         onMounted(() => {
             const item = document.querySelectorAll('.menu-link')
-            console.log(item)
+         /*    console.log(item) */
             item.forEach((element, index) => {
                 item[index].addEventListener('click', () => {
                     item.forEach((element, i) => {
@@ -85,6 +122,7 @@ export default {
 
        
         return {
+            Lan,
             showCompanyOption,
             ActionShowCompanyOption,
             push,

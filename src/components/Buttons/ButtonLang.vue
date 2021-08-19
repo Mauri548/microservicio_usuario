@@ -1,0 +1,45 @@
+<template>
+  
+  <div>
+      <button @click="cambiarLang" class="button blue-crenein has-text-weight-semibold">{{language}}</button>
+  </div>
+
+</template>
+
+<script>
+import store from '@/store'
+import { ref } from '@vue/reactivity'
+export default {
+    name:'ButtonLang',
+    emits:['pasarLan'],
+    setup(props,{emit}){
+        const language = ref("English")
+        const cambiar = ref("false")
+
+
+        const cambiarLang = () => {
+            if( language.value == "English"){
+                language.value = "Español"
+                store.commit('cambiarLan')
+                cambiar.value = store.state.cambio_lang
+                emit('pasarLan',cambiar)
+                
+            }else{
+                language.value = "English"
+                store.commit('cambiarLan')
+                cambiar.value = store.state.cambio_lang
+                emit('pasarLan',cambiar)
+            }
+        }
+        return { 
+            cambiar,
+            cambiarLang,
+            language
+        }
+    }
+}
+</script>
+
+<style>
+
+</style>
