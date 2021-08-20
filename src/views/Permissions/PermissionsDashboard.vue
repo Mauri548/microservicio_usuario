@@ -5,7 +5,7 @@
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
-                    <button @click="actionModalAddPermission" class="button btn-crenein">+ Add</button>
+                    <button @click="actionModalAddPermission" class="button btn-crenein">Invite user</button>
                 </HeadBoard>
             </div>
         </div>
