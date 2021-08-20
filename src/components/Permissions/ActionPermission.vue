@@ -1,13 +1,13 @@
 <template>
     <div v-show="data.activo" class="contenedor">
-        <div style="width: 80%; margin: auto">
+        <div style="margin: auto">
             <div v-for="permission in data.permissions" :key="permission.name" class="conteiner-body my-4">
                 <div>
                     <div @click="activarHeader(data,permission)" class="conteiner-head has-background-light p-2">
                         <h3 class="has-text-centered">{{permission.name}} ({{permission.permissions_activo}}/{{permission.total}})</h3>
                     </div>
                     <div v-if="permission.activo" class="column is-flex is-flex-wrap-wrap is-align-items-center" style="border: 1px solid #cccccc78">
-                        <div class="columns w-100" style="margin: 0">
+                        <div class="columns is-flex w-100" style="margin: 0">
                             <div class="permissions-available">
                                 <SelectPermission @onMovePermission="asignarPermisos" :appId="data.id" :data="permission" title="Available" :assigned="false" >
                                     <option v-for="item in permission.lista" :key="item.id" 
@@ -15,10 +15,10 @@
                                 </SelectPermission>
                             </div>
                             <div class="buttons-action-permission mt-5">
-                                <button @click="moveAvailableToAssigned" class="button my-1">
+                                <button @click="moveAvailableToAssigned(permission.id)" class="button my-1">
                                     <i class="fas fa-angle-right"></i>
                                 </button>
-                                <button @click="moveAssignedToAvailable" class="button my-1">
+                                <button @click="moveAssignedToAvailable(permission.id)" class="button my-1">
                                     <i class="fas fa-angle-left"></i>
                                 </button>
                                 <button @click="moveAllAvailableToAssigned(data.id,permission.id)" class="button my-1">
@@ -57,8 +57,7 @@ export default {
         SelectPermission,
     },
     props: ['data'],
-    emits: ['onActiveButton',
-            'onActivePermissionApp',
+    emits: ['onActivePermissionApp',
             'onActiveList',
             'onMoveAvailableToAssigned',
             'onMoveAssignedToAvailable',
@@ -69,9 +68,6 @@ export default {
         const permissionIdAvailable = ref()
         const permissionId = ref(999999)
         const appId = ref(99999)
-        const activeButton = (e) => {
-            emit("onActiveButton",e)
-        }
 
         const activePermissionApp = (id) => {
             emit("onActivePermissionApp",id)
@@ -90,13 +86,17 @@ export default {
         }
 
         // emite la accion de mover los item de la lista available a assigned
-        const moveAvailableToAssigned = () => {
-            emit("onMoveAvailableToAssigned", appId.value, permissionId.value, permissionIdAvailable.value)
+        const moveAvailableToAssigned = (clave) => {
+            if (clave == permissionId.value) {
+                emit("onMoveAvailableToAssigned", appId.value, permissionId.value, permissionIdAvailable.value)
+            }
         }
 
         // emite la accion de mover los item de la lista assigned a available
-        const moveAssignedToAvailable = () => {
-            emit("onMoveAssignedToAvailable", appId.value, permissionId.value, permissionIdAvailable.value)
+        const moveAssignedToAvailable = (clave) => {
+            if (clave == permissionId.value) {
+                emit("onMoveAssignedToAvailable", appId.value, permissionId.value, permissionIdAvailable.value)
+            }
         }
 
         // emite la accion de mover todos los items de la lista de available a assigned
@@ -111,7 +111,6 @@ export default {
 
         return {
             permissionIdAvailable,
-            activeButton,
             activePermissionApp,
             activarHeader,
             moveAvailableToAssigned,
@@ -143,6 +142,7 @@ export default {
 .contenedor {
     width: 100%;
     transition: 0.9s ease;
+    padding: .75rem;
 }
 .conteiner-head {
     display: flex;
@@ -152,12 +152,7 @@ export default {
 .conteiner-head .buttons, .conteiner-head .buttons .button {
     margin-bottom: 0;
 }
-.conteiner-head input {
-    width: 40%;
-}
-.conteiner-head h3 {
-    width: 20%;
-}
+
 .conteiner-body div .conteiner-head:hover {
     cursor: pointer;
 }

@@ -11,20 +11,25 @@ export default {
   created(){
     store.commit('onResize')
     this.isMobile = store.state.isMobile
+    this.isTablet = store.state.isTablet
   },
 
   setup(){
     const isMobile = ref(false)
+    const isTablet = ref(false)
 
     window.addEventListener("resize", function(){
       store.commit('onResize')
       isMobile.value = store.state.isMobile
+      isTablet.value = store.state.isTablet
     })
 
     provide('isMobile', isMobile)
+    provide('isTablet', isTablet)
 
     return{
-      isMobile
+      isMobile,
+      isTablet
     }
   }
 }

@@ -11,7 +11,7 @@
 
 <script>
 import { ref } from '@vue/reactivity'
-import { watch } from '@vue/runtime-core'
+import { onMounted, watch } from '@vue/runtime-core'
 export default {
     name: 'SelectPermission',
     props: ['data','title','assigned','appId'],
@@ -24,14 +24,13 @@ export default {
             emit("onMovePermission",permission_id.value, props.data.id, props.appId)
         })
 
-
-        const mostrar_permisos = () => {
-            console.log(permission_id.value)
-        }
+        // onMounted(() => {
+        //     const select = document.querySelector('select')
+        //     console.log(select.getAttribute())
+        // })
 
         return {
             permission_id,
-            mostrar_permisos
         }
     }
 }

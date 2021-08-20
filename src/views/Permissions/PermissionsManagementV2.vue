@@ -8,24 +8,27 @@
             <div class="column is-3">
                 <UserList :users="users"/>
             </div>
-            <div style="width: 100%">
-                <div class="column is-flex">
+            <div class="conteiner-permissions">
+                <div class="column buttons-permission">
                     <PermissionsList v-for="data in datas" :key="data.id" :data="data"
-                        @onActiveButton="activeButton"
                         @onActivePermissionApp="activePermissionApp"
                         @onActiveList="activeList"
-                        @onMovePermission="moveAvailableToAssigned"
+                        @onMoveAvailableToAssigned="moveAvailableToAssigned"
+                        @onMoveAssignedToAvailable="moveAssignedToAvailable"
+                        @onMoveAllAvailableToAssigned="moveAllAvailableToAssigned"
+                        @onMoveAllAssignedToAvailable="moveAllAssignedToAvailable"
                     />
                 </div>
-                <ActionPermission v-for="data in datas" :key="data.id" :data="data"
-                    @onActiveButton="activeButton"
-                    @onActivePermissionApp="activePermissionApp"
-                    @onActiveList="activeList"
-                    @onMoveAvailableToAssigned="moveAvailableToAssigned"
-                    @onMoveAssignedToAvailable="moveAssignedToAvailable"
-                    @onMoveAllAvailableToAssigned="moveAllAvailableToAssigned"
-                    @onMoveAllAssignedToAvailable="moveAllAssignedToAvailable"
-                />
+                <div v-if="!isTablet">
+                    <ActionPermission v-for="data in datas" :key="data.id" :data="data"
+                        @onActivePermissionApp="activePermissionApp"
+                        @onActiveList="activeList"
+                        @onMoveAvailableToAssigned="moveAvailableToAssigned"
+                        @onMoveAssignedToAvailable="moveAssignedToAvailable"
+                        @onMoveAllAvailableToAssigned="moveAllAvailableToAssigned"
+                        @onMoveAllAssignedToAvailable="moveAllAssignedToAvailable"
+                    />
+                </div>
             </div>
             
         </div>
@@ -38,6 +41,8 @@ import UserList from '../../components/Permissions/UserList.vue'
 import PermissionsList from '../../components/Permissions/PermissionsListV2.vue'
 import ActionPermission from '../../components/Permissions/ActionPermission.vue'
 import { ref } from '@vue/reactivity'
+import store from '@/store'
+import { inject } from '@vue/runtime-core'
 export default {
     components: {
         TitleBoard,
@@ -142,18 +147,9 @@ export default {
             {id: 6, name: 'Javier Rizzoli'},
             {id: 7, name: 'Charles Torres Troches'},
         ])
+        const isTablet = inject('isTablet')
 
-        // Activa el booleano de la lista para pasarlo al lado contrario
-        const activeButton = (data) => {
-            console.log(data)
-            let aux = datas.value.find(element => element.id == data.appId)
-            let permission = aux.permissions.find(element => element.id == data.permissionID)
-            aux = permission.lista.find(element => element.id == data.itemID)
-            aux.activo = data.valor
-            console.log(permission)
-            data.valor ? permission.permissions_activo+= 1 : permission.permissions_activo -= 1
-        }
-        
+
         // ************************************************************************************
         // Estas functiones moveran el permiso al sector contrario de la tabla
 
@@ -222,7 +218,7 @@ export default {
         return {
             datas,
             users,
-            activeButton,
+            isTablet,
             activePermissionApp,
             activeList,
             moveAvailableToAssigned,
@@ -237,7 +233,27 @@ export default {
 <style scoped>
 
 .conteiner-permissions {
-    display: flex;
+    width: 56%;
+    margin: 0 auto
 }
+.buttons-permission {
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .conteiner-permissions {
+        width: 100%;
+    }
+    .buttons-permission {
+        flex-direction: column;
+    }
+}
+/* @media (max-width: 425px) {
+    .buttons-permission {
+        justify-content: left;
+        overflow-x: scroll;
+    }
+} */
 
 </style>
