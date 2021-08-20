@@ -19,10 +19,9 @@
 
 <script>
 import ActionPermission from '../../components/Permissions/ActionPermission.vue'
-import { ref } from '@vue/reactivity'
 import { inject } from '@vue/runtime-core'
 export default {
-    name: 'PermissionsListV2',
+    name: 'PermissionsList',
     components: {
         ActionPermission
     },

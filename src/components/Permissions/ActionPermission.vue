@@ -46,14 +46,12 @@
 import { ref } from '@vue/reactivity'
 import Searcher from '../Board/Searcher.vue'
 import ButtonIcon from '../Buttons/ButtonIcon.vue'
-import PermissionsItem from './PermissionsItem.vue'
 import SelectPermission from './SelectPermission.vue'
 export default {
     name: 'ActionPermission',
     components: {
         Searcher,
         ButtonIcon,
-        PermissionsItem,
         SelectPermission,
     },
     props: ['data'],
@@ -65,6 +63,7 @@ export default {
             'onMoveAllAssignedToAvailable'
             ],
     setup(props,{emit}) {
+        // Variables para almacenar las id de los datos que se van a pasar en la tabla
         const permissionIdAvailable = ref()
         const permissionId = ref(999999)
         const appId = ref(99999)

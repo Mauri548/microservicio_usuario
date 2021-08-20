@@ -38,10 +38,9 @@
 <script>
 import TitleBoard from '../../components/Board/TitleBoard.vue'
 import UserList from '../../components/Permissions/UserList.vue'
-import PermissionsList from '../../components/Permissions/PermissionsListV2.vue'
+import PermissionsList from '../../components/Permissions/PermissionsList.vue'
 import ActionPermission from '../../components/Permissions/ActionPermission.vue'
 import { ref } from '@vue/reactivity'
-import store from '@/store'
 import { inject } from '@vue/runtime-core'
 export default {
     components: {
