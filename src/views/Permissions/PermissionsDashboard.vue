@@ -29,8 +29,8 @@
             </Board>
         </div>
         <Pagination/>
-        <AddPermission :data="addPermission" @onCloseModal="actionModalAddPermission" />
-        <EditPermission :data="editPermission" @onCloseModal="actionModalEditPermission" />
+        <AddPermission :data="addPermission"   @tengoAct="mostrarModal2"  @onCloseModal="actionModalAddPermission" /> 
+        <EditPermission :data="editPermission" @tengoAct="mostrarModal"  @onCloseModal="actionModalEditPermission" />
     </div>
 
 
@@ -40,11 +40,11 @@
                 <div class="modal-content-width has-text-black" style="border:1px ridge grey;" :class="{'modal-puntowifi-escritorio' : !isMobile, 'modal-puntowifi-mobil' : isMobile}">
                     <div class="container has-text-centered has-background-white" :class="{'p-2':isMobile, 'p-5':!isMobile}" id="modal">
                         <!-- <h1 class="is-size-3 has-text-weight-semibold" :class="{'is-size-4':isMobile}">No se puede borrar el anuncio</h1> -->
-                        <p v-show="comprobar==true" class="has-text-centered has-text-success">Se cargo con exito la empresa.</p>
-                        <p v-show="comprobar_edi==true" class="has-text-centered has-text-success">Se edito con exito la empresa.</p>
+                        <p v-show="comprobar==true" class="has-text-centered has-text-success">Se cargo con exito el permiso.</p>
+                        <p v-show="comprobar_edi==true" class="has-text-centered  has-text-success">Se edito con exito el permiso.</p>
                         <div class="columns mt-2">
                             <div class="column">
-                                <button class="button w-100 fondo-crenein is-outline btn has-text-white has-text-weight-blod" @click="carga_exitosa = false">Esta bien</button>
+                                <button class="button w-100 fondo-crenein is-outline btn has-text-white has-text-weight-blod" @click="cerrarModal">Esta bien</button>
                             </div>
                         </div>
                     </div>
@@ -63,7 +63,6 @@ import ActionModal from '../../components/Modals/ActionsModal.vue'
 import EditPermission from './EditPermission.vue'
 import AddPermission from './AddPermission.vue'
 import { ref } from '@vue/reactivity'
-import store from '@/store';
 import { inject } from '@vue/runtime-core'
 
 export default {
@@ -77,18 +76,40 @@ export default {
         AddPermission,
         EditPermission,
     },
-
-    created(){
-        this.comprobar_carga()
-        this.comprobar_edicion()
-    },
-
+   
     setup() {
         const isMobile = inject('isMobile')
         const carga_exitosa = ref(false)
-        const comprobar = store.state.carga_exitosa
-        const comprobar_edi = store.state.edicion_exitosa
+       /*  const comprobar = store.state.carga_exitosa */
+        const comprobar = ref(false)
+        const comprobar_edi = ref(false)
         const accion_exitosa = ref(false)
+        const addPermission = ref(false)
+        const editPermission = ref(false)
+
+
+        const mostrarModal = (act) => {
+            /* console.log(act.value.activo) */
+            carga_exitosa.value = act.value.activo
+            comprobar_edi.value = act.value.edit
+        }
+
+         const mostrarModal2 = (act) => {
+            /* console.log(act.value.activo) */
+            carga_exitosa.value = act.value.activo
+            comprobar.value = act.value.cargar
+        }
+
+
+        const cerrarModal = () => {
+            carga_exitosa.value = false
+            if(comprobar_edi.value==true){
+                comprobar_edi.value = false
+            }
+            if(comprobar.value==true){
+                comprobar.value = false
+            }
+        }
 
         const datas = ref([
             {id: 1, app: 'ISPB', key: 'customers_table_list', detail: 'Ver lista', activo: false},
@@ -101,12 +122,9 @@ export default {
             {id: 8, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
             {id: 9, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
             {id: 10, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-            
         ])
-        const addPermission = ref(false)
-        const editPermission = ref(false)
-
-
+      
+        
         const titles = ref(['App','Key','Detail'])
 
         const actionModal = (data) => {
@@ -124,34 +142,17 @@ export default {
             addPermission.value = !addPermission.value
         }
 
-
-        const comprobar_carga = () => {
-            // console.log(comprobar)
-            if(comprobar==true){
-               carga_exitosa.value = true
-               let accion = "cargarPermission"
-               store.commit('verificar_carga',accion)
-            }
-        }
-        const comprobar_edicion = () => {
-            // console.log(comprobar)
-            if(comprobar_edi==true){
-               carga_exitosa.value = true
-               let accion = "edicionPermission"
-               store.commit('verificar_carga',accion)
-            }
-        }
-
         const actionModalEditPermission = () => {
             datas.value.forEach(element => element.activo = false)
             editPermission.value = !editPermission.value
-
         }
+        
 
         return {
+            mostrarModal2 ,
+            cerrarModal,
+            mostrarModal,
             isMobile,
-            comprobar_carga,
-            comprobar_edicion ,
             carga_exitosa ,
             comprobar ,
             comprobar_edi ,

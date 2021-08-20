@@ -6,7 +6,7 @@
         <div class="modal-background  "></div>
         <div class="modal-card " >
             <header class="modal-card-head has-background-white " >
-            <p class="modal-card-title has-text-centered blue-crenein" style="font-size:1.5em; font-weight:bold;">Edit Permissions</p>
+            <p class="modal-card-title has-text-centered blue-crenein" style="font-size:1.5em; font-weight:bold;">Edit Permission</p>
             <button class="delete" @click="closeModal"  aria-label="close"></button>
             </header>
             <section class="modal-card-body">
@@ -23,7 +23,7 @@
                 
                     <div class="column has-text-centered" >
                         <button class="button has-background-danger has-text-white mr-2"  style="font-weight:bold;" @click="closeModal" >Cancel</button>
-                        <button class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;" @click="verificar">Save changes</button>
+                        <button class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;"  @click="verificar">Save changes</button>
                     </div>
                 </form>
             </section>
@@ -37,29 +37,45 @@
 
 <script>
 import CampoForm from '../../components/CampoForm.vue'
-import store from '@/store';
+import { ref } from '@vue/reactivity'
 export default {
     name:'EditPermission',
     props: ['data'],
-    emits: ['onCloseModal','onOpenModalDelete'],
+    emits: ['onCloseModal','onOpenModalDelete','tengoAct'],
     components: {
         CampoForm
-    },
-    setup(props, { emit }){
-       
-        const closeModal = () => {
-            emit("onCloseModal")
-        }
-        const verificar = () => {
-            router.push({name: 'PermissionsDashboard'})
-            let accion = "edicionPermission"
-            store.commit('verificar_carga',accion)
-        }
+    }
+    
 
+    ,
+    setup(props, { emit }){
+        
+        const act = ref({activo:false ,edit:false})
+     /*  const act = ref(false) */
+
+
+        const closeModal = () => {
+            act.value.activo = false
+            act.value.edit = false
+            /* console.log(act.value) */
+            emit("onCloseModal")
+
+        }
+       
+
+        const verificar = () => {
+            
+            emit("onCloseModal")
+            act.value.activo = true
+            act.value.edit = true
+            emit('tengoAct', act) 
+
+        }
 
         return{
+            act ,
+            verificar,
             closeModal,
-       
         }
     }
 }
