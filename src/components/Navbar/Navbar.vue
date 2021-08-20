@@ -24,7 +24,7 @@
           <div class="navbar-item">
             <div class="buttons" :class="{'buttons-mobile':isMobile}">
               <!-- <button @click="cambiar" class="button blue-crenein has-text-weight-semibold">{{text}}</button> -->
-              <ButtonLang @pasarLan="revisar" />
+              <ButtonLang  />
               <SelectCompany/>
               <MenuApp v-show="!isMobile"/>
               <MenuPerfil/>
@@ -70,10 +70,7 @@ export default {
       console.log(optionActive.value)
     }
 
-    const revisar = (cambiar) => {
-          console.log(cambiar.value)
-    }
-
+    
 
     const OpenMenuNavbar = () => {
       menuNavbar.value = !menuNavbar.value
@@ -81,7 +78,7 @@ export default {
     }
 
     return{
-      revisar,
+      
       Lan,
       optionActive,
       isMobile,

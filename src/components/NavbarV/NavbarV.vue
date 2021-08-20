@@ -54,7 +54,7 @@
 <script>
 
 import {ref} from '@vue/reactivity' 
-import { onMounted, watch, watchEffect } from '@vue/runtime-core'
+import { onMounted, watchEffect } from '@vue/runtime-core'
 import { useRouter } from 'vue-router'
 import store from '@/store'
 

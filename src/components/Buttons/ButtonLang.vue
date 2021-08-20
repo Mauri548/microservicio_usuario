@@ -9,10 +9,11 @@
 <script>
 import store from '@/store'
 import { ref } from '@vue/reactivity'
+
 export default {
     name:'ButtonLang',
     emits:['pasarLan'],
-    setup(props,{emit}){
+    setup(){
         const language = ref("English")
         const cambiar = ref("false")
 
@@ -22,13 +23,13 @@ export default {
                 language.value = "Español"
                 store.commit('cambiarLan')
                 cambiar.value = store.state.cambio_lang
-                emit('pasarLan',cambiar)
+                
                 
             }else{
                 language.value = "English"
                 store.commit('cambiarLan')
                 cambiar.value = store.state.cambio_lang
-                emit('pasarLan',cambiar)
+              
             }
         }
         return { 

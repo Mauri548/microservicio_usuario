@@ -22,7 +22,7 @@ const store = createStore({
                     state.cambio_lang = false
               }
 
-              console.log(state.cambio_lang)
+              /* console.log(state.cambio_lang) */
         },
 
 
