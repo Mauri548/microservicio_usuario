@@ -1,7 +1,13 @@
 <template>
     <div class="conteiner-tablero mt-2 py-4">
         <div class="head-tablero">
-            <TitleBoard title="Companies" />
+            <div v-show="Lan==true">
+                <TitleBoard title="Empresas" />
+            </div> 
+            <div v-show="Lan==false">
+                <TitleBoard title="Companies" />
+            </div> 
+           
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard />
@@ -58,6 +64,8 @@ import ActionModal from '../../components/Modals/ActionsModal.vue'
 import { ref } from '@vue/reactivity'
 import store from '@/store';
 import { inject } from '@vue/runtime-core'
+import {  watchEffect } from '@vue/runtime-core'
+
 
 export default {
     components: {
@@ -79,6 +87,7 @@ export default {
         const comprobar = store.state.carga_exitosa
         const comprobar_edi = store.state.edicion_exitosa
         const accion_exitosa = ref(false)
+        const Lan = ref(false)
 
         const datas = ref([
             {id: 1, nameFantasy: 'Internet', businessName: 'Internet', owners: 'Gonzalo Ramitez', cuit: 203688999, email: 'ramirez@gmail.com',
@@ -98,6 +107,41 @@ export default {
         ])
 
         const titles = ref(['Name fantasy', 'Business name', 'Owners', 'Cuit', 'Email', 'Phone', 'Tax condition', 'Direction', 'Location', 'Province', 'Country'])
+
+
+        watchEffect(()=>{
+            Lan.value = store.state.cambio_lang
+
+            if(Lan.value){
+                titles.value[0] = "Nombre de fantasia"
+                titles.value[1] = "Nombre de negocio"
+                titles.value[2] = "Propietario"
+                titles.value[3] = "Cuit"
+                titles.value[4] = "Correo"
+                titles.value[5] = "Telefono"
+                titles.value[6] = "Condición fiscal"
+                titles.value[7] = "Direccion"
+                titles.value[8] = "Ciudad"
+                titles.value[9] = "Provincia"
+                titles.value[10] = "Pais"
+            }
+            else{
+                titles.value[0] = "Name fantasy"
+                titles.value[1] = "Business name"
+                titles.value[2] = "Owner"
+                titles.value[3] = "Cuit"
+                titles.value[4] = "Email"
+                titles.value[5] = "Phone"
+                titles.value[6] = "Tax condition"
+                titles.value[7] = "Direction"
+                titles.value[8] = "Location"
+                titles.value[9] = "Province"
+                titles.value[10] = "Country"
+            }
+ 
+
+        })
+
 
         const actionModal = (data) => {
             console.log(datas.value)
@@ -129,6 +173,7 @@ export default {
         }
 
         return {
+            Lan,
             isMobile ,
             comprobar_carga ,
             comprobar_edicion ,

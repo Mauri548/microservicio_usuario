@@ -7,8 +7,10 @@
 </template>
 
 <script>
-import store from '@/store'
+
 import { ref } from '@vue/reactivity'
+import store from '@/store'
+
 
 export default {
     name:'ButtonLang',

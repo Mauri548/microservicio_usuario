@@ -1,7 +1,12 @@
 <template>
     <div class="conteiner-tablero mt-2 py-4">
         <div class="head-tablero">
-            <TitleBoard title="Users" />
+            <div v-show="Lan==true">
+                <TitleBoard title="Usuarios" />
+            </div> 
+            <div v-show="Lan==false">
+                <TitleBoard title="Users" />
+            </div> 
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard/>
@@ -34,6 +39,10 @@ import Pagination from '../../components/Board/Pagination.vue'
 import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
 import { ref } from '@vue/reactivity'
+import store from '@/store'
+import {  watchEffect } from '@vue/runtime-core'
+
+
 export default {
     components: {
         TitleBoard,
@@ -52,6 +61,7 @@ export default {
             {id: 4, avatar: 'foto', fullName: 'Glo Ferreyra', email: 'gloquita@gmail.com', created: '24/07/2021', state: 'Habilitado', activo: false},
             {id: 5, avatar: 'foto', fullName: 'Leonardo Ferreyra', email: 'loreto@gmail.com', created: '24/07/2021', state: 'Pendiente', activo: false},
         ])
+        const Lan = ref(false)
 
         const titles = ref(['Avatar','Full name','Email','Created','State'])
 
@@ -65,9 +75,27 @@ export default {
             aux.activo = false
             aux.modalDelete = !aux.modalDelete
         }
-        
+        watchEffect(()=>{
+            Lan.value = store.state.cambio_lang
+
+            if(Lan.value){
+                titles.value[1] = "Nombre completo"
+                titles.value[2] = "Correo"
+                titles.value[3] = "Creado"
+                titles.value[4] = "Estado"
+            }
+            else{
+                titles.value[1] = "Full name"
+                titles.value[2] = "Email"
+                titles.value[3] = "Created"
+                titles.value[4] = "State"
+            }
+ 
+
+        })
 
         return {
+            Lan,
             datas,
             titles,
             actionModal,
