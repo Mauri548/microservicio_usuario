@@ -4,6 +4,7 @@ const store = createStore({
     state(){
         return {
             isMobile: false,
+            isTablet: false,
             carga_exitosa: false,
             edicion_exitosa: false,
             cambio_lang: false,
@@ -13,6 +14,7 @@ const store = createStore({
     mutations: {
         onResize(state) {
             window.screen.width < 1024 ? state.isMobile = true : state.isMobile = false;
+            window.screen.width <= 768 ? state.isTablet = true : state.isTablet = false;
         },
 
         cambiarLan(state){

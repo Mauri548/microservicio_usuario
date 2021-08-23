@@ -9,7 +9,9 @@
             </div> 
             <hr>
             <div class="body-tablero my-3 px-4">
-                <HeadBoard/>
+                <HeadBoard :buttonDefault="false">
+                    <button class="button btn-crenein">Invite user</button>
+                </HeadBoard>             
             </div>
         </div>
         <div class="body-tablero px-4">

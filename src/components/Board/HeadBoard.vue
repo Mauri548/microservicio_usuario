@@ -25,7 +25,6 @@ export default {
         ShowRows,
         Searcher,
     },
-    // props: ['namePath'],
     props: {
         namePath: String,
         buttonDefault: {

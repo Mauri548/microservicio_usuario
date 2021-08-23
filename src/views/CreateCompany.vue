@@ -58,6 +58,10 @@
                                 </div>
                             </div>
                         </div>
+                        <hr class="my-2">
+                        <div style="width: 92%">
+                            <p class="has-text-right"> <span class="has-text-weight-semibold">Total:</span> ${{total}}</p>
+                        </div>
                     </div>
                     <div class="field is-grouped is-justify-content-space-between">
                         <button type="button" class="button btn-crenein prev">Prev</button>
@@ -71,7 +75,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from '@vue/runtime-core';
+import { onMounted, ref, watch } from '@vue/runtime-core';
 import CampoForm from '../components/CampoForm.vue';
 import ProgressBar from '../components/CreateCompany/ProgressBar.vue'
 import SelectApp from '../components/CreateCompany/SelectApp.vue'
@@ -97,6 +101,15 @@ export default {
             {id: 3, name: 'Geston', licencia: 'Licencia 60x8', price: 3800, logo: geston},
         ])
         // **************************
+        const total = ref(11400)
+
+        watch(datas.value, () => {
+            total.value = 0
+            datas.value.forEach(element => {
+                total.value += element.price
+            })
+            console.log(total.value)
+        })
 
         onMounted(() => {
             const slidepage = document.querySelector('.slidepage')
@@ -157,6 +170,7 @@ export default {
 
         return {
             datas,
+            total,
             removeResumen
         }
 
