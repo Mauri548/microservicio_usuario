@@ -1,7 +1,8 @@
 <template>
-    <div>
+    <div class="prueba">
         <button @click="activePermissionApp(data.id)" class="button btn-crenein button-permission-app ">
-            <span >{{data.app}} permissions</span>
+            <!-- <span >{{data.app}} permissions</span> -->
+            <span >{{data.app}}</span>
             <span class="icon is-small">
                 <i class="fas fa-chevron-down"></i>
             </span>
@@ -74,13 +75,18 @@ export default {
 </script>
 
 <style scoped>
-
+.prueba {
+    width: 33%;
+}
 .button-permission-app {
     width: 100%;
 }
 @media (max-width: 768px) {
     .button-permission-app {
         margin: 2px 0;
+    }
+    .prueba {
+        width: 100%;
     }
 }
 @media (max-width: 425px) {
