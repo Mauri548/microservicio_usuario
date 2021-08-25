@@ -7,7 +7,7 @@
         <div class="form-outer pt-3">
             <form action="">
                 <div class="page slidepage">    
-                    <CampoForm place="Namee fantasy" type="text" />
+                    <CampoForm place="Name fantasy" type="text" />
                     <CampoForm place="Bussines name" type="text" />
                     <CampoForm place="Owner" type="text" />
                     <CampoForm place="Cuit" type="number" />
