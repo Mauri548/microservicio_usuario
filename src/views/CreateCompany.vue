@@ -29,7 +29,7 @@
                     </div>
                 </div>
 
-           <!--      <div v-show="Lan==true" class="page">
+           <!--    <div v-show="Lan==true" class="page">
                     <CampoForm place="Condicion fiscal" type="text" />
                     <CampoForm place="Direccion" type="text" />
                     <CampoForm place="Localidad" type="text" />
