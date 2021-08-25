@@ -1,9 +1,14 @@
 <template>
     <div class="conteiner-tablero mt-2 mb-4 py-4">
-        <div class="head-tablero">
-            <TitleBoard title="Permissions" />
+        <div  class="head-tablero">
+            <TitleBoard v-if="Lan==false" title="Permissions" />
+            <TitleBoard v-if="Lan==true" title="Permisos" />
             <hr>
         </div>
+      <!--   <div v-if="Lan==true" class="head-tablero">
+            <TitleBoard title="Permisos" />
+            <hr>
+        </div> -->
         <div class="columns m-0 mx-2">
             <div class="column is-3">
                 <UserList :users="users"/>
@@ -41,6 +46,8 @@ import UserList from '../../components/Permissions/UserList.vue'
 import PermissionsList from '../../components/Permissions/PermissionsList.vue'
 import ActionPermission from '../../components/Permissions/ActionPermission.vue'
 import { ref } from '@vue/reactivity'
+import store from '@/store'
+import {  watchEffect } from '@vue/runtime-core'
 import { inject } from '@vue/runtime-core'
 export default {
     components: {
@@ -51,6 +58,7 @@ export default {
     },
 
     setup() {
+        const Lan = ref(false)
         const datas = ref([
             {id: 1, app: 'PuWiC', activo: false, permissions: [
                 {id: 1, name: 'Client list', total: 7, permissions_activo: 0, activo: false, lista: [
@@ -149,6 +157,12 @@ export default {
         const isTablet = inject('isTablet')
 
 
+        watchEffect(()=>{
+            Lan.value = store.state.cambio_lang
+        })
+
+
+
         // ************************************************************************************
         // Estas functiones moveran el permiso al sector contrario de la tabla
 
@@ -215,6 +229,7 @@ export default {
         }
 
         return {
+            Lan,
             datas,
             users,
             isTablet,

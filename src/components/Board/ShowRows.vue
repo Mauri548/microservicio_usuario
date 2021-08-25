@@ -1,6 +1,8 @@
 <template>
     <div class="column is-flex is-align-items-center">
-        <p>Show</p>
+      
+        <p v-if="Lan==true">Mostrar</p>
+        <p v-if="Lan==false">Show</p>
         <div class="dropdown mx-2" :class="{'is-active':activo}">
             <div class="dropdown-trigger">
                 <button @click="activar" id="select-row" class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
@@ -19,12 +21,15 @@
                 </div>
             </div>
         </div>
-        <p>rows</p>
+        <p v-if="Lan==true">filas</p>
+        <p v-if="Lan==false">rows</p>
     </div>
 </template>
 
 <script>
 import { ref } from '@vue/reactivity'
+import store from '@/store'
+import {  watchEffect } from '@vue/runtime-core'
 export default {
     name: 'ShowRows',
 
@@ -34,7 +39,11 @@ export default {
         ])
         const cantSelect = ref(50)
         const activo = ref(false)
+        const Lan = ref(false)
 
+        watchEffect(()=>{
+            Lan.value = store.state.cambio_lang
+        })
         const activar = () => {
             activo.value = !activo.value
         }
@@ -52,6 +61,7 @@ export default {
         })
 
         return{
+            Lan,
             cantRows,
             cantSelect,
             activo,

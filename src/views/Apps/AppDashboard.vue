@@ -56,6 +56,7 @@ import geston from '@/assets/geston2.png'
 import { ref } from '@vue/reactivity'
 import store from '@/store';
 import { inject } from '@vue/runtime-core'
+import {  watchEffect } from '@vue/runtime-core'
 
 export default {
     components: {
@@ -78,6 +79,7 @@ export default {
         const comprobar_edi = store.state.edicion_exitosa
         const accion_exitosa = ref(false)
         const paso_elim = ref(false)
+        const Lan = ref(false)
 
         const datas = ref([
            {id: 1, name: 'ISPB', logo: ispb, obvservation: 'Licencia x de ISPB', activo: false, modalDelete: false},
@@ -85,7 +87,28 @@ export default {
            {id: 3, name: 'Geston', logo: geston, obvservation: 'Licencia x de Geston', activo: false, modalDelete: false},
         ])
 
-        const titles = ['Name','Logo','Obvservation']
+        const titles = ref(['Name','Logo','Obvservation'])
+
+
+        watchEffect(()=>{
+            Lan.value = store.state.cambio_lang
+
+            if(Lan.value){
+                titles.value[0] = "Nombre"
+                titles.value[1] = "Logo"
+                titles.value[2] = "Observacion"
+         
+            }
+            else{
+                titles.value[0] = "Name"
+                titles.value[1] = "Logo"
+                titles.value[2] = "Obvservation"
+        
+            }
+ 
+        })
+
+
 
         const actionModal = (data) => {
             let aux = datas.value.find(element => element.id == data.id)
@@ -117,6 +140,7 @@ export default {
 
 
         return {
+            Lan,
             isMobile,
             carga_exitosa,
             comprobar,

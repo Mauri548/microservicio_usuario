@@ -1,6 +1,15 @@
 <template>
     <div class="conteiner-tablero mt-2 py-4">
-        <div class="head-tablero">
+        <div v-if="Lan==true" class="head-tablero">
+            <TitleBoard title="Permisos"/>
+            <hr>
+            <div class="body-tablero my-3 px-4">
+                <HeadBoard :buttonDefault="false">
+                    <button @click="actionModalAddPermission" class="button btn-crenein">+ Agregar</button>
+                </HeadBoard>
+            </div>
+        </div>
+        <div v-if="Lan==false" class="head-tablero">
             <TitleBoard title="Permissions"/>
             <hr>
             <div class="body-tablero my-3 px-4">
@@ -64,6 +73,9 @@ import EditPermission from './EditPermission.vue'
 import AddPermission from './AddPermission.vue'
 import { ref } from '@vue/reactivity'
 import { inject } from '@vue/runtime-core'
+import store from '@/store'
+import {  watchEffect } from '@vue/runtime-core'
+
 
 export default {
     components: {
@@ -86,7 +98,12 @@ export default {
         const accion_exitosa = ref(false)
         const addPermission = ref(false)
         const editPermission = ref(false)
+        const Lan = ref(false)
 
+
+        watchEffect(()=>{
+            Lan.value = store.state.cambio_lang
+        })
 
         const mostrarModal = (act) => {
             /* console.log(act.value.activo) */
@@ -149,6 +166,7 @@ export default {
         
 
         return {
+            Lan ,
             mostrarModal2 ,
             cerrarModal,
             mostrarModal,
