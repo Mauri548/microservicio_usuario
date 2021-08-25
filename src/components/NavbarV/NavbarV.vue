@@ -54,7 +54,7 @@
 <script>
 
 import {ref} from '@vue/reactivity' 
-import { onMounted, watchEffect } from '@vue/runtime-core'
+import { onMounted, watch, watchEffect } from '@vue/runtime-core'
 import { useRouter } from 'vue-router'
 import store from '@/store'
 
@@ -74,6 +74,7 @@ export default {
 
         const router = useRouter()
         const Lan = ref(false)
+        const creating_company = ref(false)
 
         
         const push = (path) => {
@@ -82,12 +83,24 @@ export default {
 
 
 
-    watchEffect(()=>{
-
-        Lan.value = store.state.cambio_lang
-    /*     console.log(Lan.value ) */
-
-    })
+        watchEffect(()=>{
+            Lan.value = store.state.cambio_lang
+            creating_company.value = store.state.creating_company
+            console.log(creating_company.value)
+            console.log(store.state.creating_company)
+            
+            // let buttons = document.querySelectorAll('.menu-link')
+            // console.log(buttons)
+            // if (creating_company.value) {
+            //     buttons.forEach(button => {
+            //         button.disabled = false
+            //     })
+            // } else {
+            //     buttons.forEach(button => {
+            //         button.disabled = true
+            //     })
+            // }
+        })
        
         const showCompanyOption = ref(false)
 
@@ -100,7 +113,7 @@ export default {
         // esperar a que este cargado para agregar los elementos del html
         onMounted(() => {
             const item = document.querySelectorAll('.menu-link')
-         /*    console.log(item) */
+            /*    console.log(item) */
             item.forEach((element, index) => {
                 item[index].addEventListener('click', () => {
                     item.forEach((element, i) => {
@@ -109,17 +122,9 @@ export default {
                     item[index].classList.add('is-active')
                 }) 
             })
+            
 
         })
-
-        // document.addEventListener('click', function(e) {
-            // let clic = e.target
-            // console.log(e.target)
-            // if (!clic.includes('companyOption')) {
-            //     showCompanyOption.value = false
-            // }
-        // }, false)
-
        
         return {
             Lan,
@@ -138,6 +143,7 @@ export default {
     margin-top: 8px;
 }
 a:hover {
+    transition: ease .3s;
     border: 1px solid #005395;
     color: #005395;
 }

@@ -6,7 +6,7 @@
 
 <script>
 import store from '@/store'
-import { provide, ref } from '@vue/runtime-core'
+import { provide, ref, watch } from '@vue/runtime-core'
 export default {
   created(){
     store.commit('onResize')

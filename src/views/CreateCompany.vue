@@ -65,8 +65,8 @@
                     </div>
                     <div class="field is-grouped is-justify-content-space-between">
                         <button type="button" class="button btn-crenein prev">Prev</button>
-                        <!-- <button class="button btn-crenein submite">Submite</button> -->
-                        <router-link class="button btn-crenein submite" :to="{name: 'InviteUser'}">Submite</router-link>
+                        <button @click="createCompany" class="button btn-crenein submite">Submite</button>
+                        <!-- <router-link class="button btn-crenein submite" :to="{name: 'InviteUser'}">Submite</router-link> -->
                     </div>
                 </div>
             </form>
@@ -75,13 +75,15 @@
 </template>
 
 <script>
-import { onMounted, ref, watch } from '@vue/runtime-core';
+import { onMounted, ref, watch, watchEffect } from '@vue/runtime-core';
 import CampoForm from '../components/CampoForm.vue';
 import ProgressBar from '../components/CreateCompany/ProgressBar.vue'
 import SelectApp from '../components/CreateCompany/SelectApp.vue'
 import ispb from '@/assets/ispb2.png'
 import puwic from '@/assets/puwic2.png'
 import geston from '@/assets/geston2.png'
+import store from '@/store.js';
+import { useRouter } from 'vue-router';
 
 
 export default {
@@ -90,6 +92,10 @@ export default {
         CampoForm,
         ProgressBar,
         SelectApp,
+    },
+
+    created(){
+        store.commit("setCreatingCompany")
     },
 
     setup(){
@@ -102,6 +108,14 @@ export default {
         ])
         // **************************
         const total = ref(11400)
+        const router = useRouter()
+        const creating_company = ref(true)
+
+        watchEffect(() => {
+            creating_company.value = store.state.creating_company
+            console.log(creating_company.value)
+            console.log(store.state.creating_company)
+        })
 
         watch(datas.value, () => {
             total.value = 0
@@ -168,9 +182,17 @@ export default {
             datas.value.splice(pos, 1)
         }
 
+        const createCompany = () => {
+            // verificas si los valores son correctos
+            // falta hacer las validaciones
+            store.commit('setCreatingCompany')
+            router.push({name: 'InviteUser'})
+        }
+
         return {
             datas,
             total,
+            createCompany,
             removeResumen
         }
 

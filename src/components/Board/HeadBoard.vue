@@ -35,7 +35,6 @@ export default {
 
     setup(props) {
         const router = useRouter()
-        console.log(props.buttonDefault)
 
         const push = () => {
             router.push({name: props.namePath})

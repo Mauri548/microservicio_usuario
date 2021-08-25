@@ -10,7 +10,7 @@
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
-                    <button class="button btn-crenein">Invite user</button>
+                    <router-link :to="{name: 'InviteUser'}" class="button btn-crenein">Invite user</router-link>
                 </HeadBoard>             
             </div>
         </div>
@@ -107,9 +107,7 @@ export default {
 }
 </script>
 
-<style>
-
-
+<style scoped>
 
 /* .is-current {
     background-color: #005395;
