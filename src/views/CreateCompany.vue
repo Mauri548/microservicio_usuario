@@ -6,7 +6,7 @@
 
         <div class="form-outer pt-3">
             <form action="">
-        <!--         <div v-show="Lan==true" class="page slidepage">    
+                <div v-show="Lan" class="page slidepage">    
                     <CampoForm place="Nombre de fantasia" type="text" />
                     <CampoForm place="Nombre del negocio" type="text" />
                     <CampoForm place="Propietario" type="text" />
@@ -16,9 +16,9 @@
                     <div class="" >
                         <button type="button" class="button btn-crenein next" style="width:100%">Siguiente</button>
                     </div>
-                </div> -->
-                <div class="page slidepage">    
-                    <CampoForm place="Nameeeee fantasy" type="text" />
+                </div> 
+                <div v-show="!Lan" class="page slidepage">    
+                    <CampoForm place="Name fantasy" type="text" />
                     <CampoForm place="Bussines name" type="text" />
                     <CampoForm place="Owner" type="text" />
                     <CampoForm place="Cuit" type="number" />
