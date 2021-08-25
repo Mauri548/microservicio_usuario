@@ -17,7 +17,7 @@
                         <button type="button" class="button btn-crenein next" style="width:100%">Siguiente</button>
                     </div>
                 </div> 
-                <div v-show="!Lan" class="page slidepage">    
+                <div v-show="Lan==false" class="page slidepage">    
                     <CampoForm place="Name fantasy" type="text" />
                     <CampoForm place="Bussines name" type="text" />
                     <CampoForm place="Owner" type="text" />
