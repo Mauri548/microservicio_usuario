@@ -95,7 +95,7 @@ export default {
     },
 
     created(){
-        store.commit("setCreatingCompany")
+        store.commit("setCreatingCompany",true)
     },
 
     setup(){
@@ -185,7 +185,7 @@ export default {
         const createCompany = () => {
             // verificas si los valores son correctos
             // falta hacer las validaciones
-            store.commit('setCreatingCompany')
+            store.commit('setCreatingCompany',false)
             router.push({name: 'InviteUser'})
         }
 

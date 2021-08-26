@@ -4,19 +4,19 @@
         <div v-show="Lan==false">
             <aside class="menu mx-3">
                 <ul class="menu-list">
-                    <li><a class="menu-link" @click="push('PersonalForm')">Personal Info</a></li>
-                    <li><a class="menu-link" @click="push('PermissionsDashboard')">Permissions</a></li>
-                    <li><a class="menu-link companyOption btn-company" @click="ActionShowCompanyOption">
+                    <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PersonalForm')">Personal Info</a></li>
+                    <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PermissionsDashboard')">Permissions</a></li>
+                    <li><a class="menu-link companyOption btn-company" :class="{'not-active': creating_company}" @click="ActionShowCompanyOption">
                         <span class="column has-text-left ">Company</span>
                         <span class="column has-text-right  icon is-small">
                             <i  class="fas fa-chevron-down"></i>
                         </span>
                     </a>
                         <ul v-show="showCompanyOption" >
-                            <li><a class="menu-link" @click="push('UserDashboard')">User management</a></li>
-                            <li><a class="menu-link" @click="push('CompaniesDashboard')">Companies management</a></li>
-                            <li><a class="menu-link" @click="push('AppDashboard')">Apps management</a></li>
-                            <li><a class="menu-link" @click="push('PermissionsManagement')">Permissions management</a></li>
+                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('UserDashboard')">User management</a></li>
+                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('CompaniesDashboard')">Companies management</a></li>
+                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('AppDashboard')">Apps management</a></li>
+                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PermissionsManagement')">Permissions management</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -26,19 +26,19 @@
         <div v-show="Lan==true">
             <aside class="menu mx-3">
                 <ul class="menu-list">
-                    <li><a class="menu-link" @click="push('PersonalForm')">Informacion personal</a></li>
-                    <li><a class="menu-link" @click="push('PermissionsDashboard')">Permisos</a></li>
-                    <li><a class="menu-link companyOption btn-company" @click="ActionShowCompanyOption">
+                    <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PersonalForm')">Informacion personal</a></li>
+                    <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PermissionsDashboard')">Permisos</a></li>
+                    <li><a class="menu-link companyOption btn-company" :class="{'not-active': creating_company}" @click="ActionShowCompanyOption">
                         <span class="column has-text-left ">Empresa</span>
                         <span class="column has-text-right  icon is-small">
                             <i  class="fas fa-chevron-down"></i>
                         </span>
                     </a>
                         <ul v-show="showCompanyOption" >
-                            <li><a class="menu-link" @click="push('UserDashboard')">Gestion de usuarios</a></li>
-                            <li><a class="menu-link" @click="push('CompaniesDashboard')">Gestion de empresas</a></li>
-                            <li><a class="menu-link" @click="push('AppDashboard')">Gestion de Apps</a></li>
-                            <li><a class="menu-link" @click="push('PermissionsManagement')">Gestion de permisos</a></li>
+                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('UserDashboard')">Gestion de usuarios</a></li>
+                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('CompaniesDashboard')">Gestion de empresas</a></li>
+                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('AppDashboard')">Gestion de Apps</a></li>
+                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PermissionsManagement')">Gestion de permisos</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -76,30 +76,14 @@ export default {
         const Lan = ref(false)
         const creating_company = ref(false)
 
-        
+        // Redirige al usuario a otra vista        
         const push = (path) => {
             router.push({name: path})
         }
 
-
-
         watchEffect(()=>{
             Lan.value = store.state.cambio_lang
             creating_company.value = store.state.creating_company
-            console.log(creating_company.value)
-            console.log(store.state.creating_company)
-            
-            // let buttons = document.querySelectorAll('.menu-link')
-            // console.log(buttons)
-            // if (creating_company.value) {
-            //     buttons.forEach(button => {
-            //         button.disabled = false
-            //     })
-            // } else {
-            //     buttons.forEach(button => {
-            //         button.disabled = true
-            //     })
-            // }
         })
        
         const showCompanyOption = ref(false)
@@ -129,6 +113,7 @@ export default {
         return {
             Lan,
             showCompanyOption,
+            creating_company,
             ActionShowCompanyOption,
             push,
         }
@@ -150,6 +135,10 @@ a:hover {
 a.is-active {
     background-color: #005395;
     color: #fff
+}
+a.not-active {
+    pointer-events: none;
+    cursor: default;
 }
 .btn-company {
     display: flex;

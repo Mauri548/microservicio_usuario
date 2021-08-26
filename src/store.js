@@ -20,8 +20,10 @@ const store = createStore({
             window.screen.width <= 768 ? state.isTablet = true : state.isTablet = false;
         },
 
-        setCreatingCompany(state) {
-            state.creating_company = !state.creating_company
+        setCreatingCompany(state,data) {
+            console.log(data)
+            data ? state.creating_company = true : state.creating_company = false
+            // state.creating_company = !state.creating_company
         },
 
         cambiarLan(state){

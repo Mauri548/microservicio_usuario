@@ -127,21 +127,25 @@ export default {
         
         const titles = ref(['App','Key','Detail'])
 
+        // Abre el modal de acciones del elemento que clickeas
         const actionModal = (data) => {
             let aux = datas.value.find(element => element.id == data.id)
             aux.activo = !aux.activo
         }
 
+        // Abre la ventana emergente para eliminar un elemento de la lista
         const actionModalDelete = (data) => {
             let aux = datas.value.find(element => element.id == data)
             aux.activo = false
             aux.modalDelete = !aux.modalDelete
         }
 
+        // Abre el modal para agregar un permiso a la lista
         const actionModalAddPermission = () => {
             addPermission.value = !addPermission.value
         }
 
+        // Abre el modal para editar un permiso de la lista
         const actionModalEditPermission = () => {
             datas.value.forEach(element => element.activo = false)
             editPermission.value = !editPermission.value
