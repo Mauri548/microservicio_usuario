@@ -24,11 +24,6 @@ export default {
             emit("onMovePermission",permission_id.value, props.data.id, props.appId)
         })
 
-        // onMounted(() => {
-        //     const select = document.querySelector('select')
-        //     console.log(select.getAttribute())
-        // })
-
         return {
             permission_id,
         }

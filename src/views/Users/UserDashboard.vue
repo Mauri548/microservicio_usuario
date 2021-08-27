@@ -23,7 +23,11 @@
                     <td @click="actionModal(data)">{{data.email}}</td>
                     <td @click="actionModal(data)">{{data.created}}</td>
                     <td @click="actionModal(data)">{{data.state}}</td>
-                    <Modal :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
+                    <Modal :data="data" :buttonDefault="false" @onCloseModal="actionModal" 
+                     @onOpenModalDelete="actionModalDelete" >
+                        <button v-if="data.state == 'Habilitado'" class="button btn-crenein w-100 my-1">Disable</button>
+                        <button v-else class="button btn-crenein w-100 my-1">Enable</button>
+                    </Modal>
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
