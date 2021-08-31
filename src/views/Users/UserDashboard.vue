@@ -71,11 +71,13 @@ export default {
 
         const titles = ref(['Avatar','Full name','Email','Created','State'])
 
+        // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
             let aux = datas.value.find(element => element.id == data.id)
             aux.activo = !aux.activo
         }
 
+        // Activa el valor de modalDelete para abrir el modal de aviso 
         const actionModalDelete = (data) => {
             let aux = datas.value.find(element => element.id == data)
             aux.activo = false
@@ -116,10 +118,4 @@ export default {
 }
 </script>
 
-<style scoped>
-
-/* .is-current {
-    background-color: #005395;
-} */
-
-</style>
+<style scoped></style>

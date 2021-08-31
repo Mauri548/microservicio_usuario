@@ -1,15 +1,18 @@
 <template>
     <div class="conteiner-tablero mt-2 mb-4 py-4">
         <div class="head-tablero">
+            <!-- Titulo del tablero -->
             <TitleBoard title="Permissions" />
             <hr>
         </div>
         <div class="columns m-0 mx-2">
             <div class="column is-3">
+                <!-- Lista de usuarios -->
                 <UserList :users="users"/>
             </div>
             <div class="conteiner-permissions">
                 <div class="column buttons-permission">
+                    <!-- Botones de los permisos de las App contratada -->
                     <PermissionsList v-for="data in datas" :key="data.id" :data="data"
                         @onActivePermissionApp="activePermissionApp"
                         @onActiveList="activeList"
@@ -20,6 +23,7 @@
                     />
                 </div>
                 <div v-if="!isTablet">
+                    <!-- Lista de permisos para asignar o deshabilitar -->
                     <ActionPermission v-for="data in datas" :key="data.id" :data="data"
                         @onActivePermissionApp="activePermissionApp"
                         @onActiveList="activeList"

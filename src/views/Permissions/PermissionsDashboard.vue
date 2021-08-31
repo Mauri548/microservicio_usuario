@@ -94,7 +94,7 @@ export default {
             comprobar_edi.value = act.value.edit
         }
 
-         const mostrarModal2 = (act) => {
+        const mostrarModal2 = (act) => {
             /* console.log(act.value.activo) */
             carga_exitosa.value = act.value.activo
             comprobar.value = act.value.cargar
