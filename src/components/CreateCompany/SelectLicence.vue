@@ -80,7 +80,7 @@ export default {
         desplazamiento.value = -(100/cantSection.value).toFixed(1)
 
         const openSelectCoin = () => {
-            coinActivo.value = !coinActivo.value
+            coinActivo.value = !coinActivo.value 
         }
 
         const changeCoin = (id) => {
