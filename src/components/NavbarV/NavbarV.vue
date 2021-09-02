@@ -4,15 +4,15 @@
         <div v-show="Lan==false">
             <aside class="menu mx-3">
                 <ul class="menu-list">
-                    <li><a class="menu-link" @click="push('PersonalForm')">Personal Info</a></li>
-                    <li><a class="menu-link" @click="push('PermissionsDashboard')">Permissions</a></li>
+                    <li><a class="menu-link" @click="push('PersonalForm')">{{$t('navbarV.personalInfo')}}</a></li>
+                    <li><a class="menu-link" @click="push('PermissionsDashboard')">{{$t('navbarV.permisos')}}</a></li>
                     <li><a class="menu-link companyOption btn-company" @click="ActionShowCompanyOption">
-                        <span class="column has-text-left ">Company</span>
+                        <span class="column has-text-left ">{{$t('navbarV.company')}}</span>
                         <span class="column has-text-right  icon is-small">
                             <i  class="fas fa-chevron-down"></i>
                         </span>
                     </a>
-                        <ul v-show="showCompanyOption" >
+                        <ul v-show="showCompanyOption">
                             <li><a class="menu-link" @click="push('UserDashboard')">User management</a></li>
                             <li><a class="menu-link" @click="push('CompaniesDashboard')">Companies management</a></li>
                             <li><a class="menu-link" @click="push('AppDashboard')">Apps management</a></li>
