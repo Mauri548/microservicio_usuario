@@ -1,6 +1,7 @@
 <template>
     <div class="conteiner-tablero mt-2 py-2">
         <div class="head-tablero">
+            <!-- Componente del titulo de la tabla -->
             <TitleBoard title="Apps" />
             <hr>
             <div class="body-tablero my-3 px-4">
@@ -8,7 +9,9 @@
             </div>
         </div>
         <div class="body-tablero px-4">
+            <!-- Componente de Tablero -->
             <Board :datas="datas" :titles="titles">
+                <!-- Esto se remplazara en el <slot> dentro del componente -->
                 <tr class="has-text-centered" v-for="data in datas" :key="data.id">
                     <th @click="actionModal(data)" >{{data.id}}</th>
                     <td @click="actionModal(data)">{{data.name}}</td>
@@ -22,11 +25,10 @@
             </Board>
         </div>
         <div>
-            <div class="modal" :class="{'is-active': carga_exitosa}">
+            <!-- <div class="modal" :class="{'is-active': carga_exitosa}">
                 <div class="modal-background " style="background-color: rgb(197, 197, 197, 0.0)"></div>
                 <div class="modal-content-width has-text-black" style="border:1px ridge grey;" :class="{'modal-puntowifi-escritorio' : !isMobile, 'modal-puntowifi-mobil' : isMobile}">
                     <div class="container has-text-centered has-background-white" :class="{'p-2':isMobile, 'p-5':!isMobile}" id="modal">
-                        <!-- <h1 class="is-size-3 has-text-weight-semibold" :class="{'is-size-4':isMobile}">No se puede borrar el anuncio</h1> -->
                         <p v-show="comprobar==true" class="has-text-centered has-text-success">Se cargo con exito el App.</p>
                         <p v-show="comprobar_edi==true" class="has-text-centered has-text-success">Se edito con exito el App.</p>
                         <div class="columns mt-2">
@@ -36,7 +38,18 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
+            <transition name="modalAlert">
+                <div class="modal" style="top: 50px; justify-content: flex-start" :class="{'is-active': carga_exitosa}">
+                    <div class="modal-background " style="background-color: rgb(197, 197, 197, 0.0)"></div>
+                    <div class="modal-content-width has-text-black" :class="{'modal-puntowifi-escritorio' : !isMobile, 'modal-puntowifi-mobil' : isMobile}">
+                        <div class="container has-text-centered has-background-success" style="border-radius: 20px" :class="{'p-2':isMobile, 'p-5':!isMobile}" id="modal">
+                            <p v-show="comprobar==true" class="has-text-centered has-text-white">Se cargo con exito el App.</p>
+                            <p v-show="comprobar_edi==true" class="has-text-centered has-text-success">Se edito con exito el App.</p>
+                        </div>
+                    </div>
+                </div>
+            </transition>
         </div>
 
         <Pagination/>
@@ -75,6 +88,8 @@ export default {
         const isMobile = inject('isMobile')
         const carga_exitosa = ref(false)
         const comprobar = store.state.carga_exitosa
+        // const comprobar = true
+
         const comprobar_edi = store.state.edicion_exitosa
         const accion_exitosa = ref(false)
         const paso_elim = ref(false)
@@ -87,11 +102,13 @@ export default {
 
         const titles = ['Name','Logo','Obvservation']
 
+        // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
             let aux = datas.value.find(element => element.id == data.id)
             aux.activo = !aux.activo
         }
 
+        // Activa el valor modalDelete para abrir una ventana de aviso antes de eliminar un elemento
         const actionModalDelete = (data) => {
             let aux = datas.value.find(element => element.id == data)
             aux.activo = false
@@ -99,15 +116,16 @@ export default {
         }
 
         const comprobar_carga = () => {
-            // console.log(comprobar)
             if(comprobar==true){
                carga_exitosa.value = true
                let accion = "cargarApp"
                store.commit('verificar_carga',accion)
             }
+            setTimeout(() => {
+                carga_exitosa.value = false
+            },5000)
         }
         const comprobar_edicion = () => {
-            // console.log(comprobar)
             if(comprobar_edi==true){
                carga_exitosa.value = true
                let accion = "edicionApp"
@@ -134,6 +152,26 @@ export default {
 }
 </script>
 
-<style >
+<style>
+/* modalAlert transitions */
+.modalAlert-enter-from {
+    opacity: 0;
+    transform: translateY(-60px)
+}
+.modalAlert-enter-active {
+    animation: temblor .5s ease
+}
+.modalAlert-leave-active {
+    transition: all .3s ease
+}
 
+@keyframes temblor {
+    0% {transform: translateY(-60px); opacity: 0;}
+    50% {transform: translateY(0); opacity: 1;}
+    60% {transform: translateX(8px);}
+    70% {transform: translateX(-8px);}
+    80% {transform: translateX(4px);}
+    90% {transform: translateX(-4px);}
+    100% {transform: translateX(0px);}
+}
 </style>

@@ -1,45 +1,47 @@
 <template>
-    <div v-show="data.activo" class="contenedor">
-        <div style="margin: auto">
-            <div v-for="permission in data.permissions" :key="permission.name" class="conteiner-body my-4">
-                <div>
-                    <div @click="activarHeader(data,permission)" class="conteiner-head has-background-light p-2">
-                        <h3 class="has-text-centered">{{permission.name}} ({{permission.permissions_activo}}/{{permission.total}})</h3>
-                    </div>
-                    <div v-if="permission.activo" class="column is-flex is-flex-wrap-wrap is-align-items-center" style="border: 1px solid #cccccc78">
-                        <div class="columns is-flex w-100" style="margin: 0">
-                            <div class="permissions-available">
-                                <SelectPermission @onMovePermission="asignarPermisos" :appId="data.id" :data="permission" title="Available" :assigned="false" >
-                                    <option v-for="item in permission.lista" :key="item.id" 
-                                    v-show="!item.activo" :value="item.id">{{item.name}}</option>
-                                </SelectPermission>
-                            </div>
-                            <div class="buttons-action-permission mt-5">
-                                <button @click="moveAvailableToAssigned(permission.id)" class="button my-1">
-                                    <i class="fas fa-angle-right"></i>
-                                </button>
-                                <button @click="moveAssignedToAvailable(permission.id)" class="button my-1">
-                                    <i class="fas fa-angle-left"></i>
-                                </button>
-                                <button @click="moveAllAvailableToAssigned(data.id,permission.id)" class="button my-1">
-                                    <i class="fas fa-angle-double-right"></i>
-                                </button>
-                                <button @click="moveAllAssignedToAvailable(data.id,permission.id)" class="button my-1">
-                                    <i class="fas fa-angle-double-left"></i>
-                                </button>
-                            </div>
-                            <div class=" permissions-assigned">
-                                <SelectPermission  @onMovePermission="asignarPermisos" :appId="data.id" :data="permission" title="Assigned" :assigned="true">
-                                    <option v-for="item in permission.lista" :key="item.id" 
-                                    v-show="item.activo" :value="item.id">{{item.name}}</option>
-                                </SelectPermission>
+    <transition name="actionPermission" mode="out-in">
+        <div v-if="data.activo" class="contenedor">
+            <div style="margin: auto">
+                <div v-for="permission in data.permissions" :key="permission.name" class="conteiner-body my-4">
+                    <div>
+                        <div @click="activarHeader(data,permission)" class="conteiner-head has-background-light p-2">
+                            <h3 class="has-text-centered">{{permission.name}} ({{permission.permissions_activo}}/{{permission.total}})</h3>
+                        </div>
+                        <div v-if="permission.activo" class="column is-flex is-flex-wrap-wrap is-align-items-center" style="border: 1px solid #cccccc78">
+                            <div class="columns is-flex w-100" style="margin: 0">
+                                <div class="permissions-available">
+                                    <SelectPermission @onMovePermission="asignarPermisos" :appId="data.id" :data="permission" title="Available" :assigned="false" >
+                                        <option v-for="item in permission.lista" :key="item.id" 
+                                        v-show="!item.activo" :value="item.id">{{item.name}}</option>
+                                    </SelectPermission>
+                                </div>
+                                <div class="buttons-action-permission mt-5">
+                                    <button @click="moveAvailableToAssigned(permission.id)" class="button my-1">
+                                        <i class="fas fa-angle-right"></i>
+                                    </button>
+                                    <button @click="moveAssignedToAvailable(permission.id)" class="button my-1">
+                                        <i class="fas fa-angle-left"></i>
+                                    </button>
+                                    <button @click="moveAllAvailableToAssigned(data.id,permission.id)" class="button my-1">
+                                        <i class="fas fa-angle-double-right"></i>
+                                    </button>
+                                    <button @click="moveAllAssignedToAvailable(data.id,permission.id)" class="button my-1">
+                                        <i class="fas fa-angle-double-left"></i>
+                                    </button>
+                                </div>
+                                <div class=" permissions-assigned">
+                                    <SelectPermission  @onMovePermission="asignarPermisos" :appId="data.id" :data="permission" title="Assigned" :assigned="true">
+                                        <option v-for="item in permission.lista" :key="item.id" 
+                                        v-show="item.activo" :value="item.id">{{item.name}}</option>
+                                    </SelectPermission>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </transition>
 </template>
 
 <script>
@@ -173,5 +175,24 @@ export default {
         width: 100%;
     }
 }
+
+/* actionPermission transitions */
+
+.actionPermission-enter-from, .actionPermission-leave-to {
+    opacity: 0;
+    /* transform: translateY(20px) */
+    transform: scale(.6);
+}
+/* .actionPermission-enter-to, .actionPermission-leave-from {
+    opacity: 1;
+} */
+.actionPermission-enter-active {
+    transition: all .3s ease;
+}
+.actionPermission-leave-active {
+    transition: all .3s ease;
+}
+
+
 
 </style>

@@ -7,6 +7,7 @@
             <Searcher/>
         </div>
         <div class="column has-text-right">
+            <!-- Si buttonDefault es true te mostrara ese boton por defecto -->
             <button v-if="buttonDefault" @click="push" class="button btn-crenein">+ Add</button>
             <slot></slot>
             <button class="button btn-crenein">More options</button>
@@ -36,6 +37,7 @@ export default {
     setup(props) {
         const router = useRouter()
 
+        // Te redirecciona al path indicado por el prop "namePath"
         const push = () => {
             router.push({name: props.namePath})
         }

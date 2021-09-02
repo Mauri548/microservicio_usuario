@@ -206,8 +206,13 @@ export default {
 
         const activePermissionApp = (id) => {
             datas.value.forEach(element => {
-                element.id == id ? element.activo = !element.activo : element.activo = false
+                element.activo = false
+                // element.id == id ? element.activo = !element.activo : element.activo = false
             })
+            let aux = datas.value.find(element => element.id == id)
+            setTimeout(() => {
+                aux.activo = true
+            },300)
         }
 
 
