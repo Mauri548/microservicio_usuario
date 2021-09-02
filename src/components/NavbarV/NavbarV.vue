@@ -1,7 +1,6 @@
 <template>
-  
     <div  class="conteiner-nabvarV">
-        <div v-show="Lan==false">
+        <div>
             <aside class="menu mx-3">
                 <ul class="menu-list">
                     <li><a class="menu-link" @click="push('PersonalForm')">{{$t('navbarV.personalInfo')}}</a></li>
@@ -13,50 +12,26 @@
                         </span>
                     </a>
                         <ul v-show="showCompanyOption">
-                            <li><a class="menu-link" @click="push('UserDashboard')">User management</a></li>
-                            <li><a class="menu-link" @click="push('CompaniesDashboard')">Companies management</a></li>
-                            <li><a class="menu-link" @click="push('AppDashboard')">Apps management</a></li>
-                            <li><a class="menu-link" @click="push('PermissionsManagement')">Permissions management</a></li>
+                            <li><a class="menu-link" @click="push('UserDashboard')">{{$t('navbarV.userManagement')}}</a></li>
+                            <li><a class="menu-link" @click="push('CompaniesDashboard')">{{$t('navbarV.companyManagement')}}</a></li>
+                            <li><a class="menu-link" @click="push('AppDashboard')">{{$t('navbarV.appsManagement')}}</a></li>
+                            <li><a class="menu-link" @click="push('PermissionsManagement')">{{$t('navbarV.permissionsManagement')}}</a></li>
                         </ul>
                     </li>
                 </ul>
             </aside>
         </div>
-
-        <div v-show="Lan==true">
-            <aside class="menu mx-3">
-                <ul class="menu-list">
-                    <li><a class="menu-link" @click="push('PersonalForm')">Informacion personal</a></li>
-                    <li><a class="menu-link" @click="push('PermissionsDashboard')">Permisos</a></li>
-                    <li><a class="menu-link companyOption btn-company" @click="ActionShowCompanyOption">
-                        <span class="column has-text-left ">Empresa</span>
-                        <span class="column has-text-right  icon is-small">
-                            <i  class="fas fa-chevron-down"></i>
-                        </span>
-                    </a>
-                        <ul v-show="showCompanyOption" >
-                            <li><a class="menu-link" @click="push('UserDashboard')">Gestion de usuarios</a></li>
-                            <li><a class="menu-link" @click="push('CompaniesDashboard')">Gestion de empresas</a></li>
-                            <li><a class="menu-link" @click="push('AppDashboard')">Gestion de Apps</a></li>
-                            <li><a class="menu-link" @click="push('PermissionsManagement')">Gestion de permisos</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </aside>
-        </div>
-
-    
+   
     </div>
-  
-    
+
 </template>
 
 <script>
 
 import {ref} from '@vue/reactivity' 
-import { onMounted, watchEffect } from '@vue/runtime-core'
+import { onMounted } from '@vue/runtime-core'
 import { useRouter } from 'vue-router'
-import store from '@/store'
+
 
 export default {
     name:'NavbarV',
@@ -73,28 +48,15 @@ export default {
         // ])
 
         const router = useRouter()
-        const Lan = ref(false)
-
-        
+      
         const push = (path) => {
+            console.log(path)
             router.push({name: path})
         }
-
-
-
-    watchEffect(()=>{
-
-        Lan.value = store.state.cambio_lang
-    /*     console.log(Lan.value ) */
-
-    })
-       
         const showCompanyOption = ref(false)
-
         const ActionShowCompanyOption = () => {
             showCompanyOption.value = !showCompanyOption.value
         }
-
         // Le damos una funcion a cada etiqueta "a" para que pueda agregar o quitar la clase "is-active"
         // esta funcion se crea dentro de onMounted() porque el template no se carga todavia entonces debe de 
         // esperar a que este cargado para agregar los elementos del html
@@ -111,7 +73,6 @@ export default {
             })
 
         })
-
         // document.addEventListener('click', function(e) {
             // let clic = e.target
             // console.log(e.target)
@@ -119,10 +80,7 @@ export default {
             //     showCompanyOption.value = false
             // }
         // }, false)
-
-       
         return {
-            Lan,
             showCompanyOption,
             ActionShowCompanyOption,
             push,

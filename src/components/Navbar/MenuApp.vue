@@ -7,35 +7,17 @@
                 </span>
             </button>  
         </div>
-        <div v-show="Lan==false" class="dropdown-menu shadow close-apps" id="dropdown-menu" role="menu" style="width: 18rem">
+     
+        <div class="dropdown-menu shadow close-apps" id="dropdown-menu" role="menu" style="width: 18rem">
             <div class="dropdown-content close-apps has-text-centered">
-                <h2 class="blue-crenein has-text-weight-medium close-apps">Crenein products</h2>
+                <h2 class="blue-crenein has-text-weight-medium close-apps">{{$t('navbar.menuApp.creneinProduct')}}</h2>
                 <hr class="my-1 close-apps">
                 <div class="p-4 is-flex is-flex-direction-column is-align-items-flex-start close-apps">
-                    <h5 class="blue-crenein has-text-weight-semibold close-apps">Switch to:</h5>
+                    <h5 class="blue-crenein has-text-weight-semibold close-apps">{{$t('navbar.menuApp.conectarse')}}</h5>
                     <div class="columns is-multiline is-flex is-justify-content-space-between w-100 my-2 close-apps is-align-items-center" style="margin: auto">
                         <AppCrenein v-for="app in apps" :key="app.id" :name="app.name" :logo="app.logo" :activo="app.activo" />
                     </div>
-                    <h2 class="has-text-weight-semibold close-apps">Discover</h2>
-                    <div class="is-flex is-flex-direction-column close-apps">
-                        <div class="is-flex my-2 is-align-items-center discover" v-for="item in discovers" :key="item.id">
-                            <img class="img-rounded" :src="item.image" :alt="item.name" width="35">
-                            <p class="ml-3">{{item.name}}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div v-show="Lan==true" class="dropdown-menu shadow close-apps" id="dropdown-menu" role="menu" style="width: 18rem">
-            <div class="dropdown-content close-apps has-text-centered">
-                <h2 class="blue-crenein has-text-weight-medium close-apps">Productos de Crenein</h2>
-                <hr class="my-1 close-apps">
-                <div class="p-4 is-flex is-flex-direction-column is-align-items-flex-start close-apps">
-                    <h5 class="blue-crenein has-text-weight-semibold close-apps">Conectarse a:</h5>
-                    <div class="columns is-multiline is-flex is-justify-content-space-between w-100 my-2 close-apps is-align-items-center" style="margin: auto">
-                        <AppCrenein v-for="app in apps" :key="app.id" :name="app.name" :logo="app.logo" :activo="app.activo" />
-                    </div>
-                    <h2 class="has-text-weight-semibold close-apps">Descubrir</h2>
+                    <h2 class="has-text-weight-semibold close-apps">{{$t('navbar.menuApp.descubrir')}}</h2>
                     <div class="is-flex is-flex-direction-column close-apps">
                         <div class="is-flex my-2 is-align-items-center discover" v-for="item in discovers" :key="item.id">
                             <img class="img-rounded" :src="item.image" :alt="item.name" width="35">
@@ -59,8 +41,6 @@ import blog from '@/assets/blog.jpg'
 // *****************************
 import AppCrenein from './AppsCrenein.vue'
 import { ref } from '@vue/reactivity'
-import store from '@/store'
-import {  watchEffect } from '@vue/runtime-core'
 export default {
     name: 'MenuApp',
     components: {
@@ -87,19 +67,13 @@ export default {
         // ******************************
 
         const activo = ref(false)
-        const Lan = ref(false)
+   
 
         const activar = () => {
             activo.value = !activo.value
         }
 
-        watchEffect(()=>{
-
-            Lan.value = store.state.cambio_lang
-        /*     console.log(Lan.value ) */
-
-        })
-
+    
         // agrege una clase vacia llamada "close-apps" que al hacer click fuera de esa clase se cierre el menu de app
         document.addEventListener('click', function(e) {
             let clic = e.target.className
@@ -109,7 +83,6 @@ export default {
         }, false)
 
         return {
-            Lan ,
             apps,
             discovers,
             activo,
