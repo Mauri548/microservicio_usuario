@@ -2,7 +2,7 @@
     <div class="dropdown mx-2" :class="{'is-active':activo}">
         <div class="dropdown-trigger">
             <button @click="activar" id="select-company" class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                <span class="blue-crenein has-text-weight-semibold">{{companyActual.name}}</span>
+                <span class="blue-crenein has-text-weight-semibold">{{$t('navbar.selectCompany.company')}} {{companyActual.name}}</span>
                 <span class="icon is-small">
                     <i id="select-company" class="fas fa-chevron-down blue-crenein"></i>
                 </span>
@@ -13,7 +13,7 @@
 
                 <a v-for="item in data" :key="item.id" href="#" 
                     @click="changeCompany(item.id)" class="dropdown-item blue-crenein has-text-weight-semibold" :class="{'is-active': item.id == companyActual.id}"
-                    >{{item.name}}
+                    >{{$t('navbar.selectCompany.company')}} {{item.name}}
                 </a>
             </div>
         </div>
@@ -29,9 +29,9 @@ export default {
 
         // ******* Datos de prueba *******
         const data = ref([
-            {id: 1, name: 'Company Milkaut'},{id: 2, name: 'Company Random'}, {id: 3, name: 'Company Crenein'},
+            {id: 1, name: 'Milkaut'},{id: 2, name: 'Random'}, {id: 3, name: 'Crenein'},
         ])
-        const companyActual = ref({id: 1, name: 'Company Milkaut'})
+        const companyActual = ref({id: 1, name: 'Milkaut'})
         // *******************************
 
         const activo = ref(false)

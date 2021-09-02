@@ -2,20 +2,20 @@
     <div class="modal" :class="{'is-active':data.activo}">
         <div class="modal-background" @click="closeModal(data)"></div>
         <div class="modal-content has-background-white">
-            <h1 class="has-text-centered has-text-weight-semibold is-size-4">{{Palabras.pal1}}</h1>
+            <h1 class="has-text-centered has-text-weight-semibold is-size-4">{{$t('modal.acciones')}}</h1>
             <hr class="my-3">
             <button v-if="buttonDefault" @click="push(data)" class="button btn-crenein w-100 my-1">
                 <span class="icon is-small">
                     <i class="fas fa-pencil-alt"></i>
                 </span>
-                <span>{{Palabras.pal2}}</span>
+                <span>{{$t('modal.editar')}}</span>
             </button>
             <slot></slot>
             <button @click="openModalDelete(data)" class="button btn-delete w-100 my-1">
                 <span class="icon is-small">
                     <i class="fas fa-trash-alt"></i>
                 </span>
-                <span>{{Palabras.pal3}}</span>
+                <span>{{$t('modal.eliminar')}}</span>
             </button>
         </div>
         <button @click="closeModal(data)" class="modal-close is-large" aria-label="close"></button>
@@ -24,9 +24,6 @@
 
 <script>
 import { useRouter } from 'vue-router'
-import {  watchEffect } from '@vue/runtime-core'
-import { ref } from '@vue/reactivity'
-import store from '@/store'
 
 export default {
     name: 'Modal',
@@ -42,24 +39,10 @@ export default {
     emits: ['onCloseModal','onOpenModalDelete'],
 
     setup(props, { emit }) {
-        const Lan = ref(false)
-        const Palabras = ref({pal1:'Actions',pal2:'Edit',pal3:'Delete'})
+  
         const closeModal = (e) => {
             emit("onCloseModal", {id: e.id, valor: false})
         }
-
-        watchEffect(()=>{
-            Lan.value = store.state.cambio_lang
-            if(Lan.value){
-                Palabras.value.pal1 = 'Acciones'
-                Palabras.value.pal2 = 'Editar'
-                Palabras.value.pal3 = 'Eliminar'
-            }else{
-                Palabras.value.pal1 = 'Actions'
-                Palabras.value.pal2 = 'Edit'
-                Palabras.value.pal3 = 'Delete'
-            }
-        })
 
         const openModalDelete = (e) => {
             emit("onOpenModalDelete", e.id)
@@ -71,8 +54,6 @@ export default {
         }
 
         return {
-            Palabras,
-            Lan,
             closeModal,
             openModalDelete,
             push,

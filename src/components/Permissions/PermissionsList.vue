@@ -7,6 +7,7 @@
                 <i class="fas fa-chevron-down"></i>
             </span>
         </button>
+        
         <ActionPermission v-if="isTablet" :data="data"
             @onActivePermissionApp="activePermissionApp"
             @onActiveList="activeList"

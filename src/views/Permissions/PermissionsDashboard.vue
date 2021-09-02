@@ -1,23 +1,21 @@
 <template>
     <div class="conteiner-tablero mt-2 py-4">
-        <div v-if="Lan==true" class="head-tablero">
-            <TitleBoard title="Permisos"/>
+        <div  class="head-tablero">
+            <div v-if="$i18n.locale=='es'">
+                <TitleBoard title="Permisos"/>
+            </div>
+            <div v-if="$i18n.locale=='en'">
+                <TitleBoard title="Permissions"/>
+            </div>
+          
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
-                    <button @click="actionModalAddPermission" class="button btn-crenein">+ Agregar</button>
+                    <button @click="actionModalAddPermission" class="button btn-crenein">{{$t('board.headBoard.agregar')}}</button>
                 </HeadBoard>
             </div>
         </div>
-        <div v-if="Lan==false" class="head-tablero">
-            <TitleBoard title="Permissions"/>
-            <hr>
-            <div class="body-tablero my-3 px-4">
-                <HeadBoard :buttonDefault="false">
-                    <button @click="actionModalAddPermission" class="button btn-crenein">+ Add</button>
-                </HeadBoard>
-            </div>
-        </div>
+        
         <div class="body-tablero px-4">
             <Board :datas="datas" :titles="titles" >
                 <tr class="has-text-centered" v-for="data in datas" :key="data.id">
@@ -30,7 +28,7 @@
                             <span class="icon is-small">
                                 <i class="fas fa-pencil-alt"></i>
                             </span>
-                            <span>Edit</span>
+                            <span>{{$t('modal.editar')}}</span>
                         </button>
                     </Modal>
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
@@ -73,9 +71,6 @@ import EditPermission from './EditPermission.vue'
 import AddPermission from './AddPermission.vue'
 import { ref } from '@vue/reactivity'
 import { inject } from '@vue/runtime-core'
-import store from '@/store'
-import {  watchEffect } from '@vue/runtime-core'
-
 
 export default {
     components: {
@@ -98,12 +93,8 @@ export default {
         const accion_exitosa = ref(false)
         const addPermission = ref(false)
         const editPermission = ref(false)
-        const Lan = ref(false)
+    
 
-
-        watchEffect(()=>{
-            Lan.value = store.state.cambio_lang
-        })
 
         const mostrarModal = (act) => {
             /* console.log(act.value.activo) */
@@ -166,7 +157,6 @@ export default {
         
 
         return {
-            Lan ,
             mostrarModal2 ,
             cerrarModal,
             mostrarModal,

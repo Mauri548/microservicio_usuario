@@ -23,7 +23,10 @@ const messages = {
                 GestionCuenta:'Gestiona tu cuenta de crenein',
                 crearEmpresa:'Crear Empresa',
                 cerrarSesion:'Cerrar sesión',
-            }
+            },
+            selectCompany:{
+                company:'Empresa', 
+            },
         },
         board:{
             headBoard:{
@@ -41,8 +44,18 @@ const messages = {
                 msmAccion:'Esta accion limpiara el formulario',
                 siCancel:'Si,cancelar',
                 noCancel:'No,cancelar',
-            }
+            },
+            acciones:'Acciones',
+            editar:'Editar',
+            eliminar:'Eliminar',
         },
+        permisos:{
+            agregar:'Agregar Permiso',
+            editar:'Editar Permiso',
+            cancel:'Cancelar',
+            guardar:'Guardar cambios'
+
+        }
 
 
     },
@@ -67,7 +80,10 @@ const messages = {
                 GestionCuenta:'Manage your Crenein Acount',
                 crearEmpresa:'Create Company',
                 cerrarSesion:'Sing out',
-            }
+            },
+            selectCompany:{
+                company:'Company', 
+            },
         },
         board:{
             headBoard:{
@@ -85,8 +101,18 @@ const messages = {
                 msmAccion:'this actions will clear the form ',
                 siCancel:'Yes,cancel',
                 noCancel:'No,cancel',
-            }
+            },
+            acciones:'Actions',
+            editar:'Edit',
+            eliminar:'Delete',
         },
+        permisos:{
+            agregar:'Add Permission',
+            editar:'Edit Permission',
+            cancel:'Cancelar',
+            guardar:'Save changes',
+                
+        }
     }
 }
 
