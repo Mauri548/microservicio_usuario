@@ -35,6 +35,7 @@ export default {
             const carrousel = document.querySelector(`.${props.carrousel}`)
             const punto = document.querySelectorAll(`.${props.type}`)
             
+            // Calculamos el width del carrousel dependiendo del tamaño del dispositivo
             if (window.screen.width <= 768) {
                 if (props.type == 'app') {
                     carrousel.style.width = `${(cantSection * 100)}%`
@@ -44,24 +45,6 @@ export default {
             } else {
                 carrousel.style.width = `${(cantSection * 100)}%`
             }
-
-
-            // punto.forEach((cadaPunto, i) => {
-            //     punto[i].addEventListener('click', () => {
-            //         let posicion = i
-            //         let operacion = posicion * desplazamiento
-
-            //         carrousel.style.transform = `translateX(${operacion}%)`
-            //         punto.forEach((cadaPunto, i) => {
-            //             punto[i].classList.remove('activo')
-            //         })
-            //         punto[i].classList.add('activo')
-
-            //         i == 0 ? arrowPrev[props.pos].style.display = 'none' : arrowPrev[props.pos].style.display = 'flex'
-            //         i == cantSection -1 ? arrowNext[props.pos].style.display = 'none' : arrowNext[props.pos].style.display = 'flex'
-            //     })
-            // })
-
             
         })
 

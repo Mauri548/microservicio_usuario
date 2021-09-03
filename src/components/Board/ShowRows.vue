@@ -44,6 +44,7 @@ export default {
             cantSelect.value = valor
         }
 
+        // funcion que cerrara el desplegable con la class "select-row" cuando no se haga click a este
         document.addEventListener('click', (e) => {
             let clic = e.target.getAttribute('id')
             if ((clic != 'select-row') && (e.path[1].getAttribute('id') != 'select-row')) {

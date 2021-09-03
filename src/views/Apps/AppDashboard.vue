@@ -39,21 +39,12 @@
                     </div>
                 </div>
             </div> -->
-            <transition name="modalAlert">
-                <div class="modal" style="top: 50px; justify-content: flex-start" :class="{'is-active': carga_exitosa}">
-                    <div class="modal-background " style="background-color: rgb(197, 197, 197, 0.0)"></div>
-                    <div class="modal-content-width has-text-black" :class="{'modal-puntowifi-escritorio' : !isMobile, 'modal-puntowifi-mobil' : isMobile}">
-                        <div class="container has-text-centered has-background-success" style="border-radius: 20px" :class="{'p-2':isMobile, 'p-5':!isMobile}" id="modal">
-                            <p v-show="comprobar==true" class="has-text-centered has-text-white">Se cargo con exito el App.</p>
-                            <p v-show="comprobar_edi==true" class="has-text-centered has-text-success">Se edito con exito el App.</p>
-                        </div>
-                    </div>
-                </div>
-            </transition>
         </div>
 
         <Pagination/>
     </div>
+    <!-- Modal de carga exitosa -->
+    <ModalAlert :activador="carga_exitosa"/>
 </template>
 
 <script>
@@ -63,6 +54,7 @@ import Board from '../../components/Board/Board.vue'
 import Pagination from '../../components/Board/Pagination.vue'
 import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
+import ModalAlert from '../../components/Modals/ModalsAlert.vue'
 import ispb from '@/assets/ispb2.png'
 import puwic from '@/assets/puwic2.png'
 import geston from '@/assets/geston2.png'
@@ -78,6 +70,7 @@ export default {
         Pagination,
         Modal,
         ActionModal,
+        ModalAlert,
     },
     created(){
         this.comprobar_carga()
@@ -88,8 +81,6 @@ export default {
         const isMobile = inject('isMobile')
         const carga_exitosa = ref(false)
         const comprobar = store.state.carga_exitosa
-        // const comprobar = true
-
         const comprobar_edi = store.state.edicion_exitosa
         const accion_exitosa = ref(false)
         const paso_elim = ref(false)
@@ -117,13 +108,12 @@ export default {
 
         const comprobar_carga = () => {
             if(comprobar==true){
-               carga_exitosa.value = true
-               let accion = "cargarApp"
-               store.commit('verificar_carga',accion)
+                setTimeout(() => carga_exitosa.value = true ,500)
+
+                let accion = "cargarApp"
+                store.commit('verificar_carga',accion)
             }
-            setTimeout(() => {
-                carga_exitosa.value = false
-            },5000)
+            setTimeout(() => carga_exitosa.value = false ,3000)
         }
         const comprobar_edicion = () => {
             if(comprobar_edi==true){
@@ -152,26 +142,4 @@ export default {
 }
 </script>
 
-<style>
-/* modalAlert transitions */
-.modalAlert-enter-from {
-    opacity: 0;
-    transform: translateY(-60px)
-}
-.modalAlert-enter-active {
-    animation: temblor .5s ease
-}
-.modalAlert-leave-active {
-    transition: all .3s ease
-}
-
-@keyframes temblor {
-    0% {transform: translateY(-60px); opacity: 0;}
-    50% {transform: translateY(0); opacity: 1;}
-    60% {transform: translateX(8px);}
-    70% {transform: translateX(-8px);}
-    80% {transform: translateX(4px);}
-    90% {transform: translateX(-4px);}
-    100% {transform: translateX(0px);}
-}
-</style>
+<style></style>

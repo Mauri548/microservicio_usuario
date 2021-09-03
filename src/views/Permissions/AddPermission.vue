@@ -1,7 +1,6 @@
 <template>
   
     <div>
-    
         <div class="modal " :class="{'is-active':data}" >
         <div class="modal-background  "></div>
         <div class="modal-card " >

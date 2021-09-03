@@ -28,13 +28,17 @@ export default {
 
 
         const move = (conteiner) => {
-            const carrousel = document.querySelector(`.${conteiner}`)
+            const carrousel = document.querySelector(`.${conteiner}`) // Obtenemos el carrousel que queremos mover
+            // Obtenemos la flecha next y prev
             const arrowPrev = document.querySelector(`.arrow-prev.${props.punto}`)
             const arrowNext = document.querySelector(`.arrow-next.${props.punto}`)
-            const punto = document.querySelectorAll(`.punto.${props.punto}`)
+            // Obtenemos los puntos que estan debajo del carrousel
+            const punto = document.querySelectorAll(`.punto.${props.punto}`) 
             
+            // obtenemos la posicion del punto que esta activo del carrousel pasado como props
             props.punto == 'app' ? positionApp.value = calculatePosition(punto) : positionLic.value = calculatePosition(punto)
 
+            // Verificamos si avanza el carrousel o si retrosede
             if (props.arrow == 'arrow-next') {
                 props.punto == 'app' ? positionApp.value += 1 : positionLic.value += 1
             } else {
@@ -60,9 +64,11 @@ export default {
 
             // Mostramos o ocultamos la flecha del carrousel si esta en el comienzo o en el final
             if (props.punto == 'app') {
+                // Si el valor es igual a 0 ocultamos la flecha de prev y si es igual al valor maximo oculamos la flecha next
                 positionApp.value == 0 ? arrowPrev.style.display = 'none' : arrowPrev.style.display = 'flex'
                 positionApp.value == props.cantSection -1 ? arrowNext.style.display = 'none' : arrowNext.style.display = 'flex'
             } else {
+                // Si el valor es igual a 0 ocultamos la flecha de prev y si es igual al valor maximo oculamos la flecha next
                 positionLic.value == 0 ? arrowPrev.style.display = 'none' : arrowPrev.style.display = 'flex'
                 positionLic.value == props.cantSection -1 ? arrowNext.style.display = 'none' : arrowNext.style.display = 'flex'
             }

@@ -89,6 +89,7 @@ export default {
         // emite la accion de mover los item de la lista available a assigned
         const moveAvailableToAssigned = (clave) => {
             if (clave == permissionId.value) {
+                // pasamos el id de app, de permiso y el de subpermiso
                 emit("onMoveAvailableToAssigned", appId.value, permissionId.value, permissionIdAvailable.value)
             }
         }

@@ -61,17 +61,6 @@ import store from '@/store'
 export default {
     name:'NavbarV',
     setup(){
-        // const paths = ref([
-        //     {id: 1, name: 'Home', namePath: '', activo: true, padre: false},
-        //     {id: 2, name: 'Personal Info', namePath: 'PersonalForm', activo: false, padre: false},
-        //     {id: 3, name: 'Permissions management', namePath: '', activo: false, padre: false},
-        //     {id: 4, name: 'Company', activo: false, padre: true, paths: [
-        //         {id: 5, name: 'Companies management', namePath: 'CompaniesDashboard', activo: false},
-        //         {id: 6, name: 'Apps management', namePath: 'AppDashboard', activo: false},
-        //         {id: 7, name: 'Permissions management', namePath: 'PermissionsDashboard', activo: false},
-        //     ]}
-        // ])
-
         const router = useRouter()
         const Lan = ref(false)
         const creating_company = ref(false)
