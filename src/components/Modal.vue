@@ -30,7 +30,6 @@ import store from '@/store'
 
 export default {
     name: 'Modal',
-    // props: ['data','namePath'],
     props: {
         data: Object,
         namePath: String,

@@ -29,7 +29,7 @@
             </Board>
         </div>
         <Pagination/>
-        <AddPermission :data="addPermission"   @tengoAct="mostrarModal2"  @onCloseModal="actionModalAddPermission" /> 
+        <AddPermission :data="addPermission" @tengoAct="mostrarModal2" @onCloseModal="actionModalAddPermission" /> 
         <EditPermission :data="editPermission" @tengoAct="mostrarModal"  @onCloseModal="actionModalEditPermission" />
     </div>
 
@@ -182,4 +182,12 @@ export default {
     background-color: #005395;
 }
 
+/* scaleSize transitions */
+/* .scaleSize-enter-from, .scaleSize-leave-to {
+    opacity: 0;
+    transform: scale(.5);
+}
+.scaleSize-enter-active, .scaleSize-leave-active {
+    transition: all .3s ease
+} */
 </style>

@@ -142,13 +142,13 @@ export default {
 
         })
 
-
+        // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
-            console.log(datas.value)
             let aux = datas.value.find(element => element.id == data.id)
             aux.activo = !aux.activo
         }
 
+        // Activa el valor modalDelete para abrir una ventana de aviso antes de eliminar un elemento
         const actionModalDelete = (data) => {
             let aux = datas.value.find(element => element.id == data)
             aux.activo = false

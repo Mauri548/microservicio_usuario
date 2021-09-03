@@ -130,12 +130,16 @@ export default {
 
         onMounted(() => {
             // Logica del carrousel
-            const slidepage = document.querySelector('.slidepage')
+            const slidepage = document.querySelector('.slidepage') //obtenemos el contenedor del carrousel
+
+            // **********************************************************
+            // Obtenemos los elementos para la barra de progreso y hacer que cambie a medida que avanzan los pasos
             const progressText = document.querySelectorAll('.step p')
-            const progressCheck = document.querySelectorAll('.step .check')
+            const progressCheck = document.querySelectorAll('.step .check') 
             const bullet = document.querySelectorAll('.step .bullet')
+            // ***********************************************************
             const form = document.querySelector('.form-outer')
-            let current = 1
+            let current = 1 // variable que indica en el paso del formulario que se encuentra
 
             // activa la clase de la barra de progreso cuando se completa un paso del carrousel
             const next = () => {
@@ -155,7 +159,6 @@ export default {
 
             const btnNext = document.querySelectorAll('.next')
             const btnPrev = document.querySelectorAll('.prev')
-            console.log(btnPrev)
 
             // Agregamos una funcion a cada boton de next para desplazar el carrousel
             btnNext.forEach((btn, i) => {

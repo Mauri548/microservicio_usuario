@@ -20,6 +20,8 @@ export default {
     setup(props,{emit}) {
         const permission_id = ref([])
 
+        // Emitimos el valor seleccionado en la lista de permiso
+        // pasando el id principal de la app, el de la lista de permiso y los permisos seleccionados
         watch(permission_id, () => {
             emit("onMovePermission",permission_id.value, props.data.id, props.appId)
         })

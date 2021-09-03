@@ -72,12 +72,10 @@ export default {
         }
 
         watchEffect(()=>{
-
             Lan.value = store.state.cambio_lang
-        /*     console.log(Lan.value ) */
-
         })
 
+        // Funcion que cierra el desplegable cuando no se hace click a este
         // Agrege una clase vacia llamada "close-perfil" que al hacer click fuera de esa clase se cierra el menu app
         document.addEventListener('click', function(e){
             let clic = e.target.className

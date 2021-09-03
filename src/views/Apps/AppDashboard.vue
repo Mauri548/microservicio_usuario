@@ -1,6 +1,7 @@
 <template>
     <div class="conteiner-tablero mt-2 py-2">
         <div class="head-tablero">
+            <!-- Componente del titulo de la tabla -->
             <TitleBoard title="Apps" />
             <hr>
             <div class="body-tablero my-3 px-4">
@@ -8,7 +9,9 @@
             </div>
         </div>
         <div class="body-tablero px-4">
+            <!-- Componente de Tablero -->
             <Board :datas="datas" :titles="titles">
+                <!-- Esto se remplazara en el <slot> dentro del componente -->
                 <tr class="has-text-centered" v-for="data in datas" :key="data.id">
                     <th @click="actionModal(data)" >{{data.id}}</th>
                     <td @click="actionModal(data)">{{data.name}}</td>
@@ -22,11 +25,10 @@
             </Board>
         </div>
         <div>
-            <div class="modal" :class="{'is-active': carga_exitosa}">
+            <!-- <div class="modal" :class="{'is-active': carga_exitosa}">
                 <div class="modal-background " style="background-color: rgb(197, 197, 197, 0.0)"></div>
                 <div class="modal-content-width has-text-black" style="border:1px ridge grey;" :class="{'modal-puntowifi-escritorio' : !isMobile, 'modal-puntowifi-mobil' : isMobile}">
                     <div class="container has-text-centered has-background-white" :class="{'p-2':isMobile, 'p-5':!isMobile}" id="modal">
-                        <!-- <h1 class="is-size-3 has-text-weight-semibold" :class="{'is-size-4':isMobile}">No se puede borrar el anuncio</h1> -->
                         <p v-show="comprobar==true" class="has-text-centered has-text-success">Se cargo con exito el App.</p>
                         <p v-show="comprobar_edi==true" class="has-text-centered has-text-success">Se edito con exito el App.</p>
                         <div class="columns mt-2">
@@ -36,11 +38,13 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <Pagination/>
     </div>
+    <!-- Modal de carga exitosa -->
+    <ModalAlert :activador="carga_exitosa"/>
 </template>
 
 <script>
@@ -50,6 +54,7 @@ import Board from '../../components/Board/Board.vue'
 import Pagination from '../../components/Board/Pagination.vue'
 import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
+import ModalAlert from '../../components/Modals/ModalsAlert.vue'
 import ispb from '@/assets/ispb2.png'
 import puwic from '@/assets/puwic2.png'
 import geston from '@/assets/geston2.png'
@@ -65,6 +70,7 @@ export default {
         Pagination,
         Modal,
         ActionModal,
+        ModalAlert,
     },
     created(){
         this.comprobar_carga()
@@ -87,11 +93,13 @@ export default {
 
         const titles = ['Name','Logo','Obvservation']
 
+        // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
             let aux = datas.value.find(element => element.id == data.id)
             aux.activo = !aux.activo
         }
 
+        // Activa el valor modalDelete para abrir una ventana de aviso antes de eliminar un elemento
         const actionModalDelete = (data) => {
             let aux = datas.value.find(element => element.id == data)
             aux.activo = false
@@ -99,15 +107,15 @@ export default {
         }
 
         const comprobar_carga = () => {
-            // console.log(comprobar)
             if(comprobar==true){
-               carga_exitosa.value = true
-               let accion = "cargarApp"
-               store.commit('verificar_carga',accion)
+                setTimeout(() => carga_exitosa.value = true ,500)
+
+                let accion = "cargarApp"
+                store.commit('verificar_carga',accion)
             }
+            setTimeout(() => carga_exitosa.value = false ,3000)
         }
         const comprobar_edicion = () => {
-            // console.log(comprobar)
             if(comprobar_edi==true){
                carga_exitosa.value = true
                let accion = "edicionApp"
@@ -134,6 +142,4 @@ export default {
 }
 </script>
 
-<style >
-
-</style>
+<style></style>
