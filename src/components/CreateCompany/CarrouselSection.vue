@@ -36,6 +36,7 @@ export default {
             const punto = document.querySelectorAll(`.${props.type}`)
             
             // Calculamos el width del carrousel dependiendo del tamaño del dispositivo
+            console.log(carrousel)
             if (window.screen.width <= 768) {
                 if (props.type == 'app') {
                     carrousel.style.width = `${(cantSection * 100)}%`
@@ -43,6 +44,7 @@ export default {
                     carrousel.style.width = '95%'
                 }
             } else {
+                
                 carrousel.style.width = `${(cantSection * 100)}%`
             }
             
