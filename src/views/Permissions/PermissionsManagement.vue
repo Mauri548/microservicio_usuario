@@ -11,6 +11,7 @@
                 <TitleBoard title="Permissions"/>
                 <hr>
             </div>
+        </div>
 
 
         <div class="columns m-0 mx-2">
