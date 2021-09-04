@@ -183,7 +183,7 @@
                 <CampoForm   type="text" place="Nombre completo"/>
                 <CampoForm   type="password" place="Contraseña"/> 
             </div>
-            <div class="column    ">
+            <div class="column">
                 <button class=" button has-text-white button1 "  style="background-color:#005395; font-weight:bold;">Guardar</button>
             </div>  
             <div class="column  ">
@@ -195,22 +195,12 @@
         
     </div>
 
-
-
-
-
- 
-
-
-   <!--  <Action activo=activo /> -->
-
 </template>
 
 <script>
 import { useRouter } from 'vue-router';
 import CampoForm from '../../components/CampoForm.vue'
 import { inject } from '@vue/runtime-core'
-/* import Action from '../../components/Modals/ActionsModal.vue' */
 import {ref} from '@vue/reactivity'
 import store from '@/store'
 import {  watchEffect } from '@vue/runtime-core'
@@ -218,7 +208,6 @@ export default {
     name:'PersonalForm',
     components: {
         CampoForm,
-       /*  Action */
     }, 
  
     setup(){

@@ -2,7 +2,7 @@
     <transition name="modalAlert" >
         <div v-show="activador" class="alert-conteiner">
             <div class="alert-msg has-background-success">
-                Se cargo con exito la App
+                <slot></slot>
             </div>
         </div>
     </transition>
