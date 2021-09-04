@@ -21,7 +21,7 @@
                         <i class="fas fa-upload"></i>
                     </span>
                     <span class="file-label">
-                        Choose a file…
+                        {{$t('personalForm.escogeArchivo')}}
                     </span>
                     </span>
                     <span class="file-name">
@@ -31,18 +31,25 @@
             </div>
 
             <div class="column ">
-                <CampoForm   type="text" place="Email" />
-                <CampoForm   type="text" place="Full name"/>
-                <CampoForm   type="password" place="Password"/> 
+                <div v-show="$i18n.locale=='es'">
+                    <CampoForm   type="text" place="Correo" />
+                    <CampoForm   type="text" place="Nombre completo"/>
+                    <CampoForm   type="password" place="Contraseña"/> 
+                </div>
+                <div v-show="$i18n.locale=='en'">
+                    <CampoForm   type="text" place="Email" />
+                    <CampoForm   type="text" place="Full name"/>
+                    <CampoForm   type="password" place="Password"/> 
+                </div>
             </div>
             
             <div class="column ">
                 <div class="columns  ">
                     <div class="column  is-flex-grow-0">
-                        <button class=" button  has-text-white has-background-danger " @click="volver"  style="font-weight:bold;">Cancel</button>
+                        <button class=" button  has-text-white has-background-danger " @click="volver"  style="font-weight:bold;">{{$t('personalForm.cancel')}}</button>
                     </div>
                     <div class="column   pl-0  ">
-                        <button class=" button has-text-white button1 "   style="background-color:#005395; font-weight:bold;">Save</button>
+                        <button class=" button has-text-white button1 "   style="background-color:#005395; font-weight:bold;">{{$t('personalForm.guardar')}}</button>
                     </div>     
                 </div>
             </div>

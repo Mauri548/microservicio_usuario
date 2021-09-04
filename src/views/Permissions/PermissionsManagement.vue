@@ -1,17 +1,18 @@
 <template>
     <div class="conteiner-tablero mt-2 mb-4 py-4">
         <div  class="head-tablero">
-            <TitleBoard v-if="Lan==false" title="Permissions" />
-            <TitleBoard v-if="Lan==true" title="Permisos" />
+            <div v-if="$i18n.locale=='es'">
+                <TitleBoard title="Permisos"/>
+            </div>
+            <div v-if="$i18n.locale=='en'">
+                <TitleBoard title="Permissions"/>
+            </div>
             <hr>
         </div>
-      <!--   <div v-if="Lan==true" class="head-tablero">
-            <TitleBoard title="Permisos" />
-            <hr>
-        </div> -->
+ 
         <div class="columns m-0 mx-2">
             <div class="column is-3">
-                <UserList :users="users"/>
+                    <UserList :users="users"/>
             </div>
             <div class="conteiner-permissions">
                 <div class="column buttons-permission">

@@ -1,28 +1,28 @@
 <template>
     <div class="progress-bar">
         <div class="step">
-            <p>Data 1</p>
+            <p>{{$t('createCompany.datos')}} 1</p>
             <div class="bullet">
                 <span>1</span>
             </div>
             <div class="check fas fa-check"></div>
         </div>
         <div class="step">
-            <p>Data 2</p>
+            <p>{{$t('createCompany.datos')}} 2</p>
             <div class="bullet">
                 <span>2</span>
             </div>
             <div class="check fas fa-check"></div>
         </div>
         <div class="step">
-            <p>Apps</p>
+            <p>{{$t('createCompany.app')}}</p>
             <div class="bullet">
                 <span>3</span>
             </div>
             <div class="check fas fa-check"></div>
         </div>
         <div class="step">
-            <p>Resume</p>
+            <p>{{$t('createCompany.resume')}} </p>
             <div class="bullet">
                 <span>4</span>
             </div>

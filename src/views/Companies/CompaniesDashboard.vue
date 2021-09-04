@@ -1,10 +1,10 @@
 <template>
     <div class="conteiner-tablero mt-2 py-4">
         <div class="head-tablero">
-            <div v-show="Lan==true">
+            <div v-show="$i18n.locale=='es'">
                 <TitleBoard title="Empresas" />
             </div> 
-            <div v-show="Lan==false">
+            <div v-show="$i18n.locale=='en'">
                 <TitleBoard title="Companies" />
             </div> 
            

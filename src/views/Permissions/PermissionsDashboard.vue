@@ -70,7 +70,7 @@ import ActionModal from '../../components/Modals/ActionsModal.vue'
 import EditPermission from './EditPermission.vue'
 import AddPermission from './AddPermission.vue'
 import { ref } from '@vue/reactivity'
-import { inject } from '@vue/runtime-core'
+import { inject, watchEffect } from '@vue/runtime-core'
 
 export default {
     components: {
@@ -134,6 +134,15 @@ export default {
       
         
         const titles = ref(['App','Key','Detail'])
+
+  /*  watchEffect(()=>{
+            if($i18n.locale=='es'){
+                titles.value[0] = 'Aplicacion'
+            }
+            if($i18n.locale=='en'){
+                titles.value[0] = 'App'
+            }
+        })  */
 
         const actionModal = (data) => {
             let aux = datas.value.find(element => element.id == data.id)

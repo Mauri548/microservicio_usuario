@@ -57,6 +57,7 @@ import { ref } from '@vue/reactivity'
 import store from '@/store';
 import { inject } from '@vue/runtime-core'
 import {  watchEffect } from '@vue/runtime-core'
+import i18n from '@/i18n.js'
 
 export default {
     components: {
@@ -89,7 +90,16 @@ export default {
 
         const titles = ref(['Name','Logo','Obvservation'])
 
+        watchEffect(()=>{
+            console.log(i18n)
+           /*  if($i18n.locale=='es'){
+                titles[0].value = 'Nombre'
+            }else{
+                titles[0].value = 'Name'
+            } */
+        })
 
+        
         watchEffect(()=>{
             Lan.value = store.state.cambio_lang
 

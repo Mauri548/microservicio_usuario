@@ -10,7 +10,7 @@
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
-                    <button class="button btn-crenein">Invite user</button>
+                    <button class="button btn-crenein">{{$t('inviteUser.invitar')}}</button>
                 </HeadBoard>             
             </div>
         </div>

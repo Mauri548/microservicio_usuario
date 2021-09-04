@@ -1,23 +1,12 @@
 <template>
     <div class="mb-5 mt-2 has-text-centered shadow container-form">
-        <h1 v-if="Lan==true" class="pt-2 has-text-weight-bold is-size-4">Crear Empresa</h1>
-        <h1 v-if="Lan==false" class="pt-2 has-text-weight-bold is-size-4">Create Company</h1>
+        <h1  class="pt-2 has-text-weight-bold is-size-4">{{$t('createCompany.crear')}}</h1>
+        
         <ProgressBar/>
 
         <div class="form-outer pt-3">
             <form action="">
-                <div v-show="Lan" class="page slidepage">    
-                    <CampoForm place="Nombre de fantasia" type="text" />
-                    <CampoForm place="Nombre del negocio" type="text" />
-                    <CampoForm place="Propietario" type="text" />
-                    <CampoForm place="Cuit" type="number" />
-                    <CampoForm place="Correo" type="email" />
-                    <CampoForm place="Telefono" type="number" />
-                    <div class="" >
-                        <button type="button" class="button btn-crenein next" style="width:100%">Siguiente</button>
-                    </div>
-                </div> 
-                <div v-show="Lan==false" class="page slidepage">    
+                <div  class="page slidepage">    
                     <CampoForm place="Name fantasy" type="text" />
                     <CampoForm place="Bussines name" type="text" />
                     <CampoForm place="Owner" type="text" />
@@ -28,21 +17,9 @@
                         <button type="button" class="button btn-crenein next" style="width:100%">Next</button>
                     </div>
                 </div>
-
-           <!--    <div v-show="Lan==true" class="page">
-                    <CampoForm place="Condicion fiscal" type="text" />
-                    <CampoForm place="Direccion" type="text" />
-                    <CampoForm place="Localidad" type="text" />
-                    <CampoForm place="Provicia" type="text" />
-                    <CampoForm place="Pais" type="text" />
-                    <div class="field is-grouped is-justify-content-space-between">
-                        <button type="button" class="button btn-crenein prev">Anterior</button>
-                        <button type="button" class="button btn-crenein next">Siguiente</button>
-                    </div>
-                </div> -->
-                <div  class="page">
+                <div class="page">
                     <CampoForm place="Tax condition" type="text" />
-                    <CampoForm place="Direcction" type="text" />
+                    <CampoForm place="Direction" type="text" />
                     <CampoForm place="Location" type="text" />
                     <CampoForm place="Province" type="text" />
                     <CampoForm place="Country" type="text" />
@@ -51,14 +28,6 @@
                         <button type="button" class="button btn-crenein next">Next</button>
                     </div>
                 </div>
-              <!--   <div v-show="Lan==true" class="page">
-                    <SelectApp />
-                    <div class="field is-grouped is-justify-content-space-between">
-                        <button type="button" class="button btn-crenein prev">Anterior</button>
-                        <button type="button" class="button btn-crenein next">Siguiente</button>
-                    </div>
-                </div> -->
-
                 <div  class="page">
                     <SelectApp />
                     <div class="field is-grouped is-justify-content-space-between">
@@ -66,7 +35,6 @@
                         <button type="button" class="button btn-crenein next">Next</button>
                     </div>
                 </div>
-
                 <!-- Probablemente se pueda hacer en un componente -->
                 <div class="page">
                     <div class="mb-5">
@@ -93,9 +61,9 @@
                         </div>
                     </div>
                     <div class="field is-grouped is-justify-content-space-between">
-                        <button type="button" class="button btn-crenein prev">Prev</button>
+                        <button type="button" class="button btn-crenein prev">{{$t('createCompany.anterior')}}</button>
                         <!-- <button class="button btn-crenein submite">Submite</button> -->
-                        <router-link class="button btn-crenein submite" :to="{name: 'InviteUser'}">Submite</router-link>
+                        <router-link class="button btn-crenein submite" :to="{name: 'InviteUser'}">{{$t('createCompany.enviar')}}</router-link>
                     </div>
                 </div>
             </form>
@@ -111,8 +79,8 @@ import SelectApp from '../components/CreateCompany/SelectApp.vue'
 import ispb from '@/assets/ispb2.png'
 import puwic from '@/assets/puwic2.png'
 import geston from '@/assets/geston2.png'
-import store from '@/store'
-import {  watchEffect } from '@vue/runtime-core'
+
+
 
 
 export default {
@@ -133,7 +101,7 @@ export default {
         ])
         // **************************
         const total = ref(11400)
-        const Lan = ref(false)
+
 
         watch(datas.value, () => {
             total.value = 0
@@ -141,10 +109,6 @@ export default {
                 total.value += element.price
             })
             console.log(total.value)
-        })
-
-        watchEffect(()=>{
-            Lan.value = store.state.cambio_lang
         })
 
         onMounted(() => {
@@ -205,7 +169,6 @@ export default {
         }
 
         return {
-            Lan,
             datas,
             total,
             removeResumen

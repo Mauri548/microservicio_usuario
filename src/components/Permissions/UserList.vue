@@ -1,7 +1,6 @@
 <template>
     <div class="has-text-centered">
-        <h3 v-if="Lan==true" class="fondo-crenein has-text-white py-1">Usuarios</h3>
-        <h3 v-if="Lan==false" class="fondo-crenein has-text-white py-1">Users</h3>
+        <h3 class="fondo-crenein has-text-white py-1">{{$t('user.usuarios')}}</h3>
         <ul>
             <li v-for="user in users" :key="user.id" >
                 <a>{{user.name}}</a>

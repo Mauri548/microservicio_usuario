@@ -5,12 +5,12 @@
         <form action="" class="column is-half is-offset-one-quarter mt-1 is-mobile" style="width:560px">   
             
             <div class="column has-text-centered blue-crenein">
-               <h2 style="font-size:1.5em; font-weight:bold;" >Edit Company</h2>
+               <h2 style="font-size:1.5em; font-weight:bold;" >{{$t('company.editarCompany')}}</h2>
             </div>
             <div class="column">
-
-                    <CampoForm place="Name Fantasy" type="text" />
-                    <CampoForm place="Bussines Name" type="text" />
+                <div v-show="$i18n.locale=='en'">
+                    <CampoForm place="Fantasy Name" type="text" />
+                    <CampoForm place="Business Name" type="text" />
                     <CampoForm place="Owner" type="text" />
                     <CampoForm place="Cuit" type="text" />
                     <CampoForm place="Email" type="text" />
@@ -20,6 +20,22 @@
                     <CampoForm place="Location" type="text" />
                     <CampoForm place="Province" type="text" />
                     <CampoForm place="Country" type="text" />
+                </div>
+                <div v-show="$i18n.locale=='es'">
+                    <CampoForm place="Nombre de Fantasia" type="text" />
+                    <CampoForm place="Nombre del Negocio" type="text" />
+                    <CampoForm place="Propietario" type="text" />
+                    <CampoForm place="Cuit" type="text" />
+                    <CampoForm place="Correo" type="text" />
+                    <CampoForm place="Telefono" type="text" />
+                    <CampoForm place="Condición Fiscal" type="text" />
+                    <CampoForm place="Dirección" type="text" />
+                    <CampoForm place="Localidad" type="text" />
+                    <CampoForm place="Provincia" type="text" />
+                    <CampoForm place="Pais" type="text" />
+                    
+                </div>
+            
 
             </div>
   
@@ -27,10 +43,10 @@
             <div class="column ">
                 <div class="columns  ">
                     <div class="column  is-flex-grow-0">
-                        <button class=" button  has-text-white has-background-danger " @click="volver" style="font-weight:bold;">Cancel</button>
+                        <button class=" button  has-text-white has-background-danger " @click="volver" style="font-weight:bold;">{{$t('company.cancel')}}</button>
                     </div>
                     <div class="column   pl-0  ">
-                        <button class=" button has-text-white button1 "  @click="verificar" style="background-color:#005395; font-weight:bold;">Save</button>
+                        <button class=" button has-text-white button1 "  @click="verificar" style="background-color:#005395; font-weight:bold;">{{$t('company.guardar')}}</button>
                     </div>     
                 </div>
             </div>

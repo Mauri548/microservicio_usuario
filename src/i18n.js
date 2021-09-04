@@ -55,7 +55,44 @@ const messages = {
             cancel:'Cancelar',
             guardar:'Guardar cambios'
 
-        }
+        },
+        personalForm:{
+            escogeArchivo:'Escoge un archivo',
+            guardar:'Guardar',
+            cancel:'Cancelar',
+        },
+        company:{
+            editarCompany:'Editar Empresa',
+            cancel:'Cancelar',
+            guardar:'Guardar',
+        },
+        app:{
+                agregarApp:'Agregar App',     
+                editarApp:'Editar App',
+                escogeArchivo:'Escoge un archivo',
+                guardar:'Guardar',
+                cancel:'Cancelar',
+        },
+        inviteUser:{
+            titulo:'¡Solo queda un paso más! invita a los usuarios a tu empresa para que te ayuden a gestionarla.',
+            ingresarMail:'Ingrese el correo electrónico de la persona a la que desea invitar.',
+            enviar:'Enviar',
+            continuar:'Continuar',
+            invitar:'Invitar usuario',
+
+        },
+        user:{
+            usuarios:'Usuarios',
+        },
+        createCompany:{
+            datos:'Datos',
+            resume:'Mis Compras',  
+            app:'Aplicaciones',
+            crear:'Crear Empresa',
+            enviar:'Enviar',
+            anterior:'Anterior'
+        },
+
 
 
     },
@@ -112,7 +149,42 @@ const messages = {
             cancel:'Cancelar',
             guardar:'Save changes',
                 
-        }
+        },
+        personalForm:{
+            escogeArchivo:'Choose a file',
+            guardar:'Save',
+            cancel:'Cancel',
+        },
+        company:{
+            editarCompany:'Edit Company',
+            cancel:'Cancel',
+            guardar:'Save',
+        },
+        app:{
+            agregarApp:'Add App',     
+            editarApp:'Edit App',
+            escogeArchivo:'Choose a file',
+            guardar:'Save',
+            cancel:'Cancel',
+        },
+        inviteUser:{
+            titulo:'There is only one more step left! invite users to your company to help you manage it.',
+            ingresarMail:'Enter the email of the person you want to invite.',
+            enviar:'Send',
+            continuar:'Continue',
+            invitar:'Invite user',
+        },
+        user:{
+            usuarios:'Users',
+        },
+        createCompany:{
+            datos:'Data',
+            resume:'My shoppings',  
+            app:'Apps',
+            crear:'Create Company',
+            enviar:'Submite',
+            anterior:'Prev'
+        },
     }
 }
 
