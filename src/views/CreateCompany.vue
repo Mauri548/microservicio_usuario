@@ -69,8 +69,8 @@
                     <div class="field is-grouped is-justify-content-space-between">
 
                         <button type="button" class="button btn-crenein prev">{{$t('createCompany.anterior')}}</button>
-                        <!-- <button class="button btn-crenein submite">Submite</button> -->
-                        <router-link class="button btn-crenein submite" @click="createCompany" >{{$t('createCompany.enviar')}}</router-link>
+                        <button @click="createCompany" class="button btn-crenein submite">{{$t('createCompany.enviar')}}</button>
+                        <!-- <router-link class="button btn-crenein submite" @click="createCompany" >{{$t('createCompany.enviar')}}</router-link> -->
 
     
                     </div>
