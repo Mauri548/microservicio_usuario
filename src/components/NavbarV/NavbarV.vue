@@ -3,25 +3,29 @@
         <div>
             <aside class="menu mx-3">
                 <ul class="menu-list">
-                    <li><a class="menu-link" @click="push('PersonalForm')">{{$t('navbarV.personalInfo')}}</a></li>
-                    <li><a class="menu-link" @click="push('PermissionsDashboard')">{{$t('navbarV.permisos')}}</a></li>
-                    <li><a class="menu-link companyOption btn-company" @click="ActionShowCompanyOption">
+
+                    <li><a class="menu-link" :class="{'not-active': creating_company}"  @click="push('PersonalForm')">{{$t('navbarV.personalInfo')}}</a></li>
+                    <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PermissionsDashboard')">{{$t('navbarV.permisos')}}</a></li>
+                    <li><a class="menu-link companyOption btn-company"  :class="{'not-active': creating_company}"  @click="ActionShowCompanyOption">
                         <span class="column has-text-left ">{{$t('navbarV.company')}}</span>
+
                         <span class="column has-text-right  icon is-small">
                             <i  class="fas fa-chevron-down"></i>
                         </span>
                     </a>
+
                         <ul v-show="showCompanyOption">
-                            <li><a class="menu-link" @click="push('UserDashboard')">{{$t('navbarV.userManagement')}}</a></li>
-                            <li><a class="menu-link" @click="push('CompaniesDashboard')">{{$t('navbarV.companyManagement')}}</a></li>
-                            <li><a class="menu-link" @click="push('AppDashboard')">{{$t('navbarV.appsManagement')}}</a></li>
-                            <li><a class="menu-link" @click="push('PermissionsManagement')">{{$t('navbarV.permissionsManagement')}}</a></li>
+                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('UserDashboard')">{{$t('navbarV.userManagement')}}</a></li>
+                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('CompaniesDashboard')">{{$t('navbarV.companyManagement')}}</a></li>
+                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('AppDashboard')">{{$t('navbarV.appsManagement')}}</a></li>
+                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PermissionsManagement')">{{$t('navbarV.permissionsManagement')}}</a></li>
+
                         </ul>
                     </li>
                 </ul>
             </aside>
         </div>
-   
+
     </div>
 
 </template>
@@ -29,30 +33,28 @@
 <script>
 
 import {ref} from '@vue/reactivity' 
-import { onMounted } from '@vue/runtime-core'
+import { onMounted, watch, watchEffect} from '@vue/runtime-core'
 import { useRouter } from 'vue-router'
 
 
 export default {
     name:'NavbarV',
     setup(){
-        // const paths = ref([
-        //     {id: 1, name: 'Home', namePath: '', activo: true, padre: false},
-        //     {id: 2, name: 'Personal Info', namePath: 'PersonalForm', activo: false, padre: false},
-        //     {id: 3, name: 'Permissions management', namePath: '', activo: false, padre: false},
-        //     {id: 4, name: 'Company', activo: false, padre: true, paths: [
-        //         {id: 5, name: 'Companies management', namePath: 'CompaniesDashboard', activo: false},
-        //         {id: 6, name: 'Apps management', namePath: 'AppDashboard', activo: false},
-        //         {id: 7, name: 'Permissions management', namePath: 'PermissionsDashboard', activo: false},
-        //     ]}
-        // ])
-
         const router = useRouter()
-      
+
+       
+        const creating_company = ref(false)
+        // Redirige al usuario a otra vista        
         const push = (path) => {
             console.log(path)
             router.push({name: path})
         }
+
+        watchEffect(()=>{
+            
+            creating_company.value = store.state.creating_company
+        })
+       
         const showCompanyOption = ref(false)
         const ActionShowCompanyOption = () => {
             showCompanyOption.value = !showCompanyOption.value
@@ -62,7 +64,7 @@ export default {
         // esperar a que este cargado para agregar los elementos del html
         onMounted(() => {
             const item = document.querySelectorAll('.menu-link')
-         /*    console.log(item) */
+            /*    console.log(item) */
             item.forEach((element, index) => {
                 item[index].addEventListener('click', () => {
                     item.forEach((element, i) => {
@@ -71,8 +73,10 @@ export default {
                     item[index].classList.add('is-active')
                 }) 
             })
+            
 
         })
+
         // document.addEventListener('click', function(e) {
             // let clic = e.target
             // console.log(e.target)
@@ -80,8 +84,12 @@ export default {
             //     showCompanyOption.value = false
             // }
         // }, false)
+
+       
+
         return {
             showCompanyOption,
+            creating_company,
             ActionShowCompanyOption,
             push,
         }
@@ -96,12 +104,17 @@ export default {
     margin-top: 8px;
 }
 a:hover {
+    transition: ease .3s;
     border: 1px solid #005395;
     color: #005395;
 }
 a.is-active {
     background-color: #005395;
     color: #fff
+}
+a.not-active {
+    pointer-events: none;
+    cursor: default;
 }
 .btn-company {
     display: flex;

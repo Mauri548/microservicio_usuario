@@ -1,9 +1,11 @@
 <template>
     <div class="mb-5 mt-2 has-text-centered shadow container-form">
+
         <h1  class="pt-2 has-text-weight-bold is-size-4">{{$t('createCompany.crear')}}</h1>
         
+        <!-- Componente de la barra de progreso del carrousel -->
         <ProgressBar/>
-
+        <!-- Formulario del carrousel -->
         <div class="form-outer pt-3">
             <form action="">
                 <div  class="page slidepage">    
@@ -28,7 +30,10 @@
                         <button type="button" class="button btn-crenein next">Next</button>
                     </div>
                 </div>
-                <div  class="page">
+
+                <div class="page">
+                    <!-- Carrousel para seleccional la app -->
+
                     <SelectApp />
                     <div class="field is-grouped is-justify-content-space-between">
                         <button type="button" class="button btn-crenein prev">Prev</button>
@@ -36,6 +41,7 @@
                     </div>
                 </div>
                 <!-- Probablemente se pueda hacer en un componente -->
+                <!-- Carrousel para seleccional las licencia -->
                 <div class="page">
                     <div class="mb-5">
                         <div v-for="data in datas" :key="data.id" class="is-flex is-align-items-center">
@@ -61,9 +67,12 @@
                         </div>
                     </div>
                     <div class="field is-grouped is-justify-content-space-between">
+
                         <button type="button" class="button btn-crenein prev">{{$t('createCompany.anterior')}}</button>
                         <!-- <button class="button btn-crenein submite">Submite</button> -->
-                        <router-link class="button btn-crenein submite" :to="{name: 'InviteUser'}">{{$t('createCompany.enviar')}}</router-link>
+                        <router-link class="button btn-crenein submite" @click="createCompany" >{{$t('createCompany.enviar')}}</router-link>
+
+    
                     </div>
                 </div>
             </form>
@@ -72,13 +81,15 @@
 </template>
 
 <script>
-import { onMounted, ref, watch } from '@vue/runtime-core';
+import { onMounted, ref, watch, watchEffect } from '@vue/runtime-core';
 import CampoForm from '../components/CampoForm.vue';
 import ProgressBar from '../components/CreateCompany/ProgressBar.vue'
 import SelectApp from '../components/CreateCompany/SelectApp.vue'
 import ispb from '@/assets/ispb2.png'
 import puwic from '@/assets/puwic2.png'
 import geston from '@/assets/geston2.png'
+import store from '@/store.js';
+import { useRouter } from 'vue-router';
 
 
 
@@ -91,6 +102,10 @@ export default {
         SelectApp,
     },
 
+    created(){
+        store.commit("setCreatingCompany",true)
+    },
+
     setup(){
 
         // ****** Dato prueba *******
@@ -101,6 +116,13 @@ export default {
         ])
         // **************************
         const total = ref(11400)
+        const router = useRouter()
+        const creating_company = ref(true)
+
+        // observamos el estado de creating_company para actualizar su estado
+        watchEffect(() => {
+            creating_company.value = store.state.creating_company
+        })
 
 
         watch(datas.value, () => {
@@ -112,14 +134,19 @@ export default {
         })
 
         onMounted(() => {
-            const slidepage = document.querySelector('.slidepage')
+            // Logica del carrousel
+            const slidepage = document.querySelector('.slidepage') //obtenemos el contenedor del carrousel
 
+            // **********************************************************
+            // Obtenemos los elementos para la barra de progreso y hacer que cambie a medida que avanzan los pasos
             const progressText = document.querySelectorAll('.step p')
-            const progressCheck = document.querySelectorAll('.step .check')
+            const progressCheck = document.querySelectorAll('.step .check') 
             const bullet = document.querySelectorAll('.step .bullet')
+            // ***********************************************************
             const form = document.querySelector('.form-outer')
-            let current = 1
+            let current = 1 // variable que indica en el paso del formulario que se encuentra
 
+            // activa la clase de la barra de progreso cuando se completa un paso del carrousel
             const next = () => {
                 bullet[current - 1].classList.add('active')
                 progressText[current - 1].classList.add('active')
@@ -127,6 +154,7 @@ export default {
                 current += 1
             }
 
+            // Remueve la clase de la barra de progreso cuando se retrosede un paso del carrousel
             const prev = () => {
                 bullet[current - 2].classList.remove('active')
                 progressText[current - 2].classList.remove('active')
@@ -136,13 +164,15 @@ export default {
 
             const btnNext = document.querySelectorAll('.next')
             const btnPrev = document.querySelectorAll('.prev')
-            console.log(btnPrev)
 
+            // Agregamos una funcion a cada boton de next para desplazar el carrousel
             btnNext.forEach((btn, i) => {
                 btnNext[i].addEventListener('click', () => {
+                    // Hacemos un calculo para saber cuanto % desplazarnos
                     let operacion = (i + 1) * -20
                     slidepage.style.marginLeft = `${operacion}%`
                     next()
+                    // condicional para adaptar el tamaño en la vista
                     if (i == 1) {
                         form.style.maxHeight = '100%'
                     } else if (i == 2) {
@@ -151,11 +181,14 @@ export default {
                 })
             })
 
+            // Agregamos una funcion a cada boton de texto para desplazar el carrousel
             btnPrev.forEach((btn, i) => {
                 btnPrev[i].addEventListener('click', () => {
+                    // hacemos un calculo para saber cuanto % desplazar el carrousel
                     let operacion = i * -20
                     slidepage.style.marginLeft = `${operacion}%`
                     prev()
+                    // Condicional para adaptar el tamaño en la vista
                     i == 1 ? form.style.maxHeight = '430px' : ''
                     i == 2 ? form.style.maxHeight = '100%' : ''
                 })
@@ -168,9 +201,17 @@ export default {
             datas.value.splice(pos, 1)
         }
 
+        const createCompany = () => {
+            // verificas si los valores son correctos
+            // falta hacer las validaciones
+            store.commit('setCreatingCompany',false)
+            router.push({name: 'InviteUser'})
+        }
+
         return {
             datas,
             total,
+            createCompany,
             removeResumen
         }
 

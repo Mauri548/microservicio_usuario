@@ -2,12 +2,15 @@ import { createStore } from "vuex";
 
 const store = createStore({
     state(){
+        let creating_company = false
+
         return {
             isMobile: false,
             isTablet: false,
             carga_exitosa: false,
             edicion_exitosa: false,
             cambio_lang: false,
+            creating_company
         }
     },
 
@@ -15,6 +18,12 @@ const store = createStore({
         onResize(state) {
             window.screen.width < 1024 ? state.isMobile = true : state.isMobile = false;
             window.screen.width <= 768 ? state.isTablet = true : state.isTablet = false;
+        },
+
+        setCreatingCompany(state,data) {
+            console.log(data)
+            data ? state.creating_company = true : state.creating_company = false
+            // state.creating_company = !state.creating_company
         },
 
         cambiarLan(state){

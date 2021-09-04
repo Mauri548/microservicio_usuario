@@ -79,16 +79,20 @@ export default {
         // Calculamos el desplazamiento que hara por seccion
         desplazamiento.value = -(100/cantSection.value).toFixed(1)
 
+        // Abre el desplegable de monedas
         const openSelectCoin = () => {
-            coinActivo.value = !coinActivo.value
+            coinActivo.value = !coinActivo.value 
         }
 
+        // Cambia el valor del desplegable de monedas
         const changeCoin = (id) => {
             let aux = coins.value.find(element => element.id == id)
             coinSelect.value = aux
             openSelectCoin()
         }
 
+        // funcion que detecta cuando se hace click fuera del elemento con la class "select-coin"
+        // y hace que se cierre el desplegable de moneda
         document.addEventListener('click', (e) => {
             let clic = e.target.getAttribute('id')
             if (clic != 'select-coin') {
@@ -111,6 +115,9 @@ export default {
 </script>
 
 <style scoped>
+.dropdown-menu {
+    min-width: 10rem;
+}
 
 .carrousel {
     width: 100%;
@@ -152,4 +159,5 @@ export default {
         margin: 5px 5px;
     }
 }
+
 </style>

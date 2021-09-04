@@ -1,21 +1,26 @@
 <template>
     <div class="conteiner-tablero mt-2 mb-4 py-4">
+
+        <!-- Titulo del tablero -->
         <div  class="head-tablero">
             <div v-if="$i18n.locale=='es'">
                 <TitleBoard title="Permisos"/>
+                <hr>
             </div>
             <div v-if="$i18n.locale=='en'">
                 <TitleBoard title="Permissions"/>
+                <hr>
             </div>
-            <hr>
-        </div>
- 
+
+
         <div class="columns m-0 mx-2">
             <div class="column is-3">
-                    <UserList :users="users"/>
+                <!-- Lista de usuarios -->
+                <UserList :users="users"/>
             </div>
             <div class="conteiner-permissions">
                 <div class="column buttons-permission">
+                    <!-- Botones de los permisos de las App contratada -->
                     <PermissionsList v-for="data in datas" :key="data.id" :data="data"
                         @onActivePermissionApp="activePermissionApp"
                         @onActiveList="activeList"
@@ -26,6 +31,7 @@
                     />
                 </div>
                 <div v-if="!isTablet">
+                    <!-- Lista de permisos para asignar o deshabilitar -->
                     <ActionPermission v-for="data in datas" :key="data.id" :data="data"
                         @onActivePermissionApp="activePermissionApp"
                         @onActiveList="activeList"
@@ -217,8 +223,14 @@ export default {
 
         const activePermissionApp = (id) => {
             datas.value.forEach(element => {
-                element.id == id ? element.activo = !element.activo : element.activo = false
+                element.activo = false
+                // element.id == id ? element.activo = !element.activo : element.activo = false
             })
+            let aux = datas.value.find(element => element.id == id)
+            // Esperamos 3 milisegundo para hacer que se visualice el msj de exito
+            setTimeout(() => {
+                aux.activo = true
+            },300)
         }
 
 

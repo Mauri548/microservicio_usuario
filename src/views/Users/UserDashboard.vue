@@ -10,7 +10,7 @@
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
-                    <button class="button btn-crenein">{{$t('inviteUser.invitar')}}</button>
+                    <router-link :to="{name: 'InviteUser'}" class="button btn-crenein">{{$t('inviteUser.invitar')}}</router-link>
                 </HeadBoard>             
             </div>
         </div>
@@ -23,7 +23,11 @@
                     <td @click="actionModal(data)">{{data.email}}</td>
                     <td @click="actionModal(data)">{{data.created}}</td>
                     <td @click="actionModal(data)">{{data.state}}</td>
-                    <Modal :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
+                    <Modal :data="data" :buttonDefault="false" @onCloseModal="actionModal" 
+                     @onOpenModalDelete="actionModalDelete" >
+                        <button @click="ChangeState(data)" v-if="data.state == 'Habilitado'" class="button btn-crenein w-100 my-1">Disable</button>
+                        <button @click="ChangeState(data)" v-else class="button btn-crenein w-100 my-1">Enable</button>
+                    </Modal>
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
@@ -67,11 +71,13 @@ export default {
 
         const titles = ref(['Avatar','Full name','Email','Created','State'])
 
+        // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
             let aux = datas.value.find(element => element.id == data.id)
             aux.activo = !aux.activo
         }
 
+        // Activa el valor de modalDelete para abrir el modal de aviso 
         const actionModalDelete = (data) => {
             let aux = datas.value.find(element => element.id == data)
             aux.activo = false
@@ -92,27 +98,24 @@ export default {
                 titles.value[3] = "Created"
                 titles.value[4] = "State"
             }
- 
 
         })
+
+        // Cambia el estado del usuario entre habilitado y deshabilitado
+        const ChangeState = (data) => {
+            data.state == 'Habilitado'? data.state = 'Deshabilitado' : data.state = 'Habilitado'
+        }
 
         return {
             Lan,
             datas,
             titles,
             actionModal,
-            actionModalDelete
+            actionModalDelete,
+            ChangeState
         }
     }
 }
 </script>
 
-<style>
-
-
-
-/* .is-current {
-    background-color: #005395;
-} */
-
-</style>
+<style scoped></style>

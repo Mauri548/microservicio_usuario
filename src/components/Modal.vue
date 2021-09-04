@@ -27,7 +27,6 @@ import { useRouter } from 'vue-router'
 
 export default {
     name: 'Modal',
-    // props: ['data','namePath'],
     props: {
         data: Object,
         namePath: String,

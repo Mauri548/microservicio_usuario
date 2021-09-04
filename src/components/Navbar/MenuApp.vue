@@ -73,7 +73,6 @@ export default {
             activo.value = !activo.value
         }
 
-    
         // agrege una clase vacia llamada "close-apps" que al hacer click fuera de esa clase se cierre el menu de app
         document.addEventListener('click', function(e) {
             let clic = e.target.className

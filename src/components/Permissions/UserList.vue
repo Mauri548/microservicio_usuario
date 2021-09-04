@@ -5,12 +5,6 @@
             <li v-for="user in users" :key="user.id" >
                 <a>{{user.name}}</a>
             </li>
-            <!-- <li><a>Mauri</a></li>
-            <li><a>Mauri</a></li>
-            <li><a>Mauri</a></li>
-            <li><a>Mauri</a></li>
-            <li><a>Mauri</a></li>
-            <li><a>Mauri</a></li> -->
         </ul>
     </div>
 </template>

@@ -7,11 +7,13 @@
             <Searcher/>
         </div>
         <div class="column has-text-right">
+
             <div>
                 <button v-if="buttonDefault" @click="push" class="button btn-crenein">{{$t('board.headBoard.agregar')}}</button>
                 <slot></slot>
                 <button class="button btn-crenein">{{$t('board.headBoard.masOps')}}</button>
             </div>
+
         </div>
     </div>
 </template>
@@ -38,8 +40,8 @@ export default {
 
     setup(props) {
         const router = useRouter()
-        console.log(props.buttonDefault)
 
+        // Te redirecciona al path indicado por el prop "namePath"
         const push = () => {
             router.push({name: props.namePath})
         }

@@ -36,17 +36,21 @@
             </Board>
         </div>
         <Pagination/>
-        <AddPermission :data="addPermission"   @tengoAct="mostrarModal2"  @onCloseModal="actionModalAddPermission" /> 
+        <AddPermission :data="addPermission" @tengoAct="mostrarModal2" @onCloseModal="actionModalAddPermission" /> 
         <EditPermission :data="editPermission" @tengoAct="mostrarModal"  @onCloseModal="actionModalEditPermission" />
     </div>
 
+    <ModalAlert :activador="carga_exitosa">
+        <p v-if="comprobar">Se cargo con exito el permiso</p>
+        <p v-if="comprobar_edi">Se edito con exito el permiso.</p>
+    </ModalAlert>
 
-      <div>
+
+      <!-- <div>
             <div class="modal" :class="{'is-active': carga_exitosa}">
                 <div class="modal-background " style="background-color: rgb(197, 197, 197, 0.0)"></div>
                 <div class="modal-content-width has-text-black" style="border:1px ridge grey;" :class="{'modal-puntowifi-escritorio' : !isMobile, 'modal-puntowifi-mobil' : isMobile}">
                     <div class="container has-text-centered has-background-white" :class="{'p-2':isMobile, 'p-5':!isMobile}" id="modal">
-                        <!-- <h1 class="is-size-3 has-text-weight-semibold" :class="{'is-size-4':isMobile}">No se puede borrar el anuncio</h1> -->
                         <p v-show="comprobar==true" class="has-text-centered has-text-success">Se cargo con exito el permiso.</p>
                         <p v-show="comprobar_edi==true" class="has-text-centered  has-text-success">Se edito con exito el permiso.</p>
                         <div class="columns mt-2">
@@ -57,7 +61,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 </template>
 
 <script>
@@ -67,6 +71,7 @@ import Board from '../../components/Board/Board.vue'
 import Pagination from '../../components/Board/Pagination.vue'
 import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
+import ModalAlert from '../../components/Modals/ModalsAlert.vue'
 import EditPermission from './EditPermission.vue'
 import AddPermission from './AddPermission.vue'
 import { ref } from '@vue/reactivity'
@@ -82,6 +87,7 @@ export default {
         ActionModal,
         AddPermission,
         EditPermission,
+        ModalAlert,
     },
    
     setup() {
@@ -100,14 +106,21 @@ export default {
             /* console.log(act.value.activo) */
             carga_exitosa.value = act.value.activo
             comprobar_edi.value = act.value.edit
+            setTimeout(() => {
+                carga_exitosa.value = false
+                comprobar_edi.value = false
+            } ,3000)
         }
 
-         const mostrarModal2 = (act) => {
+        const mostrarModal2 = (act) => {
             /* console.log(act.value.activo) */
             carga_exitosa.value = act.value.activo
             comprobar.value = act.value.cargar
+            setTimeout(() => {
+                carga_exitosa.value = false
+                comprobar.value = false
+            } ,3000)
         }
-
 
         const cerrarModal = () => {
             carga_exitosa.value = false
@@ -135,6 +148,7 @@ export default {
         
         const titles = ref(['App','Key','Detail'])
 
+
   /*  watchEffect(()=>{
             if($i18n.locale=='es'){
                 titles.value[0] = 'Aplicacion'
@@ -144,21 +158,27 @@ export default {
             }
         })  */
 
+
+        // Abre el modal de acciones del elemento que clickeas
+
         const actionModal = (data) => {
             let aux = datas.value.find(element => element.id == data.id)
             aux.activo = !aux.activo
         }
 
+        // Abre la ventana emergente para eliminar un elemento de la lista
         const actionModalDelete = (data) => {
             let aux = datas.value.find(element => element.id == data)
             aux.activo = false
             aux.modalDelete = !aux.modalDelete
         }
 
+        // Abre el modal para agregar un permiso a la lista
         const actionModalAddPermission = () => {
             addPermission.value = !addPermission.value
         }
 
+        // Abre el modal para editar un permiso de la lista
         const actionModalEditPermission = () => {
             datas.value.forEach(element => element.activo = false)
             editPermission.value = !editPermission.value
@@ -195,4 +215,12 @@ export default {
     background-color: #005395;
 }
 
+/* scaleSize transitions */
+.scaleSize-enter-from, .scaleSize-leave-to {
+    opacity: 0;
+    transform: scale(.5);
+}
+.scaleSize-enter-active, .scaleSize-leave-active {
+    transition: all .3s ease
+}
 </style>

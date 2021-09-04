@@ -1,13 +1,14 @@
 <template>
     <div class="prueba">
         <button @click="activePermissionApp(data.id)" class="button btn-crenein button-permission-app ">
-            <!-- <span >{{data.app}} permissions</span> -->
             <span >{{data.app}}</span>
             <span class="icon is-small">
                 <i class="fas fa-chevron-down"></i>
             </span>
         </button>
-        
+
+        <!-- Lista de permisos para asignar o deshabilitar -->
+
         <ActionPermission v-if="isTablet" :data="data"
             @onActivePermissionApp="activePermissionApp"
             @onActiveList="activeList"
@@ -38,26 +39,33 @@ export default {
 
     setup(props,{emit}) {
         const isTablet = inject('isTablet')
+
+        // Activamos el boton para mostrar la lista de permiso de esa app
         const activePermissionApp = (id) => {
             emit("onActivePermissionApp",id)
         }
 
+        // emitimos la accion de activar la sublista de permisos
         const activeList = (app, permission) => {
             emit("onActiveList",app, permission)
         }
 
+        // emitimos la accion de mover un elemento de la lista
         const moveAvailableToAssigned = ( appId, permissionId, permissionIdAvailable) => {
             emit("onMoveAvailableToAssigned", appId, permissionId, permissionIdAvailable)
         }
 
+        // emitimos la accion de mover un elemento de la lista
         const moveAssignedToAvailable = (appId, permissionId, permissionIdAvailable) => {
             emit("onMoveAssignedToAvailable", appId, permissionId, permissionIdAvailable)
         }
 
+        // emitimos la accion de mover todos los elementos de la lista
         const moveAllAvailableToAssigned = (id_app, id_permission) => {
             emit("onMoveAllAvailableToAssigned", id_app, id_permission)
         }
 
+        // emitimos la accion de mover todos los elementos de la lista
         const moveAllAssignedToAvailable = (id_app, id_permission) => {
             emit("onMoveAllAssignedToAvailable", id_app, id_permission)
         }

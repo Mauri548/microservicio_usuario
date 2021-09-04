@@ -1,7 +1,6 @@
 <template>
   
     <div>
-    
         <div class="modal " :class="{'is-active':data}" >
         <div class="modal-background  "></div>
         <div class="modal-card " >
@@ -27,10 +26,8 @@
                     </div>
                 </form>
             </section>
-    
         </div>
         </div>
-
     </div>
 
 </template>
@@ -87,9 +84,5 @@ export default {
     background-color: none;
     font-size: 0.9rem;
 }
-
-
-
-
 
 </style>
