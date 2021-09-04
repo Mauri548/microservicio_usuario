@@ -44,7 +44,9 @@
         <Pagination/>
     </div>
     <!-- Modal de carga exitosa -->
-    <ModalAlert :activador="carga_exitosa"/>
+    <ModalAlert :activador="carga_exitosa">
+        Se cargo con exito la App
+    </ModalAlert>
 </template>
 
 <script>
