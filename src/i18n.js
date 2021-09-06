@@ -36,6 +36,10 @@ const messages = {
             showRows:{
                 mostrar:'Mostrar',  
                 filas:'filas',
+            },
+            pagination:{
+                al:'al',
+                de:'de',
             }
         },
         modal:{
@@ -144,6 +148,10 @@ const messages = {
             showRows:{
                 mostrar:'Show', 
                 filas:'rows',     
+            },
+            pagination:{
+                al:'to',
+                de:'of',
             }
         },
         modal:{
