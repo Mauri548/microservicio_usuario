@@ -35,12 +35,12 @@
         </div>
     </div>
 
-      <div>
+    <!--   <div>
             <div class="modal" :class="{'is-active': carga_exitosa}">
                 <div class="modal-background " style="background-color: rgb(197, 197, 197, 0.0)"></div>
                 <div class="modal-content-width has-text-black" style="border:1px ridge grey;" :class="{'modal-puntowifi-escritorio' : !isMobile, 'modal-puntowifi-mobil' : isMobile}">
                     <div class="container has-text-centered has-background-white" :class="{'p-2':isMobile, 'p-5':!isMobile}" id="modal">
-                        <!-- <h1 class="is-size-3 has-text-weight-semibold" :class="{'is-size-4':isMobile}">No se puede borrar el anuncio</h1> -->
+                      
                         <p v-show="comprobar==true" class="has-text-centered has-text-success">Se cargo con exito la empresa.</p>
                         <p v-show="comprobar_edi==true" class="has-text-centered has-text-success">Se edito con exito la empresa.</p>
                         <div class="columns mt-2">
@@ -51,7 +51,14 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
+
+   <ModalAlert :activador="carga_exitosa">
+        <p v-if="comprobar_edi">{{$t('company.modalEdicion')}}</p>
+    </ModalAlert>
+
+
+
 </template>
 
 <script>
@@ -61,10 +68,12 @@ import Board from '../../components/Board/Board.vue'
 import Pagination from '../../components/Board/Pagination.vue'
 import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
+import ModalAlert from '../../components/Modals/ModalsAlert.vue'
 import { ref } from '@vue/reactivity'
 import store from '@/store';
 import { inject } from '@vue/runtime-core'
 import {  watchEffect } from '@vue/runtime-core'
+import i18n from '@/i18n.js'
 
 
 export default {
@@ -75,6 +84,7 @@ export default {
         Pagination,
         Modal,
         ActionModal,
+        ModalAlert,
     },
     created(){
         this.comprobar_carga()
@@ -87,7 +97,8 @@ export default {
         const comprobar = store.state.carga_exitosa
         const comprobar_edi = store.state.edicion_exitosa
         const accion_exitosa = ref(false)
-        const Lan = ref(false)
+     
+
 
         const datas = ref([
             {id: 1, nameFantasy: 'Internet', businessName: 'Internet', owners: 'Gonzalo Ramitez', cuit: 203688999, email: 'ramirez@gmail.com',
@@ -106,14 +117,20 @@ export default {
             phone: 3624624482, taxCondition: 'IVA', direction: 'calle 2', location: 'Resistencia', province: 'Chaco', country: 'Argentina'},
         ])
 
-        const titles = ref(['Name fantasy', 'Business name', 'Owners', 'Cuit', 'Email', 'Phone', 'Tax condition', 'Direction', 'Location', 'Province', 'Country'])
+        const titles = ref()
 
 
         watchEffect(()=>{
-            Lan.value = store.state.cambio_lang
 
-            if(Lan.value){
-                titles.value[0] = "Nombre de fantasia"
+            if(i18n.global.locale=='es'){
+                titles.value = ['Nombre de fantasia', 'Nombre del negocio', 'Propietarios', 'Cuit', 'Correo', 'Telefono', 'Condición fiscal', 'Dirección', 'Localidad', 'Provincia', 'Pais']
+            }
+            if(i18n.global.locale=='en'){
+                titles.value = ['Name fantasy', 'Business name', 'Owners', 'Cuit', 'Email', 'Phone', 'Tax condition', 'Direction', 'Location', 'Province', 'Country']
+            }
+
+            
+            /*     titles.value[0] = "Nombre de fantasia"
                 titles.value[1] = "Nombre de negocio"
                 titles.value[2] = "Propietario"
                 titles.value[3] = "Cuit"
@@ -123,23 +140,8 @@ export default {
                 titles.value[7] = "Direccion"
                 titles.value[8] = "Ciudad"
                 titles.value[9] = "Provincia"
-                titles.value[10] = "Pais"
-            }
-            else{
-                titles.value[0] = "Name fantasy"
-                titles.value[1] = "Business name"
-                titles.value[2] = "Owner"
-                titles.value[3] = "Cuit"
-                titles.value[4] = "Email"
-                titles.value[5] = "Phone"
-                titles.value[6] = "Tax condition"
-                titles.value[7] = "Direction"
-                titles.value[8] = "Location"
-                titles.value[9] = "Province"
-                titles.value[10] = "Country"
-            }
- 
-
+                titles.value[10] = "Pais" */
+            
         })
 
         // Activa el valor para abrir una ventana modal de ese elemento
@@ -155,6 +157,7 @@ export default {
             aux.modalDelete = !aux.modalDelete
         }
 
+    
         const comprobar_carga = () => {
             // console.log(comprobar)
             if(comprobar==true){
@@ -173,7 +176,6 @@ export default {
         }
 
         return {
-            Lan,
             isMobile ,
             comprobar_carga ,
             comprobar_edicion ,

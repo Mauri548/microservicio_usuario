@@ -53,7 +53,10 @@ const messages = {
             agregar:'Agregar Permiso',
             editar:'Editar Permiso',
             cancel:'Cancelar',
-            guardar:'Guardar cambios'
+            guardar:'Guardar cambios',
+            modalCarga:'Se cargo con exito el permiso.',
+            modalEdicion:'Se edito con exito el permiso.',
+
 
         },
         personalForm:{
@@ -65,6 +68,7 @@ const messages = {
             editarCompany:'Editar Empresa',
             cancel:'Cancelar',
             guardar:'Guardar',
+            modalEdicion:'Se edito con exito la empresa.',
         },
         app:{
                 agregarApp:'Agregar App',     
@@ -72,6 +76,8 @@ const messages = {
                 escogeArchivo:'Escoge un archivo',
                 guardar:'Guardar',
                 cancel:'Cancelar',
+                modalCarga:'Se cargo con exito la aplicación.',
+                modalEdicion:'Se edito con exito la aplicación.',
         },
         inviteUser:{
             titulo:'¡Solo queda un paso más! invita a los usuarios a tu empresa para que te ayuden a gestionarla.',
@@ -156,6 +162,8 @@ const messages = {
             editar:'Edit Permission',
             cancel:'Cancelar',
             guardar:'Save changes',
+            modalCarga:'The permit was successfully loaded.',
+            modalEdicion:'The permission was successfully edited.',
                 
         },
         personalForm:{
@@ -167,6 +175,7 @@ const messages = {
             editarCompany:'Edit Company',
             cancel:'Cancel',
             guardar:'Save',
+            modalEdicion:'The company was successfully edited.',
         },
         app:{
             agregarApp:'Add App',     
@@ -174,6 +183,8 @@ const messages = {
             escogeArchivo:'Choose a file',
             guardar:'Save',
             cancel:'Cancel',
+            modalCarga:'The application was successfully loaded.',
+            modalEdicion:'The application was successfully edited.',
         },
         inviteUser:{
             titulo:'There is only one more step left! invite users to your company to help you manage it.',

@@ -1,12 +1,10 @@
 <template>
     <div class="conteiner-tablero mt-2 py-4">
         <div class="head-tablero">
-            <div v-show="Lan==true">
-                <TitleBoard title="Usuarios" />
-            </div> 
-            <div v-show="Lan==false">
-                <TitleBoard title="Users" />
-            </div> 
+            
+                <TitleBoard v-show="$i18n.locale=='es'" title="Usuarios" />
+                <TitleBoard v-show="$i18n.locale=='en'" title="Users" />
+         
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
@@ -45,8 +43,9 @@ import Pagination from '../../components/Board/Pagination.vue'
 import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
 import { ref } from '@vue/reactivity'
-import store from '@/store'
+/* import store from '@/store' */
 import {  watchEffect } from '@vue/runtime-core'
+import i18n from '@/i18n.js'
 
 
 export default {
@@ -67,9 +66,9 @@ export default {
             {id: 4, avatar: 'foto', fullName: 'Glo Ferreyra', email: 'gloquita@gmail.com', created: '24/07/2021', state: 'Habilitado', activo: false},
             {id: 5, avatar: 'foto', fullName: 'Leonardo Ferreyra', email: 'loreto@gmail.com', created: '24/07/2021', state: 'Pendiente', activo: false},
         ])
-        const Lan = ref(false)
+      
 
-        const titles = ref(['Avatar','Full name','Email','Created','State'])
+        const titles = ref([])
 
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
@@ -84,21 +83,12 @@ export default {
             aux.modalDelete = !aux.modalDelete
         }
         watchEffect(()=>{
-            Lan.value = store.state.cambio_lang
-
-            if(Lan.value){
-                titles.value[1] = "Nombre completo"
-                titles.value[2] = "Correo"
-                titles.value[3] = "Creado"
-                titles.value[4] = "Estado"
+            if(i18n.global.locale == 'en'){
+                titles.value = ['Avatar','Full name','Email','Created','State']
             }
-            else{
-                titles.value[1] = "Full name"
-                titles.value[2] = "Email"
-                titles.value[3] = "Created"
-                titles.value[4] = "State"
+            if(i18n.global.locale == 'es'){
+                titles.value = ['Avatar','Nombre completo','Correo','Creado','Estado']
             }
-
         })
 
         // Cambia el estado del usuario entre habilitado y deshabilitado
@@ -107,7 +97,6 @@ export default {
         }
 
         return {
-            Lan,
             datas,
             titles,
             actionModal,

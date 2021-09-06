@@ -2,7 +2,8 @@
     <div class="conteiner-tablero mt-2 py-2">
         <div class="head-tablero">
             <!-- Componente del titulo de la tabla -->
-            <TitleBoard title="Apps" />
+            <TitleBoard v-show="$i18n.locale=='en'" title="Apps" />
+             <TitleBoard v-show="$i18n.locale=='es'" title="Aplicaciones" />
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard namePath="AddApp"  />
@@ -45,7 +46,9 @@
     </div>
     <!-- Modal de carga exitosa -->
     <ModalAlert :activador="carga_exitosa">
-        Se cargo con exito la App
+       <!--  Se cargo con exito la App -->
+       <p v-if="comprobar">{{$t('app.modalCarga')}}</p>
+       <p v-if="comprobar_edi">{{$t('app.modalEdicion')}}</p>
     </ModalAlert>
 </template>
 
@@ -88,7 +91,7 @@ export default {
         const comprobar_edi = store.state.edicion_exitosa
         const accion_exitosa = ref(false)
         const paso_elim = ref(false)
-        const Lan = ref(false)
+     
 
         const datas = ref([
            {id: 1, name: 'ISPB', logo: ispb, obvservation: 'Licencia x de ISPB', activo: false, modalDelete: false},
@@ -96,38 +99,19 @@ export default {
            {id: 3, name: 'Geston', logo: geston, obvservation: 'Licencia x de Geston', activo: false, modalDelete: false},
         ])
 
-        const titles = ref(['Name','Logo','Obvservation'])
+        const titles = ref([])
 
         watchEffect(()=>{
-            console.log(i18n)
-           /*  if($i18n.locale=='es'){
-                titles[0].value = 'Nombre'
-            }else{
-                titles[0].value = 'Name'
-            } */
+            if(i18n.global.locale=='es'){
+                titles.value = ['Nombre','Logo','Obvservación']
+            }
+            if(i18n.global.locale=='en'){
+                titles.value = ['Name','Logo','Obvservation']
+            }
         })
 
         
-        watchEffect(()=>{
-            Lan.value = store.state.cambio_lang
-
-            if(Lan.value){
-                titles.value[0] = "Nombre"
-                titles.value[1] = "Logo"
-                titles.value[2] = "Observacion"
-         
-            }
-            else{
-                titles.value[0] = "Name"
-                titles.value[1] = "Logo"
-                titles.value[2] = "Obvservation"
-        
-            }
- 
-        })
-
-
-
+    
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
             let aux = datas.value.find(element => element.id == data.id)
@@ -160,7 +144,7 @@ export default {
 
 
         return {
-            Lan,
+        
             isMobile,
             carga_exitosa,
             comprobar,

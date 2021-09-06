@@ -41,8 +41,8 @@
     </div>
 
     <ModalAlert :activador="carga_exitosa">
-        <p v-if="comprobar">Se cargo con exito el permiso</p>
-        <p v-if="comprobar_edi">Se edito con exito el permiso.</p>
+        <p v-if="comprobar">{{$t('permisos.modalCarga')}}</p>
+        <p v-if="comprobar_edi">{{$t('permisos.modalEdicion')}}</p>
     </ModalAlert>
 
 
@@ -76,6 +76,7 @@ import EditPermission from './EditPermission.vue'
 import AddPermission from './AddPermission.vue'
 import { ref } from '@vue/reactivity'
 import { inject, watchEffect } from '@vue/runtime-core'
+import i18n from '@/i18n.js'
 
 export default {
     components: {
@@ -146,17 +147,17 @@ export default {
         ])
       
         
-        const titles = ref(['App','Key','Detail'])
+        const titles = ref([])
 
 
-  /*  watchEffect(()=>{
-            if($i18n.locale=='es'){
-                titles.value[0] = 'Aplicacion'
+        watchEffect(()=>{
+            if(i18n.global.locale=='es'){
+                titles.value = ['Aplicacion','Clave','Detalle']
             }
-            if($i18n.locale=='en'){
-                titles.value[0] = 'App'
+            if(i18n.global.locale=='en'){
+                titles.value = ['App','Key','Detail']
             }
-        })  */
+        })  
 
 
         // Abre el modal de acciones del elemento que clickeas
