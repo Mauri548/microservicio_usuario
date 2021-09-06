@@ -147,10 +147,6 @@ export default {
         // observamos el estado de creating_company para actualizar su estado
         watchEffect(() => {
             creating_company.value = store.state.creating_company
-
-
-
-
         })
 
 
