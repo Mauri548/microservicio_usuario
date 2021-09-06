@@ -30,7 +30,7 @@
                     <hr>
                     <p v-show="coinSelect.name == 'ARS'">{{licence.price.ars}} ARS</p>
                     <p v-show="coinSelect.name == 'USD'">{{licence.price.usd}} USD</p>
-                    <button class="button btn-crenein my-2 is-size-7">I want</button>
+                    <button class="button btn-crenein my-2 is-size-7">{{$t('selectLicence.btnQuiero')}}</button>
                 </div>
             </div>
             <Arrow arrow="arrow-next" icon="fa-chevron-right" conteiner="conteiner-licence" punto="lic"

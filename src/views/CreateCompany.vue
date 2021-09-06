@@ -7,27 +7,47 @@
         <ProgressBar/>
         <!-- Formulario del carrousel -->
         <div class="form-outer pt-3">
-            <form action="">
+              <form  action="">
                 <div  class="page slidepage">    
-                    <CampoForm place="Name fantasy" type="text" />
-                    <CampoForm place="Bussines name" type="text" />
-                    <CampoForm place="Owner" type="text" />
+                    <CampoForm v-show="$i18n.locale=='en'" place="Name fantasy" type="text" />
+                    <CampoForm v-show="$i18n.locale=='es'" place="Nombre de fantasia" type="text" />
+
+                    <CampoForm v-show="$i18n.locale=='en'" place="Business name" type="text" />
+                    <CampoForm v-show="$i18n.locale=='es'" place="Nombre del negocio" type="text" />
+
+                    <CampoForm v-show="$i18n.locale=='en'" place="Owner" type="text" />
+                    <CampoForm v-show="$i18n.locale=='es'" place="Propietario" type="text" />
+
                     <CampoForm place="Cuit" type="number" />
-                    <CampoForm place="Email" type="email" />
-                    <CampoForm place="Phone" type="number" />
+
+                    <CampoForm v-show="$i18n.locale=='en'" place="Email" type="email" />
+                    <CampoForm v-show="$i18n.locale=='es'" place="Correo" type="email" />
+
+                    <CampoForm v-show="$i18n.locale=='en'"  place="Phone" type="number" />
+                    <CampoForm v-show="$i18n.locale=='es'"  place="Telefono" type="number" />
                     <div class="" >
-                        <button type="button" class="button btn-crenein next" style="width:100%">Next</button>
+                        <button type="button" class="button btn-crenein next" style="width:100%">{{$t('createCompany.siguiente')}}</button>
                     </div>
                 </div>
                 <div class="page">
-                    <CampoForm place="Tax condition" type="text" />
-                    <CampoForm place="Direction" type="text" />
-                    <CampoForm place="Location" type="text" />
-                    <CampoForm place="Province" type="text" />
-                    <CampoForm place="Country" type="text" />
+                    <CampoForm v-show="$i18n.locale=='en'" place="Tax condition" type="text" />
+                    <CampoForm v-show="$i18n.locale=='es'" place="Condición Fiscal" type="text" />
+
+                    <CampoForm v-show="$i18n.locale=='en'" place="Direction" type="text" />
+                    <CampoForm v-show="$i18n.locale=='es'" place="Dirección" type="text" />
+
+                    <CampoForm v-show="$i18n.locale=='en'" place="Location" type="text" />
+                    <CampoForm v-show="$i18n.locale=='es'" place="Localidad" type="text" />
+
+                    <CampoForm v-show="$i18n.locale=='en'" place="Province" type="text" />
+                    <CampoForm v-show="$i18n.locale=='es'" place="Provincia" type="text" />
+
+                    <CampoForm v-show="$i18n.locale=='en'" place="Country" type="text" />
+                    <CampoForm v-show="$i18n.locale=='es'" place="Pais" type="text" />
+
                     <div class="field is-grouped is-justify-content-space-between">
-                        <button type="button" class="button btn-crenein prev">Prev</button>
-                        <button type="button" class="button btn-crenein next">Next</button>
+                        <button type="button" class="button btn-crenein prev">{{$t('createCompany.anterior')}}</button>
+                        <button type="button" class="button btn-crenein next">{{$t('createCompany.siguiente')}}</button>
                     </div>
                 </div>
 
@@ -36,8 +56,8 @@
 
                     <SelectApp />
                     <div class="field is-grouped is-justify-content-space-between">
-                        <button type="button" class="button btn-crenein prev">Prev</button>
-                        <button type="button" class="button btn-crenein next">Next</button>
+                        <button type="button" class="button btn-crenein prev">{{$t('createCompany.anterior')}}</button>
+                        <button type="button" class="button btn-crenein next">{{$t('createCompany.siguiente')}}</button>
                     </div>
                 </div>
                 <!-- Probablemente se pueda hacer en un componente -->
@@ -76,6 +96,10 @@
                     </div>
                 </div>
             </form>
+
+
+
+
         </div>
     </div>
 </template>
@@ -90,6 +114,7 @@ import puwic from '@/assets/puwic2.png'
 import geston from '@/assets/geston2.png'
 import store from '@/store.js';
 import { useRouter } from 'vue-router';
+/* import {i18n} from '@/i18n.js' */
 
 
 
@@ -122,6 +147,10 @@ export default {
         // observamos el estado de creating_company para actualizar su estado
         watchEffect(() => {
             creating_company.value = store.state.creating_company
+
+
+
+
         })
 
 

@@ -90,7 +90,12 @@ const messages = {
             app:'Aplicaciones',
             crear:'Crear Empresa',
             enviar:'Enviar',
-            anterior:'Anterior'
+            anterior:'Anterior',
+            siguiente:'Siguiente',
+
+        },
+        selectLicence:{
+            btnQuiero:'Lo quiero'
         },
 
 
@@ -183,7 +188,11 @@ const messages = {
             app:'Apps',
             crear:'Create Company',
             enviar:'Submite',
-            anterior:'Prev'
+            anterior:'Prev',
+            siguiente:'Next',
+        },
+        selectLicence:{
+            btnQuiero:'I want'
         },
     }
 }
