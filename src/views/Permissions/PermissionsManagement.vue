@@ -66,7 +66,7 @@ export default {
     },
 
     setup() {
-        const Lan = ref(false)
+
         const datas = ref([
             {id: 1, app: 'PuWiC', activo: false, permissions: [
                 {id: 1, name: 'Client list', total: 7, permissions_activo: 0, activo: false, lista: [
@@ -166,7 +166,7 @@ export default {
 
 
         watchEffect(()=>{
-            Lan.value = store.state.cambio_lang
+      
         })
 
 
@@ -243,7 +243,6 @@ export default {
         }
 
         return {
-            Lan,
             datas,
             users,
             isTablet,
