@@ -83,6 +83,9 @@ const messages = {
         },
         user:{
             usuarios:'Usuarios',
+            habilitar:'Habilitar',
+            deshabilitar:'Deshabilitar',
+
         },
         createCompany:{
             datos:'Datos',
@@ -181,6 +184,8 @@ const messages = {
         },
         user:{
             usuarios:'Users',
+            habilitar:'Enable',
+            deshabilitar:'Disable',
         },
         createCompany:{
             datos:'Data',
