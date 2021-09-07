@@ -159,7 +159,7 @@ export default {
                 // Pone en falso los sub elementos de la lista
                 if (!element.link) {
                     element.opc.forEach(it => {
-                        it.active = false
+                        it.activo = false
                     })
                 }
             })
