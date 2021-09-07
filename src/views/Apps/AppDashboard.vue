@@ -136,10 +136,12 @@ export default {
         }
         const comprobar_edicion = () => {
             if(comprobar_edi==true){
-               carga_exitosa.value = true
-               let accion = "edicionApp"
-               store.commit('verificar_carga',accion)
+                setTimeout(() => carga_exitosa.value = true ,500)
+
+                let accion = "edicionApp"
+                store.commit('verificar_carga',accion)
             }
+            setTimeout(() => carga_exitosa.value = false ,3000)
         }
 
 

@@ -96,8 +96,8 @@ export default {
             listas.value[0].nombre = i18n.global.locale == 'en'? 'Personal Info': 'Información personal'
             listas.value[1].nombre = i18n.global.locale == 'en'? 'Permissions': 'Permisos'
             listas.value[2].nombre = i18n.global.locale == 'en'? 'Company': 'Empresa'
-            listas.value[2].opc[0].nombre = i18n.global.locale == 'en'? 'User management': 'Gestión de usuarios'
-            listas.value[2].opc[1].nombre = i18n.global.locale == 'en'? 'Companies management' : 'Gestión de empreseas'
+            listas.value[2].opc[0].nombre = i18n.global.locale == 'en'? 'Users management': 'Gestión de usuarios'
+            listas.value[2].opc[1].nombre = i18n.global.locale == 'en'? 'Companies management' : 'Gestión de empresas'
             listas.value[2].opc[2].nombre = i18n.global.locale == 'en'? 'Apps management': 'Gestión de aplicaciones'
             listas.value[2].opc[3].nombre = i18n.global.locale == 'en'? 'Permissions management': 'Gestión de permisos'
 

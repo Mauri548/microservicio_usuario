@@ -161,18 +161,21 @@ export default {
         const comprobar_carga = () => {
             // console.log(comprobar)
             if(comprobar==true){
-               carga_exitosa.value = true
-               let accion = "cargarCompany"
-               store.commit('verificar_carga',accion)
+                setTimeout(() => carga_exitosa.value = true, 500)
+                let accion = "cargarCompany"
+                store.commit('verificar_carga',accion)
             }
+            setTimeout(() => carga_exitosa.value = false, 3000)
         }
         const comprobar_edicion = () => {
             // console.log(comprobar)
             if(comprobar_edi==true){
-               carga_exitosa.value = true
-               let accion = "edicionCompany"
-               store.commit('verificar_carga',accion)
+                setTimeout(() => carga_exitosa.value = true, 500)
+
+                let accion = "edicionCompany"
+                store.commit('verificar_carga',accion)
             }
+            setTimeout(() => carga_exitosa.value = false, 3000)
         }
 
         return {

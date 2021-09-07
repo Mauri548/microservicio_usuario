@@ -9,7 +9,7 @@ const store = createStore({
             carga_exitosa: false,
             edicion_exitosa: false,
             cambio_lang: false,
-            creating_company: false ,
+            creating_company: false,
         }
     },
 
