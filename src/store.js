@@ -1,4 +1,7 @@
 import { createStore } from "vuex";
+import i18n from '@/i18n.js'
+
+console.log(i18n.global.locale)
 
 const store = createStore({
     state(){
@@ -10,8 +13,9 @@ const store = createStore({
             edicion_exitosa: false,
             cambio_lang: false,
             creating_company: false ,
+            
             lista: [
-                {nombre: 'Personal Info', activo: false, link: true, name_link: 'PersonalForm'},
+                {nombre: i18n.global.local == 'en'? 'Personal Info': 'Información personal', activo: false, link: true, name_link: 'PersonalForm'},
                 {nombre: 'Permissions', activo: false, link: true, name_link: 'PermissionsDashboard'},
                 {nombre: 'Company', activo: false, link: false, opc: [
                     {nombre: 'User management', activo: false, name_link: 'UserDashboard'},

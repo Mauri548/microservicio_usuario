@@ -80,7 +80,7 @@ export default {
         // Verifica que se aya guardado el nombre de la url
         if (route.matched[route.matched.length-1].name) {
             // buscamos en nuesta lista de direcciones la path correspondiente
-            listas.value.forEach(element => {
+            listas.forEach(element => {
                 if (element.name_link == route.matched[route.matched.length-1].name) {
                     // Activamos el elemento
                     element.activo = true
