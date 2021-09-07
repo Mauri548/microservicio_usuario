@@ -81,9 +81,6 @@ export default {
     background-color: #005395;
 }
 
-.punto:hover {
-    cursor: pointer;
-}
 
 @media (max-width: 768px) {
     .puntos {

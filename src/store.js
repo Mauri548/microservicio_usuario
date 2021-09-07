@@ -2,7 +2,6 @@ import { createStore } from "vuex";
 
 const store = createStore({
     state(){
-        let creating_company = false
 
         return {
             isMobile: false,
@@ -10,7 +9,17 @@ const store = createStore({
             carga_exitosa: false,
             edicion_exitosa: false,
             cambio_lang: false,
-            creating_company
+            creating_company: false ,
+            lista: [
+                {nombre: 'Personal Info', activo: false, link: true, name_link: 'PersonalForm'},
+                {nombre: 'Permissions', activo: false, link: true, name_link: 'PermissionsDashboard'},
+                {nombre: 'Company', activo: false, link: false, opc: [
+                    {nombre: 'User management', activo: false, name_link: 'UserDashboard'},
+                    {nombre: 'Companies management', activo: false, name_link: 'CompaniesDashboard'},
+                    {nombre: 'Apps management', activo: false, name_link: 'AppDashboard'},
+                    {nombre: 'Permissions management', activo: false, name_link: 'PermissionsManagement'},
+                ]},
+            ]
         }
     },
 

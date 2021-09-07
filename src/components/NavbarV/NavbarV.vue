@@ -1,50 +1,31 @@
 <template>
   
     <div  class="conteiner-nabvarV">
-        <div v-show="Lan==false">
+
+        <div>
             <aside class="menu mx-3">
                 <ul class="menu-list">
-                    <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PersonalForm')">Personal Info</a></li>
-                    <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PermissionsDashboard')">Permissions</a></li>
-                    <li><a class="menu-link companyOption btn-company" :class="{'not-active': creating_company}" @click="ActionShowCompanyOption">
-                        <span class="column has-text-left ">Company</span>
-                        <span class="column has-text-right  icon is-small">
-                            <i  class="fas fa-chevron-down"></i>
-                        </span>
-                    </a>
-                        <ul v-show="showCompanyOption" >
-                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('UserDashboard')">User management</a></li>
-                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('CompaniesDashboard')">Companies management</a></li>
-                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('AppDashboard')">Apps management</a></li>
-                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PermissionsManagement')">Permissions management</a></li>
-                        </ul>
-                    </li>
+                    <li v-for="lista in listas" :key="lista.nombre">
+                        <div v-if="lista.link">
+                            <a class="menu-link" :class="{'not-active': creating_company, 'is-active':lista.activo}" @click="activar(lista)">{{lista.nombre}}</a>
+                        </div>
+                        <div v-else>
+                            <a class="menu-link companyOption btn-company" :class="{'not-active': creating_company}" @click="activar(lista)">
+                                <span class="column has-text-left ">{{lista.nombre}}</span>
+                                <span class="column has-text-right  icon is-small">
+                                    <i  class="fas fa-chevron-down"></i>
+                                </span>
+                            </a>
+                            <ul v-show="lista.activo">
+                                <li v-for="sublist in lista.opc" :key="sublist.name">
+                                    <a class="menu-link" :class="{'not-active': creating_company, 'is-active':sublist.activo}" @click="activarSublist(lista,sublist)">{{sublist.nombre}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>  
                 </ul>
             </aside>
         </div>
-
-        <div v-show="Lan==true">
-            <aside class="menu mx-3">
-                <ul class="menu-list">
-                    <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PersonalForm')">Informacion personal</a></li>
-                    <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PermissionsDashboard')">Permisos</a></li>
-                    <li><a class="menu-link companyOption btn-company" :class="{'not-active': creating_company}" @click="ActionShowCompanyOption">
-                        <span class="column has-text-left ">Empresa</span>
-                        <span class="column has-text-right  icon is-small">
-                            <i  class="fas fa-chevron-down"></i>
-                        </span>
-                    </a>
-                        <ul v-show="showCompanyOption" >
-                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('UserDashboard')">Gestion de usuarios</a></li>
-                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('CompaniesDashboard')">Gestion de empresas</a></li>
-                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('AppDashboard')">Gestion de Apps</a></li>
-                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PermissionsManagement')">Gestion de permisos</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </aside>
-        </div>
-
     
     </div>
   
@@ -55,15 +36,41 @@
 
 import {ref} from '@vue/reactivity' 
 import { onMounted, watch, watchEffect } from '@vue/runtime-core'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import store from '@/store'
 
 export default {
     name:'NavbarV',
+
     setup(){
         const router = useRouter()
         const Lan = ref(false)
         const creating_company = ref(false)
+        const listas = store.state.lista
+        const route = useRoute()
+        // console.log(route.matched[route.matched.length-1])
+
+        // Funcion para el link correspondiente del navbar al recargar la página
+        // Verifica que se aya guardado el nombre de la url
+        if (route.matched[route.matched.length-1].name) {
+            // buscamos en nuesta lista de direcciones la path correspondiente
+            listas.forEach(element => {
+                if (element.name_link == route.matched[route.matched.length-1].name) {
+                    // Activamos el elemento
+                    element.activo = true
+                }
+                // En el caso de que tenga una sublista se hara lo mismo pero con la sublista
+                if (!element.link) {
+                    element.opc.forEach(item => {
+                        if (item.name_link == route.matched[route.matched.length-1].name) {
+                            // Se activa la lista principal y la sublista
+                            item.activo = true
+                            element.activo = true
+                        }
+                    })
+                }
+            })
+        }
 
         // Redirige al usuario a otra vista        
         const push = (path) => {
@@ -75,18 +82,17 @@ export default {
             creating_company.value = store.state.creating_company
         })
        
-        const showCompanyOption = ref(false)
+        // const showCompanyOption = ref(false)
 
-        const ActionShowCompanyOption = () => {
-            showCompanyOption.value = !showCompanyOption.value
-        }
+        // const ActionShowCompanyOption = () => {
+        //     showCompanyOption.value = !showCompanyOption.value
+        // }
 
         // Le damos una funcion a cada etiqueta "a" para que pueda agregar o quitar la clase "is-active"
         // esta funcion se crea dentro de onMounted() porque el template no se carga todavia entonces debe de 
         // esperar a que este cargado para agregar los elementos del html
         onMounted(() => {
             const item = document.querySelectorAll('.menu-link')
-            /*    console.log(item) */
             item.forEach((element, index) => {
                 item[index].addEventListener('click', () => {
                     item.forEach((element, i) => {
@@ -95,16 +101,41 @@ export default {
                     item[index].classList.add('is-active')
                 }) 
             })
-            
-
         })
+
+        // ************************* Prueba *********************
+
+        const activar = (lista) => {
+            listas.forEach(element => {
+                if (lista != element) {
+                    element.activo = false
+                }
+                if (!element.link) {
+                    element.opc.forEach(it => {
+                        it.active = false
+                    })
+                }
+            })
+            lista.activo = !lista.activo
+            push(lista.name_link)
+        }
+
+        const activarSublist = (lista, sublist) => {
+            activar(sublist)
+            lista.activo = !lista.activo
+        }
+
+        // ******************************************************
        
         return {
             Lan,
-            showCompanyOption,
+            // showCompanyOption,
             creating_company,
-            ActionShowCompanyOption,
+            listas,
+            // ActionShowCompanyOption,
             push,
+            activar,
+            activarSublist
         }
     } 
 }
