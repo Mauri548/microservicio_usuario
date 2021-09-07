@@ -9,8 +9,14 @@
                         </div>
                         <div v-if="permission.activo" class="column is-flex is-flex-wrap-wrap is-align-items-center" style="border: 1px solid #cccccc78">
                             <div class="columns is-flex w-100" style="margin: 0">
-                                <div class="permissions-available">
-                                    <SelectPermission @onMovePermission="asignarPermisos" :appId="data.id" :data="permission" title="Available" :assigned="false" >
+                                <div v-show="$i18n.locale=='en'" class="permissions-available">
+                                    <SelectPermission @onMovePermission="asignarPermisos" :appId="data.id" :data="permission" title="Availables" :assigned="false" >
+                                        <option v-for="item in permission.lista" :key="item.id" 
+                                        v-show="!item.activo" :value="item.id">{{item.name}}</option>
+                                    </SelectPermission>
+                                </div>
+                                <div v-show="$i18n.locale=='es'" class="permissions-available">
+                                    <SelectPermission @onMovePermission="asignarPermisos" :appId="data.id" :data="permission" title="Disponibles" :assigned="false" >
                                         <option v-for="item in permission.lista" :key="item.id" 
                                         v-show="!item.activo" :value="item.id">{{item.name}}</option>
                                     </SelectPermission>
@@ -29,8 +35,14 @@
                                         <i class="fas fa-angle-double-left"></i>
                                     </button>
                                 </div>
-                                <div class=" permissions-assigned">
-                                    <SelectPermission  @onMovePermission="asignarPermisos" :appId="data.id" :data="permission" title="Assigned" :assigned="true">
+                                <div v-show="$i18n.locale=='en'" class=" permissions-assigned">
+                                    <SelectPermission  @onMovePermission="asignarPermisos" :appId="data.id" :data="permission" title="Assigneds" :assigned="true">
+                                        <option v-for="item in permission.lista" :key="item.id" 
+                                        v-show="item.activo" :value="item.id">{{item.name}}</option>
+                                    </SelectPermission>
+                                </div>
+                                <div v-show="$i18n.locale=='es'" class=" permissions-assigned">
+                                    <SelectPermission  @onMovePermission="asignarPermisos" :appId="data.id" :data="permission" title="Asignados" :assigned="true">
                                         <option v-for="item in permission.lista" :key="item.id" 
                                         v-show="item.activo" :value="item.id">{{item.name}}</option>
                                     </SelectPermission>

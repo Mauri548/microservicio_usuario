@@ -49,6 +49,10 @@ const messages = {
                 siCancel:'Si,cancelar',
                 noCancel:'No,cancelar',
             },
+            actionPermission:{
+                disponible:'Disponible',   
+                asignado:'Asignado', 
+            },
             acciones:'Acciones',
             editar:'Editar',
             eliminar:'Eliminar',
@@ -160,6 +164,10 @@ const messages = {
                 msmAccion:'this actions will clear the form ',
                 siCancel:'Yes,cancel',
                 noCancel:'No,cancel',
+            },
+            actionPermission:{
+                disponible:'Available',   
+                asignado:'Assigned', 
             },
             acciones:'Actions',
             editar:'Edit',
