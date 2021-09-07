@@ -25,32 +25,6 @@
                 </ul>
             </aside>
         </div>
-    
-        <!-- <div>
-            <aside class="menu mx-3">
-                <ul class="menu-list">
-
-                    <li><a class="menu-link" :class="{'not-active': creating_company}"  @click="push('PersonalForm')">{{$t('navbarV.personalInfo')}}</a></li>
-                    <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PermissionsDashboard')">{{$t('navbarV.permisos')}}</a></li>
-                    <li><a class="menu-link companyOption btn-company"  :class="{'not-active': creating_company}"  @click="ActionShowCompanyOption">
-                        <span class="column has-text-left ">{{$t('navbarV.company')}}</span>
-
-                        <span class="column has-text-right  icon is-small">
-                            <i  class="fas fa-chevron-down"></i>
-                        </span>
-                    </a>
-
-                        <ul v-show="showCompanyOption">
-                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('UserDashboard')">{{$t('navbarV.userManagement')}}</a></li>
-                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('CompaniesDashboard')">{{$t('navbarV.companyManagement')}}</a></li>
-                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('AppDashboard')">{{$t('navbarV.appsManagement')}}</a></li>
-                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PermissionsManagement')">{{$t('navbarV.permissionsManagement')}}</a></li>
-
-                        </ul>
-                    </li>
-                </ul>
-            </aside>
-        </div> -->
 
     </div>
 
@@ -72,7 +46,6 @@ export default {
         const router = useRouter()
         const Lan = ref(false)
         const creating_company = ref(false)
-        // const listas = store.state.lista
         const listas = ref([
                 {nombre: i18n.global.local == 'en'? 'Personal Info': 'Información personal', activo: false, link: true, name_link: 'PersonalForm'},
                 {nombre: 'Permissions', activo: false, link: true, name_link: 'PermissionsDashboard'},
@@ -146,8 +119,6 @@ export default {
             })
         })
 
-        // ************************* Prueba *********************
-
         // Activa el elemento seleccionado del menu
         const activar = (lista) => {
             // Recorremos la lista de elementos
@@ -173,8 +144,6 @@ export default {
             lista.activo = !lista.activo
         }
 
-        // ******************************************************
-
         // document.addEventListener('click', function(e) {
             // let clic = e.target
             // console.log(e.target)
@@ -187,10 +156,8 @@ export default {
 
         return {
             Lan,
-            // showCompanyOption,
             creating_company,
             listas,
-            // ActionShowCompanyOption,
             push,
             activar,
             activarSublist
