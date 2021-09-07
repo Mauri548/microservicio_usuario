@@ -2,12 +2,10 @@
   
     <div v-show="isMobile==false">
 
-
-          
         <form action="" class="column is-half is-offset-one-quarter mt-1 is-mobile" style="width:560px">   
             
             <div class="column has-text-centered blue-crenein">
-               <h2 style="font-size:1.5em; font-weight:bold;" >Edit App</h2>
+               <h2 style="font-size:1.5em; font-weight:bold;" >{{$t('app.editarApp')}}</h2>
             </div>
             
             <div class="column mt-1 is-relative">
@@ -29,7 +27,7 @@
                         <i class="fas fa-upload"></i>
                     </span>
                     <span class="file-label">
-                        Choose a file…
+                        {{$t('app.escogeArchivo')}}
                     </span>
                     </span>
                     <span class="file-name">
@@ -39,16 +37,21 @@
             </div>
 
             <div class="column ">
-                <textarea class="textarea" placeholder="Observation"></textarea>
+                <div v-show="$i18n.locale=='es'">
+                    <textarea class="textarea" placeholder="Observación"></textarea>
+                </div>
+                <div v-show="$i18n.locale=='en'">
+                    <textarea class="textarea" placeholder="Observation"></textarea>
+                </div>
             </div>
             
             <div class="column ">
                 <div class="columns  ">
                     <div class="column  is-flex-grow-0">
-                        <button class=" button  has-text-white has-background-danger " @click="volver" style="font-weight:bold;">Cancel</button>
+                        <button class=" button  has-text-white has-background-danger " @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
                     </div>
                     <div class="column   pl-0  ">
-                        <button class=" button has-text-white button1 "  @click="verificar" style="background-color:#005395; font-weight:bold;">Save</button>
+                        <button class=" button has-text-white button1 "  @click="verificar" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
                     </div>     
                 </div>
             </div>
@@ -59,7 +62,7 @@
         <form action="" class="column has-text-centered  mt-5 ml-6">
 
             <div class="column has-text-centered blue-crenein">
-               <h2 style="font-size:1.5em; font-weight:bold;" >Edit App</h2>
+               <h2 style="font-size:1.5em; font-weight:bold;" >{{$t('app.editarApp')}}</h2>
             </div>    
 
             
@@ -76,7 +79,7 @@
                         <i class="fas fa-upload"></i>
                     </span>
                     <span class="file-label">
-                        Choose a file…
+                         {{$t('app.escogeArchivo')}}
                     </span>
                     </span>
                     <span class="file-name">
@@ -85,13 +88,18 @@
                 </label>
             </div>
             <div class="column ">
-                <textarea class="textarea" placeholder="Observation"></textarea>
+                <div v-show="$i18n.locale=='es'">
+                    <textarea class="textarea" placeholder="Observación"></textarea>
+                </div>
+                <div v-show="$i18n.locale=='en'">
+                    <textarea class="textarea" placeholder="Observation"></textarea>
+                </div>
             </div>
             <div class="column    ">
-                <button class=" button has-text-white button1 "  @click="verificar" style="background-color:#005395; font-weight:bold;">Save</button>
+                <button class=" button has-text-white button1 "  @click="verificar" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
             </div>  
             <div class="column  ">
-                <button class=" button  button1 has-text-white has-background-danger " @click="volver" style="font-weight:bold;">Cancel</button>
+                <button class=" button  button1 has-text-white has-background-danger " @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
             </div>
                       
         </form>

@@ -6,7 +6,9 @@
                 <i class="fas fa-chevron-down"></i>
             </span>
         </button>
+
         <!-- Lista de permisos para asignar o deshabilitar -->
+
         <ActionPermission v-if="isTablet" :data="data"
             @onActivePermissionApp="activePermissionApp"
             @onActiveList="activeList"

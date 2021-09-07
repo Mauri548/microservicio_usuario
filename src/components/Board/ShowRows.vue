@@ -1,6 +1,8 @@
 <template>
     <div class="column is-flex is-align-items-center">
-        <p>Show</p>
+      
+        
+        <p>{{$t('board.showRows.mostrar')}}</p>
         <div class="dropdown mx-2" :class="{'is-active':activo}">
             <div class="dropdown-trigger">
                 <button @click="activar" id="select-row" class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
@@ -19,7 +21,8 @@
                 </div>
             </div>
         </div>
-        <p>rows</p>
+        <p>{{$t('board.showRows.filas')}}</p>
+     
     </div>
 </template>
 
@@ -34,7 +37,7 @@ export default {
         ])
         const cantSelect = ref(50)
         const activo = ref(false)
-
+       
         const activar = () => {
             activo.value = !activo.value
         }
@@ -53,6 +56,7 @@ export default {
         })
 
         return{
+     
             cantRows,
             cantSelect,
             activo,

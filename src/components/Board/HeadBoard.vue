@@ -7,10 +7,13 @@
             <Searcher/>
         </div>
         <div class="column has-text-right">
-            <!-- Si buttonDefault es true te mostrara ese boton por defecto -->
-            <button v-if="buttonDefault" @click="push" class="button btn-crenein">+ Add</button>
-            <slot></slot>
-            <button class="button btn-crenein">More options</button>
+
+            <div>
+                <button v-if="buttonDefault" @click="push" class="button btn-crenein">{{$t('board.headBoard.agregar')}}</button>
+                <slot></slot>
+                <button class="button btn-crenein">{{$t('board.headBoard.masOps')}}</button>
+            </div>
+
         </div>
     </div>
 </template>
@@ -19,6 +22,7 @@
 import ShowRows from './ShowRows.vue'
 import Searcher from './Searcher.vue'
 import { useRouter } from 'vue-router'
+
 
 export default {
     name: 'HeadBoard',
@@ -42,7 +46,9 @@ export default {
             router.push({name: props.namePath})
         }
 
-        return {push}
+        return {
+            push
+        }
     }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
     <div class="conteiner-pagination px-4 mt-3">
         <nav class="pagination is-right" role="navigation" aria-label="pagination">
-            <p class="ml-1">1 al 7 de 7</p>
+            <p class="ml-1">1 {{$t('board.pagination.al')}} 7 {{$t('board.pagination.de')}} 7</p>
             <ul class="pagination-list">
                 <li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
                 <li><span class="pagination-ellipsis">&hellip;</span></li>

@@ -1,10 +1,19 @@
 <template>
     <div class="conteiner-tablero mt-2 mb-4 py-4">
-        <div class="head-tablero">
-            <!-- Titulo del tablero -->
-            <TitleBoard title="Permissions" />
-            <hr>
+
+        <!-- Titulo del tablero -->
+        <div  class="head-tablero">
+            <div v-if="$i18n.locale=='es'">
+                <TitleBoard title="Permisos"/>
+                <hr>
+            </div>
+            <div v-if="$i18n.locale=='en'">
+                <TitleBoard title="Permissions"/>
+                <hr>
+            </div>
         </div>
+
+
         <div class="columns m-0 mx-2">
             <div class="column is-3">
                 <!-- Lista de usuarios -->
@@ -45,6 +54,8 @@ import UserList from '../../components/Permissions/UserList.vue'
 import PermissionsList from '../../components/Permissions/PermissionsList.vue'
 import ActionPermission from '../../components/Permissions/ActionPermission.vue'
 import { ref } from '@vue/reactivity'
+import store from '@/store'
+import {  watchEffect } from '@vue/runtime-core'
 import { inject } from '@vue/runtime-core'
 export default {
     components: {
@@ -55,6 +66,7 @@ export default {
     },
 
     setup() {
+
         const datas = ref([
             {id: 1, app: 'PuWiC', activo: false, permissions: [
                 {id: 1, name: 'Client list', total: 7, permissions_activo: 0, activo: false, lista: [
@@ -151,6 +163,12 @@ export default {
             {id: 7, name: 'Charles Torres Troches'},
         ])
         const isTablet = inject('isTablet')
+
+
+        watchEffect(()=>{
+      
+        })
+
 
 
         // ************************************************************************************

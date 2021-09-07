@@ -1,14 +1,21 @@
 <template>
     <div class="conteiner-tablero mt-2 py-4">
-        <div class="head-tablero">
-            <TitleBoard title="Permissions"/>
+        <div  class="head-tablero">
+            <div v-if="$i18n.locale=='es'">
+                <TitleBoard title="Permisos"/>
+            </div>
+            <div v-if="$i18n.locale=='en'">
+                <TitleBoard title="Permissions"/>
+            </div>
+          
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
-                    <button @click="actionModalAddPermission" class="button btn-crenein">+ Add</button>
+                    <button @click="actionModalAddPermission" class="button btn-crenein">{{$t('board.headBoard.agregar')}}</button>
                 </HeadBoard>
             </div>
         </div>
+        
         <div class="body-tablero px-4">
             <Board :datas="datas" :titles="titles" >
                 <tr class="has-text-centered" v-for="data in datas" :key="data.id">
@@ -21,7 +28,7 @@
                             <span class="icon is-small">
                                 <i class="fas fa-pencil-alt"></i>
                             </span>
-                            <span>Edit</span>
+                            <span>{{$t('modal.editar')}}</span>
                         </button>
                     </Modal>
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
@@ -34,8 +41,8 @@
     </div>
 
     <ModalAlert :activador="carga_exitosa">
-        <p v-if="comprobar">Se cargo con exito el permiso</p>
-        <p v-if="comprobar_edi">Se edito con exito el permiso.</p>
+        <p v-if="comprobar">{{$t('permisos.modalCarga')}}</p>
+        <p v-if="comprobar_edi">{{$t('permisos.modalEdicion')}}</p>
     </ModalAlert>
 
 
@@ -68,7 +75,8 @@ import ModalAlert from '../../components/Modals/ModalsAlert.vue'
 import EditPermission from './EditPermission.vue'
 import AddPermission from './AddPermission.vue'
 import { ref } from '@vue/reactivity'
-import { inject } from '@vue/runtime-core'
+import { inject, watchEffect } from '@vue/runtime-core'
+import i18n from '@/i18n.js'
 
 export default {
     components: {
@@ -92,6 +100,7 @@ export default {
         const accion_exitosa = ref(false)
         const addPermission = ref(false)
         const editPermission = ref(false)
+    
 
 
         const mostrarModal = (act) => {
@@ -138,9 +147,21 @@ export default {
         ])
       
         
-        const titles = ref(['App','Key','Detail'])
+        const titles = ref([])
+
+
+        watchEffect(()=>{
+            if(i18n.global.locale=='es'){
+                titles.value = ['Aplicacion','Clave','Detalle']
+            }
+            if(i18n.global.locale=='en'){
+                titles.value = ['App','Key','Detail']
+            }
+        })  
+
 
         // Abre el modal de acciones del elemento que clickeas
+
         const actionModal = (data) => {
             let aux = datas.value.find(element => element.id == data.id)
             aux.activo = !aux.activo

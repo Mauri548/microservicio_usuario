@@ -1,5 +1,4 @@
 <template>
-  
     <div  class="conteiner-nabvarV">
 
         <div>
@@ -27,9 +26,34 @@
             </aside>
         </div>
     
+        <!-- <div>
+            <aside class="menu mx-3">
+                <ul class="menu-list">
+
+                    <li><a class="menu-link" :class="{'not-active': creating_company}"  @click="push('PersonalForm')">{{$t('navbarV.personalInfo')}}</a></li>
+                    <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PermissionsDashboard')">{{$t('navbarV.permisos')}}</a></li>
+                    <li><a class="menu-link companyOption btn-company"  :class="{'not-active': creating_company}"  @click="ActionShowCompanyOption">
+                        <span class="column has-text-left ">{{$t('navbarV.company')}}</span>
+
+                        <span class="column has-text-right  icon is-small">
+                            <i  class="fas fa-chevron-down"></i>
+                        </span>
+                    </a>
+
+                        <ul v-show="showCompanyOption">
+                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('UserDashboard')">{{$t('navbarV.userManagement')}}</a></li>
+                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('CompaniesDashboard')">{{$t('navbarV.companyManagement')}}</a></li>
+                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('AppDashboard')">{{$t('navbarV.appsManagement')}}</a></li>
+                            <li><a class="menu-link" :class="{'not-active': creating_company}" @click="push('PermissionsManagement')">{{$t('navbarV.permissionsManagement')}}</a></li>
+
+                        </ul>
+                    </li>
+                </ul>
+            </aside>
+        </div> -->
+
     </div>
-  
-    
+
 </template>
 
 <script>
@@ -38,6 +62,8 @@ import {ref} from '@vue/reactivity'
 import { onMounted, watch, watchEffect } from '@vue/runtime-core'
 import { useRoute, useRouter } from 'vue-router'
 import store from '@/store'
+import i18n from '@/i18n.js'
+
 
 export default {
     name:'NavbarV',
@@ -54,7 +80,7 @@ export default {
         // Verifica que se aya guardado el nombre de la url
         if (route.matched[route.matched.length-1].name) {
             // buscamos en nuesta lista de direcciones la path correspondiente
-            listas.forEach(element => {
+            listas.value.forEach(element => {
                 if (element.name_link == route.matched[route.matched.length-1].name) {
                     // Activamos el elemento
                     element.activo = true
@@ -71,14 +97,15 @@ export default {
                 }
             })
         }
-
+  
         // Redirige al usuario a otra vista        
         const push = (path) => {
+            console.log(path)
             router.push({name: path})
         }
 
         watchEffect(()=>{
-            Lan.value = store.state.cambio_lang
+            
             creating_company.value = store.state.creating_company
         })
        
@@ -87,6 +114,7 @@ export default {
         // const ActionShowCompanyOption = () => {
         //     showCompanyOption.value = !showCompanyOption.value
         // }
+
 
         // Le damos una funcion a cada etiqueta "a" para que pueda agregar o quitar la clase "is-active"
         // esta funcion se crea dentro de onMounted() porque el template no se carga todavia entonces debe de 
@@ -126,7 +154,17 @@ export default {
         }
 
         // ******************************************************
+
+        // document.addEventListener('click', function(e) {
+            // let clic = e.target
+            // console.log(e.target)
+            // if (!clic.includes('companyOption')) {
+            //     showCompanyOption.value = false
+            // }
+        // }, false)
+
        
+
         return {
             Lan,
             // showCompanyOption,
