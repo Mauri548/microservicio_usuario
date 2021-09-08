@@ -11,17 +11,17 @@
         </div>
         <div class="body-tablero px-4">
             <!-- Componente de Tablero -->
-            <Board :datas="datas" :titles="titles">
+            <Board :datas="apps" :titles="titles">
                 <!-- Esto se remplazara en el <slot> dentro del componente -->
                 <tr class="has-text-centered" v-for="app in apps" :key="app.id">
-                    <th @click="actionModal(data)" >{{app.id}}</th>
-                    <td @click="actionModal(data)">{{app.name}}</td>
-                    <td @click="actionModal(data)">
+                    <th @click="actionModal(app)" >{{app.id}}</th>
+                    <td @click="actionModal(app)">{{app.nombre}}</td>
+                    <td @click="actionModal(app)">
                         <img :src="app.logo" width="40" alt="">
                     </td>
-                    <td @click="actionModal(data)">{{data.obvservation}}</td>
-                    <Modal namePath="EditApp" :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
-                    <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
+                    <td @click="actionModal(app)">{{app.observacion}}</td>
+                    <Modal namePath="EditApp" :data="app" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
+                    <ActionModal :data="app" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
         </div>
@@ -60,9 +60,9 @@ import Pagination from '../../components/Board/Pagination.vue'
 import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
 import ModalAlert from '../../components/Modals/ModalsAlert.vue'
-import ispb from '@/assets/ispb2.png'
+/* import ispb from '@/assets/ispb2.png'
 import puwic from '@/assets/puwic2.png'
-import geston from '@/assets/geston2.png'
+import geston from '@/assets/geston2.png' */
 import { ref } from '@vue/reactivity'
 import store from '@/store';
 import { inject } from '@vue/runtime-core'
@@ -99,12 +99,12 @@ export default {
         const apps_aux = ref([])
 
 
-        const datas = ref([
+     /*    const datas = ref([
            {id: 1, name: 'ISPB', logo: ispb, obvservation: 'Licencia x de ISPB', activo: false, modalDelete: false},
            {id: 2, name: 'PuWiC', logo: puwic, obvservation: 'Licencia x de PuWiC', activo: false, modalDelete: false},
            {id: 3, name: 'Geston', logo: geston, obvservation: 'Licencia x de Geston', activo: false, modalDelete: false},
         ])
-
+ */
         const titles = ref([])
 
         watchEffect(()=>{
@@ -122,24 +122,22 @@ export default {
                 client.rawRequest(/* GraphQL */ `
                 query{
                     apps{
-                        data{ 
+                        id
+                        name
+                        logo
+                        observation
+                        visible
+                        deleted_at
+                        created_at
+                        updated_at
+                        licenses {
                             id
                             name
-                            logo
-                            observation
-                            visible
+                            price_arg
+                            price_usd
                             deleted_at
                             created_at
                             updated_at
-                            licenses {
-                                id
-                                name
-                                price_arg
-                                price_usd
-                                deleted_at
-                                created_at
-                                updated_at
-                            }
                         }
                     }
                 }`,
@@ -152,11 +150,13 @@ export default {
                 })
                 .then((data) => {
                     apps.value = []
-                    data.data.apps.data.forEach(element => {
-                        apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation })
+                    data.data.apps.forEach(element => {
+                        apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false, modalDelete: false})
                     })
+                      console.log(apps.value)
                 }).catch(error => {
-                 console.log(error.response);
+                  
+                    console.log(error.response);
                 })
             })
         }
@@ -164,13 +164,16 @@ export default {
 
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
-            let aux = datas.value.find(element => element.id == data.id)
+         
+            let aux = apps.value.find(element => element.id == data.id)
+            console.log(aux)
             aux.activo = !aux.activo
+
         }
 
         // Activa el valor modalDelete para abrir una ventana de aviso antes de eliminar un elemento
         const actionModalDelete = (data) => {
-            let aux = datas.value.find(element => element.id == data)
+            let aux = apps.value.find(element => element.id == data)
             aux.activo = false
             aux.modalDelete = !aux.modalDelete
         }
@@ -230,7 +233,6 @@ export default {
 
 
         return {
-            totalElement ,
             traerApps,
             apps,
             apps_aux,
@@ -241,7 +243,7 @@ export default {
             comprobar_edi,
             accion_exitosa,
             paso_elim,
-            datas,
+       /*      datas, */
             titles,
             actionModal,
             actionModalDelete,
