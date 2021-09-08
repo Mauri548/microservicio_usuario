@@ -68,6 +68,7 @@ import store from '@/store';
 import { inject } from '@vue/runtime-core'
 import {  watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js'
+import {GraphQLClient, request as fetchGQL} from 'graphql-request';
 
 export default {
     components: {
@@ -91,6 +92,7 @@ export default {
         const comprobar_edi = store.state.edicion_exitosa
         const accion_exitosa = ref(false)
         const paso_elim = ref(false)
+        const endpoint = store.state.url_backend
      
 
         const datas = ref([
@@ -110,8 +112,6 @@ export default {
             }
         })
 
-        
-    
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
             let aux = datas.value.find(element => element.id == data.id)
@@ -143,6 +143,40 @@ export default {
             }
             setTimeout(() => carga_exitosa.value = false ,3000)
         }
+
+        watchEffect(() => {
+            const client = new GraphQLClient(endpoint)
+
+            client.rawRequest(/* GraphQL */ `
+            query{
+                apps{
+                    id
+                    name
+                    logo
+                    observation
+                    visible
+                    deleted_at
+                    created_at
+                    updated_at
+                    licenses {
+                        id
+                        name
+                        price_arg
+                        price_usd
+                        deleted_at
+                        created_at
+                        updated_at
+                    }
+                }
+            }
+            `)
+            .then((data) => {
+                console.log(data)
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+        })
 
 
         return {
