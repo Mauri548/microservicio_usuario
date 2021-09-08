@@ -13,11 +13,11 @@
             <!-- Componente de Tablero -->
             <Board :datas="datas" :titles="titles">
                 <!-- Esto se remplazara en el <slot> dentro del componente -->
-                <tr class="has-text-centered" v-for="data in datas" :key="data.id">
-                    <th @click="actionModal(data)" >{{data.id}}</th>
-                    <td @click="actionModal(data)">{{data.name}}</td>
+                <tr class="has-text-centered" v-for="app in apps" :key="app.id">
+                    <th @click="actionModal(data)" >{{app.id}}</th>
+                    <td @click="actionModal(data)">{{app.name}}</td>
                     <td @click="actionModal(data)">
-                        <img :src="data.logo" width="40" alt="">
+                        <img :src="app.logo" width="40" alt="">
                     </td>
                     <td @click="actionModal(data)">{{data.obvservation}}</td>
                     <Modal namePath="EditApp" :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
@@ -68,6 +68,7 @@ import store from '@/store';
 import { inject } from '@vue/runtime-core'
 import {  watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js'
+import { GraphQLClient } from 'graphql-request'
 
 export default {
     components: {
@@ -82,6 +83,7 @@ export default {
     created(){
         this.comprobar_carga()
         this.comprobar_edicion()
+        this.traerApps()
     },
 
     setup() {
@@ -91,6 +93,11 @@ export default {
         const comprobar_edi = store.state.edicion_exitosa
         const accion_exitosa = ref(false)
         const paso_elim = ref(false)
+
+        const endpoint = store.state.url_backend
+        const apps = ref([])
+        const apps_aux = ref([])
+        const totalElement = ref(0)
      
 
         const datas = ref([
@@ -111,6 +118,65 @@ export default {
         })
 
         
+
+        const traerApps = () => {
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            watchEffect(() => {
+                client.rawRequest(/* GraphQL */ `
+                query(){
+                    apps{
+                        data{ 
+                            id
+                            name
+                            logo
+                            observation
+                            visible
+                            deleted_at
+                            created_at
+                            updated_at
+                            licenses {
+                                id
+                                name
+                                price_arg
+                                price_usd
+                                deleted_at
+                                created_at
+                                updated_at
+                            }
+                        }
+                    }
+                }`,
+                {
+                    /* page: parseInt(route.params.page),
+                    first: mostrar_cantidad.value */
+                },
+                {
+                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+                })
+                .then((data) => {
+                    apps.value = []
+                    data.data.apps.data.forEach(element => {
+                        apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false})
+                    })
+                }).catch(error => {
+                 console.log(error.response);
+                })
+            })
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
@@ -146,7 +212,11 @@ export default {
 
 
         return {
-        
+            totalElement ,
+            traerApps,
+            apps,
+            apps_aux,
+            endpoint,
             isMobile,
             carga_exitosa,
             comprobar,

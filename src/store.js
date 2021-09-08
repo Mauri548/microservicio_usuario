@@ -10,6 +10,7 @@ const store = createStore({
             edicion_exitosa: false,
             cambio_lang: false,
             creating_company: false,
+            url_backend: 'https://dev_front_gateway_crenein_ms.crenein.com/graphql-playground',
         }
     },
 
