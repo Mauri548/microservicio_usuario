@@ -57,19 +57,15 @@ export default {
                 ]},
             ])
         const route = useRoute()
-        console.log(route.matched[route.matched.length-1].name)
 
         // Funcion para el link correspondiente del navbar al recargar la página
         // Verifica que se aya guardado el nombre de la url
         if (route.matched[route.matched.length-1].name) {
             // buscamos en nuesta lista de direcciones la path correspondiente
             listas.value.forEach(element => {
-                console.log(element.name_link)
                 if (element.name_link == route.matched[route.matched.length-1].name) {
                     // Activamos el elemento
-                    console.log(element)
                     element.activo = true
-                    console.log(element)
 
                 }
                 // En el caso de que tenga una sublista se hara lo mismo pero con la sublista

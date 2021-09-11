@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { ref } from '@vue/runtime-core'
+import { onMounted, ref } from '@vue/runtime-core'
 export default {
     name: 'Arrow',
 
@@ -13,6 +13,13 @@ export default {
 
         const positionApp = ref(0)
         const positionLic = ref(0)
+
+        onMounted(() => {
+            const arrowNext = document.querySelector(`.arrow-next.${props.punto}`)
+            if(props.cantSection == 1) {
+                arrowNext.style.display = 'none'
+            }
+        })
 
         // Calculamos la posicion actual del carrousel de app
         const calculatePosition = (punto) => {
@@ -33,7 +40,7 @@ export default {
             const arrowPrev = document.querySelector(`.arrow-prev.${props.punto}`)
             const arrowNext = document.querySelector(`.arrow-next.${props.punto}`)
             // Obtenemos los puntos que estan debajo del carrousel
-            const punto = document.querySelectorAll(`.punto.${props.punto}`) 
+            const punto = document.querySelectorAll(`.punto.${props.punto}`)
             
             // obtenemos la posicion del punto que esta activo del carrousel pasado como props
             props.punto == 'app' ? positionApp.value = calculatePosition(punto) : positionLic.value = calculatePosition(punto)
@@ -66,7 +73,12 @@ export default {
             if (props.punto == 'app') {
                 // Si el valor es igual a 0 ocultamos la flecha de prev y si es igual al valor maximo oculamos la flecha next
                 positionApp.value == 0 ? arrowPrev.style.display = 'none' : arrowPrev.style.display = 'flex'
-                positionApp.value == props.cantSection -1 ? arrowNext.style.display = 'none' : arrowNext.style.display = 'flex'
+                // positionApp.value == props.cantSection -1 ? arrowNext.style.display = 'none' : arrowNext.style.display = 'flex'
+                if (positionApp.value == props.cantSection - 1 || props.cantSection == 0) {
+                    arrowNext.style.display = 'none'
+                } else {
+                    arrowNext.style.display = 'flex'
+                }
             } else {
                 // Si el valor es igual a 0 ocultamos la flecha de prev y si es igual al valor maximo oculamos la flecha next
                 positionLic.value == 0 ? arrowPrev.style.display = 'none' : arrowPrev.style.display = 'flex'

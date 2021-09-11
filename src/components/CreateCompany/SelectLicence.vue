@@ -23,20 +23,20 @@
             <Arrow arrow="arrow-prev" icon="fa-chevron-left" conteiner="conteiner-licence" punto="lic"
             :cantSection="cantSection" :desplazamiento="desplazamiento" />
             <div class="conteiner-licence">
-                <div class="licence" v-for="licence in licences" :key="licence.id" >
-                    <h3 class="mt-2">{{licence.title}}</h3>
-                    <hr>
-                    <p>{{licence.description}}</p>
-                    <hr>
-                    <p v-show="coinSelect.name == 'ARS'">{{licence.price.ars}} ARS</p>
-                    <p v-show="coinSelect.name == 'USD'">{{licence.price.usd}} USD</p>
+                <div class="licence" v-for="license in app.licenses" :key="license.id" >
+                    <h3 class="my-2">{{license.name}}</h3>
+                    <!-- <hr>
+                    <p>{{license.description}}</p>
+                    <hr> -->
+                    <p class="my-2" v-show="coinSelect.name == 'ARS'">{{license.price_arg}} ARS</p>
+                    <p class="my-2" v-show="coinSelect.name == 'USD'">{{license.price_usd}} USD</p>
                     <button class="button btn-crenein my-2 is-size-7">{{$t('selectLicence.btnQuiero')}}</button>
                 </div>
             </div>
             <Arrow arrow="arrow-next" icon="fa-chevron-right" conteiner="conteiner-licence" punto="lic"
             :cantSection="cantSection" :desplazamiento="desplazamiento" />
 
-            <CarrouselSection :size="licences.length" carrousel="conteiner-licence" type="lic" :pos="1" />
+            <CarrouselSection :size="app.licenses.length" carrousel="conteiner-licence" type="lic" :pos="1" />
         </div>
     </div>
 </template>
@@ -47,20 +47,13 @@ import CarrouselSection from './CarrouselSection.vue'
 import Arrow from './Arrow.vue'
 export default {
     name: 'SelectLicence',
-
     components: {
         CarrouselSection,
         Arrow,
     },
+    props: ['app'],
     
-    setup() {
-        const licences = ref([
-            {id: 1, title: 'Licencia 40x6', description: 'Permite hasta 40 anuncios y 6 puntos WiFi', price: {ars: 3000, usd: 32}},
-            {id: 2, title: 'Licencia 60x8', description: 'Permite hasta 60 anuncios y 8 puntos WiFi', price: {ars: 4000, usd: 41}},
-            {id: 3, title: 'Licencia 80x10', description: 'Permite hasta 80 anuncios y 10 puntos WiFi', price: {ars: 5000, usd: 52}},
-            {id: 4, title: 'Licencia 100x12', description: 'Permite hasta 100 anuncios y 12 puntos WiFi', price: {ars: 6000, usd: 62}},
-            {id: 5, title: 'Licencia 120x14', description: 'Permite hasta 120 anuncios y 14 puntos WiFi', price: {ars: 7000, usd: 72}},
-        ])
+    setup(props) {
 
         const coins = ref([
             {id: 1, name: 'ARS'},{id:2, name: 'USD'}
@@ -71,10 +64,15 @@ export default {
         const desplazamiento = ref(0)
 
         // Calculamos la cantidad de secciones que tendra el carrousel
-        if ((licences.value.length % 3) > 0) {
-            cantSection.value = Math.trunc(licences.value.length / 3) + 1
-        } else {
-            cantSection.value = Math.trunc(licences.value.length / 3) 
+        if (props.app) {
+            console.log('aaa')
+            if ((props.app.licenses.length % 3) > 0) {
+                cantSection.value = Math.trunc(props.app.licenses.length / 3) + 1
+            } else if ((props.app.licenses.length % 3) == 0) {
+                cantSection.value = 1
+            } else {
+                cantSection.value = Math.trunc(props.app.licenses.length / 3) 
+            }
         }
         // Calculamos el desplazamiento que hara por seccion
         desplazamiento.value = -(100/cantSection.value).toFixed(1)
@@ -101,7 +99,6 @@ export default {
         }, false)
 
         return {
-            licences,
             coins,
             coinActivo,
             coinSelect,
@@ -136,12 +133,13 @@ export default {
 }
 
 .carrousel .licence {
-    width: calc(33.3% / 2 - 10px);
+    width: calc(33.3% / 1 - 10px);
     margin: 0px 5px;
-    padding: 4px;
+    padding: 15px;
     border-radius: 15px;
     box-shadow: 0px 0px 8px 2px #ccc;
-    font-size: 0.85rem;
+    /* font-size: 0.85rem; */
+    box-sizing: border-box;
 }
 
 .licence hr {

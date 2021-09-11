@@ -54,7 +54,7 @@
                 <div class="page">
                     <!-- Carrousel para seleccional la app -->
 
-                    <SelectApp />
+                    <SelectApp :apps="apps" />
                     <div class="field is-grouped is-justify-content-space-between">
                         <button type="button" class="button btn-crenein prev">{{$t('createCompany.anterior')}}</button>
                         <button type="button" class="button btn-crenein next">{{$t('createCompany.siguiente')}}</button>
@@ -114,6 +114,7 @@ import puwic from '@/assets/puwic2.png'
 import geston from '@/assets/geston2.png'
 import store from '@/store.js';
 import { useRouter } from 'vue-router';
+import { GraphQLClient } from 'graphql-request';
 /* import {i18n} from '@/i18n.js' */
 
 
@@ -140,13 +141,47 @@ export default {
             {id: 3, name: 'Geston', licencia: 'Licencia 60x8', price: 3800, logo: geston},
         ])
         // **************************
+        const apps = ref([])
         const total = ref(11400)
         const router = useRouter()
         const creating_company = ref(true)
+        const endpoint = store.state.url_backend
 
         // observamos el estado de creating_company para actualizar su estado
         watchEffect(() => {
             creating_company.value = store.state.creating_company
+        })
+
+        // Traemos los datos de la app y dentro de esta sus licencias
+        watchEffect(() => {
+            const client = new GraphQLClient(endpoint)
+
+            client.rawRequest(/* GraphQL */ `
+            query{
+                appsVisible {
+                    id
+                    name
+                    logo
+                    observation
+                    visible
+                    licenses {
+                        id
+                        name
+                        price_arg
+                        price_usd
+                    }
+                }
+            }
+            `)
+            .then((data) => {
+                apps.value = []
+                // Cargamos los datos traidos en un arreglo
+                data.data.appsVisible.forEach(element => {
+                    apps.value.push({id: element.id, name: element.name, logo: ispb, observation: element.observation, licenses: element.licenses})
+                })
+                console.log(apps.value)
+            })
+            .catch(error => console.log(error.response))
         })
 
 
@@ -236,6 +271,7 @@ export default {
         return {
             datas,
             total,
+            apps,
             createCompany,
             removeResumen
         }
