@@ -90,7 +90,7 @@ export default {
     created(){
         this.comprobar_carga()
         this.comprobar_edicion()
-        this.traerCompanies()
+     /*    this.traerCompanies() */
     },
 
     setup() {

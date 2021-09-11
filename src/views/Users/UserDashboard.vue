@@ -58,6 +58,9 @@ export default {
         Modal,
         ActionModal,
     },
+ /*    created(){
+        this.traerUsers()
+    }, */
 
     setup () {
         const datas = ref([
@@ -111,10 +114,10 @@ export default {
                     /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
                 })
                 .then((data) => {
-                    apps.value = []
-                    data.data.apps.forEach(element => {
-                        apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false, modalDelete: false})
-                        console.log(typeof element.logo)
+                    users.value = []
+                    data.data.users.forEach(element => {
+                        users.value.push({id:element.id, nombre: element.name, avatar: element.avatar, email:element.email ,activo: false, modalDelete: false})
+                      /*   console.log(typeof element.logo) */
                     })
 
                 }).catch(error => {
