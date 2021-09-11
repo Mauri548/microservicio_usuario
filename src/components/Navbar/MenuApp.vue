@@ -41,6 +41,8 @@ import blog from '@/assets/blog.jpg'
 // *****************************
 import AppCrenein from './AppsCrenein.vue'
 import { ref } from '@vue/reactivity'
+import i18n from '@/i18n.js' 
+import { watchEffect } from '@vue/runtime-core'
 export default {
     name: 'MenuApp',
     components: {
@@ -60,11 +62,23 @@ export default {
             {id: 3, name: 'Geston', logo: geston, activo: false}
         ])
 
-        const discovers = ref([
-            {id: 1, name: 'Blog', image: blog},
-            {id: 2, name: 'More Crenein Products', image: blog}
-        ])
+        const discovers = ref([])
         // ******************************
+
+        watchEffect(()=>{ // utilizamos watcheffect para detectar que valor tiene el atributo locale del objeto i18n al momento de estar en la pagina o al momento de cambiar el valor a traves del boton del lenguaje
+            if(i18n.global.locale == 'en'){
+                discovers.value = [
+                    {id: 1, name: 'Blog', image: blog},
+                    {id: 2, name: 'More Crenein Products', image: blog}
+                ]
+            }
+            if(i18n.global.locale == 'es'){
+                 discovers.value = [
+                    {id: 1, name: 'Blog', image: blog},
+                    {id: 2, name: 'Mas Productos de Crenein', image: blog}
+                ]
+            }
+        })
 
         const activo = ref(false)
    

@@ -9,6 +9,7 @@
         <div class="form-outer pt-3">
               <form  action="">
                 <div  class="page slidepage">    
+                     <!--    Utilizo el atributo locale del objeto i18n para saber en que lenguaje esta seteado el sistema  -->
                     <CampoForm v-show="$i18n.locale=='en'" place="Name fantasy" type="text" />
                     <CampoForm v-show="$i18n.locale=='es'" place="Nombre de fantasia" type="text" />
 

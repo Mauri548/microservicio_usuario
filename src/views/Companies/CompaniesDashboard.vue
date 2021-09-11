@@ -74,6 +74,7 @@ import store from '@/store';
 import { inject } from '@vue/runtime-core'
 import {  watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js'
+import {GraphQLClient, request as fetchGQL} from 'graphql-request';
 
 
 export default {
@@ -89,6 +90,7 @@ export default {
     created(){
         this.comprobar_carga()
         this.comprobar_edicion()
+        this.traerCompanies()
     },
 
     setup() {
@@ -97,6 +99,9 @@ export default {
         const comprobar = store.state.carga_exitosa
         const comprobar_edi = store.state.edicion_exitosa
         const accion_exitosa = ref(false)
+        const endpoint = store.state.url_backend
+        const companies = ref([])
+        const companies_aux = ref([])
      
 
 
@@ -129,20 +134,55 @@ export default {
                 titles.value = ['Name fantasy', 'Business name', 'Owners', 'Cuit', 'Email', 'Phone', 'Tax condition', 'Direction', 'Location', 'Province', 'Country']
             }
 
-            
-            /*     titles.value[0] = "Nombre de fantasia"
-                titles.value[1] = "Nombre de negocio"
-                titles.value[2] = "Propietario"
-                titles.value[3] = "Cuit"
-                titles.value[4] = "Correo"
-                titles.value[5] = "Telefono"
-                titles.value[6] = "Condición fiscal"
-                titles.value[7] = "Direccion"
-                titles.value[8] = "Ciudad"
-                titles.value[9] = "Provincia"
-                titles.value[10] = "Pais" */
-            
         })
+
+        const traerCompanies = () => {
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            watchEffect(() => {
+                client.rawRequest(/* GraphQL */ `
+                query{
+                    companies {
+                        id
+                        name_fantasy
+                        business_name
+                        owners
+                        cuit
+                        email
+                        phones
+                        tax_condition
+                        direction	
+                        location	
+                        province
+                        country
+                        deleted_at
+                        created_at
+                        updated_at
+                    }
+                }`,
+                {
+                    /* page: parseInt(route.params.page),
+                    first: mostrar_cantidad.value */
+                },
+                {
+                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+                })
+                .then((data) => {
+                    companies.value = []
+                    data.data.companies.forEach(element => {
+                        companies.value.push({id:element.id, nombre_fantasia: element.name_fantasy, nombre_negocio: element.business_name,
+                        propietarios:element.owners ,cuit:element.cuit ,email:element.email,phones:element.phones,condicion_fiscal:element.tax_condition ,direccion:element.direction, localidad:element.location,provincia:element.province,pais:element.country,  activo: false, modalDelete: false})
+                       /*  console.log(typeof element.logo) */
+                    })
+
+                }).catch(error => {
+                    console.log(error.response);
+                })
+            })
+        }
+
+
+
+
 
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
@@ -179,6 +219,10 @@ export default {
         }
 
         return {
+            traerCompanies,
+            endpoint,
+            companies,
+            companies_aux,
             isMobile ,
             comprobar_carga ,
             comprobar_edicion ,

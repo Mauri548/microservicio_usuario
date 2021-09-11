@@ -9,6 +9,7 @@
         <div class="column has-text-right">
 
             <div>
+              <!--   con la expresion {{$t('')}} podemos traer la palabra que queremos mostrar traducida en el lenguaje seleccionado -->
                 <button v-if="buttonDefault" @click="push" class="button btn-crenein">{{$t('board.headBoard.agregar')}}</button>
                 <slot></slot>
                 <button class="button btn-crenein">{{$t('board.headBoard.masOps')}}</button>

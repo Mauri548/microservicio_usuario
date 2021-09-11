@@ -1,37 +1,39 @@
 <template>
   
-    <div v-show="isMobile==false" class="column tam-box mt-2 container is-centered  ">
-        <div class="column title-box">
-            <h2 class="color-letras">Recover your password</h2>
+    <div v-show="isMobile==false" class="column tam-box mt-2 container  has-text-centered">
+        <div class="column title-box ">
+            <h2 class="color-letras">{{$t('contraseña.msmRecupera')}}</h2>
         </div>
         <div class="column is-centered cuadro-border">
             <form class="column  mx-5  px-0">
-                <CampoForm place="Email" type="text" />
+                <CampoForm v-if="valorLocale=='en'" place="Email" type="text" />
+                <CampoForm v-if="valorLocale=='es'" place="Correo" type="text" />
             </form>
             <div class="column mx-5 ">
                 <div class="columns">
                     <div class="column px-0 is-flex-grow-0 ">
-                        <button class=" button color-btn has-background-danger ">Cancel</button>
+                        <button class=" button color-btn has-background-danger ">{{$t('contraseña.cancel')}}</button>
                     </div>
                     <div class="column has-text-right  px-0  " >
-                            <button class="button tam-btn color-btn title-box">Send</button>
+                            <button class="button tam-btn color-btn title-box">{{$t('contraseña.enviar')}}</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div v-show="isMobile==true" class="column tam-box mt-2 container is-centered  ">
+    <div v-show="isMobile==true" class="column tam-box mt-2 container has-text-centered  ">
         <div class="column title-box">
-            <h2 class="color-letras">Recover your password</h2>
+            <h2 class="color-letras">{{$t('contraseña.msmRecupera')}}</h2>
         </div>
         <div class="column  cuadro-border" >
             <form class="column  mx-5  px-0" >
-                <CampoForm place="Email" type="text" />
+                <CampoForm v-if="$i18n.locale=='en'" place="Email" type="text" />
+                <CampoForm v-if="$i18n.locale=='es'" place="Correo" type="text" />
 
-                <div class="column">
-                    <button class="button  color-btn title-box " style="width:100%">Send</button>
-                    <button class="button color-btn has-background-danger mt-2 " style="width:100%">Cancel</button>
+                <div class="column ">
+                    <button class="button  color-btn title-box " style="width:100%">{{$t('contraseña.enviar')}}</button>
+                    <button class="button color-btn has-background-danger mt-2 " style="width:100%">{{$t('contraseña.cancel')}}</button>
                 </div>
               
                 
@@ -45,7 +47,9 @@
 
 <script>
 import CampoForm from '../../components/CampoForm.vue'
-import { inject } from '@vue/runtime-core'
+import { inject, watchEffect } from '@vue/runtime-core'
+import { ref } from '@vue/reactivity'
+import i18n from '@/i18n.js'
 export default {
     
     name:'RecoverPass1',
@@ -54,9 +58,17 @@ export default {
     }, 
     setup(){
         const isMobile = inject('isMobile')
+        const valorLocale = ref('')
+
+        watchEffect(()=>{
+            valorLocale.value = i18n.global.locale
+            console.log(valorLocale.value)
+        })
+        
 
         return { 
-            isMobile
+            isMobile,
+            valorLocale
         }
     }
 
@@ -93,7 +105,7 @@ export default {
     
 }
 .tam-btn{
-    width: 17rem;
+    width: 16rem;
 }
 
 .tam-box{

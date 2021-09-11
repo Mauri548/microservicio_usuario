@@ -1,5 +1,6 @@
 <template>
     <div class="conteiner-pagination px-4 mt-3">
+          <!--   con la expresion {{$t('')}} podemos traer la palabra que queremos mostrar traducida en el lenguaje seleccionado -->
         <nav class="pagination is-right" role="navigation" aria-label="pagination">
             <p class="ml-1">1 {{$t('board.pagination.al')}} 7 {{$t('board.pagination.de')}} 7</p>
             <ul class="pagination-list">

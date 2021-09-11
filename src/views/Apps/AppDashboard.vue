@@ -17,7 +17,7 @@
                     <th @click="actionModal(app)" >{{app.id}}</th>
                     <td @click="actionModal(app)">{{app.nombre}}</td>
                     <td @click="actionModal(app)">
-                        <img :src="app.logo" width="40" alt="">
+                        <img :src="app.logo" width="40" alt="app.logo">
                     </td>
                     <td @click="actionModal(app)">{{app.observacion}}</td>
                     <Modal namePath="EditApp" :data="app" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
@@ -152,10 +152,10 @@ export default {
                     apps.value = []
                     data.data.apps.forEach(element => {
                         apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false, modalDelete: false})
+                        console.log(typeof element.logo)
                     })
-                      console.log(apps.value)
+
                 }).catch(error => {
-                  
                     console.log(error.response);
                 })
             })

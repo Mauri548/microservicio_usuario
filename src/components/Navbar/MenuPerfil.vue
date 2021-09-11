@@ -11,6 +11,7 @@
                     <img class="circle close-perfil" src="@/assets/perfil.jpg" alt="" style="max-height: 6rem;">
                 </div>
                 <p class="is-size-7 has-text-grey close-perfil">mauricioferreyra548@gmail.com</p>
+                  <!--   con la expresion {{$t('')}} podemos traer la palabra que queremos mostrar traducida en el lenguaje seleccionado -->
                 <p class="is-size-7 has-text-grey close-perfil">{{$t('navbar.menuPerfil.company')}} Crenein</p>
                 <div class="buttons-perfil my-1 close-perfil">
                     <button class="button fondo-crenein has-text-white is-size-7 w-100 my-2 has-text-weight-bold">{{$t('navbar.menuPerfil.GestionCuenta')}}</button>

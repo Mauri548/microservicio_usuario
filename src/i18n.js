@@ -1,6 +1,11 @@
-import {createI18n} from 'vue-i18n'
+import {createI18n} from 'vue-i18n' // importo el metodo {createI18n} del paquete instalado
 
-const messages = {
+
+// creo un archivo .js para poder manipular el lenguaje al que quiera traducir las palabras y amrar un pequeño traductor
+
+
+const messages = { // creo que un objeto en donde crearemos dos atributos en y es que seran
+    // las encargas de tener las palabras traducidas al lenguaje que queremos
     
     es:{
         navbarV:{
@@ -114,6 +119,14 @@ const messages = {
         selectLicence:{
             btnQuiero:'Lo quiero'
         },
+        contraseña:{
+            msmRecupera:'Recupera tu contraseña',
+            msmCambio:'Recibirá en un momento un enlace para recuperar su contraseña',
+            msmCambiado:'Tu contraseña ha cambiado',
+            aceptar:'Aceptar',
+            enviar:'Enviar',
+            cancel:'Cancelar',
+        }
 
 
 
@@ -226,6 +239,16 @@ const messages = {
         selectLicence:{
             btnQuiero:'I want'
         },
+        contraseña:{
+            msmRecupera:'Recover your password',
+            msmCambio:'You will receive in a moment a link to retrieve your password',
+            msmCambiado:'You password has changed',
+            aceptar:'Accept',
+            enviar:'Send',
+            cancel:'Cancel',
+
+        }
+
     }
 }
 

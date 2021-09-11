@@ -1,38 +1,28 @@
 <template>
   
 
-    <div class="column tam-box mt-2 container is-centered  ">
+    <div class="column tam-box mt-2 container has-text-centered  ">
                 <div class="column title-box ">
-                    <h2 class="color-letras">Recover your password</h2>
+                    <h2 class="color-letras">{{$t('contraseña.msmRecupera')}}</h2>
                 </div>
                 <div class="column is-centered  cuadro-border">
-                    <!-- <div class="column  mx-5  px-0 has-background-grey"> -->
-                  <!--       <form class="column  mx-5  px-0 ">
-                            <div class="form-row">
-                                <input type="text" required>
-                                <label alt="Label" data-placeholder="New password"></label>
-                            </div>
-                            <div class="form-row">
-                                <input type="text" required>
-                                <label alt="Label" data-placeholder="Confirm password"></label>
-                            </div>
-                        
-                        </form> -->
+
                     <form action="" class="column  mx-5  px-0 ">
-                        
-                        <CampoFormPass class="mb-3" place="New password" type="password" />
-                        <CampoFormPass  place="Confirm password" type="password" />
+                        <CampoFormPass v-if="$i18n.locale=='en'" class="mb-3" place="New password" type="password" />
+                        <CampoFormPass v-if="$i18n.locale=='es'" class="mb-3" place="Nueva contraseña" type="password" />
+
+                        <CampoFormPass  v-if="$i18n.locale=='en'" place="Confirm password" type="password" />
+                        <CampoFormPass  v-if="$i18n.locale=='es'" place="Confirmar contraseña" type="password" />
                         <div class="column  ">
                             <div class="columns ">
                                 <div class="column px-0 is-flex-grow-0 ">
-                                    <button class=" button color-btn has-background-danger ">Cancel</button>
+                                    <button class=" button color-btn has-background-danger ">{{$t('contraseña.cancel')}}</button>
                                 </div>
                                 <div class="column   has-text-right px-0 ">
-                                    <button class="button tam-btn color-btn title-box">Save</button>
+                                    <button class="button tam-btn color-btn title-box">{{$t('contraseña.enviar')}}</button>
                                 </div>
                             </div>
                         </div>
-
                     </form>
               
                 
@@ -142,7 +132,7 @@ form .form-row input[type=text]:focus + label[data-placeholder]:after, form .for
     
 }
 .tam-btn{
-    width: 16.5rem;
+    width: 16rem;;
 }
 
 .color-btn:hover{

@@ -1,6 +1,7 @@
 <template>
     <!-- <form action=""> -->
         <div class="field">
+            <!--    Utilizo el atributo locale del objeto i18n para saber en que lenguaje esta seteado el sistema  -->
             <div v-if="$i18n.locale=='en'"> 
                 <p class="control has-icons-right">
                     <input @keyup.enter="searching" class="input" v-model="text" type="text" placeholder="Search">

@@ -1,15 +1,16 @@
 <template>
   
-    <div class="column tam-box mt-2 container is-centered  ">
+    <div class="column tam-box mt-2 container  has-text-centered  ">
         <div class="column title-box">
-            <h2 class="color-letras">Recover your password</h2>
+            <h2 class="color-letras">{{$t('contraseña.msmRecupera')}}</h2>
         </div>
         <div class="column is-centered cuadro-border">
-            <div class="column ">
-                <button class=" button tam-btn color-letras has-background-success ">You password has changed</button>
+            <div class="column  has-text-centered">
+              <!--   <button class=" button tam-btn color-letras has-background-success ">{{$t('contraseña.msmCambiado')}}</button> -->
+                <p  style="padding:5px ;" class=" color-letras has-background-success">{{$t('contraseña.msmCambio')}}</p>
             </div>
-             <div class="column ">
-                <button class=" button tam-btn color-letras title-box ">Accept</button>
+             <div class="column is-centered">
+                <button class=" button tam-btn color-letras title-box ">{{$t('contraseña.aceptar')}}</button>
             </div>
         </div>
     </div>
@@ -50,7 +51,7 @@ export default {
     
 }
 .tam-btn{
-    width: 17rem;
+    width: 8rem;
   
 }
 

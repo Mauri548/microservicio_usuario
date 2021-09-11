@@ -1,7 +1,7 @@
 <template>
     <div class="conteiner-tablero mt-2 py-4">
         <div class="head-tablero">
-            
+             <!--    Utilizo el atributo locale del objeto i18n para saber en que lenguaje esta seteado el sistema  -->
                 <TitleBoard v-show="$i18n.locale=='es'" title="Usuarios" />
                 <TitleBoard v-show="$i18n.locale=='en'" title="Users" />
          
@@ -45,7 +45,8 @@ import ActionModal from '../../components/Modals/ActionsModal.vue'
 import { ref } from '@vue/reactivity'
 /* import store from '@/store' */
 import {  watchEffect } from '@vue/runtime-core'
-import i18n from '@/i18n.js'
+import i18n from '@/i18n.js' 
+import {GraphQLClient, request as fetchGQL} from 'graphql-request';
 
 
 export default {
@@ -69,6 +70,62 @@ export default {
       
 
         const titles = ref([])
+        const endpoint = store.state.url_backend
+        const users = ref([])
+        const users_aux = ref([])
+
+
+        const traerUsers = () => {
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            watchEffect(() => {
+                client.rawRequest(/* GraphQL */ `
+                query{
+                    users {
+                        id
+                        name
+                        email
+                        avatar
+                        created_at
+                        updated_at
+                        deleted_at
+                        companies {
+                            id
+                            name_fantasy
+                            business_name
+                            deleted_at
+                            created_at
+                            updated_at
+                        }
+                        invitations{
+                            id
+                            name
+                            email
+                        }
+                    }
+                }`,
+                {
+                    /* page: parseInt(route.params.page),
+                    first: mostrar_cantidad.value */
+                },
+                {
+                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+                })
+                .then((data) => {
+                    apps.value = []
+                    data.data.apps.forEach(element => {
+                        apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false, modalDelete: false})
+                        console.log(typeof element.logo)
+                    })
+
+                }).catch(error => {
+                    console.log(error.response);
+                })
+            })
+        }
+
+
+
+
 
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
@@ -82,7 +139,7 @@ export default {
             aux.activo = false
             aux.modalDelete = !aux.modalDelete
         }
-        watchEffect(()=>{
+        watchEffect(()=>{ // utilizamos watcheffect para detectar que valor tiene el atributo locale del objeto i18n al momento de estar en la pagina o al momento de cambiar el valor a traves del boton del lenguaje
             if(i18n.global.locale == 'en'){
                 titles.value = ['Avatar','Full name','Email','Created','State']
             }
@@ -97,6 +154,10 @@ export default {
         }
 
         return {
+            traerUsers ,
+            endpoint,
+            users,
+            users_aux,
             datas,
             titles,
             actionModal,
