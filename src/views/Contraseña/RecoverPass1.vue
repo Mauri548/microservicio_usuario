@@ -2,7 +2,8 @@
   
     <div v-show="isMobile==false" class="column tam-box mt-2 container  has-text-centered">
         <div class="column title-box ">
-            <h2 class="color-letras">{{$t('contraseña.msmRecupera')}}</h2>
+            <h2 v-if="valorLocale=='en'" class="color-letras">Recover your password</h2>
+            <h2 v-if="valorLocale=='es'" class="color-letras">Recupera tu contraseña</h2>
         </div>
         <div class="column is-centered cuadro-border">
             <form class="column  mx-5  px-0">
@@ -12,10 +13,12 @@
             <div class="column mx-5 ">
                 <div class="columns">
                     <div class="column px-0 is-flex-grow-0 ">
-                        <button class=" button color-btn has-background-danger ">{{$t('contraseña.cancel')}}</button>
+                        <button v-if="valorLocale=='en'" class=" button color-btn has-background-danger ">Cancel</button>
+                        <button v-if="valorLocale=='es'" class=" button color-btn has-background-danger ">Cancelar</button>
                     </div>
                     <div class="column has-text-right  px-0  " >
-                            <button class="button tam-btn color-btn title-box">{{$t('contraseña.enviar')}}</button>
+                            <button v-if="valorLocale=='en'" class="button tam-btn color-btn title-box">Send</button>
+                            <button v-if="valorLocale=='es'" class="button tam-btn color-btn title-box">Enviar</button>
                     </div>
                 </div>
             </div>
@@ -49,7 +52,6 @@
 import CampoForm from '../../components/CampoForm.vue'
 import { inject, watchEffect } from '@vue/runtime-core'
 import { ref } from '@vue/reactivity'
-import i18n from '@/i18n.js'
 export default {
     
     name:'RecoverPass1',
@@ -59,10 +61,12 @@ export default {
     setup(){
         const isMobile = inject('isMobile')
         const valorLocale = ref('')
+        const langStorage = window.localStorage
+       
 
         watchEffect(()=>{
-            valorLocale.value = i18n.global.locale
-            console.log(valorLocale.value)
+            valorLocale.value = langStorage.getItem('lang')
+          /*   console.log(valorLocale.value) */
         })
         
 

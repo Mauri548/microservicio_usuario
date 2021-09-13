@@ -3,12 +3,14 @@
 
     <div v-if="!isMobile" class="column tam-box mt-2 container  has-text-centered  ">
         <div class="column title-box">
-            <h2 class="color-letras">{{$t('contraseña.msmRecupera')}}</h2>
+            <h2 v-if="valorLocale=='en'" class="color-letras">Recover your password</h2>
+            <h2 v-if="valorLocale=='es'" class="color-letras">Recupera tu contraseña</h2>
         </div>
         <div class="column is-centered cuadro-border">
             <div class="column">
                 <!-- <button class="button color-letras has-background-success">{{$t('contraseña.msmCambio')}}</button> -->
-                 <p style="padding:10px ;" class=" color-letras has-background-success">{{$t('contraseña.msmCambio')}}</p>
+                    <p v-if="valorLocale=='en'" style="padding:10px ;" class=" color-letras has-background-success">You will receive in a moment a link to retrieve your password</p>
+                    <p v-if="valorLocale=='es'" style="padding:10px ;" class=" color-letras has-background-success">Recibirá en un momento un enlace para recuperar su contraseña</p>
                 <button class="button tam-btn mt-2 color-letras title-box">ok</button>
             </div>
         </div>
@@ -16,12 +18,14 @@
 
     <div v-if="isMobile" class="column tam-box mt-2 container  has-text-centered  ">
         <div class="column title-box">
-            <h2 class="color-letras">{{$t('contraseña.msmRecupera')}}</h2>
+            <h2 v-if="valorLocale=='en'" class="color-letras">Recover your password</h2>
+            <h2 v-if="valorLocale=='es'" class="color-letras">Recupera tu contraseña</h2>
         </div>
         <div class="column is-centered cuadro-border">
             <div class="column">
-                <p style="padding:5px;" class=" color-letras has-background-success">{{$t('contraseña.msmCambio')}}</p>
-                <button class="button  mt-2 color-letras title-box">ok</button>
+                <p v-if="valorLocale=='en'" style="padding:5px;" class=" color-letras has-background-success">You will receive in a moment a link to retrieve your password</p>
+                <p v-if="valorLocale=='es'" style="padding:5px;" class=" color-letras has-background-success">Recibirá en un momento un enlace para recuperar su contraseña</p>
+                <button class="button mt-2 color-letras title-box">ok</button>
             </div>
         </div>
     </div>
@@ -30,13 +34,21 @@
 </template>
 
 <script>
-import { inject } from '@vue/runtime-core'
+import { inject, watchEffect } from '@vue/runtime-core'
+import { ref } from '@vue/reactivity'
 export default {
     name:'RecoverPass2',
     setup(){
         const isMobile = inject('isMobile')
+        const valorLocale = ref('')
+        const langStorage = window.localStorage
+
+        watchEffect(()=>{
+            valorLocale.value = langStorage.getItem('lang')
+        })
 
         return { 
+            valorLocale ,
             isMobile
         }
     }

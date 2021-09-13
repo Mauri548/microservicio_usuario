@@ -19,15 +19,35 @@
 </template>
 
 <script>
+import {ref} from '@vue/reactivity'
+import i18n from '@/i18n.js' 
+import { watchEffect } from '@vue/runtime-core'
 
 export default {
     name:'ButtonLang',
-    data(){
-        return {
-           /*  langs: ['es','en'], */
-            langs: [{id:'es',lan:'Español'},{id:'en',lan:'English'}]
+    setup(){
+        const langs = ref([{id:'es',lan:'Español'},{id:'en',lan:'English'}])
+        let langStorage = window.localStorage
+
+        watchEffect(()=>{
+
+            langStorage.setItem('lang',i18n.global.locale)
+
+            console.log(langStorage.getItem('lang'))
+        })
+
+
+
+
+        return{ 
+            langs
         }
     },
+/*     data(){
+        return {
+            langs: [{id:'es',lan:'Español'},{id:'en',lan:'English'}]
+        }
+    }, */
 
 }
 </script>

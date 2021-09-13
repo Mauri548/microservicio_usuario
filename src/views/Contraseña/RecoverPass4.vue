@@ -2,15 +2,18 @@
   
     <div class="column tam-box mt-2 container  has-text-centered  ">
         <div class="column title-box">
-            <h2 class="color-letras">{{$t('contraseña.msmRecupera')}}</h2>
+            <h2 v-if="valorLocale=='en'" class="color-letras">Recover your password</h2>
+            <h2 v-if="valorLocale=='es'" class="color-letras">Recupera tu contraseña</h2>
         </div>
         <div class="column is-centered cuadro-border">
             <div class="column  has-text-centered">
               <!--   <button class=" button tam-btn color-letras has-background-success ">{{$t('contraseña.msmCambiado')}}</button> -->
-                <p  style="padding:5px ;" class=" color-letras has-background-success">{{$t('contraseña.msmCambio')}}</p>
+                <p v-if="valorLocale=='en'" style="padding:5px ;" class=" color-letras has-background-success">You password has changed</p>
+                <p v-if="valorLocale=='es'" style="padding:5px ;" class=" color-letras has-background-success">Tu contraseña ha sido cambiado</p>
             </div>
              <div class="column is-centered">
-                <button class=" button tam-btn color-letras title-box ">{{$t('contraseña.aceptar')}}</button>
+                <button v-if="valorLocale=='en'" class=" button tam-btn color-letras title-box ">Accept</button>
+                <button v-if="valorLocale=='es'" class=" button tam-btn color-letras title-box ">Aceptar</button>
             </div>
         </div>
     </div>
@@ -18,9 +21,23 @@
 </template>
 
 <script>
+import { ref } from '@vue/reactivity'
+import { watchEffect } from '@vue/runtime-core';
 
 export default {
-    name:'RecoverPass2',
+    name:'RecoverPass4',
+    setup(){
+        const valorLocale = ref('')
+        const langStorage = window.localStorage
+
+        watchEffect(()=>{
+            valorLocale.value = langStorage.getItem('lang')
+        })
+
+        return { 
+            valorLocale ,
+        }
+    }
    
 }
 </script>

@@ -1,42 +1,38 @@
 <template>
-  
-
     <div class="column tam-box mt-2 container has-text-centered  ">
-                <div class="column title-box ">
-                    <h2 class="color-letras">{{$t('contraseña.msmRecupera')}}</h2>
-                </div>
-                <div class="column is-centered  cuadro-border">
+        <div class="column title-box ">
+            <h2 v-if="valorLocale=='en'" class="color-letras">Recover your password</h2>
+            <h2 v-if="valorLocale=='es'" class="color-letras">Recupera tu contraseña</h2>
+        </div>
+        <div class="column is-centered  cuadro-border">
+            <form action="" class="column  mx-5  px-0 ">
+                <CampoFormPass v-if="valorLocale=='en'" class="mb-3" place="New password" type="password" />
+                <CampoFormPass v-if="valorLocale=='es'" class="mb-3" place="Nueva contraseña" type="password" />
 
-                    <form action="" class="column  mx-5  px-0 ">
-                        <CampoFormPass v-if="$i18n.locale=='en'" class="mb-3" place="New password" type="password" />
-                        <CampoFormPass v-if="$i18n.locale=='es'" class="mb-3" place="Nueva contraseña" type="password" />
-
-                        <CampoFormPass  v-if="$i18n.locale=='en'" place="Confirm password" type="password" />
-                        <CampoFormPass  v-if="$i18n.locale=='es'" place="Confirmar contraseña" type="password" />
-                        <div class="column  ">
-                            <div class="columns ">
-                                <div class="column px-0 is-flex-grow-0 ">
-                                    <button class=" button color-btn has-background-danger ">{{$t('contraseña.cancel')}}</button>
-                                </div>
-                                <div class="column   has-text-right px-0 ">
-                                    <button class="button tam-btn color-btn title-box">{{$t('contraseña.enviar')}}</button>
-                                </div>
-                            </div>
+                <CampoFormPass  v-if="valorLocale=='en'" place="Confirm password" type="password" />
+                <CampoFormPass  v-if="valorLocale=='es'" place="Confirmar contraseña" type="password" />
+                <div class="column  ">
+                    <div class="columns ">
+                        <div class="column px-0 is-flex-grow-0 ">
+                            <button v-if="valorLocale=='en'"  class=" button color-btn has-background-danger ">Cancel</button>
+                            <button v-if="valorLocale=='es'"  class=" button color-btn has-background-danger ">Cancelar</button>
                         </div>
-                    </form>
-              
-                
-                
+                        <div class="column   has-text-right px-0 ">
+                            <button v-if="valorLocale=='en'" class="button tam-btn color-btn title-box">Send</button>
+                            <button v-if="valorLocale=='es'" class="button tam-btn color-btn title-box">Enviar</button>
+                        </div>
+                    </div>
                 </div>
+            </form>
+        </div>
     </div>
-
-
-
 </template>
 
 <script>
 import CampoForm from '../../components/CampoForm.vue';
 import CampoFormPass from '../../components/CampoFormPass.vue';
+import { ref } from '@vue/reactivity'
+import { watchEffect } from '@vue/runtime-core';
 
 export default {
     
@@ -45,6 +41,19 @@ export default {
        CampoForm,
        CampoFormPass
     }, 
+    
+    setup(){
+        const valorLocale = ref('')
+        const langStorage = window.localStorage
+
+        watchEffect(()=>{
+            valorLocale.value = langStorage.getItem('lang')
+        })
+
+        return { 
+            valorLocale ,
+        }
+    }
  
 }
 </script>
