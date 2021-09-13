@@ -91,14 +91,10 @@
                         <button type="button" class="button btn-crenein prev">{{$t('createCompany.anterior')}}</button>
                         <button @click="createCompany" class="button btn-crenein submite">{{$t('createCompany.enviar')}}</button>
                         <!-- <router-link class="button btn-crenein submite" @click="createCompany" >{{$t('createCompany.enviar')}}</router-link> -->
-
     
                     </div>
                 </div>
             </form>
-
-
-
 
         </div>
     </div>
