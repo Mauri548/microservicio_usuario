@@ -118,6 +118,7 @@ import { inject } from '@vue/runtime-core'
 import {ref} from '@vue/reactivity'
 import { useRouter } from 'vue-router';
 import store from '@/store';
+import {GraphQLClient, request as fetchGQL} from 'graphql-request';
 
 export default {
     name:'AddApp',
@@ -129,6 +130,10 @@ export default {
         const router = useRouter()
         const isMobile = inject('isMobile')
         const activo = ref(false)
+        const observation = ref('')
+        const nombre = ref('')
+        const visible = ref('')
+        const logo = ref('')
 
         const Activar = () => {
             activo.value = !activo.value
@@ -143,10 +148,49 @@ export default {
                 store.commit('verificar_carga',accion)
         }
 
-
+        const registrarApp = () => {
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            // Estructura FetchQL(url, query, variable, opcions)
+            client.rawRequest(/* GraphQL */ `
+            mutation($observation:String, $name:String!,$logo:String,$visible:Visible!){
+              		createsUse_app (input:{
+                    name: $nombre,
+                    logo: $logo,
+                    visible: $visible,
+                    observation: $obvservation,
+                    }){
+                            id
+                            name
+                            logo
+                            observation
+                            visible
+                    }
+            }`,
+            {
+                name: nombre.value,       
+                observation: observation.value,
+                logo: logo.value,
+                visible: visible.value,
+            },
+            {
+               /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+            })
+            .then((data) => {
+                router.push({name: 'AppDashboard'})
+            /*     let accion = "nuevoanunciante"
+                store.commit('verificar_carga',accion) */
+            }).catch(error => {
+              console.log(error.response);
+            })
+        }
 
 
         return{ 
+            logo ,
+            visible,
+            nombre,
+            registrarApp,
+            observation,
             verificar ,
             volver,
             isMobile,
