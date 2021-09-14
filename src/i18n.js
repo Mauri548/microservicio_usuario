@@ -64,8 +64,6 @@ const messages = {
             guardar:'Guardar cambios',
             modalCarga:'Se cargo con exito el permiso.',
             modalEdicion:'Se edito con exito el permiso.',
-
-
         },
         personalForm:{
             escogeArchivo:'Escoge un archivo',
@@ -113,6 +111,9 @@ const messages = {
         },
         selectLicence:{
             btnQuiero:'Lo quiero'
+        },
+        licence: {
+            agregar: 'Agregar Licencia'
         },
 
 
@@ -225,6 +226,9 @@ const messages = {
         },
         selectLicence:{
             btnQuiero:'I want'
+        },
+        licence: {
+            agregar: 'Add Licence'
         },
     }
 }

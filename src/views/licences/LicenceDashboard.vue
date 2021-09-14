@@ -5,7 +5,9 @@
             <TitleBoard v-show="$i18n.locale=='es'" title="Licencias" />
             <hr>
             <div class="body-tablero my-3 px-4">
-                <HeadBoard namePath="AddApp" />
+                <HeadBoard :buttonDefault="false">
+                    <button @click="ModalAdd" class="button btn-crenein">{{$t('board.headBoard.agregar')}}</button>
+                </HeadBoard>
             </div>
         </div>
         <div class="body-tablero px-4">
@@ -21,6 +23,7 @@
         </div>
         <Pagination/>
     </div>
+    <AddLicence v-show="addLicence" @closeModal="ModalAdd" />
 </template>
 
 <script>
@@ -31,6 +34,7 @@ import Pagination from '../../components/Board/Pagination.vue'
 import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
 import ModalAlert from '../../components/Modals/ModalsAlert.vue'
+import AddLicence from './AddLicence.vue'
 import { ref, watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js'
 
@@ -44,6 +48,7 @@ export default {
         Modal,
         ActionModal,
         ModalAlert,
+        AddLicence,
     },
 
     setup() {
@@ -52,7 +57,7 @@ export default {
             {id: 1, name: 'Licence 200 client', app: 'ISPB', price_arg: 2500, price_usd: 25},
             {id: 2, name: 'Licence 5 point wifi and 25 adverstimennt', app: 'Puwic', price_arg: 2000, price_usd: 20},
         ])
-        
+        const addLicence = ref(false)
         
         watchEffect(()=>{
             if(i18n.global.locale=='es'){
@@ -63,9 +68,15 @@ export default {
             }
         })
 
+        const ModalAdd = () => {
+            addLicence.value = !addLicence.value
+        }
+
         return {
             licences,
-            titles
+            titles,
+            addLicence,
+            ModalAdd,
         }
     }
 
