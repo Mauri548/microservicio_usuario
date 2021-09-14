@@ -23,31 +23,26 @@
                         </div> 
 
                         <div class="columns">
-                            <div class="column is-flex-grow-0 pl-0 mr-1 pt-4">
+                            <div class="column is-flex-grow-0 mr-1 pl-0 pt-4">
                                 <label class="label is-size-4" style="color: #005395;"><i class="fas fa-lock"></i></label>
                             </div>
                             <div class="column px-0 ">
                                 <div class="control ">
-                                    <input class="input" type="password" placeholder="Password">
+                                    <input class="input"  type="password" placeholder="Password">
                                 </div>
-                            </div>   
-
-                           
+                            </div>    
                         </div> 
                         
                     </div>      
 
                     <div class="column has-text-centered">
-                        <button @click="Logear" class="button button2 has-text-white" style="font-weight:5px;">Login</button>
-                        <p  style="color: #005395">¿Olvidaste tu contraseña?</p>
+                        <button class="button button2 has-text-white" style="font-weight:5px;">Registrarse</button>
                     </div>
 
                     <div class="column has-text-centered">
-                        <p >o inicia sesion usando: </p>
+                        <p >o registrate usando: </p>
                         <button class="button button2 has-background-info has-text-white" ><i class="fab fa-facebook-f"></i></button>
                         <button class="button mt-1 button2 has-background-danger has-text-white" ><i class="fab fa-google-plus-g"></i></button>
-                        <p style="color: #005395">¿No eres mienbro aun?</p>
-                        <p  style="color: #005395; font-weight:bold;">Registrate gratis</p>
                     </div>
                 </form>
             </div>
@@ -56,21 +51,8 @@
 </template>
 
 <script>
-
-import { useRouter } from 'vue-router'
 export default {
-    name:'Login',
-
-    setup(){
-        const router = useRouter()
-        const Logear = () => {
-            router.push({name: 'Home'})
-        }
-
-        return{
-            Logear
-        }
-    }
+    name:'Register',
 }
 </script>
 
@@ -91,12 +73,9 @@ export default {
 }
 
 .button2{
-
     width:15rem;
     background-color:#005395;
-
 }
-
 
 .input2{
      width:12.49rem;

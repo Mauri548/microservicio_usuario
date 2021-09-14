@@ -1,0 +1,38 @@
+<template>
+    <div style="height: 100%">
+        <p class="has-text-centered has-text-weight-semibold">{{title}}:</p>
+        <div class="select is-multiple w-100" style="height: 100%">
+            <select class="w-100" multiple size="5" style="height: 89%" v-model="permission_id" >
+                <slot></slot>
+            </select>
+        </div>
+    </div>
+</template>
+
+<script>
+import { ref } from '@vue/reactivity'
+import { onMounted, watch } from '@vue/runtime-core'
+export default {
+    name: 'SelectPermission',
+    props: ['data','title','assigned','appId'],
+    emits: ['onMovePermission'],
+
+    setup(props,{emit}) {
+        const permission_id = ref([])
+
+        // Emitimos el valor seleccionado en la lista de permiso
+        // pasando el id principal de la app, el de la lista de permiso y los permisos seleccionados
+        watch(permission_id, () => {
+            emit("onMovePermission",permission_id.value, props.data.id, props.appId)
+        })
+
+        return {
+            permission_id,
+        }
+    }
+}
+</script>
+
+<style>
+
+</style>
