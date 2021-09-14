@@ -12,13 +12,13 @@
         </div>
         <div class="body-tablero px-4">
             <Board :datas="licenses" :titles="titles">
-                <tr class="has-text-centered" v-for="licence in licenses" :key="licence.id">
+                <tr class="has-text-centered row-table" v-for="licence in licenses" :key="licence.id">
                     <th @click="actionModal(licence)">{{licence.id}}</th>
                     <td @click="actionModal(licence)">{{licence.name}}</td>
                     <td @click="actionModal(licence)">{{licence.app.name}}</td>
                     <td @click="actionModal(licence)">${{licence.price_arg}}</td>
                     <td @click="actionModal(licence)">${{licence.price_usd}}</td>
-                    <Modal namePath="EditApp" :data="licence" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
+                    <Modal class="modal-action" namePath="EditApp" :data="licence" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
                     <ActionModal :data="licence" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
@@ -126,6 +126,12 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+    .row-table:hover {
+        cursor: pointer;
+        background-color: #82c1f12b;
+    }
+    .modal-action:hover {
+        cursor: default;
+    }
 </style>
