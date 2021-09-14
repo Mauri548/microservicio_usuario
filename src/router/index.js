@@ -102,6 +102,11 @@ const routes = [
         path: '/PermissionsManagement',
         name: 'PermissionsManagement',
         component: () => import(/* webpackChunkName: "PermissionsManagement" */ '../views/Permissions/PermissionsManagement.vue')
+      },
+      {
+        path: '/LicencesDashboard',
+        name: 'LicencesDashboard',
+        component: () => import(/* webpackCunkName: "LicencesDashboard" */ '../views/licences/LicenceDashboard.vue')
       }
     ]
   },

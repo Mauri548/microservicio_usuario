@@ -69,8 +69,6 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             guardar:'Guardar cambios',
             modalCarga:'Se cargo con exito el permiso.',
             modalEdicion:'Se edito con exito el permiso.',
-
-
         },
         personalForm:{
             escogeArchivo:'Escoge un archivo',
@@ -126,9 +124,10 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             aceptar:'Aceptar',
             enviar:'Enviar',
             cancel:'Cancelar',
-        }
-
-
+        },
+        licence: {
+            agregar: 'Agregar Licencia'
+        },
 
     },
     en:{
@@ -247,8 +246,11 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             enviar:'Send',
             cancel:'Cancel',
 
-        }
+        },
 
+        licence: {
+            agregar: 'Add Licence'
+        },
     }
 }
 

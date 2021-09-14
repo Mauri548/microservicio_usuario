@@ -16,15 +16,20 @@ export default {
         type: String,
         pos: Number
     },
+    // props: ['size','carrousel','type','pos'],
 
     setup(props) {
         let cantSection = 0
 
         // Calculamos la cantidad de secciones que tendra el carrousel
-        if ((props.size % 3) > 0) {
-            cantSection = Math.trunc(props.size / 3) + 1
+        if (props.size != 0 ) {
+            if ((props.size % 3) > 0) {
+                cantSection = Math.trunc(props.size / 3) + 1
+            } else {
+                cantSection = Math.trunc(props.size / 3) 
+            }
         } else {
-            cantSection = Math.trunc(props.size / 3) 
+            cantSection = 1
         }
         // Calculamos el desplazamiento que hara por seccion
         let desplazamiento = -(100/cantSection).toFixed(1)
@@ -36,7 +41,6 @@ export default {
             const punto = document.querySelectorAll(`.${props.type}`)
             
             // Calculamos el width del carrousel dependiendo del tamaño del dispositivo
-            console.log(carrousel)
             if (window.screen.width <= 768) {
                 if (props.type == 'app') {
                     carrousel.style.width = `${(cantSection * 100)}%`
