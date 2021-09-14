@@ -13,11 +13,13 @@
         <div class="body-tablero px-4">
             <Board :datas="licenses" :titles="titles">
                 <tr class="has-text-centered" v-for="licence in licenses" :key="licence.id">
-                    <th>{{licence.id}}</th>
-                    <td>{{licence.name}}</td>
-                    <td>{{licence.app.name}}</td>
-                    <td>${{licence.price_arg}}</td>
-                    <td>${{licence.price_usd}}</td>
+                    <th @click="actionModal(licence)">{{licence.id}}</th>
+                    <td @click="actionModal(licence)">{{licence.name}}</td>
+                    <td @click="actionModal(licence)">{{licence.app.name}}</td>
+                    <td @click="actionModal(licence)">${{licence.price_arg}}</td>
+                    <td @click="actionModal(licence)">${{licence.price_usd}}</td>
+                    <Modal namePath="EditApp" :data="licence" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
+                    <ActionModal :data="licence" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
         </div>
@@ -87,7 +89,8 @@ export default {
             .then((data) => {
                 console.log(data)
                 data.data.licenses.forEach(element => {
-                    licenses.value.push({id:element.id, name:element.name, price_arg:element.price_arg, price_usd:element.price_usd, app: {id:element.app.id, name: element.app.name}})
+                    licenses.value.push({id:element.id, name:element.name, price_arg:element.price_arg, 
+                        price_usd:element.price_usd, app: {id:element.app.id, name: element.app.name}, activo: false, modalDelete: false})
                 })
                 console.log(licenses.value)
             })
@@ -98,11 +101,25 @@ export default {
             addLicence.value = !addLicence.value
         }
 
+        const actionModal = (data) => {
+            let aux = licenses.value.find(element => element.id == data.id)
+            console.log(aux)
+            aux.activo = !aux.activo
+        }
+
+        const actionModalDelete = (data) => {
+            let aux = licenses.value.find(element => element.id == data)
+            aux.activo = false
+            aux.modalDelete = !aux.modalDelete
+        }
+
         return {
             licenses,
             titles,
             addLicence,
             ModalAdd,
+            actionModal,
+            actionModalDelete,
         }
     }
 
