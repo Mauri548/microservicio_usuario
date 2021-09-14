@@ -43,7 +43,7 @@ import Pagination from '../../components/Board/Pagination.vue'
 import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
 import { ref } from '@vue/reactivity'
-/* import store from '@/store' */
+import store from '@/store' 
 import {  watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js' 
 import {GraphQLClient, request as fetchGQL} from 'graphql-request';
