@@ -25,7 +25,30 @@
         </div>
         <Pagination/>
     </div>
-    <AddLicence v-show="addLicence" @closeModal="ModalAdd" />
+    <AddLicence title="licence.agregar" v-show="addLicence" @closeModal="ModalAdd">
+        <div>
+            <section class="modal-card-body">
+                <form action="" class="column">
+                    <CampoForm type="text" place="Name" v-model="name" />
+
+                    <div class="select w-100 mb-4">
+                        <select class="w-100">
+                            <option value="puwic">Puwic</option>
+                            <option value="ispb">ISPB</option>
+                        </select>
+                    </div>
+
+                    <CampoForm type="number" place="Price ARG" />
+                    <CampoForm type="numbre" place="Price USD" />
+                
+                    <div class="column p-0 has-text-centered" >
+                        <button class="button has-background-danger has-text-white mr-2"  style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
+                        <button class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;" @click="createLicence">{{$t('permisos.guardar')}}</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </AddLicence>
 </template>
 
 <script>
@@ -37,6 +60,7 @@ import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
 import ModalAlert from '../../components/Modals/ModalsAlert.vue'
 import AddLicence from './AddLicence.vue'
+import CampoForm from '../../components/CampoForm.vue'
 import { ref, watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js'
 import store from '@/store'
@@ -53,6 +77,7 @@ export default {
         ActionModal,
         ModalAlert,
         AddLicence,
+        CampoForm
     },
 
     setup() {
@@ -60,6 +85,13 @@ export default {
         const licenses = ref([])
         const addLicence = ref(false)
         const endpoint = store.state.url_backend
+
+
+        // 1° Crear variables para los datos del formulario
+        const name = ref('')
+        // 2° recibir esas variables en mi funcion createLicence
+        // 3° Utilizarlo para cargar la licencia con esos datos
+
         
         watchEffect(()=>{
             if(i18n.global.locale=='es'){
@@ -87,15 +119,45 @@ export default {
             }
             `)
             .then((data) => {
-                console.log(data)
                 data.data.licenses.forEach(element => {
                     licenses.value.push({id:element.id, name:element.name, price_arg:element.price_arg, 
                         price_usd:element.price_usd, app: {id:element.app.id, name: element.app.name}, activo: false, modalDelete: false})
                 })
-                console.log(licenses.value)
             })
             .catch(error => console.log(error))
         })
+
+        const createLicence = () => {
+            console.log(name.value)
+
+
+            // const client = new GraphQLClient(endpoint)
+            // client.rawRequest(/* GraphQL */ `
+            // mutation($app_id:Int!, $name:String!, $price_arg:Float, $price_usd: Float) {
+            //     createsLic_license(input: {
+            //         app_id: $app_id,
+            //         name: $name,
+            //         price_arg: $price_arg,
+            //         price_usd: $price_usd
+            //     }) {
+            //         id,
+            //         app_id,
+            //         name,
+            //         price_arg,
+            //         price_usd,
+            //     }
+            // }`,
+            // {
+            //     app_id: 1,
+            //     name: 'Licencia de Prueba2',
+            //     price_arg: 3000,
+            //     price_usd: 30
+            // })
+            // .then((data) => {
+            //     console.log(data)
+            // })
+            // .catch(error => console.log(error))
+        }
 
         const ModalAdd = () => {
             addLicence.value = !addLicence.value
@@ -103,7 +165,6 @@ export default {
 
         const actionModal = (data) => {
             let aux = licenses.value.find(element => element.id == data.id)
-            console.log(aux)
             aux.activo = !aux.activo
         }
 
@@ -113,6 +174,7 @@ export default {
             aux.modalDelete = !aux.modalDelete
         }
 
+
         return {
             licenses,
             titles,
@@ -120,6 +182,8 @@ export default {
             ModalAdd,
             actionModal,
             actionModalDelete,
+            createLicence,
+            name,
         }
     }
 

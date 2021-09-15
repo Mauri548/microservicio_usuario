@@ -1,13 +1,14 @@
 <template>
-    <transition name="slide-down" appear>
+    <transition name="slide-down">
         <div class="conteiner-modal">
             <div class="body-modal">
                 <div class="modal-card " >
                     <header class="modal-card-head has-background-white " >
-                        <p class="modal-card-title has-text-centered blue-crenein" style="font-size:1.5em; font-weight:bold;">{{$t('licence.agregar')}}</p>
+                        <p class="modal-card-title has-text-centered blue-crenein" style="font-size:1.5em; font-weight:bold;">{{$t(title)}}</p>
                         <button class="delete" @click="closeModal"  aria-label="close"></button>
                     </header>
-                    <section class="modal-card-body">
+                    <slot></slot>
+                    <!-- <section class="modal-card-body">
                         <form action="" class="column">
                             <CampoForm type="text" place="Name" />
 
@@ -26,7 +27,7 @@
                                 <button class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;" @click="verificar">{{$t('permisos.guardar')}}</button>
                             </div>
                         </form>
-                    </section>
+                    </section> -->
                 </div>
             </div>
         </div>
@@ -39,6 +40,7 @@ export default {
     components: {
         CampoForm,
     },
+    props: ['title'],
     emits: ['closeModal'],
 
     setup(props, { emit }) {

@@ -1,6 +1,6 @@
 <template>
     <div class="form-row">
-      <input class="input" :type="type" required>
+      <input class="input" :type="type" required @input="$emit('update:modelValue', $event.target.value)">
       <label alt="Label" :data-placeholder="place" style="color: grey"></label>
     </div>
 </template>
@@ -11,7 +11,8 @@ export default {
     name:'CampoForm',
     props: {
       place:String,
-      type:String
+      type:String,
+      modelValue: String,
     },
 }
 </script>
