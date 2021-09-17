@@ -25,23 +25,6 @@ export default {
     EditCompany,
   },
 
-  setup(){
-    onMounted(() => {
-        let input = document.querySelectorAll('.input-prueba')
-        console.log(input)
-  
-        input.forEach(item => {
-          item.addEventListener('keyup',function(e) {
-            console.log(this)
-            if (this.value.length > 0) {
-              this.classList.add('active')
-            } else {
-              this.classList.remove('active')
-            }
-          })
-        })
-      })
-  }
 }
 </script>
 

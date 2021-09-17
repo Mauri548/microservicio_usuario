@@ -7,27 +7,8 @@
                         <p class="modal-card-title has-text-centered blue-crenein" style="font-size:1.5em; font-weight:bold;">{{$t(title)}}</p>
                         <button class="delete" @click="closeModal"  aria-label="close"></button>
                     </header>
+                    <!-- Aqui van los input del formulario y los botones -->
                     <slot></slot>
-                    <!-- <section class="modal-card-body">
-                        <form action="" class="column">
-                            <CampoForm type="text" place="Name" />
-
-                            <div class="select w-100 mb-4">
-                                <select class="w-100" >
-                                    <option value="puwic">Puwic</option>
-                                    <option value="ispb">ISPB</option>
-                                </select>
-                            </div>
-
-                            <CampoForm type="number" place="Price ARG" />
-                            <CampoForm type="numbre" place="Price USD" />
-                        
-                            <div class="column p-0 has-text-centered" >
-                                <button class="button has-background-danger has-text-white mr-2"  style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
-                                <button class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;" @click="verificar">{{$t('permisos.guardar')}}</button>
-                            </div>
-                        </form>
-                    </section> -->
                 </div>
             </div>
         </div>

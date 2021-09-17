@@ -1,29 +1,30 @@
 <template>
     <div class="form-row">
       <input class="input input-prueba" 
-        :type="type" 
+        :type="type"
         @input="$emit('update:modelValue', $event.target.value)"
-        onkeyup="this.setAttribute('value', this.value);"
+        :class="{'active': modelValue}"
       >
       <label alt="Label" :data-placeholder="place" style="color: grey"></label>
+      <!-- <p class="msg-error">Este es un msj de error</p> -->
     </div>
+        <!-- onkeyup="this.setAttribute('value', this.value);" -->
 </template>
 
 <script>
-import { onMounted } from '@vue/runtime-core'
 export default {
 
-    name:'CampoForm',
-    props: {
-      place:String,
-      type:String,
-      modelValue: String,
-    },
+  name:'CampoForm',
+  props: ['place','type','modelValue'],
 
 }
 </script>
 
 <style scoped>
+
+.msg-error {
+  font-size: .7em;
+}
 
 form {
 
@@ -58,7 +59,7 @@ form .form-row input + label[data-placeholder]:after {
   content: attr(data-placeholder);
   display: block;
   position: absolute;
-  top: 50%;
+  top: 50%; /* 34% */
   left: 0.5rem;
   transform: translate(0%, -50%);
   transition: all 0.5s ease-in-out;
