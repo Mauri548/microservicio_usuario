@@ -121,6 +121,8 @@ export default {
             }
             `)
             .then((data) => {
+                console.log('aa')
+                licenses.value = []
                 data.data.licenses.forEach(element => {
                     licenses.value.push({id:element.id, name:element.name, price_arg:element.price_arg, 
                         price_usd:element.price_usd, app: {id:element.app.id, name: element.app.name}, activo: false, modalDelete: false})
@@ -128,6 +130,7 @@ export default {
             })
             .catch(error => console.log(error))
         })
+
 
         // Query para traer las apps
         const fetchApps = () => {
@@ -141,9 +144,7 @@ export default {
             }
             `)
             .then((data) => {
-                console.log(data)
                 if (data.data.appsVisible) selectedApp.value = data.data.appsVisible[0].id
-                console.log(selectedApp.value)
                 data.data.appsVisible.forEach(element => {
                     apps.value.push({id: element.id, name: element.name})
                 })
@@ -161,13 +162,10 @@ export default {
             msg_error.value.price_arg = ''
 
             if (name.value == "") msg_error.value.name = 'Name is required'
-            // if (price_arg.value == 0) msg_error.value.price_arg = 'Price ARG is required'
-            // if (price_usd.value == 0) msg_error.value.price_usd = 'Price USD is required'
 
             if (msg_error.value.name == '' && msg_error.value.price_usd == '' && msg_error.value.price_arg == ''){
-                // createLicence()
+                createLicence()
                 console.log('paso')
-                ModalAdd()
             } else {
                 console.log('no paso')
                 // Saltar los errores
@@ -175,8 +173,8 @@ export default {
 
         }
 
+        // Funcion para crear una nueva licencia
         const createLicence = () => {
-
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */ `
             mutation($app_id:Int!, $name:String!, $price_arg:Float, $price_usd: Float) {
@@ -200,6 +198,13 @@ export default {
                 price_usd: parseFloat(price_usd.value)
             })
             .then((data) => {
+                let data_licence = data.data.createsLic_license
+                // Buscamos el nombre de la app correspondiente
+                let app = apps.value.find(app => app.id == data_licence.app_id)
+                // Insertamos la nueva licencia creada en el array de licencias
+                licenses.value.push({id:data_licence.id, name:data_licence.name, price_arg:data_licence.price_arg, 
+                        price_usd:data_licence.price_usd, app: {id:data_licence.app_id, name: app.name}, activo: false, modalDelete: false})
+                // Cerramos la ventana modal
                 ModalAdd()
             })
             .catch(error => console.log(error))
@@ -208,6 +213,7 @@ export default {
         const ModalAdd = () => {
             addLicence.value = !addLicence.value
             if (addLicence.value) {
+                // Reseteamos los campos del formulario
                 document.getElementById('form-create-app').reset()
                 name.value = ''
                 price_arg.value = 0
