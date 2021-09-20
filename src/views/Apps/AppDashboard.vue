@@ -69,6 +69,7 @@ import { inject } from '@vue/runtime-core'
 import {  watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js'
 import {GraphQLClient, request as fetchGQL} from 'graphql-request';
+import { useRouter } from 'vue-router';
 
 
 export default {
@@ -97,6 +98,7 @@ export default {
         const endpoint = store.state.url_backend
         const apps = ref([])
         const apps_aux = ref([])
+        const router = useRouter()
 
 
      /*    const datas = ref([
@@ -152,12 +154,57 @@ export default {
                     apps.value = []
                     data.data.apps.forEach(element => {
                         apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false, modalDelete: false})
-                        console.log(typeof element.logo)
+                       /*  console.log(typeof element.logo) */
                     })
 
                 }).catch(error => {
                     console.log(error.response);
                 })
+            })
+        }
+
+         const eliminando = (app_id) => {
+            const client = new GraphQLClient(endpoint)
+           /*  console.log(app_id) */
+            client.rawRequest(/* GraphQL */ `
+            mutation($id: ID!){
+                 removeUse_app(id: $id) {
+                    id
+                    name
+                    logo
+                    observation
+                    visible
+                }
+            }`,
+            {
+                id: app_id
+            },
+            {
+               /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+            })
+            .then((data) => {
+                let message = data
+                // console.log(message)
+               /*  accion_exitosa.value = true
+                paso_elim.value = true */
+             /*    let cont = 0
+                anunciantes_aux.value.forEach(element => {
+                    if (element.id == data.data.eliminaAnunciante.id) {
+                        anunciantes_aux.value.splice(cont,1)
+                    }
+                    cont = cont +1
+                }) */
+                // console.log(anunciantes_aux.value)
+        
+            })
+            .catch(error => {
+                let mensaje = error.message
+              /*   accion_exitosa.value = false
+                paso_elim.value = false */
+               /*  if(mensaje.includes( 'No se puede eliminar')){
+                    mostrar_aviso.value = !mostrar_aviso.value
+                    mostrar_nombre.value = anunciante_id
+                } */
             })
         }
 
@@ -168,6 +215,8 @@ export default {
             let aux = apps.value.find(element => element.id == data.id)
             console.log(aux)
             aux.activo = !aux.activo
+            /* router.push({name: 'EditApp', params: {id: aux.id} }) */
+            
 
         }
 
@@ -175,6 +224,8 @@ export default {
         const actionModalDelete = (data) => {
             let aux = apps.value.find(element => element.id == data)
             aux.activo = false
+           /*  console.log(aux.id) */
+            eliminando(aux.id) 
             aux.modalDelete = !aux.modalDelete
         }
 
@@ -233,6 +284,7 @@ export default {
 
 
         return {
+            eliminando,
             traerApps,
             apps,
             apps_aux,

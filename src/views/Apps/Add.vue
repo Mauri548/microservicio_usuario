@@ -45,8 +45,8 @@
         
                     <div class="select is-fullwidth">
                         <select class="options is-fullwidth" v-model="visible" value="Visible">
-                            <option value="positive">Positivo</option>
-                            <option value="negative">Negativo</option>
+                            <option value="positive">{{$t('app.positivo')}}</option>
+                            <option value="negative">{{$t('app.negativo')}}</option>
                         </select>
                     </div>
             </div>
@@ -113,8 +113,8 @@
         
                 <div class="select is-fullwidth">
                     <select class="options is-fullwidth" v-model="visible" value="Visible">
-                        <option value="Positivo">Positivo</option>
-                        <option value="Negativo">Negativo</option>
+                        <option value="positive">{{$t('app.positivo')}}</option>
+                        <option value="negative">{{$t('app.negativo')}}</option>
                     </select>
                 </div>
             </div>
@@ -240,15 +240,7 @@ export default {
             })
         }
 
-
-        
         const registrarApp = () => {
-
-      /*    console.log(nombre.value)
-            console.log(observation.value)
-            console.log(logo.value)
-            console.log(visible.value) */
-
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             // Estructura FetchQL(url, query, variable, opcions)
             client.rawRequest(/* GraphQL */ `

@@ -2,8 +2,9 @@
   
     <div v-show="isMobile==false">
 
-        <form action="" class="column is-half is-offset-one-quarter mt-1 is-mobile" style="width:560px">   
-            
+       <!--  <form action="" class="column is-half is-offset-one-quarter mt-1 is-mobile" style="width:560px">  -->  
+        <div class="column is-half is-offset-one-quarter mt-1 is-mobile" style="width:560px">
+
             <div class="column has-text-centered blue-crenein">
                <h2 style="font-size:1.5em; font-weight:bold;" >{{$t('app.editarApp')}}</h2>
             </div>
@@ -21,7 +22,7 @@
          
             <div class="file column has-name is-fullwidth is-right">
                 <label class="file-label">
-                    <input class="file-input" type="file" name="resume">
+                    <input class="file-input" type="file" name="resume" @change="selectFile($event)">
                     <span class="file-cta">
                     <span class="file-icon">
                         <i class="fas fa-upload"></i>
@@ -31,17 +32,30 @@
                     </span>
                     </span>
                     <span class="file-name">
-                    Screen Shot 2017-07-29 at 15.54.25.png
+                        {{nombreImg ? nombreImg :'Screen Shot 2017-07-29 at 15.54.25.png'}}
                     </span>
                 </label>
             </div>
 
+            <div class="column">
+                <input placeholder="Nombre de la aplicacion" type="text" class="input" v-model="nombre" />
+            </div>
+
+            <div class="field  column has-text-centered">
+                <div class="select is-fullwidth">
+                    <select class="options is-fullwidth" v-model="visible" value="Visible">
+                        <option value="positive">{{$t('app.positivo')}}</option>
+                        <option value="negative">{{$t('app.negativo')}}</option>
+                    </select>
+                </div>
+            </div>
+
             <div class="column ">
                 <div v-show="$i18n.locale=='es'">
-                    <textarea class="textarea" placeholder="Observación"></textarea>
+                    <textarea class="textarea" v-model="observation" placeholder="Observación"></textarea>
                 </div>
                 <div v-show="$i18n.locale=='en'">
-                    <textarea class="textarea" placeholder="Observation"></textarea>
+                    <textarea class="textarea" v-model="observation" placeholder="Observation"></textarea>
                 </div>
             </div>
             
@@ -51,16 +65,17 @@
                         <button class=" button  has-text-white has-background-danger " @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
                     </div>
                     <div class="column   pl-0  ">
-                        <button class=" button has-text-white button1 "  @click="verificar" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
+                        <button class=" button has-text-white button1 "  @click="modificarApp" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
                     </div>     
                 </div>
             </div>
-        </form>
+        </div>
+       <!--  </form> -->
     </div>
     
     <div v-show="isMobile==true">
-        <form action="" class="column has-text-centered  mt-5 ml-6">
-
+<!--         <form action="" class="column has-text-centered  mt-5 ml-6"> -->
+        <div class="column is-half is-offset-one-quarter mt-1 is-mobile" style="width:560px">
             <div class="column has-text-centered blue-crenein">
                <h2 style="font-size:1.5em; font-weight:bold;" >{{$t('app.editarApp')}}</h2>
             </div>    
@@ -73,7 +88,7 @@
             
             <div class="file columns has-name  is-right">
                 <label class="column file-label">
-                    <input class="file-input" type="file" name="resume">
+                    <input class="file-input" type="file"  @change="selectFile($event)" name="resume">
                     <span class="file-cta">
                     <span class="file-icon">
                         <i class="fas fa-upload"></i>
@@ -83,37 +98,51 @@
                     </span>
                     </span>
                     <span class="file-name">
-                    Screen Shot 2017-07-29 at 15.54.25.png
+                     {{nombreImg ? nombreImg :'Screen Shot 2017-07-29 at 15.54.25.png'}}
                     </span>
                 </label>
             </div>
+
+             <div class="column">
+                <input placeholder="Nombre de la aplicacion" type="text" class="input" v-model="nombre" />
+            </div>
+
+            <div class="field  column has-text-centered">
+                <div class="select is-fullwidth">
+                    <select class="options is-fullwidth" v-model="visible" value="Visible">
+                        <option value="positive">{{$t('app.positivo')}}</option>
+                        <option value="negative">{{$t('app.negativo')}}</option>
+                    </select>
+                </div>
+            </div>
             <div class="column ">
                 <div v-show="$i18n.locale=='es'">
-                    <textarea class="textarea" placeholder="Observación"></textarea>
+                    <textarea class="textarea" v-model="observation" placeholder="Observación"></textarea>
                 </div>
                 <div v-show="$i18n.locale=='en'">
-                    <textarea class="textarea" placeholder="Observation"></textarea>
+                    <textarea class="textarea" v-model="observation" placeholder="Observation"></textarea>
                 </div>
             </div>
             <div class="column    ">
-                <button class=" button has-text-white button1 "  @click="verificar" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
+                <button class=" button has-text-white button1 "  @click="modificarApp" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
             </div>  
             <div class="column  ">
                 <button class=" button  button1 has-text-white has-background-danger " @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
             </div>
-                      
-        </form>
+        </div>             
+      <!--   </form> -->
     </div>
 
 </template>
 
 <script>
-import { useRouter } from 'vue-router';
+import { useRouter,useRoute } from 'vue-router';
 import CampoForm from '../../components/CampoForm.vue'
 import { inject } from '@vue/runtime-core'
 /* import Action from '../../components/Modals/ActionsModal.vue' */
 import {ref} from '@vue/reactivity'
 import store from '@/store';
+import { GraphQLClient } from 'graphql-request'
 
 export default {
     name:'EditApp',
@@ -121,10 +150,27 @@ export default {
         CampoForm,
        
     }, 
+    created(){
+        this.traerApp()
+    },
     setup(){
+        const endpoint = store.state.url_backend
         const router = useRouter()
+        const route = useRoute()
         const isMobile = inject('isMobile')
         const activo = ref(false)
+        const id = ref(null);
+        const observation = ref('')
+        const nombre = ref('')
+        const visible = ref('positive')
+        const logo = ref('')
+        const imagen = ref('')
+        const nombreImg = ref('')
+        const imgUrl = ref([])
+        const nuevo_app = ref(false)
+        const subiendo_imagen = ref(false)
+        const path = ref('');
+
 
         const Activar = () => {
             activo.value = !activo.value
@@ -135,13 +181,165 @@ export default {
         }
 
         const verificar = () => {
+             /*    router.push({name: 'AppDashboard'})
+                let accion = "edicionApp"
+                store.commit('verificar_carga',accion) */
+        }
+
+        const selectFile = (e) => {
+            imagen.value = e.target.files[0]
+        /*     message_error.value.imagen_error = ''
+            if (imagen.value.type.includes('jpg') || imagen.value.type.includes('jpeg') || imagen.value.type.includes('png')) {
+                if (imagen.value.size < 16000000) {
+                    SubirImage()
+                } else {
+                    subiendo_imagen.value = false
+                    message_error.value.imagen_error = 'El Archivo es muy pesado, asegurese de subir un archivo menor de 16MB'
+                }
+            } else {
+                message_error.value.imagen_error = 'Solo se puede subir jpg, jpeg, png'
+            } */
+
+         /*    console.log(file) */
+            nombreImg.value = e.target.files[0].name
+            logo.value = nombreImg.value
+
+        }
+
+        const SubirImage = () => {
+            // console.log(imagen.value)
+            subiendo_imagen.value = true
+            const client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */ `
+                mutation($file: Upload!) {
+                    uploadFile(file: $file)
+                }`,
+                {
+                    file: imagen.value
+                },
+                {
+                    authorization: `Bearer ${ localStorage.getItem('user_token') }`
+                }
+            ).then((data) => {
+                // console.log(data.data.uploadFile)
+                path.value = data.data.uploadFile
+                nuevo_app.value = true
+                subiendo_imagen.value = false
+                imagen_url.value = url_storage + path.value
+                // registrar()
+            })
+            .catch(error => {
+                // console.log(error)
+                nuevo_app.value = false
+                subiendo_imagen.value = false
+            })
+        }
+
+        const modificarApp = () => {
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            // Estructura FetchQL(url, query, variable, opcions)
+            client.rawRequest(/* GraphQL */ `
+            mutation($id:ID!,$observation:String, $name:String!,$logo:String,$visible:Visible!){
+              	modifiesUse_app (id: $id, input: {
+                    name: $name,
+                    logo:  $logo,
+                    observation: $observation,
+                    visible:  $visible,
+                }) {
+                    id
+                    name
+                    logo
+                    observation
+                    visible
+                }
+            }`,
+            {
+                id: id.value,
+                name: nombre.value,       
+                observation: observation.value,
+                logo: logo.value,
+                visible: visible.value,
+            },
+            {
+               /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+            })
+            .then((data) => {
                 router.push({name: 'AppDashboard'})
                 let accion = "edicionApp"
                 store.commit('verificar_carga',accion)
+            }).catch(error => {
+                console.log(error.response);
+            })
+        }
+
+
+
+
+        const traerApp = () => {
+             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            // Estructura FetchQL(url, query, variable, opcions)
+            client.rawRequest(/* GraphQL */ `
+            query($id:ID) {
+                    app(id: $id) {
+                        id
+                        name
+                        logo
+                        observation
+                        visible
+                        created_at
+                        updated_at
+                        deleted_at
+                        licenses {
+                            id
+                            name
+                            price_arg
+                            price_usd
+                            deleted_at
+                            created_at
+                            updated_at
+                        }
+                    }
+                }
+            `,
+            {
+               id : route.params.id
+            },
+            {
+               /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+            })
+            .then((data) => {
+              /*   console.log(data.data.app) */
+                let app = data.data.app
+                id.value = app.id
+                observation.value = app.observation
+                nombre.value = app.name
+                visible.value =  app.visible
+                logo.value = app.logo
+                nombreImg.value = app.logo
+             /*    console.log(observation.value,"\n",nombre.value,"\n",visible.value,"\n",logo.value) */
+
+            }).catch(error => {
+                console.log(error.response);
+            })
         }
 
 
         return{ 
+            modificarApp,
+            traerApp,
+            observation,
+            path,
+            nuevo_app ,
+            subiendo_imagen,
+            SubirImage,
+            imagen,
+            nombreImg,
+            imgUrl,
+            selectFile,
+            logo ,
+            visible,
+            nombre,
+            id,
             verificar,
             volver,
             isMobile,
