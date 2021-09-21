@@ -1,4 +1,5 @@
 <template>
+  <div class="mb-3">
     <div class="form-row">
       <input class="input input-prueba" 
         :type="type"
@@ -6,24 +7,24 @@
         :class="{'active': modelValue}"
       >
       <label alt="Label" :data-placeholder="place" style="color: grey"></label>
-      <!-- <p class="msg-error">Este es un msj de error</p> -->
     </div>
-        <!-- onkeyup="this.setAttribute('value', this.value);" -->
+    <p v-show="error != '' && error" class="msg-error">{{error}}</p>
+  </div>
 </template>
 
 <script>
 export default {
 
   name:'CampoForm',
-  props: ['place','type','modelValue'],
-
+  props: ['place','type','modelValue','error'],
 }
 </script>
 
 <style scoped>
 
-.msg-error {
+.msg-error{
   font-size: .7em;
+  color: red
 }
 
 form {
@@ -34,7 +35,7 @@ form {
 
 }
 .form-row {
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
   position: relative;
 }
 .form-row:last-child {
@@ -59,7 +60,7 @@ form .form-row input + label[data-placeholder]:after {
   content: attr(data-placeholder);
   display: block;
   position: absolute;
-  top: 50%; /* 34% */
+  top: 50%;
   left: 0.5rem;
   transform: translate(0%, -50%);
   transition: all 0.5s ease-in-out;

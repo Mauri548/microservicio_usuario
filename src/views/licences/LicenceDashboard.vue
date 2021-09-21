@@ -25,11 +25,13 @@
         </div>
         <Pagination/>
     </div>
+
+    <!-- Ventana modal de formulario -->
     <AddLicence title="licence.agregar" v-show="addLicence" @closeModal="ModalAdd">
         <div>
             <section class="modal-card-body">
                 <form id="form-create-app" action="" class="column">
-                    <CampoForm type="text" place="Name" v-model="name" />
+                    <CampoForm type="text" place="Name" v-model="name" :error="msg_error.name" />
 
                     <div class="select w-100 mb-4">
                         <select class="w-100" v-model="selectedApp" >
@@ -165,7 +167,6 @@ export default {
 
             if (msg_error.value.name == '' && msg_error.value.price_usd == '' && msg_error.value.price_arg == ''){
                 createLicence()
-                console.log('paso')
             } else {
                 console.log('no paso')
                 // Saltar los errores
@@ -218,6 +219,7 @@ export default {
                 name.value = ''
                 price_arg.value = 0
                 price_usd.value = 0
+                msg_error.value.name = ''
                 fetchApps()
             }
         }
@@ -233,7 +235,6 @@ export default {
             aux.modalDelete = !aux.modalDelete
         }
 
-
         return {
             licenses,
             titles,
@@ -247,7 +248,8 @@ export default {
             name,
             selectedApp,
             price_arg,
-            price_usd
+            price_usd,
+            msg_error
         }
     }
 
