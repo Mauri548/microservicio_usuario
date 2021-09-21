@@ -184,7 +184,9 @@ export default {
             })
             .then((data) => {
                 let message = data
+             /*    window.reload() */
                 // console.log(message)
+
                /*  accion_exitosa.value = true
                 paso_elim.value = true */
              /*    let cont = 0
@@ -248,40 +250,7 @@ export default {
             setTimeout(() => carga_exitosa.value = false ,3000)
         }
 
-        watchEffect(() => {
-            const client = new GraphQLClient(endpoint)
-
-            client.rawRequest(/* GraphQL */ `
-            query{
-                apps{
-                    id
-                    name
-                    logo
-                    observation
-                    visible
-                    deleted_at
-                    created_at
-                    updated_at
-                    licenses {
-                        id
-                        name
-                        price_arg
-                        price_usd
-                        deleted_at
-                        created_at
-                        updated_at
-                    }
-                }
-            }
-            `)
-            .then((data) => {
-                console.log(data)
-            })
-            .catch(error => {
-                console.log(error.response)
-            })
-        })
-
+    
 
         return {
             eliminando,
