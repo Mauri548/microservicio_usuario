@@ -20,8 +20,8 @@
                         <img :src="app.logo" width="40" alt="app.logo">
                     </td>
                     <td @click="actionModal(app)">{{app.observacion}}</td>
-                    <Modal namePath="EditApp" :data="app" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
-                    <ActionModal :data="app" @onCloseModalAction="actionModalDelete" />
+                    <Modal namePath="EditApp" :data="app"  @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
+                    <ActionModal :data="app" @onDeleteModal="eliminando" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
         </div>
@@ -85,7 +85,7 @@ export default {
     created(){
         this.comprobar_carga()
         this.comprobar_edicion()
-        this.traerApps()
+  /*       this.traerApps() */
     },
 
     setup() {
@@ -118,9 +118,9 @@ export default {
             }
         })
 
-        const traerApps = () => {
-            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+        
             watchEffect(() => {
+                const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
                 client.rawRequest(/* GraphQL */ `
                 query{
                     apps{
@@ -156,16 +156,19 @@ export default {
                         apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false, modalDelete: false})
                        /*  console.log(typeof element.logo) */
                     })
+                    console.log(apps.value)
 
                 }).catch(error => {
                     console.log(error.response);
                 })
             })
-        }
+        
 
          const eliminando = (app_id) => {
+     
+            actionModalDelete(app_id)
             const client = new GraphQLClient(endpoint)
-           /*  console.log(app_id) */
+            console.log(app_id)
             client.rawRequest(/* GraphQL */ `
             mutation($id: ID!){
                  removeUse_app(id: $id) {
@@ -184,9 +187,6 @@ export default {
             })
             .then((data) => {
                 let message = data
-             /*    window.reload() */
-                // console.log(message)
-
                /*  accion_exitosa.value = true
                 paso_elim.value = true */
              /*    let cont = 0
@@ -197,6 +197,7 @@ export default {
                     cont = cont +1
                 }) */
                 // console.log(anunciantes_aux.value)
+                
         
             })
             .catch(error => {
@@ -227,7 +228,7 @@ export default {
             let aux = apps.value.find(element => element.id == data)
             aux.activo = false
            /*  console.log(aux.id) */
-            eliminando(aux.id) 
+           /*  eliminando(aux.id)  */
             aux.modalDelete = !aux.modalDelete
         }
 
@@ -254,7 +255,7 @@ export default {
 
         return {
             eliminando,
-            traerApps,
+         /*    traerApps, */
             apps,
             apps_aux,
             endpoint,
