@@ -25,7 +25,31 @@
         </div>
         <Pagination/>
     </div>
-    <AddLicence v-show="addLicence" @closeModal="ModalAdd" />
+
+    <!-- Ventana modal de formulario -->
+    <AddLicence title="licence.agregar" v-show="addLicence" @closeModal="ModalAdd">
+        <div>
+            <section class="modal-card-body">
+                <form id="form-create-app" action="" class="column">
+                    <CampoForm type="text" place="Name" v-model="name" :error="msg_error.name" />
+
+                    <div class="select w-100 mb-4">
+                        <select class="w-100" v-model="selectedApp" >
+                            <option v-for="app in apps" :key="app.id" :value="app.id">{{app.name}}</option>
+                        </select>
+                    </div>
+
+                    <CampoForm type="number" place="Price ARG" v-model="price_arg" />
+                    <CampoForm type="number" place="Price USD" v-model="price_usd" />
+                
+                    <div class="column p-0 has-text-centered" >
+                        <button class="button has-background-danger has-text-white mr-2"  style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
+                        <button class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;" @click="validar">{{$t('permisos.guardar')}}</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </AddLicence>
 </template>
 
 <script>
@@ -37,6 +61,7 @@ import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
 import ModalAlert from '../../components/Modals/ModalsAlert.vue'
 import AddLicence from './AddLicence.vue'
+import CampoForm from '../../components/CampoForm.vue'
 import { ref, watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js'
 import store from '@/store'
@@ -53,13 +78,23 @@ export default {
         ActionModal,
         ModalAlert,
         AddLicence,
+        CampoForm
     },
 
     setup() {
         const titles = ref([])
         const licenses = ref([])
+        const apps = ref([])
         const addLicence = ref(false)
         const endpoint = store.state.url_backend
+
+        const name = ref('')
+        const selectedApp = ref()
+        const price_arg = ref(0)
+        const price_usd = ref(0)
+        const msg_error = ref({ name: '', price_usd: '', price_arg: '' })
+
+
         
         watchEffect(()=>{
             if(i18n.global.locale=='es'){
@@ -70,6 +105,7 @@ export default {
             }
         })
 
+        // Query que trae los datos de la licensias
         watchEffect(() => {
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */ `
@@ -87,23 +123,109 @@ export default {
             }
             `)
             .then((data) => {
-                console.log(data)
+                console.log('aa')
+                licenses.value = []
                 data.data.licenses.forEach(element => {
                     licenses.value.push({id:element.id, name:element.name, price_arg:element.price_arg, 
                         price_usd:element.price_usd, app: {id:element.app.id, name: element.app.name}, activo: false, modalDelete: false})
                 })
-                console.log(licenses.value)
             })
             .catch(error => console.log(error))
         })
 
+
+        // Query para traer las apps
+        const fetchApps = () => {
+            const cliente = new GraphQLClient(endpoint)
+            cliente.rawRequest(/* GraphQL */ `
+            query {
+                appsVisible {
+                    id
+                    name
+                }
+            }
+            `)
+            .then((data) => {
+                if (data.data.appsVisible) selectedApp.value = data.data.appsVisible[0].id
+                data.data.appsVisible.forEach(element => {
+                    apps.value.push({id: element.id, name: element.name})
+                })
+            })
+            .catch(error => console.log(error))
+        }
+
+        // Function que valida los datos del formulario para verificar que sean correctos
+        const validar = () => {
+            document.getElementById('form-create-app').addEventListener('submit', function(e) {
+                e.preventDefault()
+            })
+            msg_error.value.name = ''
+            msg_error.value.price_usd = ''
+            msg_error.value.price_arg = ''
+
+            if (name.value == "") msg_error.value.name = 'Name is required'
+
+            if (msg_error.value.name == '' && msg_error.value.price_usd == '' && msg_error.value.price_arg == ''){
+                createLicence()
+            } else {
+                console.log('no paso')
+                // Saltar los errores
+            } 
+
+        }
+
+        // Funcion para crear una nueva licencia
+        const createLicence = () => {
+            const client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */ `
+            mutation($app_id:Int!, $name:String!, $price_arg:Float, $price_usd: Float) {
+                createsLic_license(input: {
+                    app_id: $app_id,
+                    name: $name,
+                    price_arg: $price_arg,
+                    price_usd: $price_usd
+                }) {
+                    id,
+                    app_id,
+                    name,
+                    price_arg,
+                    price_usd,
+                }
+            }`,
+            {
+                app_id: parseInt(selectedApp.value),
+                name: name.value,
+                price_arg: parseFloat(price_arg.value),
+                price_usd: parseFloat(price_usd.value)
+            })
+            .then((data) => {
+                let data_licence = data.data.createsLic_license
+                // Buscamos el nombre de la app correspondiente
+                let app = apps.value.find(app => app.id == data_licence.app_id)
+                // Insertamos la nueva licencia creada en el array de licencias
+                licenses.value.push({id:data_licence.id, name:data_licence.name, price_arg:data_licence.price_arg, 
+                        price_usd:data_licence.price_usd, app: {id:data_licence.app_id, name: app.name}, activo: false, modalDelete: false})
+                // Cerramos la ventana modal
+                ModalAdd()
+            })
+            .catch(error => console.log(error))
+        }
+
         const ModalAdd = () => {
             addLicence.value = !addLicence.value
+            if (addLicence.value) {
+                // Reseteamos los campos del formulario
+                document.getElementById('form-create-app').reset()
+                name.value = ''
+                price_arg.value = 0
+                price_usd.value = 0
+                msg_error.value.name = ''
+                fetchApps()
+            }
         }
 
         const actionModal = (data) => {
             let aux = licenses.value.find(element => element.id == data.id)
-            console.log(aux)
             aux.activo = !aux.activo
         }
 
@@ -117,9 +239,17 @@ export default {
             licenses,
             titles,
             addLicence,
+            apps,
             ModalAdd,
             actionModal,
             actionModalDelete,
+            createLicence,
+            validar,
+            name,
+            selectedApp,
+            price_arg,
+            price_usd,
+            msg_error
         }
     }
 

@@ -1,22 +1,31 @@
 <template>
+  <div class="mb-3">
     <div class="form-row">
-      <input class="input" :type="type" required>
+      <input class="input input-prueba" 
+        :type="type"
+        @input="$emit('update:modelValue', $event.target.value)"
+        :class="{'active': modelValue}"
+      >
       <label alt="Label" :data-placeholder="place" style="color: grey"></label>
     </div>
+    <p v-show="error != '' && error" class="msg-error">{{error}}</p>
+  </div>
 </template>
 
 <script>
 export default {
 
-    name:'CampoForm',
-    props: {
-      place:String,
-      type:String
-    },
+  name:'CampoForm',
+  props: ['place','type','modelValue','error'],
 }
 </script>
 
 <style scoped>
+
+.msg-error{
+  font-size: .7em;
+  color: red
+}
 
 form {
 
@@ -26,12 +35,13 @@ form {
 
 }
 .form-row {
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
   position: relative;
 }
 .form-row:last-child {
   margin-bottom: 0;
 }
+
 
 form .form-row input {
   box-sizing: border-box;
@@ -58,10 +68,10 @@ form .form-row input + label[data-placeholder]:after {
   background-color: rgba(255, 255, 255, 0);
 }
 
-form .form-row input:focus, form .form-row input:valid {
+form .form-row input:focus, form .form-row input.active {
   border: 1px solid #005395;
 }
-form .form-row input:focus + label[data-placeholder]:after, form .form-row input:valid + label[data-placeholder]:after {
+form .form-row input:focus + label[data-placeholder]:after, form .form-row input.active + label[data-placeholder]:after {
   transform: translate(-5%, -150%) scale(0.9, 0.9);
   color: #005395;
   background-color: white;
