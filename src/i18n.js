@@ -50,7 +50,7 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
         modal:{
             actionsModal:{
                 msmPregunta:'¿Desea cancelar esta accion?',
-                msmAccion:'Esta accion limpiara el formulario',
+                msmAccion:'Esta accion eliminara la fila seleccionada',
                 siCancel:'Si,eliminar',
                 noCancel:'No,cancelar',
             },
@@ -175,7 +175,7 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
         modal:{
             actionsModal:{
                 msmPregunta:'Do you want to cancel user upload?',
-                msmAccion:'this actions will clear the form ',
+                msmAccion:'This action will delete the selected row',
                 siCancel:'Yes,delete',
                 noCancel:'No,cancel',
             },

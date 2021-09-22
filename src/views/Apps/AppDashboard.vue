@@ -85,7 +85,7 @@ export default {
     created(){
         this.comprobar_carga()
         this.comprobar_edicion()
-  /*       this.traerApps() */
+        this.traerApps()
     },
 
     setup() {
@@ -99,17 +99,62 @@ export default {
         const apps = ref([])
         const apps_aux = ref([])
         const router = useRouter()
-
+        const app_eliminada = ref(false)
+     
 
      /*    const datas = ref([
            {id: 1, name: 'ISPB', logo: ispb, obvservation: 'Licencia x de ISPB', activo: false, modalDelete: false},
            {id: 2, name: 'PuWiC', logo: puwic, obvservation: 'Licencia x de PuWiC', activo: false, modalDelete: false},
            {id: 3, name: 'Geston', logo: geston, obvservation: 'Licencia x de Geston', activo: false, modalDelete: false},
         ])
+        
  */
         const titles = ref([])
 
+        const traerApps = () => {
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            client.rawRequest(/* GraphQL */ `
+            query{
+                apps{
+                    id
+                    name
+                    logo
+                    observation
+                    visible
+                    deleted_at
+                    created_at
+                    updated_at
+                    licenses {
+                        id
+                        name
+                        price_arg
+                        price_usd
+                        deleted_at
+                        created_at
+                        updated_at
+                    }
+                }
+            }`,
+            {
+                /* page: parseInt(route.params.page),
+                first: mostrar_cantidad.value */
+            },
+            {
+                /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+            })
+            .then((data) => {
+                apps.value = []
+                data.data.apps.forEach(element => {
+                    apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false, modalDelete: false})
+                    /*  console.log(typeof element.logo) */
+                })
+            }).catch(error => {
+                console.log(error.response);
+            })
+        }
+        
         watchEffect(()=>{
+
             if(i18n.global.locale=='es'){
                 titles.value = ['Nombre','Logo','Obvservación']
             }
@@ -118,53 +163,7 @@ export default {
             }
         })
 
-        
-            watchEffect(() => {
-                const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-                client.rawRequest(/* GraphQL */ `
-                query{
-                    apps{
-                        id
-                        name
-                        logo
-                        observation
-                        visible
-                        deleted_at
-                        created_at
-                        updated_at
-                        licenses {
-                            id
-                            name
-                            price_arg
-                            price_usd
-                            deleted_at
-                            created_at
-                            updated_at
-                        }
-                    }
-                }`,
-                {
-                    /* page: parseInt(route.params.page),
-                    first: mostrar_cantidad.value */
-                },
-                {
-                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
-                })
-                .then((data) => {
-                    apps.value = []
-                    data.data.apps.forEach(element => {
-                        apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false, modalDelete: false})
-                       /*  console.log(typeof element.logo) */
-                    })
-                    console.log(apps.value)
-
-                }).catch(error => {
-                    console.log(error.response);
-                })
-            })
-        
-
-         const eliminando = (app_id) => {
+        const eliminando = (app_id) => {
      
             actionModalDelete(app_id)
             const client = new GraphQLClient(endpoint)
@@ -186,19 +185,10 @@ export default {
                /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
             })
             .then((data) => {
-                let message = data
+               /*  let message = data */
+               app_eliminada.value = true
                /*  accion_exitosa.value = true
                 paso_elim.value = true */
-             /*    let cont = 0
-                anunciantes_aux.value.forEach(element => {
-                    if (element.id == data.data.eliminaAnunciante.id) {
-                        anunciantes_aux.value.splice(cont,1)
-                    }
-                    cont = cont +1
-                }) */
-                // console.log(anunciantes_aux.value)
-                
-        
             })
             .catch(error => {
                 let mensaje = error.message
@@ -211,7 +201,14 @@ export default {
             })
         }
 
-
+        watchEffect(()=>{ 
+            console.log(app_eliminada.value)
+            if(app_eliminada.value){
+                traerApps() 
+                app_eliminada.value = false
+            }
+        
+            })
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
          
@@ -222,7 +219,6 @@ export default {
             
 
         }
-
         // Activa el valor modalDelete para abrir una ventana de aviso antes de eliminar un elemento
         const actionModalDelete = (data) => {
             let aux = apps.value.find(element => element.id == data)
@@ -231,7 +227,6 @@ export default {
            /*  eliminando(aux.id)  */
             aux.modalDelete = !aux.modalDelete
         }
-
         const comprobar_carga = () => {
             if(comprobar==true){
                 setTimeout(() => carga_exitosa.value = true ,500)
@@ -252,10 +247,11 @@ export default {
         }
 
     
-
         return {
+            router,
+            app_eliminada,
             eliminando,
-         /*    traerApps, */
+            traerApps,
             apps,
             apps_aux,
             endpoint,
