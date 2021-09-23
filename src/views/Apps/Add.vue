@@ -197,7 +197,6 @@ export default {
                 }
                 
             } 
-
             if (msg_error.value.name == ''){
                 registrarApp()
             } else {
