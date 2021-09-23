@@ -2,8 +2,8 @@
   
   
     <div v-show="isMobile==false">
-        <!-- <form action="" class="column is-half is-offset-one-quarter mt-1 is-mobile" style="width:560px">     -->
-        <div class="column is-half is-offset-one-quarter mt-1 is-mobile" style="width:560px">
+        <form action="" class="column is-half is-offset-one-quarter mt-1 is-mobile" style="width:560px">     
+        <!-- <div class="column is-half is-offset-one-quarter mt-1 is-mobile" style="width:560px"> -->
             
             <div class="column has-text-centered blue-crenein">
                <h2 style="font-size:1.5em; font-weight:bold;" >{{$t('app.agregarApp')}}</h2>
@@ -38,7 +38,8 @@
             </div>
 
             <div class="column">
-                <input placeholder="Nombre de la aplicacion" type="text" class="input" v-model="nombre" />
+                <CampoForm type="text" place="Name" v-model="nombre" :error="msg_error.name" />
+                <!-- <input placeholder="Nombre de la aplicacion" type="text" class="input" v-model="nombre" /> -->
             </div>
           
             <div class="field  column has-text-centered">
@@ -63,15 +64,15 @@
             <div class="column ">
                 <div class="columns  ">
                     <div class="column  is-flex-grow-0">
-                        <button class=" button  has-text-white has-background-danger " @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
+                        <button class=" button  has-text-white has-background-danger " type="button" @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
                     </div>
                     <div class="column   pl-0  ">
-                        <button class=" button has-text-white button1 "  @click="registrarApp" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
+                        <button class=" button has-text-white button1 " type="button" @click="validar" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
                     </div>     
                 </div>
             </div>
-        </div> 
-     <!--    </form>  -->
+       <!--  </div>  -->
+        </form> 
     </div>
     
     <div v-show="isMobile==true">
@@ -171,6 +172,28 @@ export default {
         const subiendo_imagen = ref(false)
        /*  const url_storage = store.state.url_storage */
         const path = ref('');
+        const msg_error = ref({ name: ''})
+
+        const validar = () => {
+          /*   document.getElementById('form-create-app').addEventListener('submit', function(e) {
+                e.preventDefault()
+            }) */
+          /*   console.log(nombre.value)
+            console.log(observation.value)
+            console.log(logo.value)
+            console.log(visible.value) */
+            msg_error.value.name = ''
+        
+            if (nombre.value == "") msg_error.value.name = 'Name is required'
+
+            if (msg_error.value.name == ''){
+                registrarApp()
+            } else {
+                console.log('no paso')
+                // Saltar los errores
+            } 
+
+        }
 
 
         const Activar = () => {
@@ -180,17 +203,7 @@ export default {
         const volver = () => {
             router.push({name: 'AppDashboard'}) 
         }
-       const verificar = () => {
-            console.log(nombre.value)
-            console.log(observation.value)
-            console.log(logo.value)
-            console.log(visible.value)
-            /* registrarApp()
-            router.push({name: 'AppDashboard'})
-            let accion = "cargarApp"
-            store.commit('verificar_carga',accion) */
-        }
-
+      
         const selectFile = (e) => {
             imagen.value = e.target.files[0]
         /*     message_error.value.imagen_error = ''
@@ -285,6 +298,8 @@ export default {
         }
 
         return{   
+            validar,
+            msg_error ,
             path,
             nuevo_app ,
             subiendo_imagen,
@@ -298,7 +313,6 @@ export default {
             nombre,
             registrarApp,
             observation,
-            verificar ,
             volver,
             isMobile,
             activo,
