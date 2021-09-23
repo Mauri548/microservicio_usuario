@@ -38,16 +38,17 @@
             </div>
 
             <div class="column">
-                <CampoForm type="text" place="Name" v-model="nombre" :error="msg_error.name" />
+                <CampoForm type="text" v-show="$i18n.locale=='en'" place="Name" v-model="nombre" :error="msg_error.name" />
+                <CampoForm type="text" v-show="$i18n.locale=='es'" place="Nombre" v-model="nombre" :error="msg_error.name" />
                 <!-- <input placeholder="Nombre de la aplicacion" type="text" class="input" v-model="nombre" /> -->
             </div>
           
             <div class="field  column has-text-centered">
         
                     <div class="select is-fullwidth">
-                        <select class="options is-fullwidth" v-model="visible" value="Visible">
-                            <option value="positive">Positivo</option>
-                            <option value="negative">Negativo</option>
+                        <select class="options is-fullwidth" v-model="visible" value="visible" >
+                            <option value="positive">{{$t('app.positivo')}}</option>
+                            <option value="negative">{{$t('app.negativo')}}</option>
                         </select>
                     </div>
             </div>
@@ -76,9 +77,9 @@
     </div>
     
     <div v-show="isMobile==true">
-        <!-- <form action="" class="column has-text-centered  mt-5 ml-6"> -->
+        <form action="" class="column has-text-centered  mt-5 ml-6">
 
-        <div class="column has-text-centered  mt-5 ml-6">
+  <!--       <div class="column has-text-centered  mt-5 ml-6"> -->
 
             <div class="column has-text-centered blue-crenein">
                <h2 style="font-size:1.5em; font-weight:bold;" >{{$t('app.agregarApp')}}</h2>
@@ -107,15 +108,17 @@
             </div>
 
             <div class="column">
-                <input placeholder="Nombre de la aplicacion" type="text" class="input" v-model="nombre" />
+                <CampoForm type="text" v-show="$i18n.locale=='en'" place="Name" v-model="nombre" :error="msg_error.name" />
+                <CampoForm type="text" v-show="$i18n.locale=='es'" place="Nombre" v-model="nombre" :error="msg_error.name" />
+               <!--  <input placeholder="Nombre de la aplicacion" type="text" class="input" v-model="nombre" /> -->
             </div>
 
             <div class="field  column has-text-centered">
         
                 <div class="select is-fullwidth">
                     <select class="options is-fullwidth" v-model="visible" value="Visible">
-                        <option value="Positivo">Positivo</option>
-                        <option value="Negativo">Negativo</option>
+                        <option value="Positivo">{{$t('app.positivo')}}</option>
+                        <option value="Negativo">{{$t('app.negativo')}}</option>
                     </select>
                 </div>
             </div>
@@ -128,14 +131,14 @@
                     <textarea class="textarea" placeholder="Observation"></textarea>
                 </div>
             </div>
-            <div class="column    ">
-                <button class=" button has-text-white button1 "  @click="registrarApp" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
+            <div class="column">
+                <button class=" button has-text-white button1 " type="button" @click="validar" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
             </div>  
-            <div class="column  ">
-                <button class=" button  button1 has-text-white has-background-danger " @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
+            <div class="column">
+                <button class="button  button1 has-text-white has-background-danger " type="button" @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
             </div>
-        </div>              
-      <!--   </form> -->
+     <!--    </div>       -->        
+        </form>
     </div>
 
 
@@ -148,6 +151,7 @@ import { inject } from '@vue/runtime-core'
 import {ref} from '@vue/reactivity'
 import { useRouter } from 'vue-router';
 import store from '@/store';
+import i18n from '@/i18n.js'
 import {GraphQLClient, request as fetchGQL} from 'graphql-request';
 
 export default {
@@ -178,13 +182,21 @@ export default {
           /*   document.getElementById('form-create-app').addEventListener('submit', function(e) {
                 e.preventDefault()
             }) */
-          /*   console.log(nombre.value)
+          /*console.log(nombre.value)
             console.log(observation.value)
             console.log(logo.value)
             console.log(visible.value) */
             msg_error.value.name = ''
         
-            if (nombre.value == "") msg_error.value.name = 'Name is required'
+            if (nombre.value == ""){
+                if(i18n.global.locale == 'en'){
+                    msg_error.value.name = 'Name is required'
+                }
+                if(i18n.global.locale == 'es'){
+                    msg_error.value.name = 'El nombre es requerido'
+                }
+                
+            } 
 
             if (msg_error.value.name == ''){
                 registrarApp()
