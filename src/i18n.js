@@ -82,6 +82,8 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             modalEdicion:'Se edito con exito la empresa.',
         },
         app:{
+                positivo:'Positivo',
+                negativo:'Negativo',
                 agregarApp:'Agregar App',     
                 editarApp:'Editar App',
                 escogeArchivo:'Escoge un archivo',
@@ -208,6 +210,8 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             modalEdicion:'The company was successfully edited.',
         },
         app:{
+            positivo:'Positive',
+            negativo:'Negative',
             agregarApp:'Add App',     
             editarApp:'Edit App',
             escogeArchivo:'Choose a file',
