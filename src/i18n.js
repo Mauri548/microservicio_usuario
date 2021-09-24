@@ -126,7 +126,8 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             cancel:'Cancelar',
         },
         licence: {
-            agregar: 'Agregar Licencia'
+            agregar: 'Agregar Licencia',
+            editar: 'Editar Licencia',
         },
 
     },
@@ -249,7 +250,8 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
         },
 
         licence: {
-            agregar: 'Add Licence'
+            agregar: 'Add Licence',
+            editar: 'Edit Licence',
         },
     }
 }
