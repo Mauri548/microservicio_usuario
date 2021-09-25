@@ -59,6 +59,18 @@
             </section>
         </div>
     </AddLicence>
+
+    <ModalAlert :activador="activeAlert" :state="succesLoad">
+        <div v-if="succesLoad">
+            <p v-if="typeAction == 'licence.agregar'" v-t="'licence.modalCarga'"></p>
+            <p v-else v-t="'licence.modalEdicion'"></p>
+        </div>
+        <div v-else>
+            <p v-if="typeAction == 'licence.agregar'" v-t="'licence.modalCargaError'"></p>
+            <p v-else v-t="'licence.modalEdicionError'"></p>
+        </div>
+    </ModalAlert>
+
 </template>
 
 <script>
@@ -87,7 +99,7 @@ export default {
         ActionModal,
         ModalAlert,
         AddLicence,
-        CampoForm
+        CampoForm,
     },
 
     setup() {
@@ -104,8 +116,8 @@ export default {
         const msg_error = ref({ name: '', price_usd: '', price_arg: '' })
         const typeAction = ref('licence.agregar')
         const licenceEdition = ref(0)
-
-
+        const succesLoad = ref(false)
+        const activeAlert = ref(false)
         
         watchEffect(()=>{
             if(i18n.global.locale=='es'){
@@ -134,7 +146,6 @@ export default {
             }
             `)
             .then((data) => {
-                console.log('aa')
                 licenses.value = []
                 data.data.licenses.forEach(element => {
                     licenses.value.push({id:element.id, name:element.name, price_arg:element.price_arg, 
@@ -167,6 +178,7 @@ export default {
 
         // Function que valida los datos del formulario para verificar que sean correctos
         const validar = () => {
+            succesLoad.value = false
             document.getElementById('form-create-app').addEventListener('submit', function(e) {
                 e.preventDefault()
             })
@@ -174,15 +186,10 @@ export default {
             msg_error.value.price_usd = ''
             msg_error.value.price_arg = ''
 
-            console.log(price_arg.value)
             if (price_arg.value == null || price_arg.value == '') price_arg.value = 0
             if (price_usd.value == null || price_usd.value == '') price_usd.value = 0
 
             if (name.value == "") msg_error.value.name = 'Name is required'
-
-            console.log(name.value)
-            console.log(price_arg.value)
-            console.log(price_usd.value)
 
             if (msg_error.value.name == '' && msg_error.value.price_usd == '' && msg_error.value.price_arg == ''){
                 typeAction.value == 'licence.agregar' ? createLicence() : editLicence()
@@ -210,7 +217,6 @@ export default {
                 price_usd: parseFloat(price_usd.value)
             })
             .then((data) => {
-                console.log(data)
                 let data_licence = data.data.createsLic_license
                 // Buscamos el nombre de la app correspondiente
                 let app = apps.value.find(app => app.id == data_licence.app_id)
@@ -219,8 +225,19 @@ export default {
                         price_usd: data_licence.price_usd == 0? null : data_licence.price_usd , app: {id:data_licence.app_id, name: app.name}, activo: false, modalDelete: false})
                 // Cerramos la ventana modal
                 ModalAdd()
+                setTimeout(() => {
+                    succesLoad.value = true
+                    activeAlert.value = true
+                    checkLoad()
+                },500)
             })
-            .catch(error => console.log(error))
+            .catch(error => {
+                ModalAdd()
+                setTimeout(() => {
+                    activeAlert.value = true
+                    checkLoad()
+                })
+            })
         }
 
         const editLicence = () => {
@@ -255,8 +272,18 @@ export default {
                 lic_aux.app.name = app.name
                 // Cerramos la ventana modal
                 ModalAdd()
+                setTimeout(() => {
+                    succesLoad.value = true
+                    checkLoad()
+                },500)
             })
-            .catch(error => console.log(error))
+            .catch(error => {
+                ModalAdd()
+                setTimeout(() => {
+                    activeAlert.value = true
+                    checkLoad()
+                })
+            })
         }
 
         const ModalAdd = (type, data) => {
@@ -295,6 +322,15 @@ export default {
             aux.modalDelete = !aux.modalDelete
         }
 
+        const checkLoad = () => {
+            if (activeAlert.value == true) {
+                setTimeout(() => {
+                    activeAlert.value = false
+                    succesLoad.value = false
+                },3000)
+            }
+        }
+
         return {
             licenses,
             titles,
@@ -310,7 +346,9 @@ export default {
             price_arg,
             price_usd,
             msg_error,
-            typeAction
+            typeAction,
+            succesLoad,
+            activeAlert,
         }
     }
 
@@ -324,5 +362,8 @@ export default {
     }
     .modal-action:hover {
         cursor: default;
+    }
+    .red {
+        background-color: red;
     }
 </style>

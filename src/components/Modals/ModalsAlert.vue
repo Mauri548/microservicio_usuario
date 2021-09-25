@@ -1,7 +1,7 @@
 <template>
     <transition name="modalAlert" >
         <div v-show="activador" class="alert-conteiner">
-            <div class="alert-msg has-background-success">
+            <div class="alert-msg has-background-success" :class="{'has-background-danger': !state}" >
                 <slot></slot>
             </div>
         </div>
@@ -10,7 +10,14 @@
 
 <script>
 export default {
- props: ['activador']
+ props: ['activador','state'],
+ props: {
+    activador: Boolean,
+    state: {
+        type: Boolean,
+        default: true,
+    }
+ }
 }
 </script>
 
