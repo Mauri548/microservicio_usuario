@@ -38,10 +38,10 @@
             </div>
 
             <div class="column">
-               <!--  <CampoForm type="text" v-show="$i18n.locale=='en'" place="Name" v-model="nombre" :error="msg_error.name" />
-                <CampoForm type="text" v-show="$i18n.locale=='es'" place="Nombre"  v-model="nombre" :error="msg_error.name" /> -->
-                <input placeholder="Nombre de la aplicacion" type="text" class="input" v-model="nombre" />
-                <p v-show="msg_error.name!=''" class="has-text-danger">{{msg_error.name}}</p>
+                <CampoForm type="text" :place="$i18n.locale=='en' ? 'Name':'Nombre'" v-model="nombre" :error="msg_error.name" />
+           
+              <!--   <input placeholder="Nombre de la aplicacion" type="text" class="input" v-model="nombre" /> -->
+                <!-- <p v-show="msg_error.name!=''" class="has-text-danger">{{msg_error.name}}</p> -->
             </div>
 
             <div class="field  column has-text-centered">
@@ -107,8 +107,9 @@
             </div>
 
              <div class="column">
-                <input placeholder="Nombre de la aplicacion" type="text" class="input" v-model="nombre" />
-                <p v-show="msg_error.name!=''" class="has-text-danger">{{msg_error.name}}</p>
+                <CampoForm type="text" :place="$i18n.locale=='en' ? 'Name':'Nombre'" v-model="nombre" :error="msg_error.name" />
+              <!--   <input placeholder="Nombre de la aplicacion" type="text" class="input" v-model="nombre" />
+                <p v-show="msg_error.name!=''" class="has-text-danger">{{msg_error.name}}</p> -->
             </div>
 
             <div class="field  column has-text-centered">
