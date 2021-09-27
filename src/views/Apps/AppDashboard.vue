@@ -25,23 +25,7 @@
                 </tr>
             </Board>
         </div>
-        <div>
-            <!-- <div class="modal" :class="{'is-active': carga_exitosa}">
-                <div class="modal-background " style="background-color: rgb(197, 197, 197, 0.0)"></div>
-                <div class="modal-content-width has-text-black" style="border:1px ridge grey;" :class="{'modal-puntowifi-escritorio' : !isMobile, 'modal-puntowifi-mobil' : isMobile}">
-                    <div class="container has-text-centered has-background-white" :class="{'p-2':isMobile, 'p-5':!isMobile}" id="modal">
-                        <p v-show="comprobar==true" class="has-text-centered has-text-success">Se cargo con exito el App.</p>
-                        <p v-show="comprobar_edi==true" class="has-text-centered has-text-success">Se edito con exito el App.</p>
-                        <div class="columns mt-2">
-                            <div class="column">
-                                <button class="button w-100 fondo-crenein is-outline btn has-text-white has-text-weight-blod" @click="carga_exitosa = false">Esta bien</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-        </div>
-
+   
         <Pagination/>
     </div>
     <!-- Modal de carga exitosa -->
@@ -86,6 +70,7 @@ export default {
         this.comprobar_carga()
         this.comprobar_edicion()
         this.traerApps()
+        console.log("se recargo")
     },
 
     setup() {
@@ -148,6 +133,8 @@ export default {
                     apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false, modalDelete: false})
                     /*  console.log(typeof element.logo) */
                 })
+                console.log(apps.value)
+                console.log("se ejecuto")
             }).catch(error => {
                 console.log(error.response);
             })
@@ -185,7 +172,8 @@ export default {
                /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
             })
             .then((data) => {
-               /*  let message = data */
+                let message = data 
+                console.log(message.data)
                app_eliminada.value = true
                /*  accion_exitosa.value = true
                 paso_elim.value = true */
@@ -201,14 +189,56 @@ export default {
             })
         }
 
-        watchEffect(()=>{ 
+        /* watchEffect(()=>{
             console.log(app_eliminada.value)
             if(app_eliminada.value){
-                traerApps() 
+                traerApps()
                 app_eliminada.value = false
             }
-        
+        }) */
+
+        watchEffect(()=>{ 
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            client.rawRequest(/* GraphQL */ `
+            query{
+                apps{
+                    id
+                    name
+                    logo
+                    observation
+                    visible
+                    deleted_at
+                    created_at
+                    updated_at
+                    licenses {
+                        id
+                        name
+                        price_arg
+                        price_usd
+                        deleted_at
+                        created_at
+                        updated_at
+                    }
+                }
+            }`,
+            {
+                /* page: parseInt(route.params.page),
+                first: mostrar_cantidad.value */
+            },
+            {
+                /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
             })
+            .then((data) => {
+                apps.value = []
+                data.data.apps.forEach(element => {
+                    apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false, modalDelete: false})
+                    /*  console.log(typeof element.logo) */
+                })
+            }).catch(error => {
+                console.log(error.response);
+            })
+        
+        })
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
          
