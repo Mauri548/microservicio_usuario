@@ -1,10 +1,10 @@
 <template>
-  <div class="mb-3">
+  <div class="mb-4">
     <div class="form-row">
-      <input class="input input-prueba" 
+      <input class="input input-prueba"
         :type="type"
         @input="$emit('update:modelValue', $event.target.value)"
-        :class="{'active': modelValue}"
+        :class="{'active': modelValue}" v-model="modelValue"
       >
       <label alt="Label" :data-placeholder="place" style="color: grey"></label>
     </div>

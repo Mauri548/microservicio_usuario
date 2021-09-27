@@ -128,7 +128,12 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             cancel:'Cancelar',
         },
         licence: {
-            agregar: 'Agregar Licencia'
+            agregar: 'Agregar Licencia',
+            editar: 'Editar Licencia',
+            modalCarga:'Se cargo con exito la licencia.',
+            modalEdicion:'Se edito con exito la licencia.',
+            modalCargaError: 'Fallo al cargar la licencia, por favor intentelo mas tarde',
+            modalEdicionError: 'Fallo al editar la licencia, por favor intentelo mas tarde',
         },
 
     },
@@ -253,7 +258,12 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
         },
 
         licence: {
-            agregar: 'Add Licence'
+            agregar: 'Add Licence',
+            editar: 'Edit Licence',
+            modalCarga:'The Licence was successfully loaded.',
+            modalEdicion:'The Licence was successfully edited.',
+            modalCargaError: 'Failed to load license, please try again later',
+            modalEdicionError: 'Failed to edit license, please try again later',
         },
     }
 }
