@@ -189,9 +189,17 @@ export default {
             if (price_arg.value == null || price_arg.value == '') price_arg.value = 0
             if (price_usd.value == null || price_usd.value == '') price_usd.value = 0
 
-            if (name.value == "") msg_error.value.name = 'Name is required'
-            if (price_arg.value < 0) msg_error.value.price_arg = 'The price cannot be less than 0'
-            if (price_usd.value < 0) msg_error.value.price_usd = 'The price cannot be less than 0'
+            if(i18n.global.locale=='es'){
+                if (name.value == "") msg_error.value.name = 'Nombre es requerido'
+                if (price_arg.value < 0) msg_error.value.price_arg = 'El precio no puede ser menor que 0'
+                if (price_usd.value < 0) msg_error.value.price_usd = 'El precio no puede ser menor que 0'
+            }
+            if(i18n.global.locale=='en'){
+                if (name.value == "") msg_error.value.name = 'Name is required'
+                if (price_arg.value < 0) msg_error.value.price_arg = 'The price cannot be less than 0'
+                if (price_usd.value < 0) msg_error.value.price_usd = 'The price cannot be less than 0'
+            }
+
 
             if (msg_error.value.name == '' && msg_error.value.price_usd == '' && msg_error.value.price_arg == ''){
                 typeAction.value == 'licence.agregar' ? createLicence() : editLicence()
