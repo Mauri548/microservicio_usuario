@@ -17,8 +17,8 @@
                 </section>
                 <footer class="column modal-card-foot">
                     <div>
-                        <button class="button btn-cancel" style=" font-weight:bold;">{{$t('modal.actionsModal.noCancel')}}</button>
-                        <button class="button has-text-white" style="background-color: #005395; font-weight:bold;" @click="closeModal(data)" >{{$t('modal.actionsModal.siCancel')}}</button>
+                        <button class="button btn-cancel" @click="closeModal(data)" style=" font-weight:bold;">{{$t('modal.actionsModal.noCancel')}}</button>
+                        <button class="button has-text-white" style="background-color: #005395; font-weight:bold;" @click="deleteModal(data)" >{{$t('modal.actionsModal.siCancel')}}</button>
                     </div>
                 </footer>
             </div>
@@ -30,13 +30,17 @@
 export default {
     name:'Action',
     props:['data'],
-    emits: ['onCloseModalAction'],
+    emits: ['onCloseModalAction','onDeleteModal'],
     
     setup(props,{emit}){
         const closeModal = (e) => {
             emit("onCloseModalAction", e.id)
         }
+        const deleteModal = (e) => {
+            emit("onDeleteModal", e.id)
+        }
         return{
+            deleteModal,
             closeModal
         }
     }

@@ -50,8 +50,8 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
         modal:{
             actionsModal:{
                 msmPregunta:'¿Desea cancelar esta accion?',
-                msmAccion:'Esta accion limpiara el formulario',
-                siCancel:'Si,cancelar',
+                msmAccion:'Esta accion eliminara la fila seleccionada',
+                siCancel:'Si,eliminar',
                 noCancel:'No,cancelar',
             },
             actionPermission:{
@@ -82,6 +82,8 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             modalEdicion:'Se edito con exito la empresa.',
         },
         app:{
+                positivo:'Positivo',
+                negativo:'Negativo',
                 agregarApp:'Agregar App',     
                 editarApp:'Editar App',
                 escogeArchivo:'Escoge un archivo',
@@ -89,6 +91,8 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
                 cancel:'Cancelar',
                 modalCarga:'Se cargo con exito la aplicación.',
                 modalEdicion:'Se edito con exito la aplicación.',
+                positivo:'Positivo',
+                negativo:'Negativo',
         },
         inviteUser:{
             titulo:'¡Solo queda un paso más! invita a los usuarios a tu empresa para que te ayuden a gestionarla.',
@@ -178,8 +182,8 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
         modal:{
             actionsModal:{
                 msmPregunta:'Do you want to cancel user upload?',
-                msmAccion:'this actions will clear the form ',
-                siCancel:'Yes,cancel',
+                msmAccion:'This action will delete the selected row',
+                siCancel:'Yes,delete',
                 noCancel:'No,cancel',
             },
             actionPermission:{
@@ -211,6 +215,8 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             modalEdicion:'The company was successfully edited.',
         },
         app:{
+            positivo:'Positive',
+            negativo:'Negative',
             agregarApp:'Add App',     
             editarApp:'Edit App',
             escogeArchivo:'Choose a file',
@@ -218,6 +224,8 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             cancel:'Cancel',
             modalCarga:'The application was successfully loaded.',
             modalEdicion:'The application was successfully edited.',
+            positivo:'Positive',
+            negativo:'Negative',
         },
         inviteUser:{
             titulo:'There is only one more step left! invite users to your company to help you manage it.',

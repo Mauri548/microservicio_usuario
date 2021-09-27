@@ -20,8 +20,8 @@
                         <img :src="app.logo" width="40" alt="app.logo">
                     </td>
                     <td @click="actionModal(app)">{{app.observacion}}</td>
-                    <Modal namePath="EditApp" :data="app" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
-                    <ActionModal :data="app" @onCloseModalAction="actionModalDelete" />
+                    <Modal namePath="EditApp" :data="app"  @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
+                    <ActionModal :data="app" @onDeleteModal="eliminando" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
         </div>
@@ -69,6 +69,7 @@ import { inject } from '@vue/runtime-core'
 import {  watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js'
 import {GraphQLClient, request as fetchGQL} from 'graphql-request';
+import { useRouter } from 'vue-router';
 
 
 export default {
@@ -97,109 +98,21 @@ export default {
         const endpoint = store.state.url_backend
         const apps = ref([])
         const apps_aux = ref([])
-
+        const router = useRouter()
+        const app_eliminada = ref(false)
+     
 
      /*    const datas = ref([
            {id: 1, name: 'ISPB', logo: ispb, obvservation: 'Licencia x de ISPB', activo: false, modalDelete: false},
            {id: 2, name: 'PuWiC', logo: puwic, obvservation: 'Licencia x de PuWiC', activo: false, modalDelete: false},
            {id: 3, name: 'Geston', logo: geston, obvservation: 'Licencia x de Geston', activo: false, modalDelete: false},
         ])
+        
  */
         const titles = ref([])
 
-        watchEffect(()=>{
-            if(i18n.global.locale=='es'){
-                titles.value = ['Nombre','Logo','Obvservación']
-            }
-            if(i18n.global.locale=='en'){
-                titles.value = ['Name','Logo','Obvservation']
-            }
-        })
-
         const traerApps = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            watchEffect(() => {
-                client.rawRequest(/* GraphQL */ `
-                query{
-                    apps{
-                        id
-                        name
-                        logo
-                        observation
-                        visible
-                        deleted_at
-                        created_at
-                        updated_at
-                        licenses {
-                            id
-                            name
-                            price_arg
-                            price_usd
-                            deleted_at
-                            created_at
-                            updated_at
-                        }
-                    }
-                }`,
-                {
-                    /* page: parseInt(route.params.page),
-                    first: mostrar_cantidad.value */
-                },
-                {
-                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
-                })
-                .then((data) => {
-                    apps.value = []
-                    data.data.apps.forEach(element => {
-                        apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false, modalDelete: false})
-                        console.log(typeof element.logo)
-                    })
-
-                }).catch(error => {
-                    console.log(error.response);
-                })
-            })
-        }
-
-
-        // Activa el valor para abrir una ventana modal de ese elemento
-        const actionModal = (data) => {
-         
-            let aux = apps.value.find(element => element.id == data.id)
-            console.log(aux)
-            aux.activo = !aux.activo
-
-        }
-
-        // Activa el valor modalDelete para abrir una ventana de aviso antes de eliminar un elemento
-        const actionModalDelete = (data) => {
-            let aux = apps.value.find(element => element.id == data)
-            aux.activo = false
-            aux.modalDelete = !aux.modalDelete
-        }
-
-        const comprobar_carga = () => {
-            if(comprobar==true){
-                setTimeout(() => carga_exitosa.value = true ,500)
-
-                let accion = "cargarApp"
-                store.commit('verificar_carga',accion)
-            }
-            setTimeout(() => carga_exitosa.value = false ,3000)
-        }
-        const comprobar_edicion = () => {
-            if(comprobar_edi==true){
-                setTimeout(() => carga_exitosa.value = true ,500)
-
-                let accion = "edicionApp"
-                store.commit('verificar_carga',accion)
-            }
-            setTimeout(() => carga_exitosa.value = false ,3000)
-        }
-
-        watchEffect(() => {
-            const client = new GraphQLClient(endpoint)
-
             client.rawRequest(/* GraphQL */ `
             query{
                 apps{
@@ -221,18 +134,123 @@ export default {
                         updated_at
                     }
                 }
-            }
-            `)
+            }`,
+            {
+                /* page: parseInt(route.params.page),
+                first: mostrar_cantidad.value */
+            },
+            {
+                /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+            })
             .then((data) => {
-                console.log(data)
+                apps.value = []
+                data.data.apps.forEach(element => {
+                    apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false, modalDelete: false})
+                    /*  console.log(typeof element.logo) */
+                })
+            }).catch(error => {
+                console.log(error.response);
             })
-            .catch(error => {
-                console.log(error.response)
-            })
+        }
+        
+        watchEffect(()=>{
+
+            if(i18n.global.locale=='es'){
+                titles.value = ['Nombre','Logo','Obvservación']
+            }
+            if(i18n.global.locale=='en'){
+                titles.value = ['Name','Logo','Obvservation']
+            }
         })
 
+        const eliminando = (app_id) => {
+     
+            actionModalDelete(app_id)
+            const client = new GraphQLClient(endpoint)
+            console.log(app_id)
+            client.rawRequest(/* GraphQL */ `
+            mutation($id: ID!){
+                 removeUse_app(id: $id) {
+                    id
+                    name
+                    logo
+                    observation
+                    visible
+                }
+            }`,
+            {
+                id: app_id
+            },
+            {
+               /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+            })
+            .then((data) => {
+               /*  let message = data */
+               app_eliminada.value = true
+               /*  accion_exitosa.value = true
+                paso_elim.value = true */
+            })
+            .catch(error => {
+                let mensaje = error.message
+              /*   accion_exitosa.value = false
+                paso_elim.value = false */
+               /*  if(mensaje.includes( 'No se puede eliminar')){
+                    mostrar_aviso.value = !mostrar_aviso.value
+                    mostrar_nombre.value = anunciante_id
+                } */
+            })
+        }
 
+        watchEffect(()=>{ 
+            console.log(app_eliminada.value)
+            if(app_eliminada.value){
+                traerApps() 
+                app_eliminada.value = false
+            }
+        
+            })
+        // Activa el valor para abrir una ventana modal de ese elemento
+        const actionModal = (data) => {
+         
+            let aux = apps.value.find(element => element.id == data.id)
+            console.log(aux)
+            aux.activo = !aux.activo
+            /* router.push({name: 'EditApp', params: {id: aux.id} }) */
+            
+
+        }
+        // Activa el valor modalDelete para abrir una ventana de aviso antes de eliminar un elemento
+        const actionModalDelete = (data) => {
+            let aux = apps.value.find(element => element.id == data)
+            aux.activo = false
+           /*  console.log(aux.id) */
+           /*  eliminando(aux.id)  */
+            aux.modalDelete = !aux.modalDelete
+        }
+        const comprobar_carga = () => {
+            if(comprobar==true){
+                setTimeout(() => carga_exitosa.value = true ,500)
+
+                let accion = "cargarApp"
+                store.commit('verificar_carga',accion)
+            }
+            setTimeout(() => carga_exitosa.value = false ,3000)
+        }
+        const comprobar_edicion = () => {
+            if(comprobar_edi==true){
+                setTimeout(() => carga_exitosa.value = true ,500)
+
+                let accion = "edicionApp"
+                store.commit('verificar_carga',accion)
+            }
+            setTimeout(() => carga_exitosa.value = false ,3000)
+        }
+
+    
         return {
+            router,
+            app_eliminada,
+            eliminando,
             traerApps,
             apps,
             apps_aux,
