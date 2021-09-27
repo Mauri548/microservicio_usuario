@@ -40,7 +40,7 @@
         <div>
             <section class="modal-card-body">
                 <form id="form-create-app" action="" class="column">
-                    <CampoForm type="text" place="Name" v-model="name" :error="msg_error.name" />
+                    <CampoForm type="text" :place="$i18n.locale=='en'? 'Name': 'Nombre'" v-model="name" :error="msg_error.name" />
 
                     <div class="select w-100 mb-4">
                         <select class="w-100 mb-4" v-model="selectedApp" >
@@ -48,8 +48,8 @@
                         </select>
                     </div>
 
-                    <CampoForm type="number" place="Price ARG" v-model="price_arg" :error="msg_error.price_arg" />
-                    <CampoForm type="number" place="Price USD" v-model="price_usd" :error="msg_error.price_usd" />
+                    <CampoForm type="number" :place="$i18n.locale=='en'? 'Price ARG': 'Precio ARG'" v-model="price_arg" :error="msg_error.price_arg" />
+                    <CampoForm type="number" :place="$i18n.locale=='en'? 'Price USD': 'Precio USD'" v-model="price_usd" :error="msg_error.price_usd" />
                 
                     <div class="column p-0 has-text-centered" >
                         <button class="button has-background-danger has-text-white mr-2"  style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
@@ -297,6 +297,8 @@ export default {
             addLicence.value = !addLicence.value
             if (addLicence.value) {
                 msg_error.value.name = ''
+                msg_error.value.price_usd = ''
+                msg_error.value.price_arg = ''
                 fetchApps()
                 /*Verificamos el tipo de accion que se hara, si es editar o agregar para reutilizar un componente
                 modal */
