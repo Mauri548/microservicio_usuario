@@ -197,7 +197,7 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
         permisos:{
             agregar:'Add Permission',
             editar:'Edit Permission',
-            cancel:'Cancelar',
+            cancel:'Cancel',
             guardar:'Save changes',
             modalCarga:'The permit was successfully loaded.',
             modalEdicion:'The permission was successfully edited.',
