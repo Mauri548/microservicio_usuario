@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-3">
+  <div class="mb-4">
     <div class="form-row">
       <input class="input input-prueba"
         :type="type"
@@ -35,7 +35,7 @@ form {
 
 }
 .form-row {
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
   position: relative;
 }
 .form-row:last-child {

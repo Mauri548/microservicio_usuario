@@ -43,13 +43,13 @@
                     <CampoForm type="text" place="Name" v-model="name" :error="msg_error.name" />
 
                     <div class="select w-100 mb-4">
-                        <select class="w-100" v-model="selectedApp" >
+                        <select class="w-100 mb-4" v-model="selectedApp" >
                             <option v-for="app in apps" :key="app.id" :value="app.id">{{app.name}}</option>
                         </select>
                     </div>
 
-                    <CampoForm type="number" place="Price ARG" v-model="price_arg" />
-                    <CampoForm type="number" place="Price USD" v-model="price_usd" />
+                    <CampoForm type="number" place="Price ARG" v-model="price_arg" :error="msg_error.price_arg" />
+                    <CampoForm type="number" place="Price USD" v-model="price_usd" :error="msg_error.price_usd" />
                 
                     <div class="column p-0 has-text-centered" >
                         <button class="button has-background-danger has-text-white mr-2"  style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
@@ -190,6 +190,8 @@ export default {
             if (price_usd.value == null || price_usd.value == '') price_usd.value = 0
 
             if (name.value == "") msg_error.value.name = 'Name is required'
+            if (price_arg.value < 0) msg_error.value.price_arg = 'The price cannot be less than 0'
+            if (price_usd.value < 0) msg_error.value.price_usd = 'The price cannot be less than 0'
 
             if (msg_error.value.name == '' && msg_error.value.price_usd == '' && msg_error.value.price_arg == ''){
                 typeAction.value == 'licence.agregar' ? createLicence() : editLicence()
@@ -225,18 +227,12 @@ export default {
                         price_usd: data_licence.price_usd == 0? null : data_licence.price_usd , app: {id:data_licence.app_id, name: app.name}, activo: false, modalDelete: false})
                 // Cerramos la ventana modal
                 ModalAdd()
-                setTimeout(() => {
-                    succesLoad.value = true
-                    activeAlert.value = true
-                    checkLoad()
-                },500)
+                changeStateModal(true)
+                succesLoad.value = false
             })
             .catch(error => {
                 ModalAdd()
-                setTimeout(() => {
-                    activeAlert.value = true
-                    checkLoad()
-                })
+                changeStateModal(false)
             })
         }
 
@@ -265,25 +261,28 @@ export default {
                 let lic_aux = licenses.value.find(licencia => licencia.id == res.id)
                 // Asignamos los valores al elemento para que se modifique en la vista del usuario
                 lic_aux.name = res.name
-                res.price_arg == 0? lic_aux.price_arg = null : lic_aux.price_usd 
-                lic_aux.price_arg = res.price_arg
-                lic_aux.price_usd = res.price_usd
+                res.price_arg == 0? lic_aux.price_arg = null : lic_aux.price_arg = res.price_arg
+                res.price_usd == 0? lic_aux.price_usd = null : lic_aux.price_usd = res.price_usd
                 lic_aux.app.id = res.app_id
                 lic_aux.app.name = app.name
                 // Cerramos la ventana modal
                 ModalAdd()
-                setTimeout(() => {
-                    succesLoad.value = true
-                    checkLoad()
-                },500)
+                changeStateModal(true)
+                succesLoad.value = false
             })
             .catch(error => {
                 ModalAdd()
-                setTimeout(() => {
-                    activeAlert.value = true
-                    checkLoad()
-                })
+                changeStateModal(false)
             })
+        }
+
+        // Cambia el estado para mostrar la ventana modal de succes o failed
+        const changeStateModal =(state) => {
+            setTimeout(() => {
+                succesLoad.value = state
+                activeAlert.value = true
+                checkLoad()
+            },500)
         }
 
         const ModalAdd = (type, data) => {
@@ -322,11 +321,11 @@ export default {
             aux.modalDelete = !aux.modalDelete
         }
 
+        // Cambia el estado de la ventana modal luego de 3s para hacer el efecto de animación y darle tiempo al usuario de leer
         const checkLoad = () => {
             if (activeAlert.value == true) {
                 setTimeout(() => {
                     activeAlert.value = false
-                    succesLoad.value = false
                 },3000)
             }
         }
