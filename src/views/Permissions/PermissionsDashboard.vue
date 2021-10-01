@@ -17,7 +17,7 @@
         </div>
         
         <div class="body-tablero px-4">
-            <Board :datas="datas" :titles="titles" >
+            <Board :datas="permisos" :titles="titles" >
                 <tr class="has-text-centered" v-for="data in permisos" :key="data.id">
                     <th @click="actionModal(data)">{{data.id}}</th>
                     <td @click="actionModal(data)">{{data.app}}</td>
@@ -180,7 +180,7 @@ export default {
             }
         }
 
-        const datas = ref([
+/*    const datas = ref([
             {id: 1, app: 'ISPB', key: 'customers_table_list', detail: 'Ver lista', activo: false},
             {id: 2, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
             {id: 3, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
@@ -191,7 +191,7 @@ export default {
             {id: 8, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
             {id: 9, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
             {id: 10, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-        ])
+        ])  */
       
         
         const titles = ref([])
@@ -210,13 +210,13 @@ export default {
         // Abre el modal de acciones del elemento que clickeas
 
         const actionModal = (data) => {
-            let aux = datas.value.find(element => element.id == data.id)
+            let aux = permisos.value.find(element => element.id == data.id)
             aux.activo = !aux.activo
         }
 
         // Abre la ventana emergente para eliminar un elemento de la lista
         const actionModalDelete = (data) => {
-            let aux = datas.value.find(element => element.id == data)
+            let aux = permisos.value.find(element => element.id == data)
             aux.activo = false
             aux.modalDelete = !aux.modalDelete
         }
@@ -228,7 +228,7 @@ export default {
 
         // Abre el modal para editar un permiso de la lista
         const actionModalEditPermission = () => {
-            datas.value.forEach(element => element.activo = false)
+            permisos.value.forEach(element => element.activo = false)
             editPermission.value = !editPermission.value
         }
         
@@ -238,7 +238,7 @@ export default {
             permisos,
             permisos_aux,
             traerPermisos,
-            mostrarModal2 ,
+             mostrarModal2 ,
             cerrarModal,
             mostrarModal,
             isMobile,
@@ -246,7 +246,7 @@ export default {
             comprobar ,
             comprobar_edi ,
             accion_exitosa ,
-            datas,
+          /*   datas, */
             titles,
             actionModal,
             actionModalDelete,
