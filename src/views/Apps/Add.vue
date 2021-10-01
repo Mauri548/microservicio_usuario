@@ -124,10 +124,10 @@
 
             <div class="column ">
                 <div v-show="$i18n.locale=='es'">
-                    <textarea class="textarea" placeholder="Observación"></textarea>
+                    <textarea class="textarea" v-model="observation" placeholder="Observación"></textarea>
                 </div>
                 <div v-show="$i18n.locale=='en'">
-                    <textarea class="textarea" placeholder="Observation"></textarea>
+                    <textarea class="textarea" v-model="observation" placeholder="Observation"></textarea>
                 </div>
             </div>
             <div class="column">
@@ -149,10 +149,9 @@ import { inject } from '@vue/runtime-core'
 /* import Action from '../../components/Modals/ActionsModal.vue' */
 import {ref} from '@vue/reactivity'
 import { useRouter } from 'vue-router';
-import store from '@/store';
 import i18n from '@/i18n.js'
 import {GraphQLClient, request as fetchGQL} from 'graphql-request';
-
+import store from '@/store';
 export default {
     name:'AddApp',
     components: {
@@ -178,9 +177,7 @@ export default {
         const msg_error = ref({ name: ''})
 
         const validar = () => {
-          /*   document.getElementById('form-create-app').addEventListener('submit', function(e) {
-                e.preventDefault()
-            }) */
+
           /*console.log(nombre.value)
             console.log(observation.value)
             console.log(logo.value)
