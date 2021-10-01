@@ -7,7 +7,7 @@
         <ProgressBar/>
         <!-- Formulario del carrousel -->
         <div class="form-outer pt-3">
-              <form  action="">
+              <form id="form-crete-company"  action="">
                 <div  class="page slidepage">    
                      <!--    Utilizo el atributo locale del objeto i18n para saber en que lenguaje esta seteado el sistema  -->
                     <CampoForm v-show="$i18n.locale=='en'" place="Name fantasy" type="text" />
@@ -90,8 +90,7 @@
                     <div class="field is-grouped is-justify-content-space-between">
 
                         <button type="button" class="button btn-crenein prev">{{$t('createCompany.anterior')}}</button>
-                        <button @click="createCompany" class="button btn-crenein submite">{{$t('createCompany.enviar')}}</button>
-                        <!-- <router-link class="button btn-crenein submite" @click="createCompany" >{{$t('createCompany.enviar')}}</router-link> -->
+                        <button @click="createCompany" type="button" class="button btn-crenein submite">{{$t('createCompany.enviar')}}</button>
     
                     </div>
                 </div>
