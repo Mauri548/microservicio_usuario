@@ -18,7 +18,7 @@
         
         <div class="body-tablero px-4">
             <Board :datas="datas" :titles="titles" >
-                <tr class="has-text-centered" v-for="data in datas" :key="data.id">
+                <tr class="has-text-centered" v-for="data in permisos" :key="data.id">
                     <th @click="actionModal(data)">{{data.id}}</th>
                     <td @click="actionModal(data)">{{data.app}}</td>
                     <td @click="actionModal(data)">{{data.key}}</td>
@@ -77,6 +77,8 @@ import AddPermission from './AddPermission.vue'
 import { ref } from '@vue/reactivity'
 import { inject, watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js'
+import {GraphQLClient, request as fetchGQL} from 'graphql-request';
+import store from '@/store';
 
 export default {
     components: {
@@ -90,6 +92,9 @@ export default {
         EditPermission,
         ModalAlert,
     },
+    created(){
+        this.traerPermisos()
+    },
    
     setup() {
         const isMobile = inject('isMobile')
@@ -100,7 +105,49 @@ export default {
         const accion_exitosa = ref(false)
         const addPermission = ref(false)
         const editPermission = ref(false)
-    
+        const endpoint = store.state.url_backend
+        const permisos = ref([])
+        const permisos_aux = ref([])
+
+        const traerPermisos = () => {
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            watchEffect(() => {
+                client.rawRequest(/* GraphQL */ `
+               query {
+                    permits {
+                        id
+                        key
+                        detail
+                        deleted_at
+                        created_at
+                        updated_at
+                        app{
+                            id
+                            name
+                        }
+                    }
+                }`,
+                {
+                    /* page: parseInt(route.params.page),
+                    first: mostrar_cantidad.value */
+                },
+                {
+                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+                })
+                .then((data) => {
+                    permisos.value = []
+                    data.data.permits.forEach(element => {
+                        permisos.value.push({id:element.id, key: element.key, detail: element.detail, app:element.app.name,  activo: false, modalDelete: false})
+                       /*  console.log(typeof element.logo) */
+                    })
+
+                }).catch(error => {
+                    console.log(error.response);
+                })
+            })
+        }
+
+
 
 
         const mostrarModal = (act) => {
@@ -187,6 +234,10 @@ export default {
         
 
         return {
+            endpoint,
+            permisos,
+            permisos_aux,
+            traerPermisos,
             mostrarModal2 ,
             cerrarModal,
             mostrarModal,
