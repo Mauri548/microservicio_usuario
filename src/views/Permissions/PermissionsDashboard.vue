@@ -77,7 +77,7 @@ import AddPermission from './AddPermission.vue'
 import { ref } from '@vue/reactivity'
 import { inject, watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js'
-import {GraphQLClient, request as fetchGQL} from 'graphql-request';
+import {GraphQLClient} from 'graphql-request';
 import store from '@/store';
 
 export default {
