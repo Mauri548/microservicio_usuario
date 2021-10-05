@@ -47,11 +47,12 @@
                         <button class="button button2 has-background-info has-text-white" ><i class="fab fa-facebook-f"></i></button>
                         <button class="button mt-1 button2 has-background-danger has-text-white" ><i class="fab fa-google-plus-g"></i></button>
                         <p style="color: #005395">¿No eres mienbro aun?</p>
-                        <p  style="color: #005395; font-weight:bold;">Registrate gratis</p>
+                        <router-link :to="{name: 'register'}" style="color: #005395; font-weight:bold;">Registrate gratis</router-link>
                     </div>
                 </form>
             </div>
         </div>
+        <p></p>
         
 </template>
 
