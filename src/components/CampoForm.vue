@@ -7,6 +7,7 @@
         :class="{'active': modelValue}" v-model="modelValue"
       >
       <label alt="Label" :data-placeholder="place" style="color: grey"></label>
+      <span v-show="required" class="a">*</span>
     </div>
     <p v-show="error != '' && error" class="msg-error">{{error}}</p>
   </div>
@@ -16,11 +17,17 @@
 export default {
 
   name:'CampoForm',
-  props: ['place','type','modelValue','error'],
+  props: ['place','type','modelValue','error','required'],
 }
 </script>
 
 <style scoped>
+.a{
+  color: red;
+  position: absolute;
+  left: -6px;
+  top: -9px;
+}
 
 .msg-error{
   font-size: .7em;
