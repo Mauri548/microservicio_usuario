@@ -59,6 +59,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "CreateCompany" */ '../views/CreateCompany/CreateCompany.vue')
       },
       {
+        path: '/CreateFinishedCompany',
+        name: 'CreateFinishedCompany',
+        component: () => import(/* webpackChunkName: "CreateFinishedCompany" */ '../views/CreateCompany/CreateCompanyFinish.vue')
+      },
+      {
         path: '/UserDashboard',
         name: 'UserDashboard',
         component: () => import(/* webpackChunkName: "UserDashboard" */ '../views/Users/UserDashboard.vue')
