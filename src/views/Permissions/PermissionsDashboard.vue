@@ -36,9 +36,78 @@
             </Board>
         </div>
         <Pagination/>
-        <AddPermission :data="addPermission" @tengoAct="mostrarModal2" @onCloseModal="actionModalAddPermission" /> 
-        <EditPermission :data="editPermission" @tengoAct="mostrarModal"  @onCloseModal="actionModalEditPermission" />
+        <!-- <AddPermission :data="addPermission" @tengoAct="mostrarModal2" @onCloseModal="actionModalAddPermission" />  -->
+  <!--       <EditPermission :data="editPermission" @tengoAct="mostrarModal"  @onCloseModal="actionModalEditPermission" /> -->
     </div>
+
+
+    <div>
+    <div class="modal " :class="{'is-active':addPermission}" >
+        <div class="modal-background  "></div>
+        <div class="modal-card " >
+            <header class="modal-card-head has-background-white " >
+            <p class="modal-card-title has-text-centered blue-crenein" style="font-size:1.5em; font-weight:bold;">{{$t('permisos.agregar')}}</p>
+            <button class="delete" @click="closeModal"  aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+                <form action="" class="column">
+            
+                    <select class="column  select1 mb-4" v-model="selectedApp" >
+                        <option v-for="app in apps" :key="app.id" :value="app">{{app.nombre}}</option>
+                    </select>
+
+                    <CampoForm type="text" :place="$i18n.locale=='en' ? 'Key':'Llave'" v-model="key" :error="msg_error.key" />
+                    
+                
+                    <div v-show="$i18n.locale=='es'">
+                        <textarea class="textarea" v-model="detail" placeholder="Detalles"></textarea>
+                    </div>
+                    <div v-show="$i18n.locale=='en'">
+                        <textarea class="textarea" v-model="detail" placeholder="Details"></textarea>
+                    </div>
+                   
+                
+                    <div class="column has-text-centered" >
+                        <button class="button has-background-danger has-text-white mr-2"  type="button" style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
+                        <button class="button  has-text-white  ml-2" type="button" style="background-color:#005395; font-weight:bold;" @click="validar">{{$t('permisos.guardar')}}</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+    </div> 
+
+   <div>
+        <div class="modal " :class="{'is-active':editPermission}" >
+        <div class="modal-background  "></div>
+        <div class="modal-card " >
+            <header class="modal-card-head has-background-white " >
+            <p class="modal-card-title has-text-centered blue-crenein" style="font-size:1.5em; font-weight:bold;">{{$t('permisos.editar')}}</p>
+            <button class="delete" @click="closeModal"  aria-label="close"></button>
+            </header>
+            <section class="modal-card-body">
+                <form action="" class="column">
+                    <select class="column  select1 mb-4" v-model="selectedApp" >
+                        <option v-for="app in apps" :key="app.id" :value="app">{{app.nombre}}</option>
+                    </select>
+
+                    <CampoForm place="Key" type="text"/>
+
+                    <textarea class="textarea " placeholder="Details"></textarea>
+                
+                    <div class="column has-text-centered" >
+                        <button class="button has-background-danger has-text-white mr-2"  style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
+                        <button class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;"  @click="validar">{{$t('permisos.guardar')}}</button>
+                    </div>
+                </form>
+            </section>
+    
+        </div>
+        </div>
+
+    </div>
+
+
 
     <ModalAlert :activador="carga_exitosa">
         <p v-if="comprobar">{{$t('permisos.modalCarga')}}</p>
@@ -79,6 +148,7 @@ import { inject, watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js'
 import {GraphQLClient} from 'graphql-request';
 import store from '@/store';
+import CampoForm from '../../components/CampoForm.vue'
 
 export default {
     components: {
@@ -91,9 +161,11 @@ export default {
         AddPermission,
         EditPermission,
         ModalAlert,
+        CampoForm
     },
     created(){
         this.traerPermisos()
+        this.traerApps()
     },
    
     setup() {
@@ -108,7 +180,49 @@ export default {
         const endpoint = store.state.url_backend
         const permisos = ref([])
         const permisos_aux = ref([])
+        const key = ref('')
+        const detail = ref('')
+        const selectedApp = ref('')
+        const msg_error = ref({ key: ''})
+        const apps = ref([])
+        const titles = ref([])
+        
+        watchEffect(() => {
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            client.rawRequest(/* GraphQL */ `
+               query {
+                    permits {
+                        id
+                        key
+                        detail
+                        deleted_at
+                        created_at
+                        updated_at
+                        app{
+                            id
+                            name
+                        }
+                    }
+                }`,
+                {
+                    /* page: parseInt(route.params.page),
+                    first: mostrar_cantidad.value */
+                },
+                {
+                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+                })
+                .then((data) => {
+                    permisos.value = []
+                    data.data.permits.forEach(element => {
+                        permisos.value.push({id:element.id, key: element.key, detail: element.detail, app:element.app.name,  activo: false, modalDelete: false})
+                       /*  console.log(typeof element.logo) */
+                    })
 
+                }).catch(error => {
+                    console.log(error.response);
+                })
+            })
+        
         const traerPermisos = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             watchEffect(() => {
@@ -147,9 +261,39 @@ export default {
             })
         }
 
+        const closeModal = () => {
+            if(addPermission.value) addPermission.value = !addPermission.value
+            if(editPermission.value) editPermission.value = !editPermission.value
+        }
 
+        const validar = () => {
 
+        
+            msg_error.value.key = ''
+        
+            if (key.value == ""){
+                if(i18n.global.locale == 'en'){
+                    msg_error.value.key = 'key is required'
+                }
+                if(i18n.global.locale == 'es'){
+                    msg_error.value.key = 'La palabra clave es requerido'
+                }
+                
+            } 
+            if (msg_error.value.key == ''){
+                if(addPermission.value){
+                    registrarPermiso()
+                }
+                if(editPermission.value){
+                    console.log("editar")
+                }
+              
+            } else {
+                console.log('no paso')
+                // Saltar los errores
+            } 
 
+        }
         const mostrarModal = (act) => {
             /* console.log(act.value.activo) */
             carga_exitosa.value = act.value.activo
@@ -194,9 +338,6 @@ export default {
         ])  */
       
         
-        const titles = ref([])
-
-
         watchEffect(()=>{
             if(i18n.global.locale=='es'){
                 titles.value = ['Aplicacion','Clave','Detalle']
@@ -206,9 +347,7 @@ export default {
             }
         })  
 
-
         // Abre el modal de acciones del elemento que clickeas
-
         const actionModal = (data) => {
             let aux = permisos.value.find(element => element.id == data.id)
             aux.activo = !aux.activo
@@ -233,7 +372,104 @@ export default {
         }
         
 
+        const traerApps = () => {
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            client.rawRequest(/* GraphQL */ `
+            query{
+                apps{
+                    id
+                    name
+                    logo
+                    observation
+                    visible
+                    deleted_at
+                    created_at
+                    updated_at
+                    licenses {
+                        id
+                        name
+                        price_arg
+                        price_usd
+                        deleted_at
+                        created_at
+                        updated_at
+                    }
+                }
+            }`,
+            {
+                /* page: parseInt(route.params.page),
+                first: mostrar_cantidad.value */
+            },
+            {
+                /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+            })
+            .then((data) => {
+                apps.value = []
+                if (data.data.apps) selectedApp.value = data.data.apps[0].id
+                data.data.apps.forEach(element => {
+                    apps.value.push({id:element.id, nombre: element.name})
+                    /*  console.log(typeof element.logo) */
+                })
+                console.log(apps.value)
+                console.log("se ejecuto")
+            }).catch(error => {
+                console.log(error.response);
+            })
+        }
+
+        const registrarPermiso = () => {
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            // Estructura FetchQL(url, query, variable, opcions)
+            client.rawRequest(/* GraphQL */ `
+            mutation($key:String!, $detail:String,$use_app_id:ID!){
+              	  createsUse_permit(input: {
+                    key: $key,
+                    detail: $detail,
+                    use_app_id: $use_app_id,
+                    }) {
+                        id
+                        key
+                        detail
+                 
+                    }
+            }`,
+            {
+                key: key.value,       
+                detail: detail.value,
+                use_app_id: selectedApp.value.id,
+            },
+            {
+               /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+            })
+            .then((data) => {
+                /* console.log(data.data.createsUse_permit.id) */
+                let id = data.data.createsUse_permit.id
+                permisos.value.push({id:id, key: key.value, detail: detail.value, app: selectedApp.value.nombre,  activo: false, modalDelete: false})
+                let accion = "cargarPermission"
+                store.commit('verificar_carga',accion) 
+                addPermission.value = !addPermission.value
+                selectedApp.value.id = ""
+                selectedApp.value.nombre = ""
+                key.value = ""
+                detail.value =""
+
+            }).catch(error => {
+
+            addPermission.value = !addPermission.value
+                console.log(error.response);
+            })
+        }
+
         return {
+            traerApps,
+            registrarPermiso,
+            validar,
+            key,
+            detail,
+            apps,
+            msg_error ,
+            selectedApp,
+            closeModal,
             endpoint,
             permisos,
             permisos_aux,
@@ -274,5 +510,17 @@ export default {
 }
 .scaleSize-enter-active, .scaleSize-leave-active {
     transition: all .3s ease
+}
+
+.select1 {
+
+    font-family: Arial, Helvetica, sans-ser;
+    color: #777474;
+    width: 100%;
+    padding: 10px ;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: none;
+    font-size: 0.9rem;
 }
 </style>
