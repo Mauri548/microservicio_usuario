@@ -65,7 +65,6 @@ export default {
 
         // Calculamos la cantidad de secciones que tendra el carrousel
         if (props.app) {
-            console.log('aaa')
             if ((props.app.licenses.length % 3) > 0) {
                 cantSection.value = Math.trunc(props.app.licenses.length / 3) + 1
             } else if ((props.app.licenses.length % 3) == 0) {
@@ -75,7 +74,8 @@ export default {
             }
         }
         // Calculamos el desplazamiento que hara por seccion
-        desplazamiento.value = -(100/cantSection.value).toFixed(1)
+        // desplazamiento.value = -(100/cantSection.value).toFixed(1)
+        desplazamiento.value = -((100/cantSection.value)).toFixed(1)
 
         // Abre el desplegable de monedas
         const openSelectCoin = () => {
@@ -123,6 +123,7 @@ export default {
 
 .carrousel .conteiner-licence {
     width: 200%;
+    box-sizing: border-box;
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
@@ -133,8 +134,8 @@ export default {
 }
 
 .carrousel .licence {
-    width: calc(33.3% / 1 - 10px);
-    margin: 0px 5px;
+    width: calc(33.3% / 1);
+    margin: 0px 10px;
     padding: 15px;
     border-radius: 15px;
     box-shadow: 0px 0px 8px 2px #ccc;

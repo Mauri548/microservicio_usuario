@@ -48,8 +48,9 @@ export default {
                     carrousel.style.width = '95%'
                 }
             } else {
-                
-                carrousel.style.width = `${(cantSection * 100)}%`
+                props.size <= 3? carrousel.style.width = `${(cantSection * 100)}%` : 
+                carrousel.style.width = `${(props.size / 3) * 100}%`
+                console.log((props.size / 3) * 100)
             }
             
         })
