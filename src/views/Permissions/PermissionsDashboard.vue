@@ -7,7 +7,6 @@
             <div v-if="$i18n.locale=='en'">
                 <TitleBoard title="Permissions"/>
             </div>
-          
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
@@ -24,7 +23,7 @@
                     <td @click="actionModal(data)">{{data.key}}</td>
                     <td @click="actionModal(data)">{{data.detail}}</td>
                     <Modal :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" :buttonDefault="false">
-                        <button @click="actionModalEditPermission" class="button btn-crenein w-100 my-1">
+                        <button @click="activarEdicion(data)" class="button btn-crenein w-100 my-1">
                             <span class="icon is-small">
                                 <i class="fas fa-pencil-alt"></i>
                             </span>
@@ -66,7 +65,6 @@
                         <textarea class="textarea" v-model="detail" placeholder="Details"></textarea>
                     </div>
                    
-                
                     <div class="column has-text-centered" >
                         <button class="button has-background-danger has-text-white mr-2"  type="button" style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
                         <button class="button  has-text-white  ml-2" type="button" style="background-color:#005395; font-weight:bold;" @click="validar">{{$t('permisos.guardar')}}</button>
@@ -91,20 +89,19 @@
                         <option v-for="app in apps" :key="app.id" :value="app">{{app.nombre}}</option>
                     </select>
 
-                    <CampoForm place="Key" type="text"/>
+                    <CampoForm place="Key" type="text" v-model="key"/>
 
-                    <textarea class="textarea " placeholder="Details"></textarea>
+                    <textarea class="textarea " placeholder="Details" v-model="detail"></textarea>
                 
                     <div class="column has-text-centered" >
-                        <button class="button has-background-danger has-text-white mr-2"  style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
-                        <button class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;"  @click="validar">{{$t('permisos.guardar')}}</button>
+                        <button class="button has-background-danger has-text-white mr-2"  type="button" style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
+                        <button class="button  has-text-white  ml-2"  type="button"  style="background-color:#005395; font-weight:bold;"  @click="validar">{{$t('permisos.guardar')}}</button>
                     </div>
                 </form>
             </section>
     
         </div>
         </div>
-
     </div>
 
 
@@ -186,7 +183,19 @@ export default {
         const msg_error = ref({ key: ''})
         const apps = ref([])
         const titles = ref([])
+        const id = ref()
         
+
+        const activarEdicion = (data) => {
+                editPermission.value = !editPermission.value 
+                id.value = data.id
+                key.value = data.key
+                detail.value = data.detail
+            /*     console.log(selectedApp.value) */
+              /*console.log(id.value) */
+        }
+
+
         watchEffect(() => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             client.rawRequest(/* GraphQL */ `
@@ -285,7 +294,7 @@ export default {
                     registrarPermiso()
                 }
                 if(editPermission.value){
-                    console.log("editar")
+                    editarPermiso() 
                 }
               
             } else {
@@ -294,6 +303,64 @@ export default {
             } 
 
         }
+
+        const editarPermiso = () => {
+
+
+          /*   console.log(id.value)  */
+
+
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            // Estructura FetchQL(url, query, variable, opcions)
+            client.rawRequest(/* GraphQL */ `
+            mutation($id:ID!,$key:String!, $detail:String,$use_app_id:ID!){
+              	modifiesUse_permit (id: $id, input: {
+                    key: $key,
+                    detail:  $detail,
+                    use_app_id: $use_app_id,
+                }) {
+                    id
+                    key
+                    detail
+                   
+                }
+            }`,
+            {
+                id: id.value,
+                key: key.value,       
+                detail: detail.value,
+                use_app_id: selectedApp.value.id,
+            },
+            {
+               /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+            })
+            .then((data) => {
+             /*    let ide = data.data.modifiesUse_permit.id */
+               /*  console.log("anduvo") */
+                let aux = permisos.value.find(element => element.id == id.value)
+                aux.activo = !aux.activo
+                aux.key = key.value
+            /*     console.log(aux) */
+                let accion = "edicionPermission"
+                store.commit('verificar_carga',accion) 
+                editPermission.value = !editPermission.value
+
+
+                carga_exitosa.value = true
+                comprobar_edi.value = true
+                setTimeout(() => {
+                carga_exitosa.value = false
+                comprobar_edi.value = false
+                } ,3000)
+
+            }).catch(error => {
+                let aux = permisos.value.find(element => element.id == id.value)
+                aux.activo = !aux.activo
+                editPermission.value = !editPermission.value
+                console.log(error.response);
+            })
+        }
+
         const mostrarModal = (act) => {
             /* console.log(act.value.activo) */
             carga_exitosa.value = act.value.activo
@@ -410,8 +477,8 @@ export default {
                     apps.value.push({id:element.id, nombre: element.name})
                     /*  console.log(typeof element.logo) */
                 })
-                console.log(apps.value)
-                console.log("se ejecuto")
+               /*  console.log(apps.value)
+                console.log("se ejecuto") */
             }).catch(error => {
                 console.log(error.response);
             })
@@ -442,6 +509,7 @@ export default {
                /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
             })
             .then((data) => {
+
                 /* console.log(data.data.createsUse_permit.id) */
                 let id = data.data.createsUse_permit.id
                 permisos.value.push({id:id, key: key.value, detail: detail.value, app: selectedApp.value.nombre,  activo: false, modalDelete: false})
@@ -453,14 +521,24 @@ export default {
                 key.value = ""
                 detail.value =""
 
+                carga_exitosa.value = true
+                comprobar.value = true
+                setTimeout(() => {
+                carga_exitosa.value = false
+                comprobar.value = false
+                } ,3000)
+
             }).catch(error => {
 
-            addPermission.value = !addPermission.value
+                addPermission.value = !addPermission.value
                 console.log(error.response);
             })
         }
 
         return {
+            id,
+            editarPermiso,
+            activarEdicion ,
             traerApps,
             registrarPermiso,
             validar,
