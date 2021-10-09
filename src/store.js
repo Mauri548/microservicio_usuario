@@ -10,8 +10,9 @@ const store = createStore({
             edicion_exitosa: false,
             cambio_lang: false,
             creating_company: false,
-            url_backend: 'https://dev_front_gateway_crenein_ms.crenein.com/graphql'
-
+            url_backend: 'https://dev_front_gateway_crenein_ms.crenein.com/graphql',
+            token: localStorage.getItem('user-token') || '',
+            status: '',
         }
     },
 
@@ -19,6 +20,10 @@ const store = createStore({
         onResize(state) {
             window.screen.width < 1024 ? state.isMobile = true : state.isMobile = false;
             window.screen.width <= 768 ? state.isTablet = true : state.isTablet = false;
+        },
+
+        setToken(state, token) {
+            state.token = token
         },
 
         setCreatingCompany(state,data) {
