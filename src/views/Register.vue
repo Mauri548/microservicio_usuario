@@ -41,7 +41,7 @@
                     </div>      
 
                     <div class="column has-text-centered">
-                        <button type="button" @click="register" class="button button2 has-text-white" :class="{'is-loading': entering}" style="font-weight:5px;">Registrarse</button>
+                        <button type="button" @click="register" class="button button2 btn-register has-text-white has-text-weight-semibold" :class="{'is-loading': entering}" style="font-weight:5px;">Registrarse</button>
                     </div>
 
                     <div class="column has-text-centered">
@@ -225,7 +225,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 
 
@@ -244,6 +244,10 @@ export default {
 .button2{
     width:15rem;
     background-color:#005395;
+}
+
+.btn-register:hover {
+    background-color: #046ec3;
 }
 
 .input2{
