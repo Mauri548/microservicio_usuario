@@ -45,6 +45,7 @@
                     </div>
 
                     <div class="column has-text-centered">
+                        <p class="blue-crenein has-text-weight-semibold">Proximamente!</p>
                         <p >o registrate usando: </p>
                         <button class="button button2 has-background-info has-text-white" ><i class="fab fa-facebook-f"></i></button>
                         <button class="button mt-1 button2 has-background-danger has-text-white" ><i class="fab fa-google-plus-g"></i></button>
