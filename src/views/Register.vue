@@ -216,8 +216,6 @@ export default {
             return re.test(email.value)
         }
 
-        
-
         return {
             name, email, password, password_confirmation, msg_error, entering,
             register
@@ -248,11 +246,10 @@ export default {
 }
 
 .input2{
-     width:12.49rem;
+    width:12.49rem;
 }
 
 .cuadro-form{
-    /* box-shadow: -2px 2px 10px; */
     width: 20rem;
 }
 
