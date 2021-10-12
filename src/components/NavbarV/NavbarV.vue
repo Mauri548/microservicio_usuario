@@ -51,10 +51,12 @@ export default {
                 {nombre: 'Permissions', activo: false, link: true, name_link: 'PermissionsDashboard'},
                 {nombre: 'Company', activo: false, link: false, opc: [
                     {nombre: 'User management', activo: false, name_link: 'UserDashboard'},
+                    {nombre: 'Invitations management', activo: false, name_link: 'InvitationsDashboard'},
                     {nombre: 'Companies management', activo: false, name_link: 'CompaniesDashboard'},
                     {nombre: 'Apps management', activo: false, name_link: 'AppDashboard'},
                     {nombre: 'Licences management', activo: false, name_link: 'LicencesDashboard'},
                     {nombre: 'Permissions management', activo: false, name_link: 'PermissionsManagement'},
+                   
                 ]},
             ])
         const route = useRoute()
@@ -94,10 +96,11 @@ export default {
             listas.value[1].nombre = i18n.global.locale == 'en'? 'Permissions': 'Permisos'
             listas.value[2].nombre = i18n.global.locale == 'en'? 'Company': 'Empresa'
             listas.value[2].opc[0].nombre = i18n.global.locale == 'en'? 'Users management': 'Gestión de usuarios'
-            listas.value[2].opc[1].nombre = i18n.global.locale == 'en'? 'Companies management' : 'Gestión de empresas'
-            listas.value[2].opc[2].nombre = i18n.global.locale == 'en'? 'Apps management': 'Gestión de aplicaciones'
-            listas.value[2].opc[3].nombre = i18n.global.locale == 'en'? 'Licences management': 'Gestión de licencias'
-            listas.value[2].opc[4].nombre = i18n.global.locale == 'en'? 'Permissions management': 'Gestión de permisos'
+            listas.value[2].opc[1].nombre = i18n.global.locale == 'en'? 'Invitations management': 'Tabla de Invitaciones'
+            listas.value[2].opc[2].nombre = i18n.global.locale == 'en'? 'Companies management' : 'Gestión de empresas'
+            listas.value[2].opc[3].nombre = i18n.global.locale == 'en'? 'Apps management': 'Gestión de aplicaciones'
+            listas.value[2].opc[4].nombre = i18n.global.locale == 'en'? 'Licences management': 'Gestión de licencias'
+            listas.value[2].opc[5].nombre = i18n.global.locale == 'en'? 'Permissions management': 'Gestión de permisos'
 
             creating_company.value = store.state.creating_company
         })
