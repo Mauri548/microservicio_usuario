@@ -41,10 +41,19 @@
 
 <script>
 import CampoForm from '../../components/CampoForm.vue'
+import store from '@/store'
 
 export default {
     components: {
         CampoForm
+    },
+
+    created(){
+        store.commit("setCreatingCompany",true)
+    },
+
+    setup() {
+
     }
 }
 </script>

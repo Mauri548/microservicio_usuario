@@ -115,7 +115,7 @@ export default {
                     localStorage.setItem('user-token', token)
                     store.commit('setToken', token)
                     FetchMe()
-                    router.push({name: 'PersonalForm'})
+                    router.push({name: 'CreateCompany'})
                 }
             })
             .catch(error => {
