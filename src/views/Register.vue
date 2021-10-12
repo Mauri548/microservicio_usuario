@@ -63,6 +63,7 @@ import CampoFormPassword from '../components/CampoFormPass.vue'
 import { useRouter } from 'vue-router'
 import store from '@/store'
 import { GraphQLClient } from 'graphql-request'
+import FetchMe from '../helper/FetchMe'
 
 export default {
     name:'Register',
@@ -113,6 +114,7 @@ export default {
                 if (isSuccess(data.data.register.status)) {
                     localStorage.setItem('user-token', token)
                     store.commit('setToken', token)
+                    FetchMe()
                     router.push({name: 'PersonalForm'})
                 }
             })
