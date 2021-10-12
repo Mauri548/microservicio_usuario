@@ -100,24 +100,27 @@ export default {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             client.rawRequest(/* GraphQL */ `
             query{
-                apps{
-                    id
-                    name
-                    logo
-                    observation
-                    visible
-                    deleted_at
-                    created_at
-                    updated_at
-                    licenses {
+                apps(first: 999, page: 1){
+                    data{
                         id
                         name
-                        price_arg
-                        price_usd
+                        logo
+                        observation
+                        visible
                         deleted_at
                         created_at
                         updated_at
+                        licenses {
+                            id
+                            name
+                            price_arg
+                            price_usd
+                        }
                     }
+                    paginatorInfo {
+                        count, currentPage, hasMorePages, total
+                    }
+                   
                 }
             }`,
             {
@@ -129,7 +132,7 @@ export default {
             })
             .then((data) => {
                 apps.value = []
-                data.data.apps.forEach(element => {
+                data.data.apps.data.forEach(element => {
                     apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false, modalDelete: false})
                     /*  console.log(typeof element.logo) */
                 })
@@ -200,25 +203,28 @@ export default {
         watchEffect(()=>{ 
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             client.rawRequest(/* GraphQL */ `
-            query{
-                apps{
-                    id
-                    name
-                    logo
-                    observation
-                    visible
-                    deleted_at
-                    created_at
-                    updated_at
-                    licenses {
+             query{
+                apps(first: 999, page: 1){
+                    data{
                         id
                         name
-                        price_arg
-                        price_usd
+                        logo
+                        observation
+                        visible
                         deleted_at
                         created_at
                         updated_at
+                        licenses {
+                            id
+                            name
+                            price_arg
+                            price_usd
+                        }
                     }
+                    paginatorInfo {
+                        count, currentPage, hasMorePages, total
+                    }
+                   
                 }
             }`,
             {
@@ -230,7 +236,7 @@ export default {
             })
             .then((data) => {
                 apps.value = []
-                data.data.apps.forEach(element => {
+                data.data.apps.data.forEach(element => {
                     apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false, modalDelete: false})
                     /*  console.log(typeof element.logo) */
                 })
