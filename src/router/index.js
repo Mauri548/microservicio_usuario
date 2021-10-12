@@ -118,6 +118,12 @@ const routes = [
         name: 'AppSuscription',
         component: () => import(/* webpackChunkName: "AppSuscription" */ '../views/Apps/AppSuscription.vue')
       }
+      ,
+      {
+        path: '/InvitationsDashboard',
+        name: 'InvitationsDashboard',
+        component: () => import(/* webpackCunkName: "LicencesDashboard" */ '../views/Invitations/InvitationsDashboard.vue')
+      }
     ]
   },
  
