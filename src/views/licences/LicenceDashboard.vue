@@ -153,7 +153,6 @@ export default {
                 // var
             })
             .then((data) => {
-                console.log(data)
                 licenses.value = []
                 data.data.licenses.data.forEach(element => {
                     licenses.value.push({id:element.id, name:element.name, price_arg:element.price_arg, 
