@@ -109,6 +109,9 @@ import { useRouter } from 'vue-router';
 import CampoForm from '../../components/CampoForm.vue'
 import { inject } from '@vue/runtime-core'
 import {ref} from '@vue/reactivity'
+
+import FetchMe from '../../helper/FetchMe'
+
 export default {
     name:'PersonalForm',
     components: {
@@ -120,10 +123,7 @@ export default {
         const isMobile = inject('isMobile')
         const activo = ref(false)
         
-
-
- 
-
+        FetchMe()
 
         const Activar = () => {
             activo.value = !activo.value
