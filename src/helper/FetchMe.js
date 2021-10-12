@@ -12,7 +12,11 @@ export default function FetchMe() {
                 email
             }
         }
-    `)
+    `,{},
+    {
+        authorization: `Bearer ${localStorage.getItem('user-token')}`
+    }
+    )
     .then((data) => {
         console.log(data)
     })
