@@ -31,24 +31,30 @@ export default {
 
             client.rawRequest(/* GraphQL */ `
             query{
-                appsVisible {
-                    id
-                    name
-                    logo
-                    observation
-                    visible
-                    licenses {
+                appsVisible(first: 999, page: 1) {
+                    data{
                         id
                         name
-                        price_arg
-                        price_usd
+                        logo
+                        observation
+                        visible
+                        licenses {
+                            id
+                            name
+                            price_arg
+                            price_usd
+                        }
                     }
+                    paginatorInfo {
+                        count, currentPage, hasMorePages, total
+                    }
+                 
                 }
             }
             `)
             .then((data) => {
                 apps.value = []
-                data.data.appsVisible.forEach(element => {
+                data.data.appsVisible.data.forEach(element => {
                     apps.value.push({id: element.id, name: element.name, logo: ispb, observation: element.observation, licenses: element.licenses})
                 })
             })
