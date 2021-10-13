@@ -8,7 +8,7 @@
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
-                   <!--  <router-link :to="{name: 'InviteUser'}" class="button btn-crenein">{{$t('inviteUser.invitar')}}</router-link> -->
+                    <router-link :to="{name: 'AppSuscription'}" class="button btn-crenein">{{$t('appSuscription.agregar')}}</router-link>
                 </HeadBoard>             
             </div>
         </div>
@@ -20,11 +20,15 @@
                     <td @click="actionModal(data)">{{data.licence}}</td>
                     <td @click="actionModal(data)">{{data.companyName}}</td>
            
-                   <!--  <Modal :data="data" :buttonDefault="false" @onCloseModal="actionModal" 
+                    <Modal :data="data" :buttonDefault="false" @onCloseModal="actionModal" 
                      @onOpenModalDelete="actionModalDelete" >
-                        <button @click="ChangeState(data)" v-if="data.state == 'Habilitado'" class="button btn-crenein w-100 my-1">{{$t('user.deshabilitar')}}</button>
-                        <button @click="ChangeState(data)" v-else class="button btn-crenein w-100 my-1">{{$t('user.habilitar')}}</button>
-                    </Modal> -->
+                         <button  class="button btn-crenein w-100 my-1">
+                            <span class="icon is-small">
+                                <i class="fas fa-pencil-alt"></i>
+                            </span>
+                            <span>{{$t('modal.editar')}}</span>
+                        </button>
+                    </Modal>
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>

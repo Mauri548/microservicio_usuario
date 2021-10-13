@@ -20,11 +20,9 @@
                     <td @click="actionModal(data)">{{data.email}}</td>
                     <td @click="actionModal(data)">{{data.created}}</td>
            
-                   <!--  <Modal :data="data" :buttonDefault="false" @onCloseModal="actionModal" 
+                    <Modal :data="data" :buttonDefault="false" @onCloseModal="actionModal" 
                      @onOpenModalDelete="actionModalDelete" >
-                        <button @click="ChangeState(data)" v-if="data.state == 'Habilitado'" class="button btn-crenein w-100 my-1">{{$t('user.deshabilitar')}}</button>
-                        <button @click="ChangeState(data)" v-else class="button btn-crenein w-100 my-1">{{$t('user.habilitar')}}</button>
-                    </Modal> -->
+                    </Modal>
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
@@ -136,10 +134,10 @@ export default {
         }
         watchEffect(()=>{ // utilizamos watcheffect para detectar que valor tiene el atributo locale del objeto i18n al momento de estar en la pagina o al momento de cambiar el valor a traves del boton del lenguaje
             if(i18n.global.locale == 'en'){
-                titles.value = ['Full name','Email','Created']
+                titles.value = ['Full name','Email','Sended']
             }
             if(i18n.global.locale == 'es'){
-                titles.value = ['Nombre completo','Correo','Creado']
+                titles.value = ['Nombre completo','Correo','Enviado']
             }
         })
 
