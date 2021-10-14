@@ -376,23 +376,22 @@ export default {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             client.rawRequest(/* GraphQL */ `
             query{
-                apps{
-                    id
-                    name
-                    logo
-                    observation
-                    visible
-                    deleted_at
-                    created_at
-                    updated_at
-                    licenses {
+                apps(first: 999, page: 1){
+                    data{
                         id
                         name
-                        price_arg
-                        price_usd
-                        deleted_at
-                        created_at
-                        updated_at
+                        logo
+                        observation
+                        visible
+                        licenses {
+                            id
+                            name
+                            price_arg
+                            price_usd
+                        }
+                    }
+                    paginatorInfo {
+                        count, currentPage, hasMorePages, total
                     }
                 }
             }`,
@@ -405,8 +404,10 @@ export default {
             })
             .then((data) => {
                 apps.value = []
-                if (data.data.apps) selectedApp.value = data.data.apps[0].id
-                data.data.apps.forEach(element => {
+                let datos = data.data.apps.data
+                console.log(datos[0].id)
+                if (datos) selectedApp.value = datos[0].id
+                datos.forEach(element => {
                     apps.value.push({id:element.id, nombre: element.name})
                     /*  console.log(typeof element.logo) */
                 })

@@ -75,7 +75,7 @@ export default {
         
             msg_error.value.key = ''
         
-            if (key.value == ""){
+        if (key.value == ""){
                 if(i18n.global.locale == 'en'){
                     msg_error.value.key = 'key is required'
                 }
@@ -115,23 +115,22 @@ export default {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             client.rawRequest(/* GraphQL */ `
             query{
-                apps{
-                    id
-                    name
-                    logo
-                    observation
-                    visible
-                    deleted_at
-                    created_at
-                    updated_at
-                    licenses {
+                apps(first: 999, page: 1){
+                    data{
                         id
                         name
-                        price_arg
-                        price_usd
-                        deleted_at
-                        created_at
-                        updated_at
+                        logo
+                        observation
+                        visible
+                        licenses {
+                            id
+                            name
+                            price_arg
+                            price_usd
+                        }
+                    }
+                    paginatorInfo {
+                        count, currentPage, hasMorePages, total
                     }
                 }
             }`,
@@ -144,12 +143,13 @@ export default {
             })
             .then((data) => {
                 apps.value = []
-                if (data.data.apps) selectedApp.value = data.data.apps[0].id
-                data.data.apps.forEach(element => {
+       /*          if (data.data.apps.data) selectedApp.value = data.data.apps[0].id */
+                console.log(data.data.apps.data)
+               /*  data.data.apps.forEach(element => {
                     apps.value.push({id:element.id, nombre: element.name})
-                    /*  console.log(typeof element.logo) */
+                    
                 })
-                console.log(apps.value)
+                console.log(apps.value) */
                 console.log("se ejecuto")
             }).catch(error => {
                 console.log(error.response);
