@@ -136,8 +136,8 @@ export default {
                     apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false, modalDelete: false})
                     /*  console.log(typeof element.logo) */
                 })
-                console.log(apps.value)
-                console.log("se ejecuto")
+                /* console.log(apps.value) */
+                /* console.log("se ejecuto") */
             }).catch(error => {
                 console.log(error.response);
             })
