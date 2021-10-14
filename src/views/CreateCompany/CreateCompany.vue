@@ -7,31 +7,41 @@
             <form>
                 <!-- <CampoForm type="text" :place="$i18n.locale=='en'? 'Name': 'Nombre'" v-model="name" :error="msg_error.name" /> -->
 
-                <CampoForm :place="$i18n.locale=='en'? 'Name fantasy': 'Nombre de fantasia'" type="text" :required="true" />
+                <CampoForm v-model="nameFantasy" :place="$i18n.locale=='en'? 'Name fantasy': 'Nombre de fantasia'" type="text" :required="true" :error="msg_error.nameFantasy" />
 
-                <CampoForm :place="$i18n.locale=='en'? 'Business name': 'Nombre del negocio'" type="text" :required="true" />
+                <CampoForm v-model="bussinesName" :place="$i18n.locale=='en'? 'Business name': 'Nombre del negocio'" type="text" :required="true" :error="msg_error.bussinesName" />
 
-                <CampoForm :place="$i18n.locale=='en'? 'Owner': 'Propietario'" type="text" />
+                <CampoForm v-model="owner" :place="$i18n.locale=='en'? 'Owner': 'Propietario'" type="text" />
 
-                <CampoForm place="Cuit" type="number" :required="true" />
+                <CampoForm v-model="cuit" place="Cuit" type="number" :required="true" :error="msg_error.cuit" />
 
-                <CampoForm :place="$i18n.locale=='en'? 'Email': 'Correo'" type="email" :required="true" />
+                <CampoForm v-model="email" :place="$i18n.locale=='en'? 'Email': 'Correo'" type="email" :required="true" :error="msg_error.email" />
 
-                <CampoForm :place="$i18n.locale=='en'? 'Phone': 'Teléfono'" type="number" />
+                <CampoForm v-model="phone" :place="$i18n.locale=='en'? 'Phone': 'Teléfono'" type="number" />
 
-                <CampoForm :place="$i18n.locale=='en'? 'Tax condition': 'Condición Fiscal'" type="text" :required="true" />
+                <!-- <CampoForm :place="$i18n.locale=='en'? 'Tax condition': 'Condición Fiscal'" type="text" :required="true" /> -->
+                <div class="mb-4">
+                    <div class="select w-100" style="position: relative">
+                        <select class="w-100 mb-4" v-model="selectTaxCondition" >
+                            <option v-for="condition in taxCondition" :key="condition.id" :value="condition.id">{{condition.name}}</option>
+                        </select>
+                        <span class="required">*</span>
+                    </div>
+                    <p v-show="msg_error.taxCondition" class="msg-error">{{msg_error.taxCondition}}</p>
 
-                <CampoForm :place="$i18n.locale=='en'? 'Direction': 'Dirección'" type="text" />
+                </div>
 
-                <CampoForm :place="$i18n.locale=='en'? 'Location': 'Localidad'" type="text" :required="true" />
+                <CampoForm v-model="direction" :place="$i18n.locale=='en'? 'Direction': 'Dirección'" type="text" />
 
-                <CampoForm :place="$i18n.locale=='en'? 'Province': 'Provincia'" type="text" :required="true" />
+                <CampoForm v-model="location" :place="$i18n.locale=='en'? 'Location': 'Localidad'" type="text" :required="true" :error="msg_error.location" />
 
-                <CampoForm :place="$i18n.locale=='en'? 'Country': 'País'" type="text" :required="true" />
+                <CampoForm v-model="province" :place="$i18n.locale=='en'? 'Province': 'Provincia'" type="text" :required="true" :error="msg_error.province" />
+
+                <CampoForm v-model="country" :place="$i18n.locale=='en'? 'Country': 'País'" type="text" :required="true" :error="msg_error.country" />
 
                 <div class="field is-grouped is-justify-content-space-between">
                     <button type="button" class="button has-background-danger has-text-weight-semibold has-text-white cancel">{{$t('personalForm.cancel')}}</button>
-                    <button type="button" class="button btn-crenein accept">{{$t('personalForm.guardar')}}</button>
+                    <button type="button" class="button btn-crenein accept" @click="register">{{$t('personalForm.guardar')}}</button>
                 </div>
 
             </form>
@@ -42,6 +52,9 @@
 <script>
 import CampoForm from '../../components/CampoForm.vue'
 import store from '@/store'
+import FetchMe from '../../helper/FetchMe'
+import { ref } from '@vue/reactivity'
+import isEmpty from '../../helper/FieldIsEmpty'
 
 export default {
     components: {
@@ -50,10 +63,103 @@ export default {
 
     created(){
         store.commit("setCreatingCompany",true)
+        FetchMe()
     },
 
     setup() {
+        const nameFantasy = ref('')
+        const bussinesName = ref('')
+        const owner = ref('')
+        const cuit = ref('')
+        const email = ref('')
+        const phone = ref('')
+        const direction = ref('')
+        const location = ref('')
+        const province = ref('')
+        const country = ref('')
+        const taxCondition = [
+            {id: 0 ,name: 'Condicion Fiscal'},
+            {id: 1 ,name: 'IVA Responsable Inscripto', value: 'IVA_Resp_Inscripto'},
+            {id: 2 ,name: 'IVA Sujeto Exento', value: 'IVA_Sujeto_Exento'},
+            {id: 3 ,name: 'Consumidor Final', value: 'Consumidor_Final'},
+            {id: 4 ,name: 'Responsable Monotributo', value: 'Resp_Monotributo'},
+            {id: 5 ,name: 'Cliente Exterior', value: 'Cliente_Exterior'},
+        ]
+        const selectTaxCondition = ref(0)
+        const msg_error = ref({nameFantasy: '', bussinesName: '', cuit: '', email: '', taxCondition: '',
+            location: '', province: '', country: ''
+        })
 
+        /**
+         * 
+         * Setea los valores de los mensajes de error a vacio
+         * 
+         */
+        const resetErrorMessage = () => {
+            for (let i in msg_error.value) {
+                msg_error.value[i] = ''
+            }
+        }
+
+        const register = () => {
+            resetErrorMessage()
+
+            // Sacar luego
+            console.log(nameFantasy.value)
+            console.log(bussinesName.value)
+            console.log(owner.value)
+            console.log(cuit.value)
+            console.log(email.value)
+            console.log(phone.value)
+            console.log(direction.value)
+            console.log(location.value)
+            console.log(province.value)
+            console.log(country.value)
+            console.log(selectTaxCondition.value)
+
+            isValid()
+        }
+
+        const isValid = () => {
+            fieldsIsEmpty()
+            
+            // sacar luego
+            for (let i in msg_error.value) {
+                console.log(msg_error.value[i])
+            }
+
+            for (let i in msg_error.value) {
+                if (msg_error.value[i] != '') return console.log('invalid')
+            }
+            return console.log('valid')
+        }
+
+        /**
+         * 
+         * Verifica si los campos requeridos estan vacios
+         * 
+         */
+        const fieldsIsEmpty = () => {
+            isEmpty(nameFantasy.value, msg_error.value ,'nameFantasy')
+            isEmpty(bussinesName.value, msg_error.value , 'bussinesName')
+            isEmpty(cuit.value, msg_error.value , 'cuit')
+            isEmpty(email.value, msg_error.value , 'email')
+            isEmpty(location.value, msg_error.value , 'location')
+            isEmpty(province.value, msg_error.value , 'province')
+            isEmpty(country.value, msg_error.value , 'country')
+
+            if (selectTaxCondition.value == 0) {
+                msg_error.value.taxCondition = 'Este campo no puede estar vacio'
+            }
+        }
+
+
+        return {
+            nameFantasy, bussinesName, owner, cuit, email, phone, direction, 
+            location, province, country, taxCondition, selectTaxCondition, msg_error,
+
+            register
+        }
     }
 }
 </script>
@@ -69,6 +175,19 @@ export default {
 }
 .cancel {
     width: 28%;
+}
+
+
+.required{
+  color: red;
+  position: absolute;
+  left: -6px;
+  top: -9px;
+}
+
+.msg-error{
+  font-size: .7em;
+  color: red
 }
 
 @media (min-width: 1024px) {

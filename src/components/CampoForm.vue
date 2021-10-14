@@ -7,7 +7,7 @@
         :class="{'active': modelValue}" v-model="modelValue"
       >
       <label alt="Label" :data-placeholder="place" style="color: grey"></label>
-      <span v-show="required" class="a">*</span>
+      <span v-show="required" class="required">*</span>
     </div>
     <p v-show="error != '' && error" class="msg-error">{{error}}</p>
   </div>
@@ -22,7 +22,7 @@ export default {
 </script>
 
 <style scoped>
-.a{
+.required{
   color: red;
   position: absolute;
   left: -6px;
