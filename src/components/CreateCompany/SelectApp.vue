@@ -18,14 +18,15 @@
         <div v-if="appSelect" class="description-app">
             <p>{{appSelect.observation}}</p>
         </div>
-        <SelectLicence v-if="appSelect" :app="appSelect" />
+        <!-- <SelectLicence v-if="appSelect" :app="appSelect" /> -->
+        <SelectLicence2 v-if="appSelect" :app="appSelect" />
     </div>
 </template>
 
 <script>
 import { ref } from '@vue/reactivity'
 import { onMounted, watchEffect } from '@vue/runtime-core'
-import SelectLicence from './SelectLicence.vue'
+import SelectLicence2 from './SelectLicence2.vue'
 import CarrouselSection from './CarrouselSection.vue'
 import Arrow from './Arrow.vue'
 
@@ -33,7 +34,7 @@ export default {
     name: 'SelectApp',
     components: {
         CarrouselSection,
-        SelectLicence,
+        SelectLicence2,
         Arrow,
     },
     props: ['apps'],
@@ -101,7 +102,8 @@ export default {
 
 .carrousel .conteiner-app {
     /* width: 300%; */
-    width: 500%;
+    /* width: 500%; */
+    width: 100%;
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
@@ -114,6 +116,9 @@ export default {
 .carrousel .img-app {
     width: calc(33.3% / 1);
     padding: 0.3em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .carrousel .img-app:hover {

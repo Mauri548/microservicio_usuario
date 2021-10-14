@@ -132,22 +132,29 @@ export default {
         watchEffect(() => {
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */ `
-            query {
-                licenses {
-                    id,
-                    name,
-                    price_arg,
-                    price_usd,
-                    app {
+            query{
+                licenses(first: 999, page: 1) {
+                    data {
                         id,
-                        name
+                        name,
+                        price_arg,
+                        price_usd,
+                        app {
+                            id,
+                            name
+                        }
+                    }
+                    paginatorInfo {
+                        count, currentPage, hasMorePages, total
                     }
                 }
-            }
-            `)
+            }`,
+            {
+                // var
+            })
             .then((data) => {
                 licenses.value = []
-                data.data.licenses.forEach(element => {
+                data.data.licenses.data.forEach(element => {
                     licenses.value.push({id:element.id, name:element.name, price_arg:element.price_arg, 
                         price_usd:element.price_usd, app: {id:element.app.id, name: element.app.name}, activo: false, modalDelete: false})
                 })
@@ -165,8 +172,7 @@ export default {
                     id
                     name
                 }
-            }
-            `)
+            }`)
             .then((data) => {
                 if (data.data.appsVisible) selectedApp.value = data.data.appsVisible[0].id
                 data.data.appsVisible.forEach(element => {

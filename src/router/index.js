@@ -59,6 +59,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "CreateCompany" */ '../views/CreateCompany/CreateCompany.vue')
       },
       {
+        path: '/CreateFinishedCompany',
+        name: 'CreateFinishedCompany',
+        component: () => import(/* webpackChunkName: "CreateFinishedCompany" */ '../views/CreateCompany/CreateCompanyFinish.vue')
+      },
+      {
         path: '/UserDashboard',
         name: 'UserDashboard',
         component: () => import(/* webpackChunkName: "UserDashboard" */ '../views/Users/UserDashboard.vue')
@@ -106,7 +111,24 @@ const routes = [
       {
         path: '/LicencesDashboard',
         name: 'LicencesDashboard',
-        component: () => import(/* webpackCunkName: "LicencesDashboard" */ '../views/licences/LicenceDashboard.vue')
+        component: () => import(/* webpackChunkName: "LicencesDashboard" */ '../views/licences/LicenceDashboard.vue')
+      },
+      {
+        path: '/AppSuscription',
+        name: 'AppSuscription',
+        component: () => import(/* webpackChunkName: "AppSuscription" */ '../views/Apps/AppSuscription.vue')
+      }
+      ,
+      {
+        path: '/InvitationsDashboard',
+        name: 'InvitationsDashboard',
+        component: () => import(/* webpackCunkName: "LicencesDashboard" */ '../views/Invitations/InvitationsDashboard.vue')
+      }
+      ,
+      {
+        path: '/SubscriptionsDashboard',
+        name: 'SubscriptionsDashboard',
+        component: () => import(/* webpackCunkName: "LicencesDashboard" */ '../views/Subscripciones/SubscriptionsDashboard.vue')
       }
     ]
   },
