@@ -80,7 +80,8 @@ export default {
             watchEffect(() => {
                 client.rawRequest(/* GraphQL */ `
                 query {
-                    invitations {
+                    invitations(first: 999, page: 1)  {
+                       data{
                         id
                         name
                         email
@@ -95,6 +96,17 @@ export default {
                         name
                         }
                     }
+                    paginatorInfo{
+                        count
+                        currentPage
+                        firstItem
+                        hasMorePages
+                        lastItem
+                        lastPage
+                        perPage
+                        total
+                        }
+                    }
                 }`,
                 {
                     /* page: parseInt(route.params.page),
@@ -105,7 +117,7 @@ export default {
                 })
                 .then((data) => {
                     invitaciones.value = []
-                    data.data.invitations.forEach(element => {
+                    data.data.invitations.data.forEach(element => {
                         invitaciones.value.push({id:element.id, nombre: element.name, email:element.email ,activo: false, modalDelete: false})
                       /*   console.log(typeof element.logo) */
                     })

@@ -16,15 +16,20 @@
             <Board :datas="users" :titles="titles" >
                 <tr class="has-text-centered" v-for="data in users" :key="data.id">
                     <th @click="actionModal(data)">{{data.id}}</th>
-                    <td @click="actionModal(data)">{{data.avatar}}</td>
+                <!--     <td @click="actionModal(data)">{{data.avatar}}</td> -->
                     <td @click="actionModal(data)">{{data.nombre}}</td>
                     <td @click="actionModal(data)">{{data.email}}</td>
                     <!-- <td @click="actionModal(data)">{{data.created}}</td> -->
-                    <td @click="actionModal(data)">{{data.state}}</td>
+
+                  <!--   Preguntar sobre el estado de los usuarios porq no figura en la query -->
+                   <!--  <td @click="actionModal(data)">{{data.state}}</td> -->
                     <Modal :data="data" :buttonDefault="false" @onCloseModal="actionModal" 
                      @onOpenModalDelete="actionModalDelete" >
-                        <button @click="ChangeState(data)" v-if="data.state == 'Habilitado'" class="button btn-crenein w-100 my-1">{{$t('user.deshabilitar')}}</button>
-                        <button @click="ChangeState(data)" v-else class="button btn-crenein w-100 my-1">{{$t('user.habilitar')}}</button>
+<!--                    <button @click="ChangeState(data)" v-if="data.state == 'Habilitado'" class="button btn-crenein w-100 my-1">{{$t('user.deshabilitar')}}</button>
+                        <button @click="ChangeState(data)" v-else class="button btn-crenein w-100 my-1">{{$t('user.habilitar')}}</button> -->
+
+
+
                     </Modal>
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
@@ -144,10 +149,10 @@ export default {
         }
         watchEffect(()=>{ // utilizamos watcheffect para detectar que valor tiene el atributo locale del objeto i18n al momento de estar en la pagina o al momento de cambiar el valor a traves del boton del lenguaje
             if(i18n.global.locale == 'en'){
-                titles.value = ['Avatar','Full name','Email','State']
+                titles.value = ['Full name','Email']
             }
             if(i18n.global.locale == 'es'){
-                titles.value = ['Avatar','Nombre completo','Correo','Estado']
+                titles.value = ['Nombre completo','Correo']
             }
         })
 
