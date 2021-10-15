@@ -13,8 +13,8 @@
             </div>
         </div>
         <div class="body-tablero px-4">
-            <Board :datas="datas" :titles="titles" >
-                <tr class="has-text-centered" v-for="data in datas" :key="data.id">
+            <Board :datas="subscripciones" :titles="titles" >
+                <tr class="has-text-centered" v-for="data in subscripciones" :key="data.id">
                     <th @click="actionModal(data)">{{data.id}}</th>
                     <td @click="actionModal(data)">{{data.nombreApp}}</td>
                     <td @click="actionModal(data)">{{data.licence}}</td>
@@ -67,9 +67,9 @@ export default {
 
     setup () {
         const datas = ref([
-            {id: 1,  nombreApp: 'Geston', licence: 'Hasta 100 clientes', companyName: 'Zunet', activo: false},
+/*             {id: 1,  nombreApp: 'Geston', licence: 'Hasta 100 clientes', companyName: 'Zunet', activo: false},
             {id: 2,  nombreApp: 'PuWIc', licence: 'Hasta 100 puntos wifi', companyName: 'Nubitec', activo: false},
-            {id: 3,  nombreApp: 'ISPBbrain', licence: 'Hasta 1mil conexiones', companyName: 'Xnet', activo: false},
+            {id: 3,  nombreApp: 'ISPBbrain', licence: 'Hasta 1mil conexiones', companyName: 'Xnet', activo: false}, */
         ])
       
 
@@ -114,7 +114,7 @@ export default {
                 })
                 .then((data) => {
                     subscripciones.value = []
-                    data.data.subscriptions.forEach(element => {
+                    data.data.subscriptions.data.forEach(element => {
                         subscripciones.value.push({id:element.id, nombreApp: element.app.name, licence:element.license.name ,companyName:element.company.name,activo: false, modalDelete: false})
                       /*   console.log(typeof element.logo) */
                     })
