@@ -142,7 +142,9 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
         },
         appSuscription: {
             title: "Elige la app que quieras",
-            agregar:'Agregar'
+            agregar:'Agregar',
+            modalCarga:'Se realizo con exito la subscripcion.',
+            modalEdicion:'Se edito con exito la subscripcion.',
         }
 
     },
@@ -281,7 +283,10 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
         },
         appSuscription: {
             title: "Choose the app you want",
-            agregar:'Add'
+            agregar:'Add',
+            modalCarga:'The subscription was successful.',
+            modalEdicion:'The subscription was successfully edited.',
+
         }
     }
 }

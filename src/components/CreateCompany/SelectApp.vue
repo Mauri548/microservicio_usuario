@@ -77,6 +77,7 @@ export default {
  
         const selectApp = (e) => {
             appSelect.value = e
+           /*  console.log(appSelect.value) */
         }
 
         return {

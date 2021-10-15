@@ -25,13 +25,17 @@
 			<h1 class="card-title has-text-white has-text-weight-semibold">{{license.name}}</h1>
 			<span v-show="coinSelect.name == 'ARS'" class="card-price has-text-white">${{license.price_arg}}</span>
 			<span v-show="coinSelect.name == 'USD'" class="card-price has-text-white">${{license.price_usd}}</span>
-			<button class="button has-text-weight-semibold">I want</button>
+			<button @click="crearSuscripcion(license)" class="button has-text-weight-semibold">I want</button>
 		</div>
   </div>
 </template>
 
 <script>
 import { ref } from '@vue/reactivity'
+import {GraphQLClient} from 'graphql-request';
+import store from '@/store';
+import { useRouter } from 'vue-router';
+
 export default {
   	name:"SelectLicence",
 
@@ -41,8 +45,13 @@ export default {
 		const coins = ref([
             {id: 1, name: 'ARS'},{id:2, name: 'USD'}
         ])
+		const endpoint = store.state.url_backend
+		const use_app_id = ref("")
+		const lic_license_id =  ref("")
+		const use_company_id = ref("")
         const coinActivo = ref(false)
         const coinSelect = ref({id: 1, name: 'ARS'})
+		const router = useRouter()
 
 		// Abre el desplegable de monedas
         const openSelectCoin = () => {
@@ -56,7 +65,60 @@ export default {
             openSelectCoin()
         }
 
-		return {coins, coinActivo, coinSelect, changeCoin, openSelectCoin}
+		const agarrar = (dato) => {
+			console.log(props.app.id)
+			console.log(dato)
+		}
+
+		const crearSuscripcion = (dato) => {
+
+			use_app_id.value = props.app.id
+			lic_license_id.value = dato.id
+			use_company_id.value = 1
+			console.log(use_company_id.value)
+			console.log(use_app_id.value)
+			console.log(lic_license_id.value)
+
+			const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            // Estructura FetchQL(url, query, variable, opcions)
+            client.rawRequest(/* GraphQL */ `
+            mutation($use_company_id:ID!, $use_app_id:ID!,$lic_license_id:ID!){
+              		createsUse_subscription (input:{
+                    use_company_id: $use_company_id,
+                    use_app_id: $use_app_id,
+                    lic_license_id: $lic_license_id,
+            
+                    }){
+                    	id
+                        use_company_id
+						use_app_id
+						lic_license_id   
+                           
+                    }
+            }`,
+            {
+                use_company_id: use_company_id.value,       
+                use_app_id: use_app_id.value,
+                lic_license_id: lic_license_id.value,
+        
+            },
+            {
+               /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+            })
+            .then((data) => {
+				console.log("Paso la carga de suscripcion")
+                router.push({name: 'SubscriptionsDashboard'}) 
+                let accion = "cargarSus"
+                store.commit('verificar_carga',accion) 
+            }).catch(error => {
+                console.log(error.response);
+            })
+		}
+
+
+
+
+		return {crearSuscripcion,use_company_id ,lic_license_id,use_app_id ,agarrar,coins, coinActivo, coinSelect, changeCoin, openSelectCoin}
   	}
 
 }

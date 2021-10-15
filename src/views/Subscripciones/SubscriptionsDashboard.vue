@@ -36,6 +36,12 @@
 
         <Pagination/>
     </div>
+       <!-- Modal de carga exitosa -->
+    <ModalAlert :activador="carga_exitosa">
+       <!--  Se cargo con exito la App -->
+       <p v-if="comprobar">{{$t('appSuscription.modalCarga')}}</p>
+       <p v-if="comprobar_edi">{{$t('appSuscription.modalEdicion')}}</p>
+    </ModalAlert>
 </template>
 
 <script>
@@ -44,12 +50,13 @@ import HeadBoard from '../../components/Board/HeadBoard.vue'
 import Board from '../../components/Board/Board.vue'
 import Pagination from '../../components/Board/Pagination.vue'
 import Modal from '../../components/Modal.vue'
+import ModalAlert from '../../components/Modals/ModalsAlert.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
 import { ref } from '@vue/reactivity'
 import store from '@/store' 
 import {  watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js' 
-import {GraphQLClient, request as fetchGQL} from 'graphql-request';
+import {GraphQLClient} from 'graphql-request';
 
 
 export default {
@@ -60,10 +67,13 @@ export default {
         Pagination,
         Modal,
         ActionModal,
+        ModalAlert,
     },
- /*    created(){
-        traerSubscripciones()
-    }, */
+    created(){
+        this.comprobar_carga()
+        this.comprobar_edicion()
+        this.traerSubscripciones()
+    },
 
     setup () {
         const datas = ref([
@@ -72,7 +82,9 @@ export default {
             {id: 3,  nombreApp: 'ISPBbrain', licence: 'Hasta 1mil conexiones', companyName: 'Xnet', activo: false}, */
         ])
       
-
+        const carga_exitosa = ref(false)
+        const comprobar = store.state.carga_exitosa
+        const comprobar_edi = store.state.edicion_exitosa
         const titles = ref([])
         const endpoint = store.state.url_backend
         const subscripciones = ref([])
@@ -143,7 +155,7 @@ export default {
         }
         watchEffect(()=>{ // utilizamos watcheffect para detectar que valor tiene el atributo locale del objeto i18n al momento de estar en la pagina o al momento de cambiar el valor a traves del boton del lenguaje
             if(i18n.global.locale == 'en'){
-                titles.value = ['App','License','Company']
+                titles.value = ['App','Licence','Company']
             }
             if(i18n.global.locale == 'es'){
                 titles.value = ['App','Licencia','Empresa']
@@ -155,7 +167,31 @@ export default {
             data.state == 'Habilitado'? data.state = 'Deshabilitado' : data.state = 'Habilitado'
         }
 
+        const comprobar_carga = () => {
+            if(comprobar==true){
+                setTimeout(() => carga_exitosa.value = true ,500)
+
+                let accion = "cargarSus"
+                store.commit('verificar_carga',accion)
+            }
+            setTimeout(() => carga_exitosa.value = false ,3000)
+        }
+        const comprobar_edicion = () => {
+            if(comprobar_edi==true){
+                setTimeout(() => carga_exitosa.value = true ,500)
+
+                let accion = "edicionSus"
+                store.commit('verificar_carga',accion)
+            }
+            setTimeout(() => carga_exitosa.value = false ,3000)
+        }
+
         return {
+            comprobar_carga,
+            comprobar_edicion ,
+            carga_exitosa ,
+            comprobar ,
+            comprobar_edi ,
             traerSubscripciones ,
             endpoint,
             subscripciones,
