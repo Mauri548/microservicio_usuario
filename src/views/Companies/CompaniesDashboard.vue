@@ -14,8 +14,8 @@
             </div>
         </div>
         <div class="body-tablero px-4">
-            <Board :datas="datas" :titles="titles" >
-                <tr class="has-text-centered" v-for="data in datas" :key="data.id">
+            <Board :datas="companies" :titles="titles" >
+                <tr class="has-text-centered" v-for="data in companies" :key="data.id">
                     <th @click="actionModal(data)">{{data.id}}</th>
                     <td @click="actionModal(data)">{{data.nameFantasy}}</td>
                     <td @click="actionModal(data)">{{data.businessName}}</td>
@@ -90,7 +90,7 @@ export default {
     created(){
         this.comprobar_carga()
         this.comprobar_edicion()
-     /*    this.traerCompanies() */
+        this.traerCompanies()
     },
 
     setup() {
