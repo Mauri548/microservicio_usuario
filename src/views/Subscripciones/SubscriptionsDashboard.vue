@@ -96,24 +96,35 @@ export default {
             watchEffect(() => {
                 client.rawRequest(/* GraphQL */ `
                 query {
-                    subscriptions(first: 999, page: 1){
-                         data {
-                            id
-                            license {
-                                id
-                                name
-                            }
-                            company {
-                                id
-                                business_name
-                            }
-                            app {
-                                id
-                                name
-                            }
-                        }
+                  subscriptions(first: 100, page: 1) {
                         paginatorInfo {
-                            count, currentPage, hasMorePages, total
+                        count
+                        currentPage
+                        firstItem
+                        hasMorePages
+                        lastItem
+                        lastPage
+                        perPage
+                        total
+                        }
+                        data {
+                        id
+                        use_app_id
+                        use_company_id
+                        lic_license_id
+                        company {
+                            id
+                            name_fantasy
+                        }
+                        app {
+                            id
+                            name
+                        }
+                        license {
+                            id
+                            name
+                            price_arg
+                        }
                         }
                     }
                 }`,
@@ -127,7 +138,7 @@ export default {
                 .then((data) => {
                     subscripciones.value = []
                     data.data.subscriptions.data.forEach(element => {
-                        subscripciones.value.push({id:element.id, nombreApp: element.app.name, licence:element.license.name ,companyName:element.company.name,activo: false, modalDelete: false})
+                        subscripciones.value.push({id:element.id, nombreApp: element.app.name, licence:element.license.name ,companyName:element.company.name_fantasy,activo: false, modalDelete: false})
                       /*   console.log(typeof element.logo) */
                     })
 
