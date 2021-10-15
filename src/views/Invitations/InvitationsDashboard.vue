@@ -13,8 +13,8 @@
             </div>
         </div>
         <div class="body-tablero px-4">
-            <Board :datas="datas" :titles="titles" >
-                <tr class="has-text-centered" v-for="data in datas" :key="data.id">
+            <Board :datas="invitaciones" :titles="titles" >
+                <tr class="has-text-centered" v-for="data in invitaciones" :key="data.id">
                     <th @click="actionModal(data)">{{data.id}}</th>
                     <td @click="actionModal(data)">{{data.fullName}}</td>
                     <td @click="actionModal(data)">{{data.email}}</td>
@@ -55,9 +55,9 @@ export default {
         Modal,
         ActionModal,
     },
- /*    created(){
-        traerInvitaciones()
-    }, */
+    created(){
+        this.traerInvitaciones()
+    },
 
     setup () {
         const datas = ref([
