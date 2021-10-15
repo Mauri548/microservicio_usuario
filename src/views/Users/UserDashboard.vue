@@ -13,13 +13,13 @@
             </div>
         </div>
         <div class="body-tablero px-4">
-            <Board :datas="datas" :titles="titles" >
-                <tr class="has-text-centered" v-for="data in datas" :key="data.id">
+            <Board :datas="users" :titles="titles" >
+                <tr class="has-text-centered" v-for="data in users" :key="data.id">
                     <th @click="actionModal(data)">{{data.id}}</th>
                     <td @click="actionModal(data)">{{data.avatar}}</td>
-                    <td @click="actionModal(data)">{{data.fullName}}</td>
+                    <td @click="actionModal(data)">{{data.nombre}}</td>
                     <td @click="actionModal(data)">{{data.email}}</td>
-                    <td @click="actionModal(data)">{{data.created}}</td>
+                    <!-- <td @click="actionModal(data)">{{data.created}}</td> -->
                     <td @click="actionModal(data)">{{data.state}}</td>
                     <Modal :data="data" :buttonDefault="false" @onCloseModal="actionModal" 
                      @onOpenModalDelete="actionModalDelete" >
@@ -58,17 +58,17 @@ export default {
         Modal,
         ActionModal,
     },
- /*    created(){
+    created(){
         this.traerUsers()
-    }, */
+    },
 
     setup () {
         const datas = ref([
-            {id: 1, avatar: 'foto', fullName: 'Mauricio Ferreyra', email: 'mauricioferreyra548@gmail.com', created: '24/07/2021', state: 'Habilitado', activo: false},
+/*           {id: 1, avatar: 'foto', fullName: 'Mauricio Ferreyra', email: 'mauricioferreyra548@gmail.com', created: '24/07/2021', state: 'Habilitado', activo: false},
             {id: 2, avatar: 'foto', fullName: 'Luis Ferreyra', email: 'luis548@gmail.com', created: '24/07/2021', state: 'Habilitado', activo: false},
             {id: 3, avatar: 'foto', fullName: 'Ema Ferreyra', email: 'emaCorreo@gmail.com', created: '24/07/2021', state: 'Deshabilitado', activo: false},
             {id: 4, avatar: 'foto', fullName: 'Glo Ferreyra', email: 'gloquita@gmail.com', created: '24/07/2021', state: 'Habilitado', activo: false},
-            {id: 5, avatar: 'foto', fullName: 'Leonardo Ferreyra', email: 'loreto@gmail.com', created: '24/07/2021', state: 'Pendiente', activo: false},
+            {id: 5, avatar: 'foto', fullName: 'Leonardo Ferreyra', email: 'loreto@gmail.com', created: '24/07/2021', state: 'Pendiente', activo: false}, */
         ])
       
 
@@ -83,26 +83,25 @@ export default {
             watchEffect(() => {
                 client.rawRequest(/* GraphQL */ `
                 query{
-                    users {
-                        id
-                        name
-                        email
-                        avatar
-                        created_at
-                        updated_at
-                        deleted_at
-                        companies {
-                            id
-                            name_fantasy
-                            business_name
-                            deleted_at
-                            created_at
-                            updated_at
-                        }
-                        invitations{
+                    users(first: 999, page: 1) {
+                    paginatorInfo {
+                        count
+                        currentPage
+                        firstItem
+                        hasMorePages
+                        lastItem
+                        lastPage
+                        perPage
+                        total
+                    } 
+                    data {
                             id
                             name
                             email
+                            companies {
+                                id
+                                name_fantasy
+                            }
                         }
                     }
                 }`,
@@ -115,7 +114,8 @@ export default {
                 })
                 .then((data) => {
                     users.value = []
-                    data.data.users.forEach(element => {
+                    console.log(data.data.users.data)
+                    data.data.users.data.forEach(element => {
                         users.value.push({id:element.id, nombre: element.name, avatar: element.avatar, email:element.email ,activo: false, modalDelete: false})
                       /*   console.log(typeof element.logo) */
                     })
@@ -132,22 +132,22 @@ export default {
 
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
-            let aux = datas.value.find(element => element.id == data.id)
+            let aux = users.value.find(element => element.id == data.id)
             aux.activo = !aux.activo
         }
 
         // Activa el valor de modalDelete para abrir el modal de aviso 
         const actionModalDelete = (data) => {
-            let aux = datas.value.find(element => element.id == data)
+            let aux = users.value.find(element => element.id == data)
             aux.activo = false
             aux.modalDelete = !aux.modalDelete
         }
         watchEffect(()=>{ // utilizamos watcheffect para detectar que valor tiene el atributo locale del objeto i18n al momento de estar en la pagina o al momento de cambiar el valor a traves del boton del lenguaje
             if(i18n.global.locale == 'en'){
-                titles.value = ['Avatar','Full name','Email','Created','State']
+                titles.value = ['Avatar','Full name','Email','State']
             }
             if(i18n.global.locale == 'es'){
-                titles.value = ['Avatar','Nombre completo','Correo','Creado','Estado']
+                titles.value = ['Avatar','Nombre completo','Correo','Estado']
             }
         })
 

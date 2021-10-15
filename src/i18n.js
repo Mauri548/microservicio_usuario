@@ -141,7 +141,8 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             buttontext: 'Ir a suscripciones',
         },
         appSuscription: {
-            title: "Elige la app que quieras"
+            title: "Elige la app que quieras",
+            agregar:'Agregar'
         }
 
     },
@@ -279,7 +280,8 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             buttontext: 'Go to subscriptions',
         },
         appSuscription: {
-            title: "Choose the app you want"
+            title: "Choose the app you want",
+            agregar:'Add'
         }
     }
 }

@@ -2,13 +2,13 @@
     <div class="conteiner-tablero mt-2 py-4">
         <div class="head-tablero">
              <!--    Utilizo el atributo locale del objeto i18n para saber en que lenguaje esta seteado el sistema  -->
-                <TitleBoard v-show="$i18n.locale=='es'" title="Invitaciones" />
-                <TitleBoard v-show="$i18n.locale=='en'" title="Invitations" />
+                <TitleBoard v-show="$i18n.locale=='es'" title="Subscripciones" />
+                <TitleBoard v-show="$i18n.locale=='en'" title="Subscriptions" />
          
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
-                   <!--  <router-link :to="{name: 'InviteUser'}" class="button btn-crenein">{{$t('inviteUser.invitar')}}</router-link> -->
+                    <router-link :to="{name: 'AppSuscription'}" class="button btn-crenein">{{$t('appSuscription.agregar')}}</router-link>
                 </HeadBoard>             
             </div>
         </div>
@@ -16,12 +16,18 @@
             <Board :datas="datas" :titles="titles" >
                 <tr class="has-text-centered" v-for="data in datas" :key="data.id">
                     <th @click="actionModal(data)">{{data.id}}</th>
-                    <td @click="actionModal(data)">{{data.fullName}}</td>
-                    <td @click="actionModal(data)">{{data.email}}</td>
-                    <td @click="actionModal(data)">{{data.created}}</td>
+                    <td @click="actionModal(data)">{{data.nombreApp}}</td>
+                    <td @click="actionModal(data)">{{data.licence}}</td>
+                    <td @click="actionModal(data)">{{data.companyName}}</td>
            
                     <Modal :data="data" :buttonDefault="false" @onCloseModal="actionModal" 
                      @onOpenModalDelete="actionModalDelete" >
+                         <button  class="button btn-crenein w-100 my-1">
+                            <span class="icon is-small">
+                                <i class="fas fa-pencil-alt"></i>
+                            </span>
+                            <span>{{$t('modal.editar')}}</span>
+                        </button>
                     </Modal>
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
@@ -56,43 +62,46 @@ export default {
         ActionModal,
     },
  /*    created(){
-        traerInvitaciones()
+        traerSubscripciones()
     }, */
 
     setup () {
         const datas = ref([
-            {id: 1,  fullName: 'Mauricio Ferreyra', email: 'mauricioferreyra548@gmail.com', created: '24/07/2021', activo: false},
-            {id: 2,  fullName: 'Luis Ferreyra', email: 'luis548@gmail.com', created: '24/07/2021', activo: false},
-            {id: 3,  fullName: 'Ema Ferreyra', email: 'emaCorreo@gmail.com', created: '24/07/2021', activo: false},
-            {id: 4,  fullName: 'Glo Ferreyra', email: 'gloquita@gmail.com', created: '24/07/2021', activo: false},
-            {id: 5,  fullName: 'Leonardo Ferreyra', email: 'loreto@gmail.com', created: '24/07/2021', activo: false},
+            {id: 1,  nombreApp: 'Geston', licence: 'Hasta 100 clientes', companyName: 'Zunet', activo: false},
+            {id: 2,  nombreApp: 'PuWIc', licence: 'Hasta 100 puntos wifi', companyName: 'Nubitec', activo: false},
+            {id: 3,  nombreApp: 'ISPBbrain', licence: 'Hasta 1mil conexiones', companyName: 'Xnet', activo: false},
         ])
       
 
         const titles = ref([])
         const endpoint = store.state.url_backend
-        const invitaciones = ref([])
-        const users_aux = ref([])
+        const subscripciones = ref([])
+        const subscripciones_aux = ref([])
 
 
-        const traerInvitaciones = () => {
+        const traerSubscripciones = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             watchEffect(() => {
                 client.rawRequest(/* GraphQL */ `
                 query {
-                    invitations {
-                        id
-                        name
-                        email
-                        use_company_id
-                        use_user_id
-                        company{
-                        id
-                        business_name
-                        }
-                        user{
+                    subscriptions(first: 999, page: 1){
+                         data {
                             id
-                        name
+                            license {
+                                id
+                                name
+                            }
+                            company {
+                                id
+                                business_name
+                            }
+                            app {
+                                id
+                                name
+                            }
+                        }
+                        paginatorInfo {
+                            count, currentPage, hasMorePages, total
                         }
                     }
                 }`,
@@ -104,9 +113,9 @@ export default {
                     /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
                 })
                 .then((data) => {
-                    invitaciones.value = []
-                    data.data.invitations.forEach(element => {
-                        invitaciones.value.push({id:element.id, nombre: element.name, email:element.email ,activo: false, modalDelete: false})
+                    subscripciones.value = []
+                    data.data.subscriptions.forEach(element => {
+                        subscripciones.value.push({id:element.id, nombreApp: element.app.name, licence:element.license.name ,companyName:element.company.name,activo: false, modalDelete: false})
                       /*   console.log(typeof element.logo) */
                     })
 
@@ -134,10 +143,10 @@ export default {
         }
         watchEffect(()=>{ // utilizamos watcheffect para detectar que valor tiene el atributo locale del objeto i18n al momento de estar en la pagina o al momento de cambiar el valor a traves del boton del lenguaje
             if(i18n.global.locale == 'en'){
-                titles.value = ['Full name','Email','Sended']
+                titles.value = ['App','License','Company']
             }
             if(i18n.global.locale == 'es'){
-                titles.value = ['Nombre completo','Correo','Enviado']
+                titles.value = ['App','Licencia','Empresa']
             }
         })
 
@@ -147,9 +156,10 @@ export default {
         }
 
         return {
-            traerInvitaciones ,
+            traerSubscripciones ,
             endpoint,
-            users_aux,
+            subscripciones,
+            subscripciones_aux,
             datas,
             titles,
             actionModal,

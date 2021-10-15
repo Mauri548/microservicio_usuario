@@ -141,22 +141,34 @@ export default {
             watchEffect(() => {
                 client.rawRequest(/* GraphQL */ `
                 query{
-                    companies {
-                        id
-                        name_fantasy
-                        business_name
-                        owners
-                        cuit
-                        email
-                        phones
-                        tax_condition
-                        direction	
-                        location	
-                        province
-                        country
-                        deleted_at
-                        created_at
-                        updated_at
+                    companies(first: 999, page: 1) {
+                        data{
+                            id
+                            name_fantasy
+                            business_name
+                            owners
+                            cuit
+                            email
+                            phones
+                            tax_condition
+                            direction	
+                            location	
+                            province
+                            country
+                            deleted_at
+                            created_at
+                            updated_at
+                        }
+         				paginatorInfo {
+                                count
+                                currentPage
+                                firstItem
+                                hasMorePages
+                                lastItem
+                                lastPage
+                                perPage
+                                total
+                        } 
                     }
                 }`,
                 {

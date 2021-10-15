@@ -124,6 +124,12 @@ const routes = [
         name: 'InvitationsDashboard',
         component: () => import(/* webpackCunkName: "LicencesDashboard" */ '../views/Invitations/InvitationsDashboard.vue')
       }
+      ,
+      {
+        path: '/SubscriptionsDashboard',
+        name: 'SubscriptionsDashboard',
+        component: () => import(/* webpackCunkName: "LicencesDashboard" */ '../views/Subscripciones/SubscriptionsDashboard.vue')
+      }
     ]
   },
  
