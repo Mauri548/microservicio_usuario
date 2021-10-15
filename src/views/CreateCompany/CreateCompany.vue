@@ -23,7 +23,8 @@
                 <div class="mb-4">
                     <div class="select w-100" style="position: relative">
                         <select class="w-100 mb-4" v-model="selectTaxCondition" >
-                            <option v-for="condition in taxCondition" :key="condition.id" :value="condition.id">{{condition.name}}</option>
+                            <option disabled selected :value="0">Condición Fiscal</option>
+                            <option v-for="condition in taxCondition" :key="condition.id" :value="condition">{{condition.name}}</option>
                         </select>
                         <span class="required">*</span>
                     </div>
@@ -55,6 +56,10 @@ import store from '@/store'
 import FetchMe from '../../helper/FetchMe'
 import { ref } from '@vue/reactivity'
 import isEmpty from '../../helper/FieldIsEmpty'
+import i18n from '@/i18n.js'
+import { watchEffect } from '@vue/runtime-core'
+import { GraphQLClient } from 'graphql-request'
+
 
 export default {
     components: {
@@ -65,6 +70,7 @@ export default {
         store.commit("setCreatingCompany",true)
         FetchMe()
     },
+
 
     setup() {
         const nameFantasy = ref('')
@@ -77,18 +83,23 @@ export default {
         const location = ref('')
         const province = ref('')
         const country = ref('')
-        const taxCondition = [
-            {id: 0 ,name: 'Condicion Fiscal'},
+        const taxCondition = ref([
+            // {id: 0 ,name: 'Condicion Fiscal'},
             {id: 1 ,name: 'IVA Responsable Inscripto', value: 'IVA_Resp_Inscripto'},
             {id: 2 ,name: 'IVA Sujeto Exento', value: 'IVA_Sujeto_Exento'},
             {id: 3 ,name: 'Consumidor Final', value: 'Consumidor_Final'},
             {id: 4 ,name: 'Responsable Monotributo', value: 'Resp_Monotributo'},
             {id: 5 ,name: 'Cliente Exterior', value: 'Cliente_Exterior'},
-        ]
+        ])
         const selectTaxCondition = ref(0)
         const msg_error = ref({nameFantasy: '', bussinesName: '', cuit: '', email: '', taxCondition: '',
             location: '', province: '', country: ''
         })
+        const endpoint = store.state.url_backend
+
+        // watchEffect(() => {
+        //     taxCondition.value[0].name = i18n.global.locale=='en'? 'Tax Condition' : 'Condición Fiscal'
+        // })
 
         /**
          * 
@@ -115,9 +126,10 @@ export default {
             console.log(location.value)
             console.log(province.value)
             console.log(country.value)
-            console.log(selectTaxCondition.value)
+            console.log(selectTaxCondition.value.value)
+            console.log(store.state.user_id)
 
-            isValid()
+            isValid()? createCompany() : console.log('invalid')
         }
 
         const isValid = () => {
@@ -129,9 +141,9 @@ export default {
             }
 
             for (let i in msg_error.value) {
-                if (msg_error.value[i] != '') return console.log('invalid')
+                if (msg_error.value[i] != '') return false
             }
-            return console.log('valid')
+            return true
         }
 
         /**
@@ -151,6 +163,56 @@ export default {
             if (selectTaxCondition.value == 0) {
                 msg_error.value.taxCondition = 'Este campo no puede estar vacio'
             }
+        }
+
+        const createCompany = () => {
+            const client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */ `
+            mutation($name_fantasy: String!, $business_name: String!, $owners: String, 
+                $cuit: String!, $email: String!, $phones: String, $tax_condition: Tax_condition!,
+                $direction: String, $location: String!, $province: String!, $country: String!, $user_id: ID) {
+                    createsUse_company(input: {
+                        name_fantasy: $name_fantasy,
+                        business_name: $business_name,
+                        owners: $owners,
+                        cuit: $cuit,
+                        email: $email,
+                        phones: $phones,
+                        tax_condition: $tax_condition,
+                        direction: $direction,
+                        location: $location,
+                        province: $province,
+                        country: $country,
+                        user_id: $user_id
+                    }) {
+                        name_fantasy, business_name, owners, cuit, email, phones, tax_condition,
+                        direction, location, province, country, user_id,
+                        users {
+                            id, name, email
+                        }
+                    }
+                }
+            `,
+            {
+                name_fantasy: nameFantasy.value, 
+                business_name: bussinesName.value, 
+                owners: owner.value, 
+                cuit: cuit.value, 
+                email: email.value, 
+                phones: phone.value, 
+                tax_condition: selectTaxCondition.value.value,
+                direction: direction.value, 
+                location: location.value,
+                province: province.value, 
+                country: country.value, 
+                user_id: store.state.user_id
+            },
+            {
+                authorization: `Bearer ${localStorage.getItem('user-token')}`
+            })
+            .then((data) => {
+                console.log(data)
+            })
         }
 
 

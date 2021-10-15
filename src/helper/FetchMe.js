@@ -19,5 +19,6 @@ export default function FetchMe() {
     )
     .then((data) => {
         console.log(data)
+        store.commit('setUserId', data.data.me.id)
     })
 }

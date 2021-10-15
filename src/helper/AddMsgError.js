@@ -6,7 +6,6 @@
  * 
  */
 const addMsgError = (objc, key) => {
-    console.log(objc)
     objc[key] = 'Este campo no puede estar vacio'
 }
 
