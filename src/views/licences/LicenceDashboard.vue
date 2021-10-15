@@ -165,19 +165,28 @@ export default {
 
         // Query para traer las apps
         const fetchApps = () => {
+            apps.value = []
             const cliente = new GraphQLClient(endpoint)
             cliente.rawRequest(/* GraphQL */ `
             query {
-                appsVisible {
-                    id
-                    name
+                  appsVisible(first: 999, page: 1) {
+                    data{
+                        id
+                        name
+                    }
+                    paginatorInfo 
+                    {
+                        count, currentPage, hasMorePages, total
+                    }
                 }
             }`)
             .then((data) => {
-                if (data.data.appsVisible) selectedApp.value = data.data.appsVisible[0].id
-                data.data.appsVisible.forEach(element => {
+                if (data.data.appsVisible.data) selectedApp.value = data.data.appsVisible.data[0].id
+                data.data.appsVisible.data.forEach(element => {
                     apps.value.push({id: element.id, name: element.name})
                 })
+
+
             })
             .catch(error => console.log(error))
         }
