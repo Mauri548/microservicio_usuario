@@ -56,9 +56,9 @@ import store from '@/store'
 import FetchMe from '../../helper/FetchMe'
 import { ref } from '@vue/reactivity'
 import isEmpty from '../../helper/FieldIsEmpty'
-import i18n from '@/i18n.js'
-import { watchEffect } from '@vue/runtime-core'
 import { GraphQLClient } from 'graphql-request'
+import { useRouter } from 'vue-router'
+import emailValidate from '../../helper/EmailValidate'
 
 
 export default {
@@ -84,7 +84,6 @@ export default {
         const province = ref('')
         const country = ref('')
         const taxCondition = ref([
-            // {id: 0 ,name: 'Condicion Fiscal'},
             {id: 1 ,name: 'IVA Responsable Inscripto', value: 'IVA_Resp_Inscripto'},
             {id: 2 ,name: 'IVA Sujeto Exento', value: 'IVA_Sujeto_Exento'},
             {id: 3 ,name: 'Consumidor Final', value: 'Consumidor_Final'},
@@ -96,10 +95,7 @@ export default {
             location: '', province: '', country: ''
         })
         const endpoint = store.state.url_backend
-
-        // watchEffect(() => {
-        //     taxCondition.value[0].name = i18n.global.locale=='en'? 'Tax Condition' : 'Condición Fiscal'
-        // })
+        const router = useRouter()
 
         /**
          * 
@@ -115,30 +111,13 @@ export default {
         const register = () => {
             resetErrorMessage()
 
-            // Sacar luego
-            console.log(nameFantasy.value)
-            console.log(bussinesName.value)
-            console.log(owner.value)
-            console.log(cuit.value)
-            console.log(email.value)
-            console.log(phone.value)
-            console.log(direction.value)
-            console.log(location.value)
-            console.log(province.value)
-            console.log(country.value)
-            console.log(selectTaxCondition.value.value)
-            console.log(store.state.user_id)
-
-            isValid()? createCompany() : console.log('invalid')
+            if (isValid()) {
+                createCompany()
+            }
         }
 
         const isValid = () => {
             fieldsIsEmpty()
-            
-            // sacar luego
-            for (let i in msg_error.value) {
-                console.log(msg_error.value[i])
-            }
 
             for (let i in msg_error.value) {
                 if (msg_error.value[i] != '') return false
@@ -155,7 +134,11 @@ export default {
             isEmpty(nameFantasy.value, msg_error.value ,'nameFantasy')
             isEmpty(bussinesName.value, msg_error.value , 'bussinesName')
             isEmpty(cuit.value, msg_error.value , 'cuit')
-            isEmpty(email.value, msg_error.value , 'email')
+            
+            if (!isEmpty(email.value, msg_error.value , 'email')) {
+                emailValidate(email.value, msg_error.value)
+                
+            }
             isEmpty(location.value, msg_error.value , 'location')
             isEmpty(province.value, msg_error.value , 'province')
             isEmpty(country.value, msg_error.value , 'country')
@@ -211,7 +194,8 @@ export default {
                 authorization: `Bearer ${localStorage.getItem('user-token')}`
             })
             .then((data) => {
-                console.log(data)
+                store.commit("setCreatingCompany",false)
+                router.push({name: 'CreateFinishedCompany'})
             })
         }
 
