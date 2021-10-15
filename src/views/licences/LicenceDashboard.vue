@@ -165,6 +165,7 @@ export default {
 
         // Query para traer las apps
         const fetchApps = () => {
+            apps.value = []
             const cliente = new GraphQLClient(endpoint)
             cliente.rawRequest(/* GraphQL */ `
             query {
@@ -184,6 +185,8 @@ export default {
                 data.data.appsVisible.data.forEach(element => {
                     apps.value.push({id: element.id, name: element.name})
                 })
+
+
             })
             .catch(error => console.log(error))
         }
