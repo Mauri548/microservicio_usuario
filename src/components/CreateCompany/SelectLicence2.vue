@@ -25,7 +25,7 @@
 			<h1 class="card-title has-text-white has-text-weight-semibold">{{license.name}}</h1>
 			<span v-show="coinSelect.name == 'ARS'" class="card-price has-text-white">${{license.price_arg}}</span>
 			<span v-show="coinSelect.name == 'USD'" class="card-price has-text-white">${{license.price_usd}}</span>
-			<button @click="crearSuscripcion(license)" class="button has-text-weight-semibold">I want</button>
+			<button @click="agarrar(license)" class="button has-text-weight-semibold">I want</button>
 		</div>
   </div>
 </template>
@@ -48,10 +48,11 @@ export default {
 		const endpoint = store.state.url_backend
 		const use_app_id = ref("")
 		const lic_license_id =  ref("")
-		const use_company_id = ref("")
+		const use_company_id = ref(localStorage.getItem('id_company_selected'))
         const coinActivo = ref(false)
         const coinSelect = ref({id: 1, name: 'ARS'})
 		const router = useRouter()
+		
 
 		// Abre el desplegable de monedas
         const openSelectCoin = () => {
@@ -66,15 +67,17 @@ export default {
         }
 
 		const agarrar = (dato) => {
-			console.log(props.app.id)
-			console.log(dato)
+			use_app_id.value = props.app.id
+			lic_license_id.value = dato.id
+			console.log(use_company_id.value)
+			console.log(use_app_id.value)
+			console.log(lic_license_id.value)
 		}
 
 		const crearSuscripcion = (dato) => {
 
 			use_app_id.value = props.app.id
 			lic_license_id.value = dato.id
-			use_company_id.value = 1
 			console.log(use_company_id.value)
 			console.log(use_app_id.value)
 			console.log(lic_license_id.value)
