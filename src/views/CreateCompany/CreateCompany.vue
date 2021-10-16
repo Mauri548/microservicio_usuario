@@ -196,6 +196,7 @@ export default {
             .then((data) => {
                 store.commit("setCreatingCompany",false)
                 localStorage.setItem('id_company_selected', data.data.createsUse_company.id)
+                store.commit("setCompanyId", data.data.createsUse_company.id)
                 router.push({name: 'CreateFinishedCompany'})
             })
         }
