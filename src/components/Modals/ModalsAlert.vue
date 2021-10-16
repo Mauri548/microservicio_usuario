@@ -1,5 +1,5 @@
 <template>
-    <transition name="modalAlert" >
+    <transition name="modalAlert">
         <div v-show="activador" class="alert-conteiner">
             <div class="alert-msg has-background-success" :class="{'has-background-danger': !state}" >
                 <slot></slot>
@@ -9,15 +9,28 @@
 </template>
 
 <script>
+import { watchEffect } from '@vue/runtime-core'
 export default {
- props: ['activador','state'],
- props: {
-    activador: Boolean,
-    state: {
-        type: Boolean,
-        default: true,
+//  props: ['activador','state'],
+    props: {
+        activador: Boolean,
+        state: {
+            type: Boolean,
+            default: true,
+        },
+    },
+    emits: ['onChangeActivator'],
+
+    setup(props, {emit}) {
+        watchEffect(() => {
+            if (props.activador == true) {
+                setTimeout(() => {
+                    emit("onChangeActivator", false)
+                },3000)
+            }
+        })
+        
     }
- }
 }
 </script>
 

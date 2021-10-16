@@ -94,11 +94,12 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
         },
         inviteUser:{
             titulo:'¡Solo queda un paso más! invita a los usuarios a tu empresa para que te ayuden a gestionarla.',
-            ingresarMail:'Ingrese el correo electrónico de la persona a la que desea invitar.',
+            ingresarMail:'Ingrese el nombre y correo electrónico de la persona a la que desea invitar.',
             enviar:'Enviar',
             continuar:'Continuar',
             invitar:'Invitar usuario',
-
+            msgInvitationSuccessfuly: 'invitación enviada con exito',
+            msgInvitationFailed: 'No se pudo enviar la invitación. Vuelve a intentarlo más tarde.'
         },
         user:{
             usuarios:'Usuarios',
@@ -236,10 +237,12 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
         },
         inviteUser:{
             titulo:'There is only one more step left! invite users to your company to help you manage it.',
-            ingresarMail:'Enter the email of the person you want to invite.',
+            ingresarMail:'Enter the name and email of the person you want to invite.',
             enviar:'Send',
             continuar:'Continue',
             invitar:'Invite user',
+            msgInvitationSuccessfuly: 'invitation sent successfully',
+            msgInvitationFailed: 'I failed to send the invitation, try again later'
         },
         user:{
             usuarios:'Users',

@@ -25,7 +25,6 @@ import { ref } from '@vue/reactivity'
 import store from '@/store'
 import { watch, watchEffect } from '@vue/runtime-core'
 import { GraphQLClient } from 'graphql-request'
-import FetchMe from '../../helper/FetchMe'
 export default {
     name: 'SelectCompany',
 
@@ -102,9 +101,7 @@ export default {
                     .then( (data) => {
                         let companiesData = data.data.user.companies
                         companiesData.forEach(company => {
-                            console.log(company)
                             if (company.id == localStorage.getItem('id_company_selected')) {
-                                console.log(company)
                                 changeValueCompany(company)
                             }
                             companies.value.push({id: company.id, name_fantasy: company.name_fantasy})
