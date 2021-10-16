@@ -13,8 +13,8 @@
             </div>
         </div>
         <div class="body-tablero px-4">
-            <Board :datas="datas" :titles="titles" >
-                <tr class="has-text-centered" v-for="data in datas" :key="data.id">
+            <Board :datas="invitaciones" :titles="titles" >
+                <tr class="has-text-centered" v-for="data in invitaciones" :key="data.id">
                     <th @click="actionModal(data)">{{data.id}}</th>
                     <td @click="actionModal(data)">{{data.fullName}}</td>
                     <td @click="actionModal(data)">{{data.email}}</td>
@@ -55,9 +55,9 @@ export default {
         Modal,
         ActionModal,
     },
- /*    created(){
-        traerInvitaciones()
-    }, */
+    created(){
+        this.traerInvitaciones()
+    },
 
     setup () {
         const datas = ref([
@@ -80,7 +80,8 @@ export default {
             watchEffect(() => {
                 client.rawRequest(/* GraphQL */ `
                 query {
-                    invitations {
+                    invitations(first: 999, page: 1)  {
+                       data{
                         id
                         name
                         email
@@ -95,6 +96,17 @@ export default {
                         name
                         }
                     }
+                    paginatorInfo{
+                        count
+                        currentPage
+                        firstItem
+                        hasMorePages
+                        lastItem
+                        lastPage
+                        perPage
+                        total
+                        }
+                    }
                 }`,
                 {
                     /* page: parseInt(route.params.page),
@@ -105,7 +117,7 @@ export default {
                 })
                 .then((data) => {
                     invitaciones.value = []
-                    data.data.invitations.forEach(element => {
+                    data.data.invitations.data.forEach(element => {
                         invitaciones.value.push({id:element.id, nombre: element.name, email:element.email ,activo: false, modalDelete: false})
                       /*   console.log(typeof element.logo) */
                     })

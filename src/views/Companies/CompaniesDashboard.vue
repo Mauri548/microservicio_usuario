@@ -14,8 +14,8 @@
             </div>
         </div>
         <div class="body-tablero px-4">
-            <Board :datas="datas" :titles="titles" >
-                <tr class="has-text-centered" v-for="data in datas" :key="data.id">
+            <Board :datas="companies" :titles="titles" >
+                <tr class="has-text-centered" v-for="data in companies" :key="data.id">
                     <th @click="actionModal(data)">{{data.id}}</th>
                     <td @click="actionModal(data)">{{data.nameFantasy}}</td>
                     <td @click="actionModal(data)">{{data.businessName}}</td>
@@ -90,7 +90,7 @@ export default {
     created(){
         this.comprobar_carga()
         this.comprobar_edicion()
-     /*    this.traerCompanies() */
+        this.traerCompanies()
     },
 
     setup() {
@@ -106,7 +106,7 @@ export default {
 
 
         const datas = ref([
-            {id: 1, nameFantasy: 'Internet', businessName: 'Internet', owners: 'Gonzalo Ramitez', cuit: 203688999, email: 'ramirez@gmail.com',
+         /*    {id: 1, nameFantasy: 'Internet', businessName: 'Internet', owners: 'Gonzalo Ramitez', cuit: 203688999, email: 'ramirez@gmail.com',
             phone: 3624624482, taxCondition: 'IVA', direction: 'calle 2', location: 'Resistencia', province: 'Chaco', country: 'Argentina'},
             {id: 2, nameFantasy: 'Internet', businessName: 'Internet', owners: 'Gonzalo Ramitez', cuit: 203688999, email: 'ramirez@gmail.com',
             phone: 3624624482, taxCondition: 'IVA', direction: 'calle 2', location: 'Resistencia', province: 'Chaco', country: 'Argentina'},
@@ -119,7 +119,7 @@ export default {
             {id: 6, nameFantasy: 'Internet', businessName: 'Internet', owners: 'Gonzalo Ramitez', cuit: 203688999, email: 'ramirez@gmail.com',
             phone: 3624624482, taxCondition: 'IVA', direction: 'calle 2', location: 'Resistencia', province: 'Chaco', country: 'Argentina'},
             {id: 7, nameFantasy: 'Internet', businessName: 'Internet', owners: 'Gonzalo Ramitez', cuit: 203688999, email: 'ramirez@gmail.com',
-            phone: 3624624482, taxCondition: 'IVA', direction: 'calle 2', location: 'Resistencia', province: 'Chaco', country: 'Argentina'},
+            phone: 3624624482, taxCondition: 'IVA', direction: 'calle 2', location: 'Resistencia', province: 'Chaco', country: 'Argentina'}, */
         ])
 
         const titles = ref()
@@ -142,7 +142,17 @@ export default {
                 client.rawRequest(/* GraphQL */ `
                 query{
                     companies(first: 999, page: 1) {
-                        data{
+                        paginatorInfo {
+                            count
+                            currentPage
+                            firstItem
+                            hasMorePages
+                            lastItem
+                            lastPage
+                            perPage
+                            total
+                            }
+                            data {
                             id
                             name_fantasy
                             business_name
@@ -151,24 +161,16 @@ export default {
                             email
                             phones
                             tax_condition
-                            direction	
-                            location	
+                            direction
+                            location
                             province
                             country
-                            deleted_at
-                            created_at
-                            updated_at
-                        }
-         				paginatorInfo {
-                                count
-                                currentPage
-                                firstItem
-                                hasMorePages
-                                lastItem
-                                lastPage
-                                perPage
-                                total
-                        } 
+                            users {
+                                id
+                                name
+                                email
+                            }
+                            }
                     }
                 }`,
                 {
@@ -180,9 +182,10 @@ export default {
                 })
                 .then((data) => {
                     companies.value = []
-                    data.data.companies.forEach(element => {
-                        companies.value.push({id:element.id, nombre_fantasia: element.name_fantasy, nombre_negocio: element.business_name,
-                        propietarios:element.owners ,cuit:element.cuit ,email:element.email,phones:element.phones,condicion_fiscal:element.tax_condition ,direccion:element.direction, localidad:element.location,provincia:element.province,pais:element.country,  activo: false, modalDelete: false})
+                    console.log(data.data.companies.data)
+                    data.data.companies.data.forEach(element => {
+                        companies.value.push({id:element.id, nameFantasy: element.name_fantasy, businessName: element.business_name,
+                        owners:element.owners ,cuit:element.cuit ,email:element.email,phone:element.phones,taxCondition:element.tax_condition ,direction:element.direction, location:element.location,province:element.province,country:element.country,  activo: false, modalDelete: false})
                        /*  console.log(typeof element.logo) */
                     })
 
@@ -192,10 +195,7 @@ export default {
             })
         }
 
-
-
-
-
+ 
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
             let aux = datas.value.find(element => element.id == data.id)

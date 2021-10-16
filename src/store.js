@@ -13,6 +13,8 @@ const store = createStore({
             url_backend: 'https://dev_front_gateway_crenein_ms.crenein.com/graphql',
             token: localStorage.getItem('user-token') || '',
             status: '',
+            user_id: null,
+            company_id: null
         }
     },
 
@@ -24,6 +26,14 @@ const store = createStore({
 
         setToken(state, token) {
             state.token = token
+        },
+
+        setCompanyId(state, value) {
+            state.company_id = value
+        },
+
+        setUserId(state, value) {
+            state.user_id = value
         },
 
         setCreatingCompany(state,data) {
@@ -100,6 +110,26 @@ const store = createStore({
             }
 
             if(accion=='cargarPermission'){
+                if(state.carga_exitosa == true){
+                    state.carga_exitosa = false
+                    // console.log("llego el emnsaje con exito",state.carga_exitosa_ciudad)
+                }else{
+                    state.carga_exitosa = true
+                    // console.log("se cargo con exito",state.carga_exitosa_ciudad)
+                }
+            }
+
+            if(accion=='edicionSus'){
+                if(state.edicion_exitosa == true){
+                    state.edicion_exitosa = false
+                    // console.log("llego el emnsaje con exito",state.carga_exitosa_ciudad)
+                }else{
+                    state.edicion_exitosa = true
+                    // console.log("se cargo con exito",state.carga_exitosa_ciudad)
+                }
+            }
+
+            if(accion=='cargarSus'){
                 if(state.carga_exitosa == true){
                     state.carga_exitosa = false
                     // console.log("llego el emnsaje con exito",state.carga_exitosa_ciudad)

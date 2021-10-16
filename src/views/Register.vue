@@ -83,6 +83,8 @@ export default {
         const endpoint = store.state.url_backend
         const router = useRouter()
 
+        localStorage.removeItem('id_company_selected')
+
         const mutationRegister = () => {
             let client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */`
@@ -109,13 +111,13 @@ export default {
                 password_confirmation: password_confirmation.value,
             })
             .then((data) => {
-                console.log(data)
+                // console.log(data)
                 let token = data.data.register.tokens.access_token
                 if (isSuccess(data.data.register.status)) {
                     localStorage.setItem('user-token', token)
                     store.commit('setToken', token)
                     FetchMe()
-                    router.push({name: 'PersonalForm'})
+                    router.push({name: 'CreateCompany'})
                 }
             })
             .catch(error => {
