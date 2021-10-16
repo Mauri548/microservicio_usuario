@@ -16,9 +16,11 @@
                                 <label class="label is-size-4" style="color: #005395;"><i class="fas fa-user-alt"></i></label>
                             </div>
                             <div class="column px-0 ">
-                                <div class="control ">
+                                <!-- <div class="control ">
                                     <input class="input" type="text" placeholder="Email">
-                                </div>
+                                </div> -->
+
+                                <CampoForm place="Email" type="text" v-model="email" :error="msg_error.email" />
                             </div>    
                         </div> 
 
@@ -27,18 +29,17 @@
                                 <label class="label is-size-4" style="color: #005395;"><i class="fas fa-lock"></i></label>
                             </div>
                             <div class="column px-0 ">
-                                <div class="control ">
+                             <!--    <div class="control ">
                                     <input class="input" type="password" placeholder="Password">
-                                </div>
+                                </div> -->
+                                <CampoFormPassword place="Password" v-model="password" :error="msg_error.password" />
                             </div>   
-
-                           
                         </div> 
                         
                     </div>      
 
                     <div class="column has-text-centered">
-                        <button @click="Logear" class="button button2 has-text-white" style="font-weight:5px;">Login</button>
+                        <button @click="validar" class="button button2 has-text-white" type="button" style="font-weight:5px;">Login</button>
                         <p  style="color: #005395">¿Olvidaste tu contraseña?</p>
                     </div>
 
@@ -59,17 +60,115 @@
 <script>
 
 import { useRouter } from 'vue-router'
+import CampoForm from '../components/CampoForm.vue'
+import CampoFormPassword from '../components/CampoFormPass.vue'
+import {ref} from '@vue/reactivity'
+import i18n from '@/i18n.js'
+import FetchMe from '../helper/FetchMe'
+import { GraphQLClient } from 'graphql-request'
+import store from '@/store'
+
 export default {
     name:'Login',
-
+    components:{
+        CampoForm,
+        CampoFormPassword
+    },
     setup(){
+        const email = ref('')
+        const password = ref('')
         const router = useRouter()
+        const msg_error = ref({  email: '', password: '' })
+        const endpoint = store.state.url_backend
+
+        const validar = () => {
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            msg_error.value.email = ''
+            msg_error.value.password = ''
+
+            if (password.value == ""){
+                if(i18n.global.locale == 'en'){
+                    msg_error.value.password= 'Password is required'
+                }
+                if(i18n.global.locale == 'es'){
+                    msg_error.value.password= 'La contraseña es requerido'
+                }
+            } 
+            if (email.value == ""){
+                if(i18n.global.locale == 'en'){
+                    msg_error.value.email= 'Email is required'
+                }
+                if(i18n.global.locale == 'es'){
+                    msg_error.value.email= 'El correo es requerido'
+                }
+            }else if(!re.test(email.value)){
+                console.log(re.test(email.value))
+                if(i18n.global.locale == 'en'){
+                    msg_error.value.email= 'The email must be in a correct format'
+                }
+                if(i18n.global.locale == 'es'){
+                    msg_error.value.email= 'El correo debe tener un formato correcto'
+                }
+            } 
+
+
+            if (msg_error.value.email == '' && msg_error.value.password == '' ){
+                Login()
+            } else {
+                console.log('no paso')
+                // Saltar los errores
+            } 
+
+        }
+
+
+        const Login = () => {
+            let client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */`
+            mutation($username: String!, $password: String!) {
+                login(input: {
+                    username: $username,
+                    password: $password,
+                }) {
+                    access_token
+                    user {
+                        id, name, email
+                    }
+                }
+            }`,
+            {
+                username: email.value,
+                password: password.value,
+            })
+            .then((data) => {
+                // console.log(data)
+                let token = data.data.login.access_token
+                    localStorage.setItem('user-token', token)
+                    store.commit('setToken', token)
+                    FetchMe() 
+                    router.push({name: 'Home'})
+            })
+            .catch(error => {
+                localStorage.removeItem('user-token')
+                console.log(error.response)
+            })
+        }
+
+
+
         const Logear = () => {
+
             router.push({name: 'Home'})
         }
 
         return{
-            Logear
+            Login,
+            validar ,
+            Logear,
+            email,
+            password,
+            msg_error 
+
         }
     }
 }

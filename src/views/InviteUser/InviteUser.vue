@@ -4,7 +4,6 @@
             <div class="column has-text-centered" style="margin:auto;">
                 <h2  style="font-weight:bold; font-size:1.6em">{{$t('inviteUser.titulo')}}</h2>
                 <h3 class="mt-4">{{$t('inviteUser.ingresarMail')}}</h3>
-
                 <form class="mt-4">
                     <div class="conteiner-button">
                         <CampoForm v-model="name" :place="$i18n.locale=='en'? 'Name': 'Nombre'" type="text" :error="msg_error.name" />
@@ -15,6 +14,7 @@
                     <button type="button" class="mt-4 px-6 button btn" @click="goToPermissions">{{$t('inviteUser.continuar')}}</button>
                 </form>
             </div>
+
         </div>
 </template>
 
@@ -97,14 +97,6 @@ export default {
         const goToPermissions = () => {
             router.push({name: 'PermissionsManagement'})
         }
-
-        
-
-        /**
-         * 
-         * 
-         * 
-         */
 
 
         return{ 
