@@ -168,7 +168,7 @@ export default {
                         country: $country,
                         user_id: $user_id
                     }) {
-                        name_fantasy, business_name, owners, cuit, email, phones, tax_condition,
+                        id, name_fantasy, business_name, owners, cuit, email, phones, tax_condition,
                         direction, location, province, country, user_id,
                         users {
                             id, name, email
@@ -195,6 +195,7 @@ export default {
             })
             .then((data) => {
                 store.commit("setCreatingCompany",false)
+                localStorage.setItem('id_company_selected', data.data.createsUse_company.id)
                 router.push({name: 'CreateFinishedCompany'})
             })
         }

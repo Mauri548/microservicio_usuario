@@ -25,12 +25,16 @@ import { ref } from '@vue/reactivity'
 import store from '@/store'
 import { watch, watchEffect } from '@vue/runtime-core'
 import { GraphQLClient } from 'graphql-request'
+import FetchMe from '../../helper/FetchMe'
 export default {
     name: 'SelectCompany',
 
     setup(){
 
         const endpoint = store.state.url_backend
+
+        // Remplaza el 2 por el valor de la id de la compañia de tu usuario
+        // localStorage.setItem('id_company_selected', "2")
 
         const companies = ref([])
         const companyActual = ref({id: localStorage.getItem('id_company_selected'), name_fantasy: ''})
