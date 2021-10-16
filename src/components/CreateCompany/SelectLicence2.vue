@@ -106,7 +106,7 @@ export default {
         
             },
             {
-               /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+             	authorization: `Bearer ${ localStorage.getItem('user_token')}` 
             })
             .then((data) => {
 				console.log("Paso la carga de suscripcion")
