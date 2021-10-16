@@ -25,7 +25,7 @@
 			<h1 class="card-title has-text-white has-text-weight-semibold">{{license.name}}</h1>
 			<span v-show="coinSelect.name == 'ARS'" class="card-price has-text-white">${{license.price_arg}}</span>
 			<span v-show="coinSelect.name == 'USD'" class="card-price has-text-white">${{license.price_usd}}</span>
-			<button @click="agarrar(license)" class="button has-text-weight-semibold">I want</button>
+			<button @click="crearSuscripcion(license)" class="button has-text-weight-semibold">I want</button>
 		</div>
   </div>
 </template>
@@ -67,11 +67,11 @@ export default {
         }
 
 		const agarrar = (dato) => {
-			use_app_id.value = props.app.id
+	/* 		use_app_id.value = props.app.id
 			lic_license_id.value = dato.id
 			console.log(use_company_id.value)
 			console.log(use_app_id.value)
-			console.log(lic_license_id.value)
+			console.log(lic_license_id.value) */
 		}
 
 		const crearSuscripcion = (dato) => {
