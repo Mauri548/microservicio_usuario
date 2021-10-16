@@ -7,11 +7,13 @@
 <script>
 import store from '@/store'
 import { provide, ref } from '@vue/runtime-core'
+import FetchMe from './helper/FetchMe'
 export default {
   created(){
     store.commit('onResize')
     this.isMobile = store.state.isMobile
     this.isTablet = store.state.isTablet
+    FetchMe()
   },
 
   setup(){
