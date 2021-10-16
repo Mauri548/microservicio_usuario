@@ -64,6 +64,9 @@ import CampoForm from '../components/CampoForm.vue'
 import CampoFormPassword from '../components/CampoFormPass.vue'
 import {ref} from '@vue/reactivity'
 import i18n from '@/i18n.js'
+import FetchMe from '../helper/FetchMe'
+import { GraphQLClient } from 'graphql-request'
+import store from '@/store'
 
 export default {
     name:'Login',
@@ -76,6 +79,7 @@ export default {
         const password = ref('')
         const router = useRouter()
         const msg_error = ref({  email: '', password: '' })
+        const endpoint = store.state.url_backend
 
         const validar = () => {
             var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -97,7 +101,8 @@ export default {
                 if(i18n.global.locale == 'es'){
                     msg_error.value.email= 'El correo es requerido'
                 }
-            }else if(re.test(email.value)){
+            }else if(!re.test(email.value)){
+                console.log(re.test(email.value))
                 if(i18n.global.locale == 'en'){
                     msg_error.value.email= 'The email must be in a correct format'
                 }
@@ -108,7 +113,7 @@ export default {
 
 
             if (msg_error.value.email == '' && msg_error.value.password == '' ){
-                Logear()
+                Login()
             } else {
                 console.log('no paso')
                 // Saltar los errores
@@ -116,11 +121,48 @@ export default {
 
         }
 
+
+        const Login = () => {
+            let client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */`
+            mutation($username: String!, $password: String!) {
+                login(input: {
+                    username: $username,
+                    password: $password,
+                }) {
+                    access_token
+                    user {
+                        id, name, email
+                    }
+                }
+            }`,
+            {
+                username: email.value,
+                password: password.value,
+            })
+            .then((data) => {
+                // console.log(data)
+                let token = data.data.login.access_token
+                    localStorage.setItem('user-token', token)
+                    store.commit('setToken', token)
+                    FetchMe() 
+                    router.push({name: 'Home'})
+            })
+            .catch(error => {
+                localStorage.removeItem('user-token')
+                console.log(error.response)
+            })
+        }
+
+
+
         const Logear = () => {
+
             router.push({name: 'Home'})
         }
 
         return{
+            Login,
             validar ,
             Logear,
             email,
