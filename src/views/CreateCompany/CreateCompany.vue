@@ -19,7 +19,6 @@
 
                 <CampoForm v-model="phone" :place="$i18n.locale=='en'? 'Phone': 'Teléfono'" type="number" />
 
-                <!-- <CampoForm :place="$i18n.locale=='en'? 'Tax condition': 'Condición Fiscal'" type="text" :required="true" /> -->
                 <div class="mb-4">
                     <div class="select w-100" style="position: relative">
                         <select class="w-100 mb-4" v-model="selectTaxCondition" >
@@ -194,6 +193,7 @@ export default {
                 authorization: `Bearer ${localStorage.getItem('user-token')}`
             })
             .then((data) => {
+                
                 store.commit("setCreatingCompany",false)
                 router.push({name: 'CreateFinishedCompany'})
             })
