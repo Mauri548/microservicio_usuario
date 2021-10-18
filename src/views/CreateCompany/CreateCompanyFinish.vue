@@ -6,7 +6,7 @@
         </div>
         <span class="is-size-5" v-t="'createCompanyFinish.subtext'"></span>
         <div class="mt-5">
-            <button class="button btn-crenein" v-t="'createCompanyFinish.buttontext'"></button>
+            <router-link class="button btn-crenein" v-t="'createCompanyFinish.buttontext'" :to="{name: 'AppSuscription'}"></router-link>
         </div>
     </div>
 </template>
