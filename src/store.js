@@ -14,7 +14,8 @@ const store = createStore({
             token: localStorage.getItem('user-token') || '',
             status: '',
             user_id: null,
-            company_id: null
+            company_id: null,
+            comes_from_register : false
         }
     },
 
@@ -34,6 +35,10 @@ const store = createStore({
 
         setUserId(state, value) {
             state.user_id = value
+        },
+
+        setComesfromRegister(state, value) {
+            state.comes_from_register = value
         },
 
         setCreatingCompany(state,data) {

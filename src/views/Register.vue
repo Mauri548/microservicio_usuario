@@ -118,6 +118,7 @@ export default {
                     localStorage.setItem('user-token', token)
                     store.commit('setToken', token)
                     FetchMe()
+                    store.commit('setComesfromRegister', true)
                     router.push({name: 'CreateCompany'})
                 }
             })
@@ -129,7 +130,7 @@ export default {
 
         const isSuccess = (status) => {
             return status == 'SUCCESS'
-        } 
+        }
 
         /**
          * 
