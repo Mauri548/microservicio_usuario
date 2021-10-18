@@ -73,14 +73,14 @@ export default {
         const endpoint = store.state.url_backend
         const invitaciones = ref([])
         const users_aux = ref([])
-
+        const company_id = ref(localStorage.getItem('id_company_selected'))
 
         const traerInvitaciones = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             watchEffect(() => {
                 client.rawRequest(/* GraphQL */ `
-                query {
-                    invitations(first: 999, page: 1)  {
+                query($company_id:ID) {
+                    invitationsxcompany(first: 999, page: 1,company_id:$company_id)  {
                        data{
                         id
                         name
@@ -111,13 +111,14 @@ export default {
                 {
                     /* page: parseInt(route.params.page),
                     first: mostrar_cantidad.value */
+                     company_id: company_id.value
                 },
                 {
                     /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
                 })
                 .then((data) => {
                     invitaciones.value = []
-                    data.data.invitations.data.forEach(element => {
+                    data.data.invitationsxcompany.data.forEach(element => {
                         invitaciones.value.push({id:element.id, nombre: element.name, email:element.email ,activo: false, modalDelete: false})
                       /*   console.log(typeof element.logo) */
                     })
@@ -159,6 +160,7 @@ export default {
         }
 
         return {
+            company_id ,
             invitaciones,
             traerInvitaciones ,
             endpoint,
