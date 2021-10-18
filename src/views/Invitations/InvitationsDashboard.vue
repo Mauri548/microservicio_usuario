@@ -16,9 +16,9 @@
             <Board :datas="invitaciones" :titles="titles" >
                 <tr class="has-text-centered" v-for="data in invitaciones" :key="data.id">
                     <th @click="actionModal(data)">{{data.id}}</th>
-                    <td @click="actionModal(data)">{{data.fullName}}</td>
+                    <td @click="actionModal(data)">{{data.nombre}}</td>
                     <td @click="actionModal(data)">{{data.email}}</td>
-                    <td @click="actionModal(data)">{{data.created}}</td>
+                  <!--   <td @click="actionModal(data)">{{data.created}}</td> -->
            
                     <Modal :data="data" :buttonDefault="false" @onCloseModal="actionModal" 
                      @onOpenModalDelete="actionModalDelete" >
@@ -61,11 +61,11 @@ export default {
 
     setup () {
         const datas = ref([
-            {id: 1,  fullName: 'Mauricio Ferreyra', email: 'mauricioferreyra548@gmail.com', created: '24/07/2021', activo: false},
+           /*  {id: 1,  fullName: 'Mauricio Ferreyra', email: 'mauricioferreyra548@gmail.com', created: '24/07/2021', activo: false},
             {id: 2,  fullName: 'Luis Ferreyra', email: 'luis548@gmail.com', created: '24/07/2021', activo: false},
             {id: 3,  fullName: 'Ema Ferreyra', email: 'emaCorreo@gmail.com', created: '24/07/2021', activo: false},
             {id: 4,  fullName: 'Glo Ferreyra', email: 'gloquita@gmail.com', created: '24/07/2021', activo: false},
-            {id: 5,  fullName: 'Leonardo Ferreyra', email: 'loreto@gmail.com', created: '24/07/2021', activo: false},
+            {id: 5,  fullName: 'Leonardo Ferreyra', email: 'loreto@gmail.com', created: '24/07/2021', activo: false}, */
         ])
       
 
@@ -146,10 +146,10 @@ export default {
         }
         watchEffect(()=>{ // utilizamos watcheffect para detectar que valor tiene el atributo locale del objeto i18n al momento de estar en la pagina o al momento de cambiar el valor a traves del boton del lenguaje
             if(i18n.global.locale == 'en'){
-                titles.value = ['Full name','Email','Sended']
+                titles.value = ['Full name','Email']
             }
             if(i18n.global.locale == 'es'){
-                titles.value = ['Nombre completo','Correo','Enviado']
+                titles.value = ['Nombre completo','Correo']
             }
         })
 
@@ -159,6 +159,7 @@ export default {
         }
 
         return {
+            invitaciones,
             traerInvitaciones ,
             endpoint,
             users_aux,
