@@ -5,7 +5,6 @@
         </div>
         <div>
             <form>
-                <!-- <CampoForm type="text" :place="$i18n.locale=='en'? 'Name': 'Nombre'" v-model="name" :error="msg_error.name" /> -->
 
                 <CampoForm v-model="nameFantasy" :place="$i18n.locale=='en'? 'Name fantasy': 'Nombre de fantasia'" type="text" :required="true" :error="msg_error.nameFantasy" />
 
@@ -58,6 +57,7 @@ import isEmpty from '../../helper/FieldIsEmpty'
 import { GraphQLClient } from 'graphql-request'
 import { useRouter } from 'vue-router'
 import emailValidate from '../../helper/EmailValidate'
+import { watchEffect } from '@vue/runtime-core'
 
 
 export default {
@@ -66,22 +66,21 @@ export default {
     },
 
     created(){
-        store.commit("setCreatingCompany",true)
-        FetchMe()
+        // FetchMe()
     },
 
 
     setup() {
-        const nameFantasy = ref('')
-        const bussinesName = ref('')
+        const nameFantasy = ref('prueba')
+        const bussinesName = ref('prueba')
         const owner = ref('')
-        const cuit = ref('')
-        const email = ref('')
+        const cuit = ref('123456789')
+        const email = ref('prueba@gmail.com')
         const phone = ref('')
         const direction = ref('')
-        const location = ref('')
-        const province = ref('')
-        const country = ref('')
+        const location = ref('Resistencia')
+        const province = ref('Chaco')
+        const country = ref('Argentina')
         const taxCondition = ref([
             {id: 1 ,name: 'IVA Responsable Inscripto', value: 'IVA_Resp_Inscripto'},
             {id: 2 ,name: 'IVA Sujeto Exento', value: 'IVA_Sujeto_Exento'},
@@ -201,6 +200,52 @@ export default {
             })
         }
 
+        const isFirstCompany = async () => {
+            console.log(store.state.user_id)
+            const client = new GraphQLClient(endpoint)
+            await client.rawRequest(/* GraphQL */`
+            query($id: ID) {
+                user(id: $id) {
+                    name, email,
+                    companies {
+                        id,
+                        name_fantasy
+                    }
+                }
+            }`,
+            {
+                id: store.state.user_id
+            })
+            .then((data) => {
+                console.log(data)
+                console.log(store.state.user_id)
+
+                if (data.data.user.companies.length == 0) {
+                    console.log('es 0')
+                    // store.commit("setCreatingCompany",true)
+                }
+                if (data.data.user.companies.length > 0) {
+                    console.log('tiene company')
+                } else {
+                    console.log('no tiene')
+                    store.commit("setCreatingCompany",true)
+                }
+            })
+            .catch(error => console.log(error))
+            return
+        }
+
+        watchEffect( async() => {
+            await FetchMe()
+            console.log(store.state.user_id)
+            if (store.state.user_id) {
+                console.log('isFirstCompany....')
+                setTimeout( async () => {
+                    await isFirstCompany()
+                    console.log('isFirstCompany.... finish')
+                },3000)
+            }
+        })
 
         return {
             nameFantasy, bussinesName, owner, cuit, email, phone, direction, 

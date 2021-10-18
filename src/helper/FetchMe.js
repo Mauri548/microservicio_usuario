@@ -1,10 +1,10 @@
 import { GraphQLClient } from 'graphql-request'
 import store from '@/store'
 
-export default function FetchMe() {
+export default async function FetchMe() {
     const endpoint = store.state.url_backend
     let client = new GraphQLClient(endpoint)
-    client.rawRequest(/* GraphQL */`
+    await client.rawRequest(/* GraphQL */`
         query {
             me {
                 id,
@@ -21,4 +21,6 @@ export default function FetchMe() {
         console.log(data)
         store.commit('setUserId', data.data.me.id)
     })
+
+    return
 }

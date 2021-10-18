@@ -13,7 +13,6 @@ export default {
     store.commit('onResize')
     this.isMobile = store.state.isMobile
     this.isTablet = store.state.isTablet
-    FetchMe()
   },
 
   setup(){

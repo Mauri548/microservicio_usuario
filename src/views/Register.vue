@@ -84,6 +84,7 @@ export default {
         const router = useRouter()
 
         localStorage.removeItem('id_company_selected')
+        localStorage.removeItem('user_id')
 
         const mutationRegister = () => {
             let client = new GraphQLClient(endpoint)
