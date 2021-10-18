@@ -85,6 +85,7 @@ export default {
         const carga_exitosa = ref(false)
         const comprobar = store.state.carga_exitosa
         const comprobar_edi = store.state.edicion_exitosa
+        const company_id = ref(localStorage.getItem('id_company_selected'))
         const titles = ref([])
         const endpoint = store.state.url_backend
         const subscripciones = ref([])
@@ -95,8 +96,8 @@ export default {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             watchEffect(() => {
                 client.rawRequest(/* GraphQL */ `
-                query {
-                  subscriptions(first: 100, page: 1) {
+                query($company_id:ID) {
+                  subscriptionsxcompany(first: 100, page: 1,company_id:$company_id) {
                         paginatorInfo {
                         count
                         currentPage
@@ -129,15 +130,17 @@ export default {
                     }
                 }`,
                 {
+                    company_id: company_id.value
                     /* page: parseInt(route.params.page),
                     first: mostrar_cantidad.value */
+
                 },
                 {
                     /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
                 })
                 .then((data) => {
                     subscripciones.value = []
-                    data.data.subscriptions.data.forEach(element => {
+                    data.data.subscriptionsxcompany.data.forEach(element => {
                         subscripciones.value.push({id:element.id, nombreApp: element.app.name, licence:element.license.name ,companyName:element.company.name_fantasy,activo: false, modalDelete: false})
                       /*   console.log(typeof element.logo) */
                     })
@@ -198,6 +201,7 @@ export default {
         }
 
         return {
+            company_id,
             comprobar_carga,
             comprobar_edicion ,
             carga_exitosa ,
