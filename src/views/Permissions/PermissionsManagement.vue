@@ -57,6 +57,7 @@ import { ref } from '@vue/reactivity'
 import store from '@/store'
 import {  watchEffect } from '@vue/runtime-core'
 import { inject } from '@vue/runtime-core'
+import { GraphQLClient } from 'graphql-request'
 export default {
     components: {
         TitleBoard,
@@ -153,22 +154,39 @@ export default {
                 ]} 
             ]},
         ])
-        const users = ref([
-            {id: 1, name: 'Marcos Barrios'},
-            {id: 2, name: 'Jesica Ruizdias'},
-            {id: 3, name: 'Jose Alberto'},
-            {id: 4, name: 'Mauricio Ferreyra'},
-            {id: 5, name: 'Manuel Rodriguez'},
-            {id: 6, name: 'Javier Rizzoli'},
-            {id: 7, name: 'Charles Torres Troches'},
-        ])
+        const users = ref([])
         const isTablet = inject('isTablet')
+        const company_id = ref(store.state.company_id)
+        const endpoint = store.state.url_backend
 
+        const traerUsersxCompany = () => {
+            console.log(company_id.value)
+            const client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */ `
+            query($company_id:ID){
+                company(id:$company_id) {
+                    users {
+                        id
+                        name
+                    }
+                }
+            }`,
+            {
+                company_id:company_id.value
+            })
+            .then((data) => {
+                console.log(data)
+                users.value = []
+                /* console.log(data.data.company) */
+                data.data.company.users.forEach(element => {
+                    users.value.push({id:element.id, nombre: element.name ,activo: false})
+                })
+            }).catch(error => console.log(error))
+        }
 
-        watchEffect(()=>{
-      
+        watchEffect(() => {
+            traerUsersxCompany()
         })
-
 
 
         // ************************************************************************************
