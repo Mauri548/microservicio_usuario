@@ -3,14 +3,8 @@
 
         <!-- Titulo del tablero -->
         <div  class="head-tablero">
-            <div v-if="$i18n.locale=='es'">
-                <TitleBoard title="Permisos"/>
-                <hr>
-            </div>
-            <div v-if="$i18n.locale=='en'">
-                <TitleBoard title="Permissions"/>
-                <hr>
-            </div>
+            <TitleBoard :title="$i18n.locale=='en'? 'Permissions' : 'Permisos'" />
+            <hr>
         </div>
 
 
@@ -158,6 +152,8 @@ export default {
         const isTablet = inject('isTablet')
         const endpoint = store.state.url_backend
 
+        const data2 = ref([])
+
         const traerUsersxCompany = (id) => {
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */ `
@@ -176,13 +172,64 @@ export default {
                 data.data.company.users.forEach(element => {
                     users.value.push({id:element.id, name: element.name ,activo: false})
                 })
-            }).catch(error => console.log(error))
+            })
+            // .catch(error => console.log(error))
+        }
+
+        const traerSubscriptionsxCompany = (id) => {
+            const client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */`
+            query($company_id: ID){
+                subscriptionsxcompany(first: 999, page: 1, company_id: $company_id) {
+                    data {
+                        use_app_id,
+                        app {
+                            name
+                        }
+                    }
+                }
+            }`,
+            {
+                company_id: id
+            })
+            .then((data) => {
+                console.log(data)
+                data2.value = []
+                data.data.subscriptionsxcompany.data.forEach(app => {
+                    data2.value.push({id: app.use_app_id, app: app.app.name, activo: false, permissions: []})
+                    traerPermitsxApp(app.use_app_id)
+                })
+            })
+            // .catch(error => console.log(error.response))
+        }
+
+        const traerPermitsxApp = async (id) => {
+            const client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */`
+            query($app_id: ID) {
+                permitsxapp(app_id: $app_id) {
+                    id, key
+                }
+            }`,
+            {
+                app_id: id
+            })
+            .then((data) => {
+                console.log(data)
+                let aux = data2.value.find(app => app.id == id)
+                data.data.permitsxapp.forEach(permit => {
+                    aux.permissions.push({id: permit.id, key: permit.key})
+                })
+            })
+            // .catch(error => console.log(error))
+            
         }
 
         watchEffect(() => {
             store.state.company_id
             console.log(localStorage.getItem('id_company_selected'))
             traerUsersxCompany(localStorage.getItem('id_company_selected'))
+            traerSubscriptionsxCompany(localStorage.getItem('id_company_selected'))
         })
 
 
