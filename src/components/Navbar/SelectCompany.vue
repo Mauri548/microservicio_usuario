@@ -70,53 +70,44 @@ export default {
             localStorage.setItem('id_company_selected', companyActual.value.id)
         })
 
+        const companySelected = async () => {
+            const client = new GraphQLClient(endpoint)
+            await client.rawRequest(/* GraphQL */ `
+            query($id: ID) {
+                user(id: $id) {
+                    name, email,
+                    companies {
+                        id,
+                        name_fantasy
+                    }
+                }
+            }`,
+            {
+                id: store.state.user_id
+            })
+            .then( (data) => {
+                let companiesData = data.data.user.companies
+                companiesData.forEach(company => {
+                    if (company.id == localStorage.getItem('id_company_selected')) {
+                        changeValueCompany(company)
+                    }
+                    companies.value.push({id: company.id, name_fantasy: company.name_fantasy})
+                })
+            })
+            .catch(error => console.log(error))
+            return
+        }
+
         watchEffect(() => {
             store.state.company_id
-            // console.log(store.state.company_id)
-            // console.log(localStorage.getItem('id_company_selected'))
-            // console.log('select company')
             if (store.state.user_id) {
-
-                /**
-                 * Solucion temporal!!
-                 * 
-                 * Buscar la forma de hacerle esperar hasta que se cree la company de forma async
-                 */
-                setTimeout(() => {
-
-                    const client = new GraphQLClient(endpoint)
-                    client.rawRequest(/* GraphQL */ `
-                    query($id: ID) {
-                        user(id: $id) {
-                            name, email,
-                            companies {
-                                id,
-                                name_fantasy
-                            }
-                        }
-                    }`,
-                    {
-                        id: store.state.user_id
-                    })
-                    .then( (data) => {
-                        let companiesData = data.data.user.companies
-                        companiesData.forEach(company => {
-                            if (company.id == localStorage.getItem('id_company_selected')) {
-                                changeValueCompany(company)
-                            }
-                            companies.value.push({id: company.id, name_fantasy: company.name_fantasy})
-                        })
-                    })
-                    .catch(error => console.log(error))
-                },1500)
+                companySelected()
             }
         })
 
         const activar = () => {
             activo.value = !activo.value
         }
-
-
 
         // Oculta el Selector de company cuando se hace click fuera de este
         document.addEventListener('click', function(e) {
