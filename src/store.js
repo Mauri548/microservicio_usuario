@@ -2,7 +2,7 @@ import { createStore } from "vuex";
 
 const store = createStore({
     state(){
-
+        
         return {
             isMobile: false,
             isTablet: false,
@@ -14,7 +14,7 @@ const store = createStore({
             token: localStorage.getItem('user-token') || '',
             status: '',
             user_id: null | localStorage.getItem('user_id'),
-            company_id: null | localStorage.getItem('ud_company_selected'),
+            company_id: null | localStorage.getItem('id_company_selected'),
             comes_from_register : false
         }
     },

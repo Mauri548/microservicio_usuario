@@ -59,6 +59,7 @@ export default {
         const changeValueCompany = (company) => {
             companyActual.value.id = company.id
             companyActual.value.name_fantasy = company.name_fantasy
+            store.commit('setCompanyId', company.id)
         }
 
         /**
@@ -86,6 +87,7 @@ export default {
                 id: store.state.user_id
             })
             .then( (data) => {
+                companies.value = []
                 let companiesData = data.data.user.companies
                 companiesData.forEach(company => {
                     if (company.id == localStorage.getItem('id_company_selected')) {

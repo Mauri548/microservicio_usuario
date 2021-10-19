@@ -55,7 +55,7 @@ import PermissionsList from '../../components/Permissions/PermissionsList.vue'
 import ActionPermission from '../../components/Permissions/ActionPermission.vue'
 import { ref } from '@vue/reactivity'
 import store from '@/store'
-import {  watchEffect } from '@vue/runtime-core'
+import {  watch, watchEffect } from '@vue/runtime-core'
 import { inject } from '@vue/runtime-core'
 import { GraphQLClient } from 'graphql-request'
 export default {
@@ -156,36 +156,33 @@ export default {
         ])
         const users = ref([])
         const isTablet = inject('isTablet')
-        const company_id = ref(store.state.company_id)
         const endpoint = store.state.url_backend
 
-        const traerUsersxCompany = () => {
-            console.log(company_id.value)
+        const traerUsersxCompany = (id) => {
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */ `
             query($company_id:ID){
                 company(id:$company_id) {
                     users {
-                        id
-                        name
+                        id, name
                     }
                 }
             }`,
             {
-                company_id:company_id.value
+                company_id: id
             })
             .then((data) => {
-                console.log(data)
                 users.value = []
-                /* console.log(data.data.company) */
                 data.data.company.users.forEach(element => {
-                    users.value.push({id:element.id, nombre: element.name ,activo: false})
+                    users.value.push({id:element.id, name: element.name ,activo: false})
                 })
             }).catch(error => console.log(error))
         }
 
         watchEffect(() => {
-            traerUsersxCompany()
+            store.state.company_id
+            console.log(localStorage.getItem('id_company_selected'))
+            traerUsersxCompany(localStorage.getItem('id_company_selected'))
         })
 
 
