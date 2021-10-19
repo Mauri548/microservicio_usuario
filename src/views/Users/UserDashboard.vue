@@ -151,9 +151,6 @@ export default {
                     /* page: parseInt(route.params.page),
                     first: mostrar_cantidad.value */
                     company_id:company_id.value
-                },
-                {
-                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
                 })
                 .then((data) => {
                     users.value = []

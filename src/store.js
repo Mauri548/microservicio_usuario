@@ -13,8 +13,8 @@ const store = createStore({
             url_backend: 'https://dev_front_gateway_crenein_ms.crenein.com/graphql',
             token: localStorage.getItem('user-token') || '',
             status: '',
-            user_id: null,
-            company_id: null,
+            user_id: null | localStorage.getItem('user_id'),
+            company_id: null | localStorage.getItem('ud_company_selected'),
             comes_from_register : false
         }
     },
