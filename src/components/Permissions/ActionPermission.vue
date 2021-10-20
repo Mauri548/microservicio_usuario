@@ -60,25 +60,22 @@ export default {
     },
     props: ['data'],
     emits: ['onActivePermissionApp',
-            'onActiveList',
             'onMoveAvailableToAssigned',
             'onMoveAssignedToAvailable',
             'onMoveAllAvailableToAssigned',
             'onMoveAllAssignedToAvailable'
             ],
     setup(props,{emit}) {
-        // Variables para almacenar las id de los datos que se van a pasar en la tabla
+        /**
+         * 
+         * Variables para almacenar las id de los datos que se van a pasar en la tabla
+         * 
+         */
         const permissionIdAvailable = ref()
         const appId = ref(99999)
 
         const activePermissionApp = (id) => {
             emit("onActivePermissionApp",id)
-        }
-
-        // Funcion que pasa al padre el id de la app principal y de la lista que le pertenece 
-        // Para modificar el valor y visualizar la vista
-        const activarHeader = (app, permission) => {
-            emit("onActiveList", app.id, permission.id)
         }
 
         const asignarPermisos = (permission, appID) => {
@@ -109,7 +106,6 @@ export default {
         return {
             permissionIdAvailable,
             activePermissionApp,
-            activarHeader,
             moveAvailableToAssigned,
             moveAssignedToAvailable,
             moveAllAvailableToAssigned,

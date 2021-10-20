@@ -11,10 +11,10 @@
 
 <script>
 import { ref } from '@vue/reactivity'
-import { onMounted, watch } from '@vue/runtime-core'
+import { watch } from '@vue/runtime-core'
 export default {
     name: 'SelectPermission',
-    props: ['data','title','assigned','appId'],
+    props: ['title','appId'],
     emits: ['onMovePermission'],
 
     setup(props,{emit}) {

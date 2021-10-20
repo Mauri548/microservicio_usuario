@@ -18,7 +18,6 @@
                     <!-- Botones de los permisos de las App contratada -->
                     <PermissionsList v-for="data in datas" :key="data.id" :data="data"
                         @onActivePermissionApp="activePermissionApp"
-                        @onActiveList="activeList"
                         @onMoveAvailableToAssigned="moveAvailableToAssigned"
                         @onMoveAssignedToAvailable="moveAssignedToAvailable"
                         @onMoveAllAvailableToAssigned="moveAllAvailableToAssigned"
@@ -29,7 +28,6 @@
                     <!-- Lista de permisos para asignar o deshabilitar -->
                     <ActionPermission v-for="data in datas" :key="data.id" :data="data"
                         @onActivePermissionApp="activePermissionApp"
-                        @onActiveList="activeList"
                         @onMoveAvailableToAssigned="moveAvailableToAssigned"
                         @onMoveAssignedToAvailable="moveAssignedToAvailable"
                         @onMoveAllAvailableToAssigned="moveAllAvailableToAssigned"
@@ -49,7 +47,7 @@ import PermissionsList from '../../components/Permissions/PermissionsList.vue'
 import ActionPermission from '../../components/Permissions/ActionPermission.vue'
 import { ref } from '@vue/reactivity'
 import store from '@/store'
-import {  watch, watchEffect } from '@vue/runtime-core'
+import { watchEffect } from '@vue/runtime-core'
 import { inject } from '@vue/runtime-core'
 import { GraphQLClient } from 'graphql-request'
 export default {
@@ -62,97 +60,10 @@ export default {
 
     setup() {
 
-        const datasss = ref([
-            {id: 1, app: 'PuWiC', activo: false, permissions: [
-                {id: 1, name: 'Client list', total: 7, permissions_activo: 0, activo: false, lista: [
-                    {id: 1, name: 'See list', activo: false},
-                    {id: 2, name: 'Add client', activo: false},
-                    {id: 3, name: 'See customer file', activo: false},
-                    {id: 4,name: 'Export client', activo: false},
-                    {id: 5,name: 'Archive client', activo: false},
-                    {id: 6, name: 'See customer fileses', activo: false},
-                    {id: 7, name: 'tag individually', activo: false},
-                ]},
-                {id: 2, name: 'Mail', total: 2, permissions_activo: 0, activo: false, lista: [
-                    {id: 1, name: 'Create email', activo: false},
-                    {id: 2, name: 'Send email', activo: false},
-                ]},
-                {id: 3, name: 'Sms', total: 11, permissions_activo: 0, activo: false, lista: [
-                    {id: 1, name: 'Prueba1', activo: false},
-                    {id: 2, name: 'Prueba2', activo: false},
-                    {id: 3, name: 'Prueba3', activo: false},
-                    {id: 4, name: 'Prueba4', activo: false},
-                    {id: 5, name: 'Prueba5', activo: false},
-                    {id: 6, name: 'Prueba6', activo: false},
-                    {id: 7, name: 'Prueba7', activo: false},
-                    {id: 8, name: 'Prueba8', activo: false},
-                    {id: 9, name: 'Prueba9', activo: false},
-                    {id: 10, name: 'Prueba10', activo: false},
-                    {id: 11, name: 'Prueba11', activo: false},
-                ]}  
-            ]},
-            {id: 2, app: 'ISPB', activo: false, permissions: [
-                {id: 1, name: 'Client list', total: 7, permissions_activo: 0, activo: false, lista: [
-                    {id: 1, name: 'See list', activo: false},
-                    {id: 2, name: 'Add client', activo: false},
-                    {id: 3, name: 'See customer file', activo: false},
-                    {id: 4, name: 'Export client', activo: false},
-                    {id: 5, name: 'Archive client', activo: false},
-                    {id: 6, name: 'See customer file', activo: false},
-                    {id: 7, name: 'tag individually', activo: false},
-                ]},
-                {id: 2, name: 'Mail', total: 2, permissions_activo: 0, activo: false, lista: [
-                    {id: 1, name: 'Create email', activo: false},
-                    {id: 2, name: 'Send email', activo: false},
-                ]},
-                {id: 3, name: 'Sms', total: 11, permissions_activo: 0, activo: false, lista: [
-                    {id: 1, name: 'Prueba1', activo: false},
-                    {id: 2, name: 'Prueba2', activo: false},
-                    {id: 3, name: 'Prueba3', activo: false},
-                    {id: 4, name: 'Prueba4', activo: false},
-                    {id: 5, name: 'Prueba5', activo: false},
-                    {id: 6, name: 'Prueba6', activo: false},
-                    {id: 7, name: 'Prueba7', activo: false},
-                    {id: 8, name: 'Prueba8', activo: false},
-                    {id: 9, name: 'Prueba9', activo: false},
-                    {id: 10, name: 'Prueba10', activo: false},
-                    {id: 11, name: 'Prueba11', activo: false},
-                ]} 
-            ]},
-            {id: 3, app: 'Geston', activo: false, permissions: [
-                {id: 1, name: 'Client list', total: 7, permissions_activo: 0, activo: false, lista: [
-                    {id: 1, name: 'See list', activo: false},
-                    {id: 2, name: 'Add client', activo: false},
-                    {id: 3, name: 'See customer file', activo: false},
-                    {id: 4, name: 'Export client', activo: false},
-                    {id: 5, name: 'Archive client', activo: false},
-                    {id: 6, name: 'See customer file', activo: false},
-                    {id: 7, name: 'tag individually', activo: false},
-                ]},
-                {id: 2, name: 'Mail', total: 2, permissions_activo: 0, activo: false, lista: [
-                    {id: 1, name: 'Create email', activo: false},
-                    {id: 2, name: 'Send email', activo: false},
-                ]},
-                {id: 3, name: 'Sms', total: 11, permissions_activo: 0, activo: false, lista: [
-                    {id: 1, name: 'Prueba1', activo: false},
-                    {id: 2, name: 'Prueba2', activo: false},
-                    {id: 3, name: 'Prueba3', activo: false},
-                    {id: 4, name: 'Prueba4', activo: false},
-                    {id: 5, name: 'Prueba5', activo: false},
-                    {id: 6, name: 'Prueba6', activo: false},
-                    {id: 7, name: 'Prueba7', activo: false},
-                    {id: 8, name: 'Prueba8', activo: false},
-                    {id: 9, name: 'Prueba9', activo: false},
-                    {id: 10, name: 'Prueba10', activo: false},
-                    {id: 11, name: 'Prueba11', activo: false},
-                ]} 
-            ]},
-        ])
+        const datas = ref([])
         const users = ref([])
         const isTablet = inject('isTablet')
         const endpoint = store.state.url_backend
-
-        const datas = ref([])
 
         const traerUsersxCompany = (id) => {
             const client = new GraphQLClient(endpoint)
@@ -240,74 +151,113 @@ export default {
         // ************************************************************************************
         // Estas functiones moveran el permiso al sector contrario de la tabla
 
-        // recibe por parametro las id de la app, el permiso principal y su lista de items
+        /**
+         * 
+         * Mueve los permisos de Asignados a Disponibles
+         * 
+         * @param id_app Es el id de la applicación que tiene el permiso actual
+         * @param permissions Es un arreglo con el id de los permisos seleccionados
+         * 
+         */
         const moveAvailableToAssigned = (id_app, permissions) => {
-            let aux = searchListPermission(id_app)
-            console.log(aux)
-            console.log(id_app)
-            console.log(permissions)
-            let permiso
-            // Si el id de la lista existe dentro del array de permission entonces cambiaremos su valor
-            permissions.forEach(element => {
-                permiso = aux.permissions.find(e => e.id == element)
-                permiso.activo = true
-            })
+            movePermits(id_app, permissions, true)
+
         }
 
-        // recibe por parametro las id de la app, el permiso principal y su lista de items
+        /**
+         * 
+         * Mueve los permisos de Disponibles a Asignados
+         * 
+         * @param id_app Es el id de la applicación que tiene el permiso actual
+         * @param permissions Es un arreglo con el id de los permisos seleccionados
+         * 
+         */
         const moveAssignedToAvailable = (id_app, permissions) => {
-            let aux = searchListPermission(id_app)
-            let permiso
-            // Si el id de la lista existe dentro del array de permission entonces cambiaremos su valor
+            movePermits(id_app, permissions, false)
+        }
+
+        /**
+         * 
+         * Mueve los permisos seleccionado de una tabla a otra
+         * 
+         * @param id_app Es el id de la applicación que tiene el permiso actual
+         * @param permissions Es un arreglo con el id de los permisos seleccionados
+         * @param value Es un booleano para pasar un permiso de activo o no
+         * 
+         */
+        const movePermits = (id_app, permissions, value) => {
+            let aux = searchApp(id_app)
             permissions.forEach(element => {
-                permiso = aux.permissions.find(e => e.id == element)
-                permiso.activo = false
+                let permiso = aux.permissions.find(permit => permit.id == element)
+                permiso.activo = value
             })
         }
 
-        // Recibe por parametro la id de la app y el id de permiso principal
-        // Cambia el valor de activo de todos los elemento a True para que se pasen a la lista de assigned
+        /**
+         * 
+         * Emits que mueve TODOS los permisos de Asignados a Disponible
+         * 
+         * @param id_app Es el id de la applicación que tiene el permiso actual
+         * 
+         */
         const moveAllAvailableToAssigned = (id_app) => {
-            let aux = searchListPermission(id_app)
-            aux.permissions.forEach(element => {
-                element.activo = true
-            })
+            moveAllPermits(id_app, true)
         }
 
-        // Recibe por parametro la id de la app y el id de permiso principal
-        // Cambia el valor de activo de todos los elemento a False para que se pasen a la lista de Available
+        /**
+         * 
+         * Emits que mueve TODOS los permisos de Disponible a Asignados
+         * 
+         * @param id_app Es el id de la applicación que tiene el permiso actual
+         * 
+         */
         const moveAllAssignedToAvailable = (id_app) => {
-            let aux = searchListPermission(id_app)
+            moveAllPermits(id_app, false)
+        }
+
+        /**
+         * 
+         * Mueve TODOS los permisos de una tabla a otra
+         * 
+         * @param id_app Es el id de la applicación que tiene el permiso actual
+         * @param value Es un booleano para pasar un permiso de activo o no
+         */
+        const moveAllPermits = (id_app, value) => {
+            let aux = searchApp(id_app)
             aux.permissions.forEach(element => {
-                element.activo = false
+                element.activo = value
             })
         }
 
-        // buscamos la app correspondiente y luego el permiso principal al que corresponde las id
-        const searchListPermission = (id_app) => {
+
+        /**
+         * 
+         * Buscamos la app correspondiente y se la devolvemos
+         * 
+         * @param id_app Es el id de la app que se desea buscar
+         * 
+         */
+        const searchApp = (id_app) => {
             let aux = datas.value.find(element => element.id == id_app)
             return aux
         }
-        // ************************************************************************************************
+
 
         const activePermissionApp = (id) => {
             datas.value.forEach(element => {
                 element.activo = false
-                // element.id == id ? element.activo = !element.activo : element.activo = false
             })
             let aux = datas.value.find(element => element.id == id)
-            // Esperamos 3 milisegundo para hacer que se visualice el msj de exito
+
+            /**
+             * 
+             * Esperamos 3 milisegundo para hacer que se visualice el msj de exito
+             * Es para el efecto de animación
+             * 
+             */
             setTimeout(() => {
                 aux.activo = true
             },300)
-        }
-
-
-        // Modifica el valor para que se visualize el tablero con los permisos activables
-        const activeList = (id_app, id_permission) => {
-            let aux = datas.value.find(element => element.id == id_app)
-            let aux2 = aux.permissions.find(element => element.id == id_permission)
-            aux2.activo = !aux2.activo
         }
 
         return {
@@ -315,11 +265,11 @@ export default {
             users,
             isTablet,
             activePermissionApp,
-            activeList,
             moveAvailableToAssigned,
             moveAssignedToAvailable,
             moveAllAvailableToAssigned,
             moveAllAssignedToAvailable,
+            movePermits
         }
     }
 }
