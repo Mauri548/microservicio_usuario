@@ -2,6 +2,7 @@
     <div class="column is-one-third">
         <img :src="logo" :alt="name" width="35">
         <p class="has-text-weight-medium" :class="{'text-inactivo':!activo}" >{{name}}</p>
+        <!-- <p class="has-text-weight-medium is-size-7" :class="{'text-inactivo':!activo}" >{{licencia}}</p> -->
     </div>
 </template>
 
@@ -12,6 +13,7 @@ export default {
         name: String,
         logo: String,
         activo: Boolean,
+        /* licencia:String */
     }
 
 }
