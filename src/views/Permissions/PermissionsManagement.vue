@@ -62,7 +62,7 @@ export default {
 
     setup() {
 
-        const datas = ref([
+        const datasss = ref([
             {id: 1, app: 'PuWiC', activo: false, permissions: [
                 {id: 1, name: 'Client list', total: 7, permissions_activo: 0, activo: false, lista: [
                     {id: 1, name: 'See list', activo: false},
@@ -152,7 +152,7 @@ export default {
         const isTablet = inject('isTablet')
         const endpoint = store.state.url_backend
 
-        const data2 = ref([])
+        const datas = ref([])
 
         const traerUsersxCompany = (id) => {
             const client = new GraphQLClient(endpoint)
@@ -193,12 +193,12 @@ export default {
                 company_id: id
             })
             .then((data) => {
-                console.log(data)
-                data2.value = []
+                datas.value = []
                 data.data.subscriptionsxcompany.data.forEach(app => {
-                    data2.value.push({id: app.use_app_id, app: app.app.name, activo: false, permissions: []})
+                    datas.value.push({id: app.use_app_id, app: app.app.name, activo: false, permissions: []})
                     traerPermitsxApp(app.use_app_id)
                 })
+                // console.log(datas.value)
             })
             // .catch(error => console.log(error.response))
         }
@@ -215,21 +215,25 @@ export default {
                 app_id: id
             })
             .then((data) => {
-                console.log(data)
-                let aux = data2.value.find(app => app.id == id)
+                let aux = datas.value.find(app => app.id == id)
                 data.data.permitsxapp.forEach(permit => {
-                    aux.permissions.push({id: permit.id, key: permit.key})
+                    aux.permissions.push({id: permit.id, key: permit.key, activo: false})
                 })
             })
             // .catch(error => console.log(error))
             
         }
 
+        /**
+         * Hay un retraso en esta consulta.. intentar mejorarla luego
+         */
         watchEffect(() => {
             store.state.company_id
-            console.log(localStorage.getItem('id_company_selected'))
-            traerUsersxCompany(localStorage.getItem('id_company_selected'))
-            traerSubscriptionsxCompany(localStorage.getItem('id_company_selected'))
+            if (localStorage.getItem('id_company_selected')) {
+                // console.log(localStorage.getItem('id_company_selected'))
+                traerUsersxCompany(localStorage.getItem('id_company_selected'))
+                traerSubscriptionsxCompany(localStorage.getItem('id_company_selected'))
+            }
         })
 
 
@@ -237,49 +241,51 @@ export default {
         // Estas functiones moveran el permiso al sector contrario de la tabla
 
         // recibe por parametro las id de la app, el permiso principal y su lista de items
-        const moveAvailableToAssigned = (id_app, id_permission, permissions) => {
-            let aux = searchListPermission(id_app, id_permission)
+        const moveAvailableToAssigned = (id_app, permissions) => {
+            let aux = searchListPermission(id_app)
+            console.log(aux)
+            console.log(id_app)
+            console.log(permissions)
             let permiso
             // Si el id de la lista existe dentro del array de permission entonces cambiaremos su valor
             permissions.forEach(element => {
-                permiso = aux.lista.find(e => e.id == element)
+                permiso = aux.permissions.find(e => e.id == element)
                 permiso.activo = true
             })
         }
 
         // recibe por parametro las id de la app, el permiso principal y su lista de items
-        const moveAssignedToAvailable = (id_app, id_permission, permissions) => {
-            let aux = searchListPermission(id_app, id_permission)
+        const moveAssignedToAvailable = (id_app, permissions) => {
+            let aux = searchListPermission(id_app)
             let permiso
             // Si el id de la lista existe dentro del array de permission entonces cambiaremos su valor
             permissions.forEach(element => {
-                permiso = aux.lista.find(e => e.id == element)
+                permiso = aux.permissions.find(e => e.id == element)
                 permiso.activo = false
             })
         }
 
         // Recibe por parametro la id de la app y el id de permiso principal
         // Cambia el valor de activo de todos los elemento a True para que se pasen a la lista de assigned
-        const moveAllAvailableToAssigned = (id_app, id_permission) => {
-            let aux = searchListPermission(id_app, id_permission)
-            aux.lista.forEach(element => {
+        const moveAllAvailableToAssigned = (id_app) => {
+            let aux = searchListPermission(id_app)
+            aux.permissions.forEach(element => {
                 element.activo = true
             })
         }
 
         // Recibe por parametro la id de la app y el id de permiso principal
         // Cambia el valor de activo de todos los elemento a False para que se pasen a la lista de Available
-        const moveAllAssignedToAvailable = (id_app, id_permission) => {
-            let aux = searchListPermission(id_app, id_permission)
-            aux.lista.forEach(element => {
+        const moveAllAssignedToAvailable = (id_app) => {
+            let aux = searchListPermission(id_app)
+            aux.permissions.forEach(element => {
                 element.activo = false
             })
         }
 
         // buscamos la app correspondiente y luego el permiso principal al que corresponde las id
-        const searchListPermission = (id_app, id_permission) => {
+        const searchListPermission = (id_app) => {
             let aux = datas.value.find(element => element.id == id_app)
-            aux = aux.permissions.find(element => element.id == id_permission)
             return aux
         }
         // ************************************************************************************************
