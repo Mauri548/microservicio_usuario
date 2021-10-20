@@ -26,7 +26,7 @@
                     <td @click="actionModal(data)">{{data.taxCondition}}</td>
                     <td @click="actionModal(data)">{{data.direction}}</td>
                     <td @click="actionModal(data)">{{data.location}}</td>
-                    <td @click="actionModal(data)">{{data.province}}</td>
+                  <!--   <td @click="actionModal(data)">{{data.province}}</td> -->
                     <td @click="actionModal(data)">{{data.country}}</td>
                     <Modal namePath="EditCompany" :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
@@ -90,7 +90,8 @@ export default {
     created(){
         this.comprobar_carga()
         this.comprobar_edicion()
-        this.traerCompanies()
+       /* this.traerCompanies()  */
+        this.traerCompaniesxUser()
     },
 
     setup() {
@@ -102,9 +103,12 @@ export default {
         const endpoint = store.state.url_backend
         const companies = ref([])
         const companies_aux = ref([])
-     
+        const user_id = ref();
 
-
+        watchEffect(()=>{
+            store.state.user_id 
+            user_id.value = localStorage.getItem('user_id')
+        })
         const datas = ref([
          /*    {id: 1, nameFantasy: 'Internet', businessName: 'Internet', owners: 'Gonzalo Ramitez', cuit: 203688999, email: 'ramirez@gmail.com',
             phone: 3624624482, taxCondition: 'IVA', direction: 'calle 2', location: 'Resistencia', province: 'Chaco', country: 'Argentina'},
@@ -128,10 +132,11 @@ export default {
         watchEffect(()=>{
 
             if(i18n.global.locale=='es'){
-                titles.value = ['Nombre de fantasia', 'Nombre del negocio', 'Propietarios', 'Cuit', 'Correo', 'Telefono', 'Condición fiscal', 'Dirección', 'Localidad', 'Provincia', 'Pais']
+                titles.value = ['Nombre de fantasia', 'Nombre del negocio', 'Propietarios', 'Cuit', 'Correo', 'Telefono', 'Condición fiscal', 'Dirección', 'Localidad', 'Pais']
+                 /*  titles.value = ['Nombre de fantasia', 'Nombre del negocio', 'Propietarios', 'Cuit', 'Correo', 'Telefono', 'Condición fiscal', 'Dirección', 'Localidad', 'Provincia', 'Pais'] */
             }
             if(i18n.global.locale=='en'){
-                titles.value = ['Name fantasy', 'Business name', 'Owners', 'Cuit', 'Email', 'Phone', 'Tax condition', 'Direction', 'Location', 'Province', 'Country']
+                titles.value = ['Name fantasy', 'Business name', 'Owners', 'Cuit', 'Email', 'Phone', 'Tax condition', 'Direction', 'Location', 'Country']
             }
 
         })
@@ -195,16 +200,70 @@ export default {
             })
         }
 
+
+        const traerCompaniesxUser = () => {
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            watchEffect(() => {
+                client.rawRequest(/* GraphQL */ `
+                query($id:ID) {
+                    user(id:$id){
+                        id
+                        name
+                        email
+                        companies {
+                              	id
+                                name_fantasy
+                                business_name
+                                owners
+                                cuit
+                                email
+                                phones
+                                tax_condition
+                                direction
+                                location
+                                country
+                        }
+                    }
+                }`,
+                {
+                    /* page: parseInt(route.params.page),
+                    first: mostrar_cantidad.value */
+                    id:user_id.value
+                    
+                },
+                {
+                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+                })
+                .then((data) => {
+                    companies.value = []
+                    console.log(data.data.user.companies)
+                    data.data.user.companies.forEach(element => {
+                        companies.value.push({id:element.id, nameFantasy: element.name_fantasy,
+                        businessName: element.business_name,owners:element.owners ,
+                        cuit:element.cuit ,email:element.email,phone:element.phones,
+                        taxCondition:element.tax_condition ,direction:element.direction,
+                        location:element.location,
+                         /* province:element.province,  */
+                        country:element.country, activo: false, modalDelete: false}) 
+                      
+                    })
+                  /*   console.log(companies.value) */
+
+                }).catch(error => {
+                    console.log(error.response);
+                })
+            })
+        }
  
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
-            let aux = datas.value.find(element => element.id == data.id)
+            let aux = companies.value.find(element => element.id == data.id)
             aux.activo = !aux.activo
         }
 
         // Activa el valor modalDelete para abrir una ventana de aviso antes de eliminar un elemento
         const actionModalDelete = (data) => {
-            let aux = datas.value.find(element => element.id == data)
+            let aux = companies.value.find(element => element.id == data)
             aux.activo = false
             aux.modalDelete = !aux.modalDelete
         }
@@ -231,6 +290,8 @@ export default {
         }
 
         return {
+            user_id,
+            traerCompaniesxUser,
             traerCompanies,
             endpoint,
             companies,
