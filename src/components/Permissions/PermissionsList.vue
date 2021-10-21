@@ -8,10 +8,8 @@
         </button>
 
         <!-- Lista de permisos para asignar o deshabilitar -->
-
         <ActionPermission v-if="isTablet" :data="data"
             @onActivePermissionApp="activePermissionApp"
-            @onActiveList="activeList"
             @onMoveAvailableToAssigned="moveAvailableToAssigned"
             @onMoveAssignedToAvailable="moveAssignedToAvailable"
             @onMoveAllAvailableToAssigned="moveAllAvailableToAssigned"
@@ -30,7 +28,6 @@ export default {
     },
     props: ['data'],
     emits: ['onActivePermissionApp',
-            'onActiveList',
             'onMoveAvailableToAssigned',
             'onMoveAssignedToAvailable',
             'onMoveAllAvailableToAssigned',
@@ -43,11 +40,6 @@ export default {
         // Activamos el boton para mostrar la lista de permiso de esa app
         const activePermissionApp = (id) => {
             emit("onActivePermissionApp",id)
-        }
-
-        // emitimos la accion de activar la sublista de permisos
-        const activeList = (app, permission) => {
-            emit("onActiveList",app, permission)
         }
 
         // emitimos la accion de mover un elemento de la lista
@@ -73,7 +65,6 @@ export default {
         return {
             isTablet,
             activePermissionApp,
-            activeList,
             moveAvailableToAssigned,
             moveAssignedToAvailable,
             moveAllAvailableToAssigned,
