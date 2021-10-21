@@ -22,6 +22,8 @@
                     <div class="is-flex is-flex-direction-column close-apps">
                         <div class="is-flex my-2 is-align-items-center discover" v-for="item in discovers" :key="item.id">
                             <img class="img-rounded" :src="item.image" :alt="item.name" width="35">
+                           <!--  <a  href="https://blog.crenein.com/" target="_blank" class="ml-3">{{item.name}}</a>
+                            -->
                             <p class="ml-3">{{item.name}}</p>
                         </div>
                     </div>
@@ -183,9 +185,16 @@ export default {
 </script>
 
 <style scoped>
+
+a{
+    text-decoration: none;
+    color: #413e3e;
+
+}
+
 .menu-app {
   font-size: 23px;
-  color: #A9A9A9;
+  color: #928d8d;
 }
 
 .img-rounded {
