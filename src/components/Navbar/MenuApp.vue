@@ -15,7 +15,8 @@
                 <div class="p-4 is-flex is-flex-direction-column is-align-items-flex-start close-apps">
                     <h5 class="blue-crenein has-text-weight-semibold close-apps">{{$t('navbar.menuApp.conectarse')}}</h5>
                     <div class="columns is-multiline is-flex is-justify-content-space-between w-100 my-2 close-apps is-align-items-center" style="margin: auto">
-                        <AppCrenein v-for="app in apps" :key="app.id" :name="app.name" :logo="app.logo" :activo="app.activo" />
+                      <!--   <AppCrenein v-for="app in apps" :key="app.id" :name="app.nombre" :licencia="app.licencia" :logo="app.logo" :activo="app.activo" /> -->
+                      <AppCrenein v-for="app in apps" :key="app.id" :name="app.nombre"  :logo="app.logo" :activo="app.activo" />
                     </div>
                     <h2 class="has-text-weight-semibold close-apps">{{$t('navbar.menuApp.descubrir')}}</h2>
                     <div class="is-flex is-flex-direction-column close-apps">
@@ -43,23 +44,29 @@ import AppCrenein from './AppsCrenein.vue'
 import { ref } from '@vue/reactivity'
 import i18n from '@/i18n.js' 
 import { watchEffect } from '@vue/runtime-core'
+import store from '@/store' 
+import {GraphQLClient} from 'graphql-request';
+
 export default {
     name: 'MenuApp',
     components: {
         AppCrenein,
     },
+    created() {
+        this.traerSuscripcionesxCompany()
+    },
 
     setup(){
-
+        const endpoint = store.state.url_backend
         // ****** Datos de prueba ******
         const apps = ref([
-            {id: 1, name: 'ISPBrain', logo: ispb, activo: true},
+       /*      {id: 1, name: 'ISPBrain', logo: ispb, activo: true},
             {id: 2, name: 'PuWiC', logo: puwic, activo: true},
             {id: 3, name: 'Geston', logo: geston, activo: true},
             {id: 3, name: 'Geston', logo: geston, activo: false},
             {id: 3, name: 'Geston', logo: geston, activo: false},
             {id: 3, name: 'Geston', logo: geston, activo: false},
-            {id: 3, name: 'Geston', logo: geston, activo: false}
+            {id: 3, name: 'Geston', logo: geston, activo: false} */
         ])
 
         const discovers = ref([])
@@ -81,7 +88,75 @@ export default {
         })
 
         const activo = ref(false)
+        const company_id = ref();
    
+        watchEffect(()=>{
+            store.state.company_id 
+            company_id.value = localStorage.getItem('id_company_selected')
+        })
+
+        
+        const traerSuscripcionesxCompany = () => {
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            watchEffect(() => {
+                client.rawRequest(/* GraphQL */ `
+                query($company_id:ID) {
+                     subscriptionsxcompany(first: 999, page: 1,company_id:$company_id) {
+                       data{
+                            id
+                            use_company_id
+                            lic_license_id
+                            use_app_id
+                            company{
+                                id
+                                business_name
+                            }
+                            app{
+                                id
+                                name
+                            }
+                            license{
+                                id
+                                name
+                            }
+                        }
+                        paginatorInfo{
+                            count
+                            currentPage
+                            firstItem
+                            hasMorePages
+                            lastItem
+                            lastPage
+                            perPage
+                            total
+                        }
+                    }
+                }`,
+                {
+                    /* page: parseInt(route.params.page),
+                    first: mostrar_cantidad.value */
+                    company_id: company_id.value
+                },
+                {
+                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+                })
+                .then((data) => {
+                  /*   let datos = data.data.subscriptionsxcompany.data
+                    console.log(datos)  */
+                    apps.value = []
+                   
+                    data.data.subscriptionsxcompany.data.forEach(element => {
+                        apps.value.push({id:element.app.id,licencia:element.license.name, nombre: element.app.name,logo: ispb, activo: true})
+                        
+                    })
+                    console.log(apps.value)
+
+                }).catch(error => {
+                    console.log(error.response);
+                })
+            })
+        }
+
 
         const activar = () => {
             activo.value = !activo.value
@@ -96,6 +171,8 @@ export default {
         }, false)
 
         return {
+            company_id,
+            traerSuscripcionesxCompany,
             apps,
             discovers,
             activo,

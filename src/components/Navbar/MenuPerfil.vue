@@ -10,9 +10,10 @@
                 <div class="mt-5 mb-2 close-perfil">
                     <img class="circle close-perfil" src="@/assets/perfil.jpg" alt="" style="max-height: 6rem;">
                 </div>
-                <p class="is-size-7 has-text-grey close-perfil">mauricioferreyra548@gmail.com</p>
+                <h3>{{nombre}}</h3>
+                <p class="is-size-7 has-text-grey close-perfil">{{email}}</p>
                   <!--   con la expresion {{$t('')}} podemos traer la palabra que queremos mostrar traducida en el lenguaje seleccionado -->
-                <p class="is-size-7 has-text-grey close-perfil">{{$t('navbar.menuPerfil.company')}} Crenein</p>
+                <p class="is-size-7 has-text-grey close-perfil">{{$t('navbar.menuPerfil.company')}} {{companyName}}</p>
                 <div class="buttons-perfil my-1 close-perfil">
                     <button class="button fondo-crenein has-text-white is-size-7 w-100 my-2 has-text-weight-bold">{{$t('navbar.menuPerfil.GestionCuenta')}}</button>
                     <router-link :to="{name: 'CreateCompany'}" class="button fondo-crenein has-text-white is-size-7 w-100 my-1 has-text-weight-bold">{{$t('navbar.menuPerfil.crearEmpresa')}}</router-link>
@@ -33,19 +34,107 @@
 
 <script>
 import { ref } from '@vue/reactivity'
-import { inject } from '@vue/runtime-core'
-
+import { inject, watchEffect } from '@vue/runtime-core'
+import store from '@/store';
+import {GraphQLClient} from 'graphql-request';
 
 export default {
     name: 'MenuPerfil',
+    created(){
+        this.traerDatosUser()
+        this.traerCompanyxUser()
+    },
 
     setup(){
         const isMobile = inject('isMobile')
         const activo = ref(false)
+        const email = ref("")
+        const user_id = ref()
+        const nombre = ref("")
+        const companyName = ref("")
+        const endpoint = store.state.url_backend
+        const company_id = ref();
+
+        watchEffect(()=>{
+            store.state.company_id 
+            store.state.user_id 
+            company_id.value = localStorage.getItem('id_company_selected')
+            user_id.value = localStorage.getItem('user_id')
+        })
 
         const activar = () => {
             activo.value = !activo.value
         }
+
+
+
+        const traerCompanyxUser = () => {
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+             watchEffect(() => {
+                client.rawRequest(/* GraphQL */ `
+                query($id:ID) {
+                    company(id:$id){
+                        id
+                        name_fantasy
+                        business_name
+                        
+                    }
+                }`,
+                {                 
+                    id:company_id.value                
+                },
+                {
+                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+                })
+                .then((data) => {
+                    let company = data.data.company
+                    companyName.value = company.name_fantasy
+                   /*  console.log(companyName.value) */
+
+                      
+                }).catch(error => {
+                    console.log(error.response);
+                })
+            })
+
+        }
+
+
+        const traerDatosUser = () => {
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            watchEffect(() => {
+                client.rawRequest(/* GraphQL */ `
+                query($id:ID) {
+                    user(id:$id){
+                        id
+                        name
+                        email
+                        companies {
+                              	id
+                                name_fantasy
+                                business_name
+                        }
+                    }
+                }`,
+                {                 
+                    id:user_id.value                
+                },
+                {
+                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+                })
+                .then((data) => {
+                    let user = data.data.user
+                    nombre.value = user.name
+                    email.value = user.email
+                    /* console.log(email.value) */
+
+                      
+                }).catch(error => {
+                    console.log(error.response);
+                })
+            })
+        }
+
 
         // Agrege una clase vacia llamada "close-perfil" que al hacer click fuera de esa clase se cierra el menu app
         document.addEventListener('click', function(e){
@@ -56,9 +145,16 @@ export default {
         }, false)
 
         return{
+            nombre,
+            traerCompanyxUser,
+            companyName,
+            email,
+            traerDatosUser,
+            user_id,
             isMobile,
             activo,
             activar,
+            company_id
         }
     }
 }

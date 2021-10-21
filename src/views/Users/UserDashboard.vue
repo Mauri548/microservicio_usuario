@@ -82,7 +82,13 @@ export default {
         const endpoint = store.state.url_backend
         const users = ref([])
         const users_aux = ref([])
-        const company_id = ref(localStorage.getItem('id_company_selected'))
+        const company_id = ref();
+
+
+        watchEffect(()=>{
+            store.state.company_id 
+            company_id.value = localStorage.getItem('id_company_selected')
+        })
 
         const traerUsers = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
@@ -166,6 +172,39 @@ export default {
                 })
             })
         }
+
+
+        watchEffect(() => {
+             const client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */ `
+                query($company_id:ID){
+                    company(id:$company_id) {
+                      users {
+                            id
+                            name
+                            email
+                        }
+                    }
+                }`,
+                {
+                    /* page: parseInt(route.params.page),
+                    first: mostrar_cantidad.value */
+                    company_id:company_id.value
+                })
+                .then((data) => {
+                    users.value = []
+                    /* console.log(data.data.company) */
+                    data.data.company.users.forEach(element => {
+                        users.value.push({id:element.id, nombre: element.name, email:element.email ,activo: false, modalDelete: false})
+                  
+                    })
+                    /* console.log(users.value) */
+
+                }).catch(error => {
+                    console.log(error.response);
+                })
+        })
+
 
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {

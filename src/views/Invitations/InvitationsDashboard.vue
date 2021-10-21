@@ -41,7 +41,7 @@ import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
 import { ref } from '@vue/reactivity'
 import store from '@/store' 
-import {  watchEffect } from '@vue/runtime-core'
+import {  watch, watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js' 
 import {GraphQLClient, request as fetchGQL} from 'graphql-request';
 
@@ -57,6 +57,7 @@ export default {
     },
     created(){
         this.traerInvitaciones()
+        console.log(localStorage.getItem('id_company_selected'))
     },
 
     setup () {
@@ -73,9 +74,18 @@ export default {
         const endpoint = store.state.url_backend
         const invitaciones = ref([])
         const users_aux = ref([])
-        const company_id = ref(localStorage.getItem('id_company_selected'))
+       /*  let company_id = localStorage.getItem('id_company_selected') */
+        const company_id = ref();
+
+        watchEffect(()=>{
+            store.state.company_id 
+            company_id.value = localStorage.getItem('id_company_selected')
+        })
+  
+
 
         const traerInvitaciones = () => {
+            
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             watchEffect(() => {
                 client.rawRequest(/* GraphQL */ `
@@ -111,7 +121,7 @@ export default {
                 {
                     /* page: parseInt(route.params.page),
                     first: mostrar_cantidad.value */
-                     company_id: company_id.value
+                    company_id: company_id.value
                 },
                 {
                     /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
@@ -130,7 +140,58 @@ export default {
         }
 
 
-
+        watchEffect(()=>{ 
+            
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            client.rawRequest(/* GraphQL */ `
+            query($company_id:ID) {
+                    invitationsxcompany(first: 999, page: 1,company_id:$company_id)  {
+                       data{
+                        id
+                        name
+                        email
+                        use_company_id
+                        use_user_id
+                        company{
+                        id
+                        business_name
+                        }
+                        user{
+                            id
+                        name
+                        }
+                    }
+                    paginatorInfo{
+                        count
+                        currentPage
+                        firstItem
+                        hasMorePages
+                        lastItem
+                        lastPage
+                        perPage
+                        total
+                        }
+                    }
+            }`,
+            {
+                /* page: parseInt(route.params.page),
+                first: mostrar_cantidad.value */
+                company_id: company_id.value
+            },
+            {
+                /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+            })
+            .then((data) => {
+                invitaciones.value = []
+                data.data.invitationsxcompany.data.forEach(element => {
+                    invitaciones.value.push({id:element.id, nombre: element.name, email:element.email ,activo: false, modalDelete: false})
+                      /*   console.log(typeof element.logo) */
+                })
+            }).catch(error => {
+                console.log(error.response);
+            })
+        
+        })
 
 
         // Activa el valor para abrir una ventana modal de ese elemento
