@@ -91,16 +91,22 @@ export default {
 
         const activo = ref(false)
         const company_id = ref();
+
+
    
         watchEffect(()=>{
             store.state.company_id 
             company_id.value = localStorage.getItem('id_company_selected')
+
+            if(activo.value){
+                traerSuscripcionesxCompany()
+            }
         })
 
         
         const traerSuscripcionesxCompany = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            watchEffect(() => {
+            
                 client.rawRequest(/* GraphQL */ `
                 query($company_id:ID) {
                      subscriptionsxcompany(first: 999, page: 1,company_id:$company_id) {
@@ -156,12 +162,15 @@ export default {
                 }).catch(error => {
                     console.log(error.response);
                 })
-            })
+            
         }
+
+        
 
 
         const activar = () => {
             activo.value = !activo.value
+            
         }
 
         // agrege una clase vacia llamada "close-apps" que al hacer click fuera de esa clase se cierre el menu de app
