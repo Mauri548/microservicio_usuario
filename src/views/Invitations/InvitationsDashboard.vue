@@ -124,7 +124,7 @@ export default {
                     company_id: company_id.value
                 },
                 {
-                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+                    authorization: `Bearer ${ localStorage.getItem('user-token') }`
                 })
                 .then((data) => {
                     invitaciones.value = []
@@ -179,7 +179,7 @@ export default {
                 company_id: company_id.value
             },
             {
-                /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+                authorization: `Bearer ${ localStorage.getItem('user-token') }`
             })
             .then((data) => {
                 invitaciones.value = []
@@ -196,13 +196,13 @@ export default {
 
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
-            let aux = datas.value.find(element => element.id == data.id)
+            let aux = invitaciones.value.find(element => element.id == data.id)
             aux.activo = !aux.activo
         }
 
         // Activa el valor de modalDelete para abrir el modal de aviso 
         const actionModalDelete = (data) => {
-            let aux = datas.value.find(element => element.id == data)
+            let aux = invitaciones.value.find(element => element.id == data)
             aux.activo = false
             aux.modalDelete = !aux.modalDelete
         }
