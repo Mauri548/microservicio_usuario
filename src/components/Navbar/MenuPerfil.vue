@@ -24,7 +24,7 @@
                     <img class="close-perfil" src="@/assets/logo_crenein.png" alt="" style="max-height: 8rem">
                 </div>
                 <div class="buttons-perfil close-perfil">
-                    <button class="button fondo-crenein has-text-white is-size-7 w-100 my-2 has-text-weight-bold">{{$t('navbar.menuPerfil.cerrarSesion')}}</button>
+                    <button @click="logout" class="button fondo-crenein has-text-white is-size-7 w-100 my-2 has-text-weight-bold">{{$t('navbar.menuPerfil.cerrarSesion')}}</button>
                 </div>
             </div>
         </div>
@@ -37,6 +37,7 @@ import { ref } from '@vue/reactivity'
 import { inject, watchEffect } from '@vue/runtime-core'
 import store from '@/store';
 import {GraphQLClient} from 'graphql-request';
+import { useRouter } from 'vue-router';
 
 export default {
     name: 'MenuPerfil',
@@ -54,6 +55,7 @@ export default {
         const companyName = ref("")
         const endpoint = store.state.url_backend
         const company_id = ref();
+        const router = useRouter()
 
         watchEffect(()=>{
             store.state.company_id 
@@ -66,7 +68,39 @@ export default {
             activo.value = !activo.value
         }
 
-
+        const logout = () => {
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+              /*   console.log(localStorage.getItem('user-token')) */
+                client.rawRequest(/* GraphQL */ `
+                    mutation{
+                        logout{
+                            status,
+                            message,
+                        }
+                    }`,
+                {                 
+                                 
+                },
+                {
+                    authorization: `Bearer ${ localStorage.getItem('user-token') }` 
+                })
+                .then((data) => {
+                   /*  let status = data.data.logout */
+              /*       console.log(status)  */
+                    localStorage.clear()
+              /*      localStorage.remove('id_company_selected')
+                    localStorage.remove('user_id') */
+                   /*  localStorage.clear()
+                    */
+               
+                  router.push({name: 'login'})  
+                      
+                }).catch(error => {
+                    
+                    console.log(error.response);
+                })
+            
+        }
 
         const traerCompanyxUser = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
@@ -145,6 +179,7 @@ export default {
         }, false)
 
         return{
+            router ,
             nombre,
             traerCompanyxUser,
             companyName,
@@ -154,7 +189,8 @@ export default {
             isMobile,
             activo,
             activar,
-            company_id
+            company_id,
+            logout
         }
     }
 }

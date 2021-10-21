@@ -128,7 +128,7 @@ export default {
                 first: mostrar_cantidad.value */
             },
             {
-                /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+                authorization: `Bearer ${ localStorage.getItem('user-token') }`
             })
             .then((data) => {
                 apps.value = []
