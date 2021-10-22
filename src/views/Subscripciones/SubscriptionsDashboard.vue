@@ -86,49 +86,31 @@ export default {
         const subscripciones = ref([])
         const subscripciones_aux = ref([])
 
-        watchEffect(()=>{
-            store.state.company_id 
-            company_id.value = localStorage.getItem('id_company_selected')
-        })
 
         /**
          * 
          * Trae las suscripciones de la empresa actual
          * 
          */
-        watchEffect(()=>{
+        const traerSuscriptionxCompany = () => {
             const client = new GraphQLClient(endpoint)
-
             client.rawRequest(/* GraphQL */ `
                 query($company_id:ID) {
                     subscriptionsxcompany(first: 100, page: 1,company_id:$company_id) {
                         paginatorInfo {
-                            count
-                            currentPage
-                            firstItem
-                            hasMorePages
-                            lastItem
-                            lastPage
-                            perPage
-                            total
+                            count, currentPage, firstItem, hasMorePages
+                            lastItem, lastPage, perPage, total
                         }
                         data {
-                            id
-                            use_app_id
-                            use_company_id
-                            lic_license_id
+                            id, use_app_id, use_company_id, lic_license_id
                             company {
-                                id
-                                name_fantasy
+                                id, name_fantasy
                             }
                             app {
-                                id
-                                name
+                                id, name
                             }
                             license {
-                                id
-                                name
-                                price_arg
+                                id, name, price_arg
                             }
                         }
                     }
@@ -148,9 +130,19 @@ export default {
                 }).catch(error => {
                     console.log(error.response);
                 })
+        }
+
+        /**
+         * 
+         * Reacciona cuando se cambia la empresa
+         * 
+         */
+        watchEffect(()=>{
+            console.log('cambiando ...')
+            store.state.company_id 
+            company_id.value = localStorage.getItem('id_company_selected')
+            traerSuscriptionxCompany()
         })
-
-
 
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
