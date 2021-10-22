@@ -7,31 +7,24 @@
             </div>
         
             <div class="column ">
-                <form>
+                <form >
 
                     <div class="column mx-4 cuadro-central " >
                         
-                        <div class="columns">
+                        <div class="columns is-flex mb-0">
                             <div class="column is-flex-grow-0 pl-0 pt-4">
                                 <label class="label is-size-4" style="color: #005395;"><i class="fas fa-user-alt"></i></label>
                             </div>
                             <div class="column px-0 ">
-                                <!-- <div class="control ">
-                                    <input class="input" type="text" placeholder="Email">
-                                </div> -->
-
                                 <CampoForm place="Email" type="text" v-model="email" :error="msg_error.email" />
                             </div>    
                         </div> 
 
-                        <div class="columns">
+                        <div class="columns is-flex">
                             <div class="column is-flex-grow-0 pl-0 mr-1 pt-4">
                                 <label class="label is-size-4" style="color: #005395;"><i class="fas fa-lock"></i></label>
                             </div>
                             <div class="column px-0 ">
-                             <!--    <div class="control ">
-                                    <input class="input" type="password" placeholder="Password">
-                                </div> -->
                                 <CampoFormPassword place="Password" v-model="password" :error="msg_error.password" />
                             </div>   
                         </div> 
