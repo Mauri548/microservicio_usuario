@@ -72,15 +72,10 @@ export default {
     created(){
         this.comprobar_carga()
         this.comprobar_edicion()
-        this.traerSubscripciones()
     },
 
     setup () {
-        const datas = ref([
-/*             {id: 1,  nombreApp: 'Geston', licence: 'Hasta 100 clientes', companyName: 'Zunet', activo: false},
-            {id: 2,  nombreApp: 'PuWIc', licence: 'Hasta 100 puntos wifi', companyName: 'Nubitec', activo: false},
-            {id: 3,  nombreApp: 'ISPBbrain', licence: 'Hasta 1mil conexiones', companyName: 'Xnet', activo: false}, */
-        ])
+        const datas = ref([])
       
         const carga_exitosa = ref(false)
         const comprobar = store.state.carga_exitosa
@@ -91,112 +86,37 @@ export default {
         const subscripciones = ref([])
         const subscripciones_aux = ref([])
 
-        watchEffect(()=>{
-            store.state.company_id 
-            company_id.value = localStorage.getItem('id_company_selected')
-        })
 
-        const traerSubscripciones = () => {
-            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            watchEffect(() => {
-                client.rawRequest(/* GraphQL */ `
-                query($company_id:ID) {
-                  subscriptionsxcompany(first: 100, page: 1,company_id:$company_id) {
-                        paginatorInfo {
-                        count
-                        currentPage
-                        firstItem
-                        hasMorePages
-                        lastItem
-                        lastPage
-                        perPage
-                        total
-                        }
-                        data {
-                        id
-                        use_app_id
-                        use_company_id
-                        lic_license_id
-                        company {
-                            id
-                            name_fantasy
-                        }
-                        app {
-                            id
-                            name
-                        }
-                        license {
-                            id
-                            name
-                            price_arg
-                        }
-                        }
-                    }
-                }`,
-                {
-                    company_id: company_id.value
-                    /* page: parseInt(route.params.page),
-                    first: mostrar_cantidad.value */
-
-                },
-                {
-                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
-                })
-                .then((data) => {
-                    subscripciones.value = []
-                    data.data.subscriptionsxcompany.data.forEach(element => {
-                        subscripciones.value.push({id:element.id, nombreApp: element.app.name, licence:element.license.name ,companyName:element.company.name_fantasy,activo: false, modalDelete: false})
-                      /*   console.log(typeof element.logo) */
-                    })
-
-                }).catch(error => {
-                    console.log(error.response);
-                })
-            })
-        }
-
-        watchEffect(()=>{
+        /**
+         * 
+         * Trae las suscripciones de la empresa actual
+         * 
+         */
+        const traerSuscriptionxCompany = () => {
             const client = new GraphQLClient(endpoint)
-
             client.rawRequest(/* GraphQL */ `
                 query($company_id:ID) {
-                  subscriptionsxcompany(first: 100, page: 1,company_id:$company_id) {
+                    subscriptionsxcompany(first: 100, page: 1,company_id:$company_id) {
                         paginatorInfo {
-                        count
-                        currentPage
-                        firstItem
-                        hasMorePages
-                        lastItem
-                        lastPage
-                        perPage
-                        total
+                            count, currentPage, firstItem, hasMorePages
+                            lastItem, lastPage, perPage, total
                         }
                         data {
-                        id
-                        use_app_id
-                        use_company_id
-                        lic_license_id
-                        company {
-                            id
-                            name_fantasy
-                        }
-                        app {
-                            id
-                            name
-                        }
-                        license {
-                            id
-                            name
-                            price_arg
-                        }
+                            id, use_app_id, use_company_id, lic_license_id
+                            company {
+                                id, name_fantasy
+                            }
+                            app {
+                                id, name
+                            }
+                            license {
+                                id, name, price_arg
+                            }
                         }
                     }
                 }`,
                 {
                     company_id: company_id.value
-                    /* page: parseInt(route.params.page),
-                    first: mostrar_cantidad.value */
-
                 },
                 {
                     authorization: `Bearer ${ localStorage.getItem('user-token') }` 
@@ -205,15 +125,21 @@ export default {
                     subscripciones.value = []
                     data.data.subscriptionsxcompany.data.forEach(element => {
                         subscripciones.value.push({id:element.id, nombreApp: element.app.name, licence:element.license.name ,companyName:element.company.name_fantasy,activo: false, modalDelete: false})
-                      /*   console.log(typeof element.logo) */
                     })
 
-                }).catch(error => {
-                    console.log(error.response);
-                })
+                }).catch(error => {console.log(error.response);})
+        }
+
+        /**
+         * 
+         * Reacciona cuando se cambia la empresa
+         * 
+         */
+        watchEffect(()=>{
+            store.state.company_id 
+            company_id.value = localStorage.getItem('id_company_selected')
+            traerSuscriptionxCompany()
         })
-
-
 
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
@@ -267,7 +193,6 @@ export default {
             carga_exitosa ,
             comprobar ,
             comprobar_edi ,
-            traerSubscripciones ,
             endpoint,
             subscripciones,
             subscripciones_aux,
