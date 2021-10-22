@@ -127,9 +127,7 @@ export default {
                         subscripciones.value.push({id:element.id, nombreApp: element.app.name, licence:element.license.name ,companyName:element.company.name_fantasy,activo: false, modalDelete: false})
                     })
 
-                }).catch(error => {
-                    console.log(error.response);
-                })
+                }).catch(error => {console.log(error.response);})
         }
 
         /**
@@ -138,7 +136,6 @@ export default {
          * 
          */
         watchEffect(()=>{
-            console.log('cambiando ...')
             store.state.company_id 
             company_id.value = localStorage.getItem('id_company_selected')
             traerSuscriptionxCompany()
