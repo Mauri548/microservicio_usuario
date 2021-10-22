@@ -31,10 +31,6 @@ export default {
     setup(){
 
         const endpoint = store.state.url_backend
-
-        // Remplaza el 2 por el valor de la id de la compañia de tu usuario
-        // localStorage.setItem('id_company_selected', "2")
-
         const companies = ref([])
         const companyActual = ref({id: localStorage.getItem('id_company_selected'), name_fantasy: ''})
 
