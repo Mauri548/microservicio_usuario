@@ -142,7 +142,6 @@ export default {
 
         const traerUsersxCompany = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            watchEffect(() => {
                 client.rawRequest(/* GraphQL */ `
                 query($company_id:ID){
                     company(id:$company_id) {
@@ -170,39 +169,14 @@ export default {
                 }).catch(error => {
                     console.log(error.response);
                 })
-            })
+           
         }
 
 
         watchEffect(() => {
-             const client = new GraphQLClient(endpoint)
-            client.rawRequest(/* GraphQL */ `
-                query($company_id:ID){
-                    company(id:$company_id) {
-                      users {
-                            id
-                            name
-                            email
-                        }
-                    }
-                }`,
-                {
-                    /* page: parseInt(route.params.page),
-                    first: mostrar_cantidad.value */
-                    company_id:company_id.value
-                })
-                .then((data) => {
-                    users.value = []
-                    /* console.log(data.data.company) */
-                    data.data.company.users.forEach(element => {
-                        users.value.push({id:element.id, nombre: element.name, email:element.email ,activo: false, modalDelete: false})
-                  
-                    })
-                    /* console.log(users.value) */
+           /*  console.log("cambiando") */
+            traerUsersxCompany()
 
-                }).catch(error => {
-                    console.log(error.response);
-                })
         })
 
 
