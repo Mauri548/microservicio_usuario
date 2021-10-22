@@ -55,110 +55,39 @@ export default {
         Modal,
         ActionModal,
     },
-    created(){
-        this.traerInvitaciones()
-        console.log(localStorage.getItem('id_company_selected'))
-    },
 
     setup () {
-        const datas = ref([
-           /*  {id: 1,  fullName: 'Mauricio Ferreyra', email: 'mauricioferreyra548@gmail.com', created: '24/07/2021', activo: false},
-            {id: 2,  fullName: 'Luis Ferreyra', email: 'luis548@gmail.com', created: '24/07/2021', activo: false},
-            {id: 3,  fullName: 'Ema Ferreyra', email: 'emaCorreo@gmail.com', created: '24/07/2021', activo: false},
-            {id: 4,  fullName: 'Glo Ferreyra', email: 'gloquita@gmail.com', created: '24/07/2021', activo: false},
-            {id: 5,  fullName: 'Leonardo Ferreyra', email: 'loreto@gmail.com', created: '24/07/2021', activo: false}, */
-        ])
-      
-
+        const datas = ref([])
+    
         const titles = ref([])
         const endpoint = store.state.url_backend
         const invitaciones = ref([])
         const users_aux = ref([])
-       /*  let company_id = localStorage.getItem('id_company_selected') */
         const company_id = ref();
 
-        watchEffect(()=>{
-            store.state.company_id 
-            company_id.value = localStorage.getItem('id_company_selected')
-        })
-  
-
-
-        const traerInvitaciones = () => {
-            
-            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            watchEffect(() => {
-                client.rawRequest(/* GraphQL */ `
-                query($company_id:ID) {
-                    invitationsxcompany(first: 999, page: 1,company_id:$company_id)  {
-                       data{
-                        id
-                        name
-                        email
-                        use_company_id
-                        use_user_id
-                        company{
-                        id
-                        business_name
-                        }
-                        user{
-                            id
-                        name
-                        }
-                    }
-                    paginatorInfo{
-                        count
-                        currentPage
-                        firstItem
-                        hasMorePages
-                        lastItem
-                        lastPage
-                        perPage
-                        total
-                        }
-                    }
-                }`,
-                {
-                    /* page: parseInt(route.params.page),
-                    first: mostrar_cantidad.value */
-                    company_id: company_id.value
-                },
-                {
-                    authorization: `Bearer ${ localStorage.getItem('user-token') }`
-                })
-                .then((data) => {
-                    invitaciones.value = []
-                    data.data.invitationsxcompany.data.forEach(element => {
-                        invitaciones.value.push({id:element.id, nombre: element.name, email:element.email ,activo: false, modalDelete: false})
-                      /*   console.log(typeof element.logo) */
-                    })
-
-                }).catch(error => {
-                    console.log(error.response);
-                })
-            })
-        }
-
-
-        watchEffect(()=>{ 
-            
+        /**
+         * 
+         * Trae las invitaciones por empresa
+         * 
+         */
+        const traerInvitaciones =() => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             client.rawRequest(/* GraphQL */ `
             query($company_id:ID) {
                     invitationsxcompany(first: 999, page: 1,company_id:$company_id)  {
-                       data{
+                    data{
                         id
                         name
                         email
                         use_company_id
                         use_user_id
                         company{
-                        id
-                        business_name
+                            id
+                            business_name
                         }
                         user{
                             id
-                        name
+                            name
                         }
                     }
                     paginatorInfo{
@@ -170,12 +99,10 @@ export default {
                         lastPage
                         perPage
                         total
-                        }
                     }
+                }
             }`,
             {
-                /* page: parseInt(route.params.page),
-                first: mostrar_cantidad.value */
                 company_id: company_id.value
             },
             {
@@ -185,14 +112,15 @@ export default {
                 invitaciones.value = []
                 data.data.invitationsxcompany.data.forEach(element => {
                     invitaciones.value.push({id:element.id, nombre: element.name, email:element.email ,activo: false, modalDelete: false})
-                      /*   console.log(typeof element.logo) */
                 })
-            }).catch(error => {
-                console.log(error.response);
-            })
-        
-        })
+            }).catch(error => {console.log(error.response);})
+        }
 
+        watchEffect(()=>{
+            store.state.company_id 
+            company_id.value = localStorage.getItem('id_company_selected')
+            traerInvitaciones()
+        })
 
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
@@ -223,7 +151,6 @@ export default {
         return {
             company_id ,
             invitaciones,
-            traerInvitaciones ,
             endpoint,
             users_aux,
             datas,
