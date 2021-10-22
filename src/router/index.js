@@ -79,7 +79,7 @@ const routes = [
         component: () => import(/* webpackChunkName: "CompaniesDashboard" */ '../views/Companies/CompaniesDashboard.vue')
       },
       {
-        path: '/EditCompany',
+        path: '/EditCompany/:id',
         name: 'EditCompany',
         component: () => import(/* webpackChunkName: "EditCompany" */ '../views/Companies/EditCompany.vue')
       },

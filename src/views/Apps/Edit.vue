@@ -334,7 +334,7 @@ export default {
                id : route.params.id
             },
             {
-               /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+               authorization: `Bearer ${ localStorage.getItem('user-token') }` 
             })
             .then((data) => {
               /*   console.log(data.data.app) */
