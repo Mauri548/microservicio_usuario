@@ -26,7 +26,7 @@
                     <td @click="actionModal(data)">{{data.taxCondition}}</td>
                     <td @click="actionModal(data)">{{data.direction}}</td>
                     <td @click="actionModal(data)">{{data.location}}</td>
-                  <!--   <td @click="actionModal(data)">{{data.province}}</td> -->
+                    <td @click="actionModal(data)">{{data.province}}</td>
                     <td @click="actionModal(data)">{{data.country}}</td>
                     <Modal namePath="EditCompany" :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" />
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
@@ -74,7 +74,7 @@ import store from '@/store';
 import { inject } from '@vue/runtime-core'
 import {  watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js'
-import {GraphQLClient, request as fetchGQL} from 'graphql-request';
+import {GraphQLClient} from 'graphql-request';
 
 
 export default {
@@ -90,7 +90,7 @@ export default {
     created(){
         this.comprobar_carga()
         this.comprobar_edicion()
-       /* this.traerCompanies()  */
+      /*  this.traerCompanies()   */
         this.traerCompaniesxUser()
     },
 
@@ -132,11 +132,11 @@ export default {
         watchEffect(()=>{
 
             if(i18n.global.locale=='es'){
-                titles.value = ['Nombre de fantasia', 'Nombre del negocio', 'Propietarios', 'Cuit', 'Correo', 'Telefono', 'Condición fiscal', 'Dirección', 'Localidad', 'Pais']
+                titles.value = ['Nombre de fantasia', 'Nombre del negocio', 'Propietarios', 'Cuit', 'Correo', 'Telefono', 'Condición fiscal', 'Dirección', 'Localidad','Provincia', 'Pais']
                  /*  titles.value = ['Nombre de fantasia', 'Nombre del negocio', 'Propietarios', 'Cuit', 'Correo', 'Telefono', 'Condición fiscal', 'Dirección', 'Localidad', 'Provincia', 'Pais'] */
             }
             if(i18n.global.locale=='en'){
-                titles.value = ['Name fantasy', 'Business name', 'Owners', 'Cuit', 'Email', 'Phone', 'Tax condition', 'Direction', 'Location', 'Country']
+                titles.value = ['Name fantasy', 'Business name', 'Owners', 'Cuit', 'Email', 'Phone', 'Tax condition', 'Direction', 'Location','Province', 'Country']
             }
 
         })
@@ -205,24 +205,41 @@ export default {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
                 client.rawRequest(/* GraphQL */ `
                 query($id:ID) {
-                    user(id:$id){
-                        id
-                        name
-                        email
-                        companies {
-                              	id
-                                name_fantasy
-                                business_name
-                                owners
-                                cuit
-                                email
-                                phones
-                                tax_condition
-                                direction
-                                location
-                                country
+                     userscompaniesxuser(first: 999, page:1, user_id: $id) {
+                            paginatorInfo {
+                                count
+                                currentPage
+                                firstItem
+                                hasMorePages
+                                lastItem
+                                lastPage
+                                perPage
+                                total
+                            }
+                            data {
+                                use_user_id
+                                use_company_id
+                                user {
+                                    id
+                                    name
+                                    email
+                                }
+                                company {
+                                    id
+                                    name_fantasy
+                                    business_name
+                                    owners
+                                    cuit
+                                    email
+                                    phones
+                                    tax_condition
+                                    direction
+                                    location
+                                    province
+                                    country
+                                }
+                            }
                         }
-                    }
                 }`,
                 {
                     /* page: parseInt(route.params.page),
@@ -235,18 +252,20 @@ export default {
                 })
                 .then((data) => {
                     companies.value = []
-                    console.log(data.data.user.companies)
-                    data.data.user.companies.forEach(element => {
-                        companies.value.push({id:element.id, nameFantasy: element.name_fantasy,
-                        businessName: element.business_name,owners:element.owners ,
-                        cuit:element.cuit ,email:element.email,phone:element.phones,
-                        taxCondition:element.tax_condition ,direction:element.direction,
-                        location:element.location,
-                         /* province:element.province,  */
-                        country:element.country, activo: false, modalDelete: false}) 
+                    let datos = data.data.userscompaniesxuser.data
+                    console.log(datos[0].company.name_fantasy)
+             
+                    datos.forEach(element => {
+                        companies.value.push({id:element.company.id, nameFantasy: element.company.name_fantasy,
+                        businessName: element.company.business_name,owners:element.company.owners ,
+                        cuit:element.company.cuit ,email:element.company.email,phone:element.company.phones,
+                        taxCondition:element.company.tax_condition ,direction:element.company.direction,
+                        location:element.company.location,
+                        province:element.company.province,   
+                        country:element.company.country, activo: false, modalDelete: false}) 
                       
-                    })
-                  /*   console.log(companies.value) */
+                    }) 
+                  /* console.log(companies.value)  */
 
                 }).catch(error => {
                     console.log(error.response);
