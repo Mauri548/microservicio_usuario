@@ -2,7 +2,10 @@
     <div class="has-text-centered">
         <h3 class="fondo-crenein has-text-white py-1">{{$t('user.usuarios')}}</h3>
         <ul>
-            <li v-for="user in users" :key="user.id" >
+            <li v-for="user in users" :key="user.id" 
+             :class="{'active': user.activo}"
+             @click="selectUser(user.id)"
+            >
                 <a>{{user.name}}</a>
             </li>
         </ul>
@@ -16,13 +19,21 @@ import {  watchEffect } from '@vue/runtime-core'
 export default {
     name: 'UserList',
     props: ['users'],
-    setup(){
+    emits: ['onChangeUserSelected'],
+    setup(props,{emit}){
         const Lan = ref(false)
         watchEffect(()=>{
             Lan.value = store.state.cambio_lang
         })
+
+        const selectUser = (id) => {
+            console.log(id)
+            emit("onChangeUserSelected", id)
+        }
+
         return{
-            Lan
+            Lan, 
+            selectUser
         }
     }
 
@@ -41,4 +52,15 @@ li:hover {
 li a {
     color: black
 }
+
+li.active {
+    /* color: #fff; */
+    background-color: #005395;
+}
+
+li.active > a {
+    color: #fff;
+}
+
+
 </style>
