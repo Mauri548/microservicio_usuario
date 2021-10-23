@@ -203,7 +203,6 @@ export default {
 
         const traerCompaniesxUser = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            watchEffect(() => {
                 client.rawRequest(/* GraphQL */ `
                 query($id:ID) {
                     user(id:$id){
@@ -252,8 +251,11 @@ export default {
                 }).catch(error => {
                     console.log(error.response);
                 })
-            })
         }
+
+        watchEffect(()=>{
+            traerCompaniesxUser()
+        })
  
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
