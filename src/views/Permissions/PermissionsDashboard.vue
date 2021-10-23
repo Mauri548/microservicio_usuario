@@ -209,7 +209,7 @@ export default {
                                 total
                             }	
                         data{
-                                    id
+                            id
                             key
                             detail
                             app{
@@ -217,7 +217,6 @@ export default {
                                 name
                             }
                         }
-                        
                     }
                 }`,
                 {
