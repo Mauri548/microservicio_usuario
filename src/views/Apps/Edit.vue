@@ -43,11 +43,16 @@
             <div class="column ">
                 <textarea class="textarea" v-model="observation" :placeholder="$i18n.locale=='es'? 'Observación': 'Observation'"></textarea>
             </div>
-            <div class="column">
+            <!-- <div class="column">
                 <button class="button has-text-white button1" type="button" @click="validar" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
             </div>  
             <div class="column">
                 <button class="button button1 has-text-white has-background-danger" type="button" @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
+            </div> -->
+
+            <div class="column is-flex is-grouped is-justify-content-space-between">
+                <button class="button button-cancel has-text-white has-background-danger" type="button" @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
+                <button class="button has-text-white button-confirm " type="button" @click="validar" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
             </div>
         </form>
     </div>
@@ -290,10 +295,6 @@ export default {
 
 <style scoped>
 
-.button1{
-    width:100%;
-}
-
 .imgred{
     border-radius: 100px;
 }
@@ -304,6 +305,15 @@ export default {
 
 .input-img {
     margin: auto
+}
+
+.button-confirm {
+    width: 65%;
+    margin-left: 6px;
+}
+
+.button-cancel {
+    width:35%
 }
 
 .conteiner-edit-app {
