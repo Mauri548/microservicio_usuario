@@ -47,6 +47,7 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
+    meta: {requiresAuth: true},
     children:[
       {
         path: '/PersonalForm',
@@ -138,6 +139,24 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+/**
+ * 
+ * Valida que el usuario este registrado para permitirte ingresar a la página
+ * de no estar registrado te redirecciona a login
+ * 
+ */
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (localStorage.getItem('user-token')) {
+      next()
+    } else {
+      next({name: "login"})
+    }
+  } else {
+    next()
+  }
 })
 
 export default router

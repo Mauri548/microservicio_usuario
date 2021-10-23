@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
 
+
 const store = createStore({
     state(){
         
@@ -10,7 +11,7 @@ const store = createStore({
             edicion_exitosa: false,
             cambio_lang: false,
             creating_company: false,
-            url_backend: 'https://dev_front_gateway_crenein_ms.crenein.com/graphql',
+            url_backend: process.env.VUE_APP_URL_BACKEND,
             token: localStorage.getItem('user-token') || '',
             status: '',
             user_id: null | localStorage.getItem('user_id'),
