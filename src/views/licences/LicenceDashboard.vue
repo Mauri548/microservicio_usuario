@@ -52,8 +52,8 @@
                     <CampoForm type="number" :place="$i18n.locale=='en'? 'Price USD': 'Precio USD'" v-model="price_usd" :error="msg_error.price_usd" />
                 
                     <div class="column p-0 has-text-centered" >
-                        <button class="button has-background-danger has-text-white mr-2"  style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
-                        <button class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;" @click="validar">{{$t('permisos.guardar')}}</button>
+                        <button type="button" class="button has-background-danger has-text-white mr-2"  style="font-weight:bold;" @click="ModalAdd" >{{$t('permisos.cancel')}}</button>
+                        <button type="button" class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;" @click="register">{{$t('permisos.guardar')}}</button>
                     </div>
                 </form>
             </section>
@@ -87,6 +87,8 @@ import { ref, watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js'
 import store from '@/store'
 import { GraphQLClient } from 'graphql-request'
+import resetErrorMessage from '../../helper/resetErrorMessage'
+import isEmpty from '../../helper/FieldIsEmpty'
 
 
 export default {
@@ -119,17 +121,26 @@ export default {
         const succesLoad = ref(false)
         const activeAlert = ref(false)
         
-        watchEffect(()=>{
+        /**
+         * 
+         * Cambia los titulos de la tabla segun el idioma que se seleccione
+         * 
+         */
+        const changeTitleByLanguage = () => {
             if(i18n.global.locale=='es'){
                 titles.value = ['Nombre','Aplicación','Precio ARG','Precio USD']
             }
             if(i18n.global.locale=='en'){
                 titles.value = ['Name','App','Price ARG','Price USD']
             }
-        })
+        }
 
-        // Query que trae los datos de la licensias
-        watchEffect(() => {
+        /**
+         * 
+         * Trae todas las licencias
+         * 
+         */
+        const fetchLicenses = () => {
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */ `
             query{
@@ -150,7 +161,7 @@ export default {
                 }
             }`,
             {
-                // var
+                // asignar la pagina 
             })
             .then((data) => {
                 licenses.value = []
@@ -160,10 +171,20 @@ export default {
                 })
             })
             .catch(error => console.log(error.response))
+        }
+
+        watchEffect(() => {
+            changeTitleByLanguage()
+            fetchLicenses()
         })
 
 
-        // Query para traer las apps
+        
+        /**
+         * 
+         * Trae las app y lo almacena
+         * 
+         */
         const fetchApps = () => {
             apps.value = []
             const cliente = new GraphQLClient(endpoint)
@@ -185,40 +206,65 @@ export default {
                 data.data.appsVisible.data.forEach(element => {
                     apps.value.push({id: element.id, name: element.name})
                 })
-
-
             })
             .catch(error => console.log(error))
         }
 
-        // Function que valida los datos del formulario para verificar que sean correctos
-        const validar = () => {
+        const register = () => {
             succesLoad.value = false
             document.getElementById('form-create-app').addEventListener('submit', function(e) {
                 e.preventDefault()
             })
-            msg_error.value.name = ''
-            msg_error.value.price_usd = ''
-            msg_error.value.price_arg = ''
+            resetErrorMessage(msg_error.value)
 
-            if (price_arg.value == null || price_arg.value == '') price_arg.value = 0
-            if (price_usd.value == null || price_usd.value == '') price_usd.value = 0
-
-            if(i18n.global.locale=='es'){
-                if (name.value == "") msg_error.value.name = 'Nombre es requerido'
-                if (price_arg.value < 0) msg_error.value.price_arg = 'El precio no puede ser menor que 0'
-                if (price_usd.value < 0) msg_error.value.price_usd = 'El precio no puede ser menor que 0'
-            }
-            if(i18n.global.locale=='en'){
-                if (name.value == "") msg_error.value.name = 'Name is required'
-                if (price_arg.value < 0) msg_error.value.price_arg = 'The price cannot be less than 0'
-                if (price_usd.value < 0) msg_error.value.price_usd = 'The price cannot be less than 0'
-            }
-
-
-            if (msg_error.value.name == '' && msg_error.value.price_usd == '' && msg_error.value.price_arg == ''){
+            if (isValid()) {
                 typeAction.value == 'licence.agregar' ? createLicence() : editLicence()
-            } else { console.log('no paso') } 
+            } else {
+                console.log('no valido')
+            }
+
+        }
+
+        /**
+         * 
+         * Valida que no tenga ningun error en los campos
+         * 
+         */
+        const isValid = () => {
+            fieldsIsEmpty()
+            
+            for (let i in msg_error.value) {
+                if (msg_error.value[i] != '') return false 
+            }
+            return true
+        }
+
+        /**
+         * 
+         * Agrega un mensaje de error para los campos precio que sea menor a 0
+         * 
+         * @param price Variable donde esta el valor del precio
+         * @param key nombre del campo que se debe buscar
+         * 
+         */
+        const msgErrorPrice = (price, key='') => {
+            if (price < 0) {
+                msg_error.value[key] = i18n.global.locale=='es'? 'El precio no puede ser menor que 0' : 'The price cannot be less than 0'
+            }
+        }
+
+        /**
+         * 
+         * Verifica que los campos no esten vacios
+         * 
+         */
+        const fieldsIsEmpty = () => {
+            isEmpty(name.value, msg_error.value, 'name')
+            if (isEmpty(price_arg.value)) price_arg.value = 0
+            if (isEmpty(price_usd.value)) price_usd.value = 0
+
+            msgErrorPrice(price_arg.value, 'price_arg')
+            msgErrorPrice(price_usd.value, 'price_usd')
         }
 
         // Funcion para crear una nueva licencia
@@ -311,9 +357,8 @@ export default {
         const ModalAdd = (type, data) => {
             addLicence.value = !addLicence.value
             if (addLicence.value) {
-                msg_error.value.name = ''
-                msg_error.value.price_usd = ''
-                msg_error.value.price_arg = ''
+                resetErrorMessage(msg_error.value)
+                
                 fetchApps()
                 /*Verificamos el tipo de accion que se hara, si es editar o agregar para reutilizar un componente
                 modal */
@@ -364,7 +409,7 @@ export default {
             actionModal,
             actionModalDelete,
             createLicence,
-            validar,
+            register,
             name,
             selectedApp,
             price_arg,
