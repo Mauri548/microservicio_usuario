@@ -52,8 +52,8 @@
                     <CampoForm type="number" :place="$i18n.locale=='en'? 'Price USD': 'Precio USD'" v-model="price_usd" :error="msg_error.price_usd" />
                 
                     <div class="column p-0 has-text-centered" >
-                        <button class="button has-background-danger has-text-white mr-2"  style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
-                        <button class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;" @click="validar">{{$t('permisos.guardar')}}</button>
+                        <button type="button" class="button has-background-danger has-text-white mr-2"  style="font-weight:bold;" @click="ModalAdd" >{{$t('permisos.cancel')}}</button>
+                        <button type="button" class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;" @click="validar">{{$t('permisos.guardar')}}</button>
                     </div>
                 </form>
             </section>
