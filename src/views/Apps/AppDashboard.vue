@@ -177,9 +177,9 @@ export default {
             .then((data) => {
                 let message = data 
                 console.log(message.data)
-               app_eliminada.value = true
-               /*  accion_exitosa.value = true
-                paso_elim.value = true */
+                app_eliminada.value = true
+                /*  accion_exitosa.value = true
+                    paso_elim.value = true */
             })
             .catch(error => {
                 let mensaje = error.message
@@ -201,60 +201,17 @@ export default {
         }) */
 
         watchEffect(()=>{ 
-            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            client.rawRequest(/* GraphQL */ `
-             query{
-                apps(first: 999, page: 1){
-                    data{
-                        id
-                        name
-                        logo
-                        observation
-                        visible
-                        deleted_at
-                        created_at
-                        updated_at
-                        licenses {
-                            id
-                            name
-                            price_arg
-                            price_usd
-                        }
-                    }
-                    paginatorInfo {
-                        count, currentPage, hasMorePages, total
-                    }
-                   
-                }
-            }`,
-            {
-                /* page: parseInt(route.params.page),
-                first: mostrar_cantidad.value */
-            },
-            {
-                /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
-            })
-            .then((data) => {
-                apps.value = []
-                data.data.apps.data.forEach(element => {
-                    apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false, modalDelete: false})
-                    /*  console.log(typeof element.logo) */
-                })
-            }).catch(error => {
-                console.log(error.response);
-            })
-        
+            traerApps()
         })
+
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
-         
             let aux = apps.value.find(element => element.id == data.id)
             console.log(aux)
             aux.activo = !aux.activo
             /* router.push({name: 'EditApp', params: {id: aux.id} }) */
-            
-
         }
+
         // Activa el valor modalDelete para abrir una ventana de aviso antes de eliminar un elemento
         const actionModalDelete = (data) => {
             let aux = apps.value.find(element => element.id == data)
@@ -266,7 +223,6 @@ export default {
         const comprobar_carga = () => {
             if(comprobar==true){
                 setTimeout(() => carga_exitosa.value = true ,500)
-
                 let accion = "cargarApp"
                 store.commit('verificar_carga',accion)
             }
