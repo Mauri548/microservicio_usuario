@@ -193,59 +193,10 @@ export default {
                 detail.value = data.detail
         }
 
-
-        watchEffect(() => {
-            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            client.rawRequest(/* GraphQL */ `
-               query {
-                        permits(first:999,page:1) {
-                            paginatorInfo{
-                                count
-                                currentPage
-                                firstItem
-                                hasMorePages
-                                lastItem
-                                lastPage
-                                perPage
-                                total
-                            }	
-                        data{
-                                    id
-                            key
-                            detail
-                            app{
-                                id
-                                name
-                            }
-                        }
-                        
-                        }
-                }`,
-                {
-                    /* page: parseInt(route.params.page),
-                    first: mostrar_cantidad.value */
-                },
-                {
-                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
-                })
-                .then((data) => {
-                    permisos.value = []
-                    console.log(data.data.permits.data)
-                    data.data.permits.data.forEach(element => {
-                        permisos.value.push({id:element.id, key: element.key, detail: element.detail, app:element.app.name,  activo: false, modalDelete: false})
-                       /*  console.log(typeof element.logo) */
-                    })
-
-                }).catch(error => {
-                    console.log(error.response);
-                })
-            })
-        
         const traerPermisos = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            watchEffect(() => {
                 client.rawRequest(/* GraphQL */ `
-               query {
+                query {
                         permits(first:999,page:1) {
                             paginatorInfo{
                                 count
@@ -267,7 +218,7 @@ export default {
                             }
                         }
                         
-                        }
+                    }
                 }`,
                 {
                     /* page: parseInt(route.params.page),
@@ -286,8 +237,13 @@ export default {
                 }).catch(error => {
                     console.log(error.response);
                 })
-            })
         }
+
+        
+        watchEffect(() => {
+             traerPermisos()
+        })
+        
 
         const closeModal = () => {
             if(addPermission.value) addPermission.value = !addPermission.value
@@ -324,11 +280,7 @@ export default {
         }
 
         const editarPermiso = () => {
-
-
           /*   console.log(id.value)  */
-
-
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             // Estructura FetchQL(url, query, variable, opcions)
             client.rawRequest(/* GraphQL */ `
@@ -363,8 +315,6 @@ export default {
                 let accion = "edicionPermission"
                 store.commit('verificar_carga',accion) 
                 editPermission.value = !editPermission.value
-
-
                 carga_exitosa.value = true
                 comprobar_edi.value = true
                 setTimeout(() => {
