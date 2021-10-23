@@ -96,10 +96,13 @@ export default {
             return
         }
 
-        watchEffect(() => {
+        watchEffect( async () => {
             store.state.company_id
             if (store.state.user_id) {
-                companySelected()
+                await companySelected()
+                if (!companyActual.value.id) {
+                    changeValueCompany(companies.value[0])
+                }
             }
         })
 
