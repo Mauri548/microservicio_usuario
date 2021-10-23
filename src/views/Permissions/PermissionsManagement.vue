@@ -11,7 +11,9 @@
         <div class="columns m-0 mx-2">
             <div class="column is-3">
                 <!-- Lista de usuarios -->
-                <UserList :users="users"/>
+                <UserList :users="users"
+                 @onChangeUserSelected="changeUserSelected"
+                />
             </div>
             <div class="conteiner-permissions">
                 <div class="column buttons-permission">
@@ -64,7 +66,15 @@ export default {
         const users = ref([])
         const isTablet = inject('isTablet')
         const endpoint = store.state.url_backend
+        const userSelected = ref('')
 
+        /**
+         * 
+         * Trae los usuarios que pertenecen a una empresa
+         * 
+         * @param id Id de la empresa
+         * 
+         */
         const traerUsersxCompany = (id) => {
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */ `
@@ -83,10 +93,18 @@ export default {
                 data.data.company.users.forEach(element => {
                     users.value.push({id:element.id, name: element.name ,activo: false})
                 })
+                changeUserSelected(users.value[0].id)
             })
             // .catch(error => console.log(error))
         }
 
+        /**
+         * 
+         * Trae las suscripciones de una empresa
+         * 
+         * @param id ID de la empresa
+         * 
+         */
         const traerSubscriptionsxCompany = (id) => {
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */`
@@ -114,7 +132,15 @@ export default {
             // .catch(error => console.log(error.response))
         }
 
+        /**
+         * 
+         * Trae los permisos de una app
+         * 
+         * @param id ID de la aplicación
+         * 
+         */
         const traerPermitsxApp = async (id) => {
+            console.log(id)
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */`
             query($app_id: ID) {
@@ -126,12 +152,13 @@ export default {
                 app_id: id
             })
             .then((data) => {
+                console.log(data)
                 let aux = datas.value.find(app => app.id == id)
                 data.data.permitsxapp.forEach(permit => {
                     aux.permissions.push({id: permit.id, key: permit.key, activo: false})
                 })
             })
-            // .catch(error => console.log(error))
+            .catch(error => console.log(error))
             
         }
 
@@ -141,11 +168,23 @@ export default {
         watchEffect(() => {
             store.state.company_id
             if (localStorage.getItem('id_company_selected')) {
-                // console.log(localStorage.getItem('id_company_selected'))
                 traerUsersxCompany(localStorage.getItem('id_company_selected'))
                 traerSubscriptionsxCompany(localStorage.getItem('id_company_selected'))
             }
         })
+
+        /**
+         * 
+         * Cambia al usuario seleccionado visualmente 
+         * 
+         * @param id Es el id del usuario seleccionado
+         * 
+         */
+        const changeUserSelected = (id) => {
+            userSelected.value = id
+            users.value.forEach(user => user.activo = false)
+            users.value.find(user => user.id == id).activo = true
+        }
 
 
         // ************************************************************************************
@@ -269,7 +308,8 @@ export default {
             moveAssignedToAvailable,
             moveAllAvailableToAssigned,
             moveAllAssignedToAvailable,
-            movePermits
+            movePermits,
+            changeUserSelected
         }
     }
 }
