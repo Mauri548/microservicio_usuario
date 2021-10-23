@@ -191,8 +191,6 @@ export default {
                 id.value = data.id
                 key.value = data.key
                 detail.value = data.detail
-            /*     console.log(selectedApp.value) */
-              /*console.log(id.value) */
         }
 
 
@@ -200,18 +198,28 @@ export default {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             client.rawRequest(/* GraphQL */ `
                query {
-                    permits {
-                        id
-                        key
-                        detail
-                        deleted_at
-                        created_at
-                        updated_at
-                        app{
-                            id
-                            name
+                        permits(first:999,page:1) {
+                            paginatorInfo{
+                                count
+                                currentPage
+                                firstItem
+                                hasMorePages
+                                lastItem
+                                lastPage
+                                perPage
+                                total
+                            }	
+                        data{
+                                    id
+                            key
+                            detail
+                            app{
+                                id
+                                name
+                            }
                         }
-                    }
+                        
+                        }
                 }`,
                 {
                     /* page: parseInt(route.params.page),
@@ -222,7 +230,8 @@ export default {
                 })
                 .then((data) => {
                     permisos.value = []
-                    data.data.permits.forEach(element => {
+                    console.log(data.data.permits.data)
+                    data.data.permits.data.forEach(element => {
                         permisos.value.push({id:element.id, key: element.key, detail: element.detail, app:element.app.name,  activo: false, modalDelete: false})
                        /*  console.log(typeof element.logo) */
                     })
@@ -237,18 +246,28 @@ export default {
             watchEffect(() => {
                 client.rawRequest(/* GraphQL */ `
                query {
-                    permits {
-                        id
-                        key
-                        detail
-                        deleted_at
-                        created_at
-                        updated_at
-                        app{
-                            id
-                            name
+                        permits(first:999,page:1) {
+                            paginatorInfo{
+                                count
+                                currentPage
+                                firstItem
+                                hasMorePages
+                                lastItem
+                                lastPage
+                                perPage
+                                total
+                            }	
+                        data{
+                                    id
+                            key
+                            detail
+                            app{
+                                id
+                                name
+                            }
                         }
-                    }
+                        
+                        }
                 }`,
                 {
                     /* page: parseInt(route.params.page),
@@ -259,7 +278,7 @@ export default {
                 })
                 .then((data) => {
                     permisos.value = []
-                    data.data.permits.forEach(element => {
+                    data.data.permits.data.forEach(element => {
                         permisos.value.push({id:element.id, key: element.key, detail: element.detail, app:element.app.name,  activo: false, modalDelete: false})
                        /*  console.log(typeof element.logo) */
                     })
