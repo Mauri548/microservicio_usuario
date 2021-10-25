@@ -144,8 +144,10 @@ export default {
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */`
             query($app_id: ID) {
-                permitsxapp(app_id: $app_id) {
-                    id, key
+                permitsxapp(first: 999, page: 1, app_id: $app_id) {
+                    data {
+                        id, key
+                    }
                 }
             }`,
             {
@@ -154,7 +156,7 @@ export default {
             .then((data) => {
                 console.log(data)
                 let aux = datas.value.find(app => app.id == id)
-                data.data.permitsxapp.forEach(permit => {
+                data.data.permitsxapp.data.forEach(permit => {
                     aux.permissions.push({id: permit.id, key: permit.key, activo: false})
                 })
             })
@@ -184,6 +186,10 @@ export default {
             userSelected.value = id
             users.value.forEach(user => user.activo = false)
             users.value.find(user => user.id == id).activo = true
+        }
+
+        const createPermission = () => {
+
         }
 
 

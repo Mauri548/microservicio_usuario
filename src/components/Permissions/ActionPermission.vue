@@ -39,6 +39,10 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="column is-flex is-justify-content-flex-end px-0">
+                            <button class="button btn-crenein" >Guardar cambios</button>
+                        </div>
                     </div>
                 </div>
             </div>
