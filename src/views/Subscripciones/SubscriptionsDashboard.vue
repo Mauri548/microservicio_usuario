@@ -26,7 +26,7 @@
                             <span class="icon is-small">
                                 <i class="fas fa-pencil-alt"></i>
                             </span>
-                            <span>{{$t('modal.editar')}}</span>
+                            <span>{{$t('appSuscription.actualizar')}}</span>
                         </button>
                     </Modal>
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />

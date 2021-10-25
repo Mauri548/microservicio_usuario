@@ -146,6 +146,7 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             agregar:'Agregar',
             modalCarga:'Se realizo con exito la subscripcion.',
             modalEdicion:'Se edito con exito la subscripcion.',
+            actualizar:'Actualizar suscripción'
         }
 
     },
@@ -289,6 +290,7 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             agregar:'Add',
             modalCarga:'The subscription was successful.',
             modalEdicion:'The subscription was successfully edited.',
+            actualizar:'Update subscription'
 
         }
     }
