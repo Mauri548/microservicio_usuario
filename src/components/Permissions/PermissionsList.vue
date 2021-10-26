@@ -14,6 +14,8 @@
             @onMoveAssignedToAvailable="moveAssignedToAvailable"
             @onMoveAllAvailableToAssigned="moveAllAvailableToAssigned"
             @onMoveAllAssignedToAvailable="moveAllAssignedToAvailable"
+            @onSavePermission="savePermission"
+
         />
     </div>
 </template>
@@ -32,6 +34,7 @@ export default {
             'onMoveAssignedToAvailable',
             'onMoveAllAvailableToAssigned',
             'onMoveAllAssignedToAvailable',
+            'onSavePermission'
             ],
 
     setup(props,{emit}) {
@@ -62,6 +65,10 @@ export default {
             emit("onMoveAllAssignedToAvailable", id_app, id_permission)
         }
 
+        const savePermission = (id_app) => {
+            emit("onSavePermission", id_app)
+        }
+
         return {
             isTablet,
             activePermissionApp,
@@ -69,6 +76,7 @@ export default {
             moveAssignedToAvailable,
             moveAllAvailableToAssigned,
             moveAllAssignedToAvailable,
+            savePermission
         }
     }
 }
