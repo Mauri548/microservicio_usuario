@@ -173,57 +173,37 @@ export default {
             if (localStorage.getItem('id_company_selected')) {
                 await traerUsersxCompany(localStorage.getItem('id_company_selected'))
                 traerSubscriptionsxCompany(localStorage.getItem('id_company_selected'))
-                console.log(users.value)
                 changeUserSelected(users.value[0].id)
             }
         })
 
         watch(userSelected, async () => {
-            console.log('watch')
             console.log(userSelected.value)
             if (userSelected.value.user_company_id) {
                 await fetchPermissionXCompanyUser(userSelected.value.user_company_id)
                 resetPermits()
                 changeVisibilityByUser()
-                console.log(datas.value)
             }
         })
 
-        // watchEffect( async () => {
-        //     if (userSelected.value.user_company_id) {
-        //         await fetchPermissionXCompanyUser(userSelected.value.user_company_id)
-        //         resetPermits()
-        //         changeVisibilityByUser()
-        //         console.log(datas.value)
-        //     }
-        // })
-
         const resetPermits = () => {
-            console.log('reset')
             datas.value.forEach(app => {
                 app.permissions.forEach(permit => {
                     permit.activo = false
                 }) 
             })
-            console.log(datas.value)
-            console.log('finish reset')
         }
 
         const changeVisibilityByUser = () => {
-            console.log('asigned')
             userPermission.value.forEach(permit => {
                 datas.value.forEach(app => {
                     let aux = app.permissions.find(item => item.id == permit.permit_id)
-                    console.log(aux)
                     if (aux) {
                         aux.activo = true
-                        console.log(aux)
                         return
                     }
                 })
             })
-            console.log(datas.value)
-            console.log('finish assigned')
         }
 
         /**
@@ -234,23 +214,18 @@ export default {
          * 
          */
         const changeUserSelected = async (id) => {
-            console.log(users.value)
             users.value.forEach(user => user.activo = false)
             let aux = users.value.find(user => user.id == id)
-            console.log(aux)
             aux.activo = true
             userSelected.value = aux
             console.log(userSelected.value)
         }
 
         const savePermission = async (id_app) => {
-            console.log('entre')
             let app = searchApp(id_app)
             // 1° Lista de permisos asignados
             let listAssignedPermission = app.permissions.filter(permit => permit.activo == true)
-            console.log(listAssignedPermission)
 
-            console.log(userSelected.value)
             await fetchPermissionXCompanyUser(userSelected.value.user_company_id)
             compareList(listAssignedPermission, userPermission.value)
         }
@@ -294,7 +269,6 @@ export default {
          * 
          */
         const fetchPermissionXCompanyUser = async (id) => {
-            console.log(id)
             const client = new GraphQLClient(endpoint)
             await client.rawRequest(/* GraphQL */`
             query($companyuser_id: ID) {
@@ -313,7 +287,6 @@ export default {
                 data.data.permissionsxcompanyuser.data.forEach(item => {
                     userPermission.value.push({ id: item.id, permit_id: parseInt(item.use_permit_id) })
                 })
-                console.log(userPermission.value)
             })
             .catch(error => console.log(error))
         }
