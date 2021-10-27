@@ -133,7 +133,6 @@ export default {
                     await traerPermitsxApp(app.use_app_id)
                 })
             })
-            // .catch(error => console.log(error.response))
         }
 
         /**
@@ -163,7 +162,7 @@ export default {
                     aux.permissions.push({id: permit.id, key: permit.key, activo: false})
                 })
             })
-            .catch(error => console.log(error))
+            // .catch(error => console.log(error))
             return
             
         }
@@ -173,12 +172,11 @@ export default {
             if (localStorage.getItem('id_company_selected')) {
                 await traerUsersxCompany(localStorage.getItem('id_company_selected'))
                 traerSubscriptionsxCompany(localStorage.getItem('id_company_selected'))
-                changeUserSelected(users.value[0].id)
+                // changeUserSelected(users.value[0].id)
             }
         })
 
         watch(userSelected, async () => {
-            console.log(userSelected.value)
             if (userSelected.value.user_company_id) {
                 await fetchPermissionXCompanyUser(userSelected.value.user_company_id)
                 resetPermits()
@@ -218,7 +216,6 @@ export default {
             let aux = users.value.find(user => user.id == id)
             aux.activo = true
             userSelected.value = aux
-            console.log(userSelected.value)
         }
 
         const savePermission = async (id_app) => {
@@ -258,7 +255,7 @@ export default {
                 // Obtengo el user_company_id que se utiliza para asignar a los permiso
 
             })
-            .catch(error => console.log(error.response))
+            // .catch(error => console.log(error.response))
         }
 
         /**
@@ -282,13 +279,12 @@ export default {
                 companyuser_id: id
             })
             .then((data) => {
-                console.log(data)
                 userPermission.value = []
                 data.data.permissionsxcompanyuser.data.forEach(item => {
                     userPermission.value.push({ id: item.id, permit_id: parseInt(item.use_permit_id) })
                 })
             })
-            .catch(error => console.log(error))
+            // .catch(error => console.log(error))
         }
 
         /**
