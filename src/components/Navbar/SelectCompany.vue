@@ -56,6 +56,29 @@ export default {
             companyActual.value.id = company.id
             companyActual.value.name_fantasy = company.name_fantasy
             store.commit('setCompanyId', company.id)
+            fetchUserCompanyId(localStorage.getItem('user_id'))
+        }
+
+        const fetchUserCompanyId = async (id) => {
+            const endpoint = store.state.url_backend
+            const client = new GraphQLClient(endpoint)
+            await client.rawRequest(/* GraphQL */`
+            query($user_id: ID) {
+                userscompaniesxuser(first: 999, page: 1, user_id: $user_id) {
+                    data {
+                        id, use_user_id, use_company_id
+                    }
+                }
+            }`,
+            {
+                user_id: id
+            })
+            .then((data) => {
+                console.log(data)
+                let aux = data.data.userscompaniesxuser.data.find(item => item.use_company_id == localStorage.getItem('id_company_selected'))
+                localStorage.setItem('user_company_id', aux.id)
+            })
+            .catch(error => console.log(error.response))
         }
 
         /**

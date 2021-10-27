@@ -291,45 +291,43 @@ export default {
             .catch(error => console.log(error))
         }
 
+        /**
+         * 
+         * Compara la lista de permisos asignados y los permisos del usuario
+         * Si el permiso existe en ambos no hace nada
+         * Si existe solo en el de usuario lo elimina de la lista de usuario
+         * si existe en solo en la lista de permiso se agrega a la lista de usuario
+         */
         const compareList = (list1, list2) => {
             list1 = list1.map(item => parseInt(item.id))
             list2 = list2.sort((a,b) => a.permit_id - b.permit_id)
-            console.log(list1)
-            console.log(list2)
 
             let index1 = 0
             let index2 = 0
 
             while ((index1 <= list1.length-1) && (index2 <= list2.length-1)) {
                 if (list1[index1] == list2[index2].permit_id) {
-                    console.log(list1[index1] + ' iguales ' + list2[index2].permit_id)
                     index1 ++
                     index2 ++
                 } else if (list1[index1] > list2[index2].permit_id) {
-                    console.log(list1[index1] + ' mayor ' + list2[index2].permit_id)
-                    console.log('del: ' + list2[index2].permit_id)
-                    removePermission(list2[index2].id)
+                    removePermission(list2[index2].id, localStorage.getItem('user_company_id'))
                     index2++
                 } else {
-                    console.log(list1[index1] + ' es menor ' + list2[index2].permit_id)
-                    console.log('new: ' + list1[index1])
-                    createPermission(list1[index1], userSelected.value.user_company_id)
+                    createPermission(list1[index1], userSelected.value.user_company_id, localStorage.getItem('user_company_id'))
                     index1++
                 }
             }
 
             if (index1 <= list1.length-1) {
                 for (let i = index1; i <= list1.length-1; i++) {
-                    console.log('new: ' + list1[index1])
-                    createPermission(list1[index1], userSelected.value.user_company_id)
+                    createPermission(list1[index1], userSelected.value.user_company_id, localStorage.getItem('user_company_id'))
                 }
                 index1 = list1.length-1
             }
 
             if (index2 <= list2.length-1) {
                 for (let i = index2; i <= list2.length-1; i++) {
-                    console.log('del: ' + list2[index2].permit_id)
-                    removePermission(list2[index2].id)
+                    removePermission(list2[index2].id, localStorage.getItem('user_company_id'))
                 }
                 index2 = list2.length-1
             }

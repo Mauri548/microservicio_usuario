@@ -66,6 +66,7 @@ import {ref} from '@vue/reactivity'
 import FetchMe from '../helper/FetchMe'
 import { GraphQLClient } from 'graphql-request'
 import store from '@/store'
+// import fetchUserCompanyId from '../helper/fetchUserCompanyId'
 
 export default {
     name:'Login',
@@ -101,10 +102,12 @@ export default {
                 password: password.value,
             })
             .then((data) => {
+                console.log(data)
                 let token = data.data.login.access_token
                 localStorage.setItem('user-token', token)
                 store.commit('setToken', token)
-                FetchMe() 
+                FetchMe()
+                // fetchUserCompanyId(data.data.login.user.id)
                 router.push({name: 'Home'})
             })
             .catch(error => {
@@ -112,6 +115,27 @@ export default {
                 isLoading.value = false
                 ActiveError()
             })
+        }
+
+        const fetchUserCompanyId = async (id) => {
+            const endpoint = store.state.url_backend
+            const client = new GraphQLClient(endpoint)
+            await client.rawRequest(/* GraphQL */`
+            query($user_id: ID) {
+                userscompaniesxuser(first: 999, page: 1, user_id: $user_id) {
+                    data {
+                        id, use_user_id, use_company_id
+                    }
+                }
+            }`,
+            {
+                user_id: id
+            })
+            .then((data) => {
+                console.log(data)
+
+            })
+            .catch(error => console.log(error.response))
         }
 
         /**
