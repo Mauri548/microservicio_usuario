@@ -6,7 +6,9 @@ const removePermission = (id) => {
     const client = new GraphQLClient(endpoint)
     client.rawRequest(/* GraphQL */`
     mutation($id: ID!) {
-        id, use_permit_id, use_company_use_user_id
+        removeUse_permission(id: $id) {
+            id, use_permit_id, use_company_use_user_id
+        }
     }`,
     {
         id: id    
