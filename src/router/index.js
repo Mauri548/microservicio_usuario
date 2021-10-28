@@ -67,6 +67,7 @@ const routes = [
       {
         path: '/UserDashboard',
         name: 'UserDashboard',
+        alias: '/',
         component: () => import(/* webpackChunkName: "UserDashboard" */ '../views/Users/UserDashboard.vue')
       },
       {
