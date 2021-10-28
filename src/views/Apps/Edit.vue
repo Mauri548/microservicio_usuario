@@ -1,93 +1,15 @@
 <template>
-  
-    <div v-show="isMobile==false">
-
-        <form action="" class="column is-half is-offset-one-quarter mt-1 is-mobile" style="width:560px">   
-        <!-- <div class="column is-half is-offset-one-quarter mt-1 is-mobile" style="width:560px"> -->
-
-            <div class="column has-text-centered blue-crenein">
-               <h2 style="font-size:1.5em; font-weight:bold;" >{{$t('app.editarApp')}}</h2>
-            </div>
-            
-            <div class="column mt-1 is-relative">
-                <div class="columns">
-                    <div class="column  has-text-left label " style="position: absolute">Logo</div>
-                    <div class="column  ">
-                        <figure class="image is-128x128" style="margin: auto">
-                            <img class="is-rounded" src="https://bulma.io/images/placeholders/128x128.png">
-                        </figure>
-                    </div>
-                </div>
-            </div>
-         
-            <div class="file column has-name is-fullwidth is-right">
-                <label class="file-label">
-                    <input class="file-input" type="file" name="resume" @change="selectFile($event)">
-                    <span class="file-cta">
-                    <span class="file-icon">
-                        <i class="fas fa-upload"></i>
-                    </span>
-                    <span class="file-label">
-                        {{$t('app.escogeArchivo')}}
-                    </span>
-                    </span>
-                    <span class="file-name">
-                        {{nombreImg ? nombreImg :'Screen Shot 2017-07-29 at 15.54.25.png'}}
-                    </span>
-                </label>
-            </div>
-
-            <div class="column">
-                <CampoForm type="text" :place="$i18n.locale=='en' ? 'Name':'Nombre'" v-model="nombre" :error="msg_error.name" />
-           
-              <!--   <input placeholder="Nombre de la aplicacion" type="text" class="input" v-model="nombre" /> -->
-                <!-- <p v-show="msg_error.name!=''" class="has-text-danger">{{msg_error.name}}</p> -->
-            </div>
-
-            <div class="field  column has-text-centered">
-                <div class="select is-fullwidth">
-                    <select class="options is-fullwidth" v-model="visible" value="visible">
-                        <option value="positive">{{$t('app.positivo')}}</option>
-                        <option value="negative">{{$t('app.negativo')}}</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="column ">
-                <div v-show="$i18n.locale=='es'">
-                    <textarea class="textarea" v-model="observation" placeholder="Observación"></textarea>
-                </div>
-                <div v-show="$i18n.locale=='en'">
-                    <textarea class="textarea" v-model="observation" placeholder="Observation"></textarea>
-                </div>
-            </div>
-            
-            <div class="column ">
-                <div class="columns  ">
-                    <div class="column  is-flex-grow-0">
-                        <button class=" button  has-text-white has-background-danger " type="button" @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
-                    </div>
-                    <div class="column   pl-0  ">
-                        <button class=" button has-text-white button1 "  type="button" @click="validar" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
-                    </div>     
-                </div>
-            </div>
-       <!--  </div> -->
-        </form>
-    </div>
     
-    <div v-show="isMobile==true">
-        <form action="" class="column has-text-centered  mt-5 ml-6">
-       <!--  <div class="column is-half is-offset-one-quarter mt-1 is-mobile" style="width:560px"> -->
+    <div class="conteiner-edit-app">
+        <form class="column has-text-centered mt-5 form-app">
             <div class="column has-text-centered blue-crenein">
                <h2 style="font-size:1.5em; font-weight:bold;" >{{$t('app.editarApp')}}</h2>
             </div>    
 
-            
-                <div class="column  label ">Logo</div>
-                <div class="column  " style="font">
-                        <img class=" iamge  imgred" width="200" height="200" src="https://bulma.io/images/placeholders/128x128.png">
-                </div>
+            <div class="column  label">Logo</div>
+            <div class="column" style="font">
+                <img class=" iamge  imgred" width="200" height="200" src="https://bulma.io/images/placeholders/128x128.png">
+            </div>
             
             <div class="file columns has-name  is-right">
                 <label class="column file-label">
@@ -100,7 +22,7 @@
                          {{$t('app.escogeArchivo')}}
                     </span>
                     </span>
-                    <span class="file-name">
+                    <span class="file-name input-img">
                      {{nombreImg ? nombreImg :'Screen Shot 2017-07-29 at 15.54.25.png'}}
                     </span>
                 </label>
@@ -108,8 +30,6 @@
 
              <div class="column">
                 <CampoForm type="text" :place="$i18n.locale=='en' ? 'Name':'Nombre'" v-model="nombre" :error="msg_error.name" />
-              <!--   <input placeholder="Nombre de la aplicacion" type="text" class="input" v-model="nombre" />
-                <p v-show="msg_error.name!=''" class="has-text-danger">{{msg_error.name}}</p> -->
             </div>
 
             <div class="field  column has-text-centered">
@@ -121,20 +41,14 @@
                 </div>
             </div>
             <div class="column ">
-                <div v-show="$i18n.locale=='es'">
-                    <textarea class="textarea" v-model="observation" placeholder="Observación"></textarea>
-                </div>
-                <div v-show="$i18n.locale=='en'">
-                    <textarea class="textarea" v-model="observation" placeholder="Observation"></textarea>
-                </div>
+                <textarea class="textarea" v-model="observation" :placeholder="$i18n.locale=='es'? 'Observación': 'Observation'"></textarea>
             </div>
-            <div class="column    ">
-                <button class=" button has-text-white button1 "  type="button" @click="validar" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
-            </div>  
-            <div class="column  ">
-                <button class=" button  button1 has-text-white has-background-danger" type="button" @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
+
+            <div class="column is-flex is-grouped is-justify-content-space-between">
+                <button class="button button-cancel has-text-white has-background-danger" type="button" @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
+                <button class="button has-text-white button-confirm " type="button" @click="validar" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
             </div>
-      <!--   </div>      -->        
+            
         </form>
     </div>
 
@@ -188,13 +102,7 @@ export default {
         }
 
         const validar = () => {
-          /*   document.getElementById('form-create-app').addEventListener('submit', function(e) {
-                e.preventDefault()
-            }) */
-          /*console.log(nombre.value)
-            console.log(observation.value)
-            console.log(logo.value)
-            console.log(visible.value) */
+
             msg_error.value.name = ''
         
             if (nombre.value == ""){
@@ -382,20 +290,44 @@ export default {
 
 <style scoped>
 
-.button1{
-    width:100%;
-}
-
 .imgred{
     border-radius: 100px;
 }
 
+.form-app {
+    margin: auto;
+}
+
+.input-img {
+    margin: auto
+}
+
+.button-confirm {
+    width: 65%;
+    margin-left: 6px;
+}
+
+.button-cancel {
+    width:35%
+}
+
+.conteiner-edit-app {
+    width: 100%;
+}
 
 @media screen and (max-width: 1200px) {
-
  
 .button1{
     width: 100%; /* The width is 100%, when the viewport is 800px or smaller */
   }
+}
+
+@media (min-width: 1024px) {
+    .conteiner-edit-app {
+        width: 80%;
+    }
+    .form-app {
+        width: 50%;
+    }
 }
 </style>

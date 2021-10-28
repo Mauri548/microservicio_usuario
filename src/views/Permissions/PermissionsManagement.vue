@@ -24,6 +24,7 @@
                         @onMoveAssignedToAvailable="moveAssignedToAvailable"
                         @onMoveAllAvailableToAssigned="moveAllAvailableToAssigned"
                         @onMoveAllAssignedToAvailable="moveAllAssignedToAvailable"
+                        @onSavePermission="savePermission"
                     />
                 </div>
                 <div v-if="!isTablet">
@@ -34,6 +35,7 @@
                         @onMoveAssignedToAvailable="moveAssignedToAvailable"
                         @onMoveAllAvailableToAssigned="moveAllAvailableToAssigned"
                         @onMoveAllAssignedToAvailable="moveAllAssignedToAvailable"
+                        @onSavePermission="savePermission"
                     />
                 </div>
             </div>
@@ -49,9 +51,11 @@ import PermissionsList from '../../components/Permissions/PermissionsList.vue'
 import ActionPermission from '../../components/Permissions/ActionPermission.vue'
 import { ref } from '@vue/reactivity'
 import store from '@/store'
-import { watchEffect } from '@vue/runtime-core'
+import { watch, watchEffect } from '@vue/runtime-core'
 import { inject } from '@vue/runtime-core'
 import { GraphQLClient } from 'graphql-request'
+import createPermission from '../../helper/createPermission'
+import removePermission from '../../helper/removePermission'
 export default {
     components: {
         TitleBoard,
@@ -67,6 +71,7 @@ export default {
         const isTablet = inject('isTablet')
         const endpoint = store.state.url_backend
         const userSelected = ref('')
+        const userPermission = ref([])
 
         /**
          * 
@@ -75,9 +80,9 @@ export default {
          * @param id Id de la empresa
          * 
          */
-        const traerUsersxCompany = (id) => {
+        const traerUsersxCompany = async (id) => {
             const client = new GraphQLClient(endpoint)
-            client.rawRequest(/* GraphQL */ `
+            await client.rawRequest(/* GraphQL */ `
             query($company_id:ID){
                 company(id:$company_id) {
                     users {
@@ -90,12 +95,12 @@ export default {
             })
             .then((data) => {
                 users.value = []
-                data.data.company.users.forEach(element => {
-                    users.value.push({id:element.id, name: element.name ,activo: false})
+                data.data.company.users.forEach( async (element) => {
+                    users.value.push({id:element.id, name: element.name, user_company_id: '' ,activo: false})
+                    fetchUsersCompaniesXUser(element.id)
                 })
-                changeUserSelected(users.value[0].id)
             })
-            // .catch(error => console.log(error))
+            return
         }
 
         /**
@@ -123,13 +128,11 @@ export default {
             })
             .then((data) => {
                 datas.value = []
-                data.data.subscriptionsxcompany.data.forEach(app => {
+                data.data.subscriptionsxcompany.data.forEach( async (app) => {
                     datas.value.push({id: app.use_app_id, app: app.app.name, activo: false, permissions: []})
-                    traerPermitsxApp(app.use_app_id)
+                    await traerPermitsxApp(app.use_app_id)
                 })
-                // console.log(datas.value)
             })
-            // .catch(error => console.log(error.response))
         }
 
         /**
@@ -140,38 +143,66 @@ export default {
          * 
          */
         const traerPermitsxApp = async (id) => {
-            console.log(id)
             const client = new GraphQLClient(endpoint)
-            client.rawRequest(/* GraphQL */`
+            await client.rawRequest(/* GraphQL */`
             query($app_id: ID) {
-                permitsxapp(app_id: $app_id) {
-                    id, key
+                permitsxapp(first: 999, page: 1, app_id: $app_id) {
+                    data {
+                        id, key
+                    }
                 }
             }`,
             {
                 app_id: id
             })
             .then((data) => {
-                console.log(data)
                 let aux = datas.value.find(app => app.id == id)
-                data.data.permitsxapp.forEach(permit => {
+                aux.permissions = []
+                data.data.permitsxapp.data.forEach(permit => {
                     aux.permissions.push({id: permit.id, key: permit.key, activo: false})
                 })
             })
-            .catch(error => console.log(error))
+            // .catch(error => console.log(error))
+            return
             
         }
 
-        /**
-         * Hay un retraso en esta consulta.. intentar mejorarla luego
-         */
-        watchEffect(() => {
+        watchEffect( async () => {
             store.state.company_id
             if (localStorage.getItem('id_company_selected')) {
-                traerUsersxCompany(localStorage.getItem('id_company_selected'))
+                await traerUsersxCompany(localStorage.getItem('id_company_selected'))
                 traerSubscriptionsxCompany(localStorage.getItem('id_company_selected'))
+                // changeUserSelected(users.value[0].id)
             }
         })
+
+        watch(userSelected, async () => {
+            if (userSelected.value.user_company_id) {
+                await fetchPermissionXCompanyUser(userSelected.value.user_company_id)
+                resetPermits()
+                changeVisibilityByUser()
+            }
+        })
+
+        const resetPermits = () => {
+            datas.value.forEach(app => {
+                app.permissions.forEach(permit => {
+                    permit.activo = false
+                }) 
+            })
+        }
+
+        const changeVisibilityByUser = () => {
+            userPermission.value.forEach(permit => {
+                datas.value.forEach(app => {
+                    let aux = app.permissions.find(item => item.id == permit.permit_id)
+                    if (aux) {
+                        aux.activo = true
+                        return
+                    }
+                })
+            })
+        }
 
         /**
          * 
@@ -180,14 +211,120 @@ export default {
          * @param id Es el id del usuario seleccionado
          * 
          */
-        const changeUserSelected = (id) => {
-            userSelected.value = id
+        const changeUserSelected = async (id) => {
             users.value.forEach(user => user.activo = false)
-            users.value.find(user => user.id == id).activo = true
+            let aux = users.value.find(user => user.id == id)
+            aux.activo = true
+            userSelected.value = aux
+        }
+
+        const savePermission = async (id_app) => {
+            let app = searchApp(id_app)
+            let listAssignedPermission = app.permissions.filter(permit => permit.activo == true)
+            compareList(listAssignedPermission, userPermission.value)
         }
 
 
-        // ************************************************************************************
+        /**
+         * 
+         * Traigo el companyuser_id de cada usuario
+         * 
+         * @param id id del usuario
+         * 
+         */
+        const fetchUsersCompaniesXUser = (id) => {
+            const client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */`
+            query($user_id: ID){
+                userscompaniesxuser(first: 999, page: 1, user_id: $user_id) {
+                    data {
+                        id, use_user_id, use_company_id
+                    }
+                }
+            }`,
+            {
+                user_id: id
+            })
+            .then((data) => {
+                let user_company_id = data.data.userscompaniesxuser.data.find(el => el.use_company_id == localStorage.getItem('id_company_selected'))
+                let aux = users.value.find(user => user.id == id)
+                aux.user_company_id = user_company_id.id
+            })
+            // .catch(error => console.log(error.response))
+        }
+
+        /**
+         * 2°
+         * Traeria los permisos que tiene asignado el usuario
+         * 
+         * @param id id del user_company
+         * 
+         */
+        const fetchPermissionXCompanyUser = async (id) => {
+            const client = new GraphQLClient(endpoint)
+            await client.rawRequest(/* GraphQL */`
+            query($companyuser_id: ID) {
+                permissionsxcompanyuser(first: 999, page: 1, companyuser_id: $companyuser_id) {
+                    data {
+                        id, use_permit_id, use_company_use_user_id
+                    }
+                }
+            }`,
+            {
+                companyuser_id: id
+            })
+            .then((data) => {
+                userPermission.value = []
+                data.data.permissionsxcompanyuser.data.forEach(item => {
+                    userPermission.value.push({ id: item.id, permit_id: parseInt(item.use_permit_id) })
+                })
+            })
+            // .catch(error => console.log(error))
+        }
+
+        /**
+         * 
+         * Compara la lista de permisos asignados y los permisos del usuario
+         * Si el permiso existe en ambos no hace nada
+         * Si existe solo en el de usuario lo elimina de la lista de usuario
+         * si existe en solo en la lista de permiso se agrega a la lista de usuario
+         */
+        const compareList = (list1, list2) => {
+            list1 = list1.map(item => parseInt(item.id))
+            list2 = list2.sort((a,b) => a.permit_id - b.permit_id)
+
+            let index1 = 0
+            let index2 = 0
+
+            while ((index1 <= list1.length-1) && (index2 <= list2.length-1)) {
+                if (list1[index1] == list2[index2].permit_id) {
+                    index1 ++
+                    index2 ++
+                } else if (list1[index1] > list2[index2].permit_id) {
+                    removePermission(list2[index2].id, localStorage.getItem('user_company_id'))
+                    index2++
+                } else {
+                    createPermission(list1[index1], userSelected.value.user_company_id, localStorage.getItem('user_company_id'))
+                    index1++
+                }
+            }
+
+            if (index1 <= list1.length-1) {
+                for (let i = index1; i <= list1.length-1; i++) {
+                    createPermission(list1[i], userSelected.value.user_company_id, localStorage.getItem('user_company_id'))
+                }
+                index1 = list1.length-1
+            }
+
+            if (index2 <= list2.length-1) {
+                for (let i = index2; i <= list2.length-1; i++) {
+                    removePermission(list2[i].id, localStorage.getItem('user_company_id'))
+                }
+                index2 = list2.length-1
+            }
+        }
+
+
         // Estas functiones moveran el permiso al sector contrario de la tabla
 
         /**
@@ -200,7 +337,6 @@ export default {
          */
         const moveAvailableToAssigned = (id_app, permissions) => {
             movePermits(id_app, permissions, true)
-
         }
 
         /**
@@ -309,7 +445,8 @@ export default {
             moveAllAvailableToAssigned,
             moveAllAssignedToAvailable,
             movePermits,
-            changeUserSelected
+            changeUserSelected,
+            savePermission
         }
     }
 }

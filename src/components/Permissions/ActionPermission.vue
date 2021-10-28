@@ -39,6 +39,10 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="column is-flex is-justify-content-flex-end px-0">
+                            <button class="button btn-crenein" @click="savePermission(data.id)">Guardar cambios</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -63,7 +67,8 @@ export default {
             'onMoveAvailableToAssigned',
             'onMoveAssignedToAvailable',
             'onMoveAllAvailableToAssigned',
-            'onMoveAllAssignedToAvailable'
+            'onMoveAllAssignedToAvailable',
+            'onSavePermission'
             ],
     setup(props,{emit}) {
         /**
@@ -103,6 +108,13 @@ export default {
             emit("onMoveAllAssignedToAvailable", id_app)
         }
 
+        const savePermission = (id_app) => {
+            console.log('save')
+            console.log('id_app: ' + id_app)
+            emit("onSavePermission", id_app)
+            console.log('aaa')
+        }
+
         return {
             permissionIdAvailable,
             activePermissionApp,
@@ -111,6 +123,7 @@ export default {
             moveAllAvailableToAssigned,
             moveAllAssignedToAvailable,
             asignarPermisos,
+            savePermission,
         }
     }
 }
