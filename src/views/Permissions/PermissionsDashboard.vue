@@ -1,12 +1,7 @@
 <template>
     <div class="conteiner-tablero mt-2 py-4">
         <div  class="head-tablero">
-            <div v-if="$i18n.locale=='es'">
-                <TitleBoard title="Permisos"/>
-            </div>
-            <div v-if="$i18n.locale=='en'">
-                <TitleBoard title="Permissions"/>
-            </div>
+            <TitleBoard :title="$i18n.locale=='en'? 'Permissions' : 'Permisos'"/>
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
@@ -33,6 +28,9 @@
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
+
+            <Loading v-show="loading"/>
+
         </div>
         <Pagination/>
         <!-- <AddPermission :data="addPermission" @tengoAct="mostrarModal2" @onCloseModal="actionModalAddPermission" />  -->
@@ -129,6 +127,7 @@ import i18n from '@/i18n.js'
 import {GraphQLClient} from 'graphql-request';
 import store from '@/store';
 import CampoForm from '../../components/CampoForm.vue'
+import Loading from '../../components/loading.vue'
 
 export default {
     components: {
@@ -141,13 +140,10 @@ export default {
         AddPermission,
         EditPermission,
         ModalAlert,
-        CampoForm
+        CampoForm,
+        Loading,
     },
-    created(){
-        this.traerPermisos()
-        this.traerApps()
-    },
-   
+
     setup() {
         const isMobile = inject('isMobile')
         const carga_exitosa = ref(false)
@@ -167,6 +163,7 @@ export default {
         const apps = ref([])
         const titles = ref([])
         const id = ref()
+        const loading = ref(false)
         
 
         const activarEdicion = (data) => {
@@ -212,15 +209,64 @@ export default {
                     data.data.permits.data.forEach(element => {
                         permisos.value.push({id:element.id, key: element.key, detail: element.detail, app:{ id: element.app.id, name:element.app.name },  activo: false, modalDelete: false})
                     })
-
+                    loading.value = false
                 }).catch(error => {
-                    console.log(error.response);
+                    console.log(error.response)
+                    loading.value = false
                 })
+        }
+
+        const traerApps = () => {
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            client.rawRequest(/* GraphQL */ `
+            query{
+                apps(first: 999, page: 1){
+                    data{
+                        id
+                        name
+                        logo
+                        observation
+                        visible
+                        licenses {
+                            id
+                            name
+                            price_arg
+                            price_usd
+                        }
+                    }
+                    paginatorInfo {
+                        count, currentPage, hasMorePages, total
+                    }
+                }
+            }`,
+            {
+                /* page: parseInt(route.params.page),
+                first: mostrar_cantidad.value */
+            },
+            {
+                /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+            })
+            .then((data) => {
+                apps.value = []
+                let datos = data.data.apps.data
+                console.log(datos[0].id)
+                if (datos) selectedApp.value = datos[0].id
+                datos.forEach(element => {
+                    apps.value.push({id:element.id, nombre: element.name})
+                    /*  console.log(typeof element.logo) */
+                })
+               /*  console.log(apps.value)
+                console.log("se ejecuto") */
+            }).catch(error => {
+                console.log(error.response);
+            })
         }
 
         
         watchEffect(() => {
-             traerPermisos()
+            loading.value = true
+            traerPermisos()
+            traerApps()
         })
         
 
@@ -364,51 +410,7 @@ export default {
         }
         
 
-        const traerApps = () => {
-            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            client.rawRequest(/* GraphQL */ `
-            query{
-                apps(first: 999, page: 1){
-                    data{
-                        id
-                        name
-                        logo
-                        observation
-                        visible
-                        licenses {
-                            id
-                            name
-                            price_arg
-                            price_usd
-                        }
-                    }
-                    paginatorInfo {
-                        count, currentPage, hasMorePages, total
-                    }
-                }
-            }`,
-            {
-                /* page: parseInt(route.params.page),
-                first: mostrar_cantidad.value */
-            },
-            {
-                /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
-            })
-            .then((data) => {
-                apps.value = []
-                let datos = data.data.apps.data
-                console.log(datos[0].id)
-                if (datos) selectedApp.value = datos[0].id
-                datos.forEach(element => {
-                    apps.value.push({id:element.id, nombre: element.name})
-                    /*  console.log(typeof element.logo) */
-                })
-               /*  console.log(apps.value)
-                console.log("se ejecuto") */
-            }).catch(error => {
-                console.log(error.response);
-            })
-        }
+        
 
         const registrarPermiso = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
@@ -466,7 +468,7 @@ export default {
             id,
             editarPermiso,
             activarEdicion ,
-            traerApps,
+            // traerApps,
             registrarPermiso,
             validar,
             key,
@@ -478,8 +480,8 @@ export default {
             endpoint,
             permisos,
             permisos_aux,
-            traerPermisos,
-             mostrarModal2 ,
+            // traerPermisos,
+            mostrarModal2 ,
             cerrarModal,
             mostrarModal,
             isMobile,
@@ -493,8 +495,8 @@ export default {
             addPermission,
             editPermission,
             actionModalAddPermission,
-            actionModalEditPermission
-
+            actionModalEditPermission,
+            loading,
         }
     }
 }
