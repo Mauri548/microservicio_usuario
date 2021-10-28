@@ -264,8 +264,8 @@ export default {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             // Estructura FetchQL(url, query, variable, opcions)
             client.rawRequest(/* GraphQL */ `
-            mutation($observation:String, $name:String!,$logo:String,$visible:Visible!){
-              		createsUse_app (input:{
+            mutation($company_user_id:ID!,$observation:String, $name:String!,$logo:String,$visible:Visible!){
+              		createsUse_app(company_user_id:$company_user_id, input:{
                     name: $name,
                     logo: $logo,
                     visible: $visible,
@@ -279,6 +279,7 @@ export default {
                     }
             }`,
             {
+                company_user_id:localStorage.getItem('user_company_id'),
                 name: nombre.value,       
                 observation: observation.value,
                 logo: logo.value,
