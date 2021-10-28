@@ -1,10 +1,7 @@
 <template>
     <div class="conteiner-tablero mt-2 py-4">
         <div class="head-tablero">
-             <!--    Utilizo el atributo locale del objeto i18n para saber en que lenguaje esta seteado el sistema  -->
-                <TitleBoard v-show="$i18n.locale=='es'" title="Subscripciones" />
-                <TitleBoard v-show="$i18n.locale=='en'" title="Subscriptions" />
-         
+            <TitleBoard :title="$i18n.locale=='en'? 'Subscriptions' : 'Subscripciones'" />
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
@@ -32,13 +29,14 @@
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
+
+            <Loading v-show="loading"/>
         </div>
 
         <Pagination/>
     </div>
        <!-- Modal de carga exitosa -->
     <ModalAlert :activador="carga_exitosa">
-       <!--  Se cargo con exito la App -->
        <p v-if="comprobar">{{$t('appSuscription.modalCarga')}}</p>
        <p v-if="comprobar_edi">{{$t('appSuscription.modalEdicion')}}</p>
     </ModalAlert>
@@ -57,7 +55,7 @@ import store from '@/store'
 import {  watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js' 
 import {GraphQLClient} from 'graphql-request';
-
+import Loading from '../../components/loading.vue'
 
 export default {
     components: {
@@ -68,6 +66,7 @@ export default {
         Modal,
         ActionModal,
         ModalAlert,
+        Loading,
     },
     created(){
         this.comprobar_carga()
@@ -84,7 +83,7 @@ export default {
         const titles = ref([])
         const endpoint = store.state.url_backend
         const subscripciones = ref([])
-        const subscripciones_aux = ref([])
+        const loading = ref(false)
 
 
         /**
@@ -122,12 +121,15 @@ export default {
                     authorization: `Bearer ${ localStorage.getItem('user-token') }` 
                 })
                 .then((data) => {
-                    subscripciones.value = []
+                    // subscripciones.value = []
                     data.data.subscriptionsxcompany.data.forEach(element => {
                         subscripciones.value.push({id:element.id, nombreApp: element.app.name, licence:element.license.name ,companyName:element.company.name_fantasy,activo: false, modalDelete: false})
                     })
-
-                }).catch(error => {console.log(error.response);})
+                    loading.value = false
+                }).catch(error => {
+                    console.log(error.response)
+                    loading.value = false
+                })
         }
 
         /**
@@ -136,6 +138,8 @@ export default {
          * 
          */
         watchEffect(()=>{
+            loading.value = true
+            subscripciones.value = []
             store.state.company_id 
             company_id.value = localStorage.getItem('id_company_selected')
             traerSuscriptionxCompany()
@@ -153,13 +157,10 @@ export default {
             aux.activo = false
             aux.modalDelete = !aux.modalDelete
         }
-        watchEffect(()=>{ // utilizamos watcheffect para detectar que valor tiene el atributo locale del objeto i18n al momento de estar en la pagina o al momento de cambiar el valor a traves del boton del lenguaje
-            if(i18n.global.locale == 'en'){
-                titles.value = ['App','Licence','Company']
-            }
-            if(i18n.global.locale == 'es'){
-                titles.value = ['App','Licencia','Empresa']
-            }
+
+        watchEffect(()=>{
+            i18n.global.locale == 'en'? titles.value = ['App','Licence','Company'] 
+            : titles.value = ['App','Licencia','Empresa']
         })
 
         // Cambia el estado del usuario entre habilitado y deshabilitado
@@ -187,15 +188,13 @@ export default {
         }
 
         return {
-            company_id,
+            loading,
             comprobar_carga,
             comprobar_edicion ,
             carga_exitosa ,
             comprobar ,
             comprobar_edi ,
-            endpoint,
             subscripciones,
-            subscripciones_aux,
             datas,
             titles,
             actionModal,
