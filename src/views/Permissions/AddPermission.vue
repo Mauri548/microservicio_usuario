@@ -104,8 +104,6 @@ export default {
             /* console.log(selectedApp.value)
             console.log(key.value)
             console.log(detail.value)  */
-           
-        
         }
 
 
@@ -157,11 +155,12 @@ export default {
         }
 
         const registrarPermiso = () => {
+            console.log(localStorage.getItem('user_company_id'))
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             // Estructura FetchQL(url, query, variable, opcions)
             client.rawRequest(/* GraphQL */ `
-            mutation($key:String!, $detail:String,$use_app_id:ID!){
-              	  createsUse_permit(input: {
+            mutation($company_user_id: ID!, $key:String!, $detail:String,$use_app_id:ID!){
+              	  createsUse_permit(company_user_id: $company_user_id ,input: {
                     key: $key,
                     detail: $detail,
                     use_app_id: $use_app_id,
@@ -173,14 +172,13 @@ export default {
                     }
             }`,
             {
+                company_user_id: localStorage.getItem('user_company_id'),
                 key: key.value,       
                 detail: detail.value,
                 use_app_id: selectedApp.value.id,
-            },
-            {
-               /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
             })
             .then((data) => {
+                console.log(data)
                 /* console.log(data.data.createsUse_permit.id) */
                 let id = data.data.createsUse_permit.id
 
