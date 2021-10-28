@@ -1,13 +1,7 @@
 <template>
     <div class="conteiner-tablero mt-2 py-4">
         <div class="head-tablero">
-            <div v-show="$i18n.locale=='es'">
-                <TitleBoard title="Empresas" />
-            </div> 
-            <div v-show="$i18n.locale=='en'">
-                <TitleBoard title="Companies" />
-            </div> 
-           
+            <TitleBoard :title="$i18n.locale=='en'? 'Companies' : 'Empresas'" />
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard />
@@ -92,14 +86,9 @@ export default {
 
 
         watchEffect(()=>{
-
-            if(i18n.global.locale=='es'){
-                titles.value = ['Nombre de fantasia', 'Nombre del negocio', 'Propietarios', 'Cuit', 'Correo', 'Telefono', 'Condición fiscal', 'Dirección', 'Localidad','Provincia', 'Pais']
-            }
-            if(i18n.global.locale=='en'){
-                titles.value = ['Name fantasy', 'Business name', 'Owners', 'Cuit', 'Email', 'Phone', 'Tax condition', 'Direction', 'Location','Province', 'Country']
-            }
-
+            i18n.global.locale=='es'?
+            titles.value = ['Nombre de fantasia', 'Nombre del negocio', 'Propietarios', 'Cuit', 'Correo', 'Telefono', 'Condición fiscal', 'Dirección', 'Localidad','Provincia', 'Pais'] 
+            : titles.value = ['Name fantasy', 'Business name', 'Owners', 'Cuit', 'Email', 'Phone', 'Tax condition', 'Direction', 'Location','Province', 'Country']
         })
 
         const traerCompanies = () => {
@@ -208,7 +197,7 @@ export default {
             .then((data) => {
                 companies.value = []
                 let datos = data.data.userscompaniesxuser.data
-                console.log(datos[0].company.name_fantasy)
+                // console.log(datos[0].company.name_fantasy)
             
                 datos.forEach(element => {
                     companies.value.push({id:element.company.id, nameFantasy: element.company.name_fantasy,
@@ -250,7 +239,6 @@ export default {
 
     
         const comprobar_carga = () => {
-            // console.log(comprobar)
             if(comprobar==true){
                 setTimeout(() => carga_exitosa.value = true, 500)
                 let accion = "cargarCompany"
@@ -259,7 +247,6 @@ export default {
             setTimeout(() => carga_exitosa.value = false, 3000)
         }
         const comprobar_edicion = () => {
-            // console.log(comprobar)
             if(comprobar_edi==true){
                 setTimeout(() => carga_exitosa.value = true, 500)
 
