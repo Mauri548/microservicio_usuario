@@ -97,7 +97,7 @@ export default {
                 users.value = []
                 data.data.company.users.forEach( async (element) => {
                     users.value.push({id:element.id, name: element.name, user_company_id: '' ,activo: false})
-                    await fetchUsersCompaniesXUser(element.id)
+                    fetchUsersCompaniesXUser(element.id)
                 })
             })
             return
@@ -220,10 +220,7 @@ export default {
 
         const savePermission = async (id_app) => {
             let app = searchApp(id_app)
-            // 1° Lista de permisos asignados
             let listAssignedPermission = app.permissions.filter(permit => permit.activo == true)
-
-            await fetchPermissionXCompanyUser(userSelected.value.user_company_id)
             compareList(listAssignedPermission, userPermission.value)
         }
 
@@ -235,9 +232,9 @@ export default {
          * @param id id del usuario
          * 
          */
-        const fetchUsersCompaniesXUser = async (id) => {
+        const fetchUsersCompaniesXUser = (id) => {
             const client = new GraphQLClient(endpoint)
-            await client.rawRequest(/* GraphQL */`
+            client.rawRequest(/* GraphQL */`
             query($user_id: ID){
                 userscompaniesxuser(first: 999, page: 1, user_id: $user_id) {
                     data {
@@ -252,8 +249,6 @@ export default {
                 let user_company_id = data.data.userscompaniesxuser.data.find(el => el.use_company_id == localStorage.getItem('id_company_selected'))
                 let aux = users.value.find(user => user.id == id)
                 aux.user_company_id = user_company_id.id
-                // Obtengo el user_company_id que se utiliza para asignar a los permiso
-
             })
             // .catch(error => console.log(error.response))
         }
@@ -316,14 +311,14 @@ export default {
 
             if (index1 <= list1.length-1) {
                 for (let i = index1; i <= list1.length-1; i++) {
-                    createPermission(list1[index1], userSelected.value.user_company_id, localStorage.getItem('user_company_id'))
+                    createPermission(list1[i], userSelected.value.user_company_id, localStorage.getItem('user_company_id'))
                 }
                 index1 = list1.length-1
             }
 
             if (index2 <= list2.length-1) {
                 for (let i = index2; i <= list2.length-1; i++) {
-                    removePermission(list2[index2].id, localStorage.getItem('user_company_id'))
+                    removePermission(list2[i].id, localStorage.getItem('user_company_id'))
                 }
                 index2 = list2.length-1
             }

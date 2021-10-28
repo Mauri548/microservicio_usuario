@@ -74,7 +74,6 @@ export default {
                 user_id: id
             })
             .then((data) => {
-                console.log(data)
                 let aux = data.data.userscompaniesxuser.data.find(item => item.use_company_id == localStorage.getItem('id_company_selected'))
                 localStorage.setItem('user_company_id', aux.id)
             })
