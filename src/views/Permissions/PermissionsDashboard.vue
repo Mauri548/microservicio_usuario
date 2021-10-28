@@ -19,7 +19,7 @@
             <Board :datas="permisos" :titles="titles" >
                 <tr class="has-text-centered" v-for="data in permisos" :key="data.id">
                     <th @click="actionModal(data)">{{data.id}}</th>
-                    <td @click="actionModal(data)">{{data.app}}</td>
+                    <td @click="actionModal(data)">{{data.app.name}}</td>
                     <td @click="actionModal(data)">{{data.key}}</td>
                     <td @click="actionModal(data)">{{data.detail}}</td>
                     <Modal :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" :buttonDefault="false">
@@ -85,8 +85,8 @@
             </header>
             <section class="modal-card-body">
                 <form action="" class="column">
-                    <select class="column  select1 mb-4" v-model="selectedApp" >
-                        <option v-for="app in apps" :key="app.id" :value="app">{{app.nombre}}</option>
+                    <select class="column  select1 mb-4" v-model="selectedApp.id" >
+                        <option v-for="app in apps" :key="app.id" :value="app.id">{{app.nombre}}</option>
                     </select>
 
                     <CampoForm place="Key" type="text" v-model="key"/>
@@ -111,23 +111,6 @@
         <p v-if="comprobar_edi">{{$t('permisos.modalEdicion')}}</p>
     </ModalAlert>
 
-
-      <!-- <div>
-            <div class="modal" :class="{'is-active': carga_exitosa}">
-                <div class="modal-background " style="background-color: rgb(197, 197, 197, 0.0)"></div>
-                <div class="modal-content-width has-text-black" style="border:1px ridge grey;" :class="{'modal-puntowifi-escritorio' : !isMobile, 'modal-puntowifi-mobil' : isMobile}">
-                    <div class="container has-text-centered has-background-white" :class="{'p-2':isMobile, 'p-5':!isMobile}" id="modal">
-                        <p v-show="comprobar==true" class="has-text-centered has-text-success">Se cargo con exito el permiso.</p>
-                        <p v-show="comprobar_edi==true" class="has-text-centered  has-text-success">Se edito con exito el permiso.</p>
-                        <div class="columns mt-2">
-                            <div class="column">
-                                <button class="button w-100 fondo-crenein is-outline btn has-text-white has-text-weight-blod" @click="cerrarModal">Esta bien</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
 </template>
 
 <script>
@@ -187,10 +170,11 @@ export default {
         
 
         const activarEdicion = (data) => {
-                editPermission.value = !editPermission.value 
-                id.value = data.id
-                key.value = data.key
-                detail.value = data.detail
+            editPermission.value = !editPermission.value 
+            id.value = data.id
+            key.value = data.key
+            detail.value = data.detail
+            selectedApp.value = data.app
         }
 
         const traerPermisos = () => {
@@ -222,15 +206,11 @@ export default {
                 {
                     /* page: parseInt(route.params.page),
                     first: mostrar_cantidad.value */
-                },
-                {
-                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
                 })
                 .then((data) => {
                     permisos.value = []
                     data.data.permits.data.forEach(element => {
-                        permisos.value.push({id:element.id, key: element.key, detail: element.detail, app:element.app.name,  activo: false, modalDelete: false})
-                       /*  console.log(typeof element.logo) */
+                        permisos.value.push({id:element.id, key: element.key, detail: element.detail, app:{ id: element.app.id, name:element.app.name },  activo: false, modalDelete: false})
                     })
 
                 }).catch(error => {
@@ -279,12 +259,10 @@ export default {
         }
 
         const editarPermiso = () => {
-          /*   console.log(id.value)  */
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            // Estructura FetchQL(url, query, variable, opcions)
             client.rawRequest(/* GraphQL */ `
-            mutation($id:ID!,$key:String!, $detail:String,$use_app_id:ID!){
-              	modifiesUse_permit (id: $id, input: {
+            mutation($company_user_id:ID!, $id:ID!, $key:String!, $detail:String,$use_app_id:ID!){
+              	modifiesUse_permit (company_user_id: $company_user_id, id: $id, input: {
                     key: $key,
                     detail:  $detail,
                     use_app_id: $use_app_id,
@@ -296,29 +274,24 @@ export default {
                 }
             }`,
             {
+                company_user_id: localStorage.getItem('user_company_id'),
                 id: id.value,
                 key: key.value,       
                 detail: detail.value,
                 use_app_id: selectedApp.value.id,
-            },
-            {
-               /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
             })
             .then((data) => {
-             /*    let ide = data.data.modifiesUse_permit.id */
-               /*  console.log("anduvo") */
                 let aux = permisos.value.find(element => element.id == id.value)
                 aux.activo = !aux.activo
                 aux.key = key.value
-            /*     console.log(aux) */
                 let accion = "edicionPermission"
                 store.commit('verificar_carga',accion) 
                 editPermission.value = !editPermission.value
                 carga_exitosa.value = true
                 comprobar_edi.value = true
                 setTimeout(() => {
-                carga_exitosa.value = false
-                comprobar_edi.value = false
+                    carga_exitosa.value = false
+                    comprobar_edi.value = false
                 } ,3000)
 
             }).catch(error => {
@@ -330,7 +303,6 @@ export default {
         }
 
         const mostrarModal = (act) => {
-            /* console.log(act.value.activo) */
             carga_exitosa.value = act.value.activo
             comprobar_edi.value = act.value.edit
             setTimeout(() => {
@@ -340,7 +312,6 @@ export default {
         }
 
         const mostrarModal2 = (act) => {
-            /* console.log(act.value.activo) */
             carga_exitosa.value = act.value.activo
             comprobar.value = act.value.cargar
             setTimeout(() => {
@@ -358,20 +329,6 @@ export default {
                 comprobar.value = false
             }
         }
-
-/*    const datas = ref([
-            {id: 1, app: 'ISPB', key: 'customers_table_list', detail: 'Ver lista', activo: false},
-            {id: 2, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-            {id: 3, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-            {id: 4, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-            {id: 5, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-            {id: 6, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-            {id: 7, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-            {id: 8, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-            {id: 9, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-            {id: 10, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-        ])  */
-      
         
         watchEffect(()=>{
             if(i18n.global.locale=='es'){
@@ -457,8 +414,8 @@ export default {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             // Estructura FetchQL(url, query, variable, opcions)
             client.rawRequest(/* GraphQL */ `
-            mutation($key:String!, $detail:String,$use_app_id:ID!){
-              	  createsUse_permit(input: {
+            mutation($company_user_id: ID!, $key:String!, $detail:String,$use_app_id:ID!){
+              	  createsUse_permit(company_user_id: $company_user_id, input: {
                     key: $key,
                     detail: $detail,
                     use_app_id: $use_app_id,
@@ -470,6 +427,7 @@ export default {
                     }
             }`,
             {
+                company_user_id: localStorage.getItem('user_company_id'),
                 key: key.value,       
                 detail: detail.value,
                 use_app_id: selectedApp.value.id,
@@ -529,7 +487,6 @@ export default {
             comprobar ,
             comprobar_edi ,
             accion_exitosa ,
-          /*   datas, */
             titles,
             actionModal,
             actionModalDelete,
