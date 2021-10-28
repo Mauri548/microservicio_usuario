@@ -1,8 +1,8 @@
 <template>
     <div class="conteiner-tablero mt-2 py-2">
         <div class="head-tablero">
-            <TitleBoard v-show="$i18n.locale=='en'" title="Licenses" />
-            <TitleBoard v-show="$i18n.locale=='es'" title="Licencias" />
+            <TitleBoard :title="$i18n.locale=='en'? 'Licenses' : 'Licencias'" />
+
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
@@ -31,6 +31,8 @@
                     <ActionModal :data="licence" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
+
+            <Loading v-show="loading"/>
         </div>
         <Pagination/>
     </div>
@@ -89,6 +91,7 @@ import store from '@/store'
 import { GraphQLClient } from 'graphql-request'
 import resetErrorMessage from '../../helper/resetErrorMessage'
 import isEmpty from '../../helper/FieldIsEmpty'
+import Loading from '../../components/loading.vue'
 
 
 export default {
@@ -102,6 +105,7 @@ export default {
         ModalAlert,
         AddLicence,
         CampoForm,
+        Loading,
     },
 
     setup() {
@@ -120,6 +124,7 @@ export default {
         const licenceEdition = ref(0)
         const succesLoad = ref(false)
         const activeAlert = ref(false)
+        const loading = ref(false)
         
         /**
          * 
@@ -127,12 +132,8 @@ export default {
          * 
          */
         const changeTitleByLanguage = () => {
-            if(i18n.global.locale=='es'){
-                titles.value = ['Nombre','Aplicación','Precio ARG','Precio USD']
-            }
-            if(i18n.global.locale=='en'){
-                titles.value = ['Name','App','Price ARG','Price USD']
-            }
+            i18n.global.locale=='en'? titles.value = ['Name','App','Price ARG','Price USD']
+            : titles.value = ['Nombre','Aplicación','Precio ARG','Precio USD']
         }
 
         /**
@@ -169,12 +170,20 @@ export default {
                     licenses.value.push({id:element.id, name:element.name, price_arg:element.price_arg, 
                         price_usd:element.price_usd, app: {id:element.app.id, name: element.app.name}, activo: false, modalDelete: false})
                 })
+                loading.value = false
             })
-            .catch(error => console.log(error.response))
+            .catch(error => {
+                console.log(error.response)
+                loading.value = false
+            })
         }
 
         watchEffect(() => {
             changeTitleByLanguage()
+        })
+
+        watchEffect(() => {
+            loading.value = true
             fetchLicenses()
         })
 
@@ -405,6 +414,7 @@ export default {
             titles,
             addLicence,
             apps,
+            loading,
             ModalAdd,
             actionModal,
             actionModalDelete,
