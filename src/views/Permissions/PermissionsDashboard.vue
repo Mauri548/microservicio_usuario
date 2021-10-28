@@ -19,7 +19,7 @@
             <Board :datas="permisos" :titles="titles" >
                 <tr class="has-text-centered" v-for="data in permisos" :key="data.id">
                     <th @click="actionModal(data)">{{data.id}}</th>
-                    <td @click="actionModal(data)">{{data.app}}</td>
+                    <td @click="actionModal(data)">{{data.app.name}}</td>
                     <td @click="actionModal(data)">{{data.key}}</td>
                     <td @click="actionModal(data)">{{data.detail}}</td>
                     <Modal :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" :buttonDefault="false">
@@ -85,8 +85,8 @@
             </header>
             <section class="modal-card-body">
                 <form action="" class="column">
-                    <select class="column  select1 mb-4" v-model="selectedApp" >
-                        <option v-for="app in apps" :key="app.id" :value="app">{{app.nombre}}</option>
+                    <select class="column  select1 mb-4" v-model="selectedApp.id" >
+                        <option v-for="app in apps" :key="app.id" :value="app.id">{{app.nombre}}</option>
                     </select>
 
                     <CampoForm place="Key" type="text" v-model="key"/>
@@ -174,7 +174,7 @@ export default {
             id.value = data.id
             key.value = data.key
             detail.value = data.detail
-            // selectedApp.value = 
+            selectedApp.value = data.app
         }
 
         const traerPermisos = () => {
@@ -210,7 +210,7 @@ export default {
                 .then((data) => {
                     permisos.value = []
                     data.data.permits.data.forEach(element => {
-                        permisos.value.push({id:element.id, key: element.key, detail: element.detail, app:element.app.name,  activo: false, modalDelete: false})
+                        permisos.value.push({id:element.id, key: element.key, detail: element.detail, app:{ id: element.app.id, name:element.app.name },  activo: false, modalDelete: false})
                     })
 
                 }).catch(error => {
@@ -281,7 +281,6 @@ export default {
                 use_app_id: selectedApp.value.id,
             })
             .then((data) => {
-                console.log(data)
                 let aux = permisos.value.find(element => element.id == id.value)
                 aux.activo = !aux.activo
                 aux.key = key.value
