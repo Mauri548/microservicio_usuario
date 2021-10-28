@@ -1,9 +1,7 @@
 <template>
     <div class="conteiner-tablero mt-2 py-2">
         <div class="head-tablero">
-            <!-- Componente del titulo de la tabla -->
-            <TitleBoard v-show="$i18n.locale=='en'" title="Apps" />
-             <TitleBoard v-show="$i18n.locale=='es'" title="Aplicaciones" />
+            <TitleBoard :title="$i18n.locale=='en'? 'Apps' : 'Aplicaciones'" />
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard namePath="AddApp"  />
@@ -12,7 +10,6 @@
         <div class="body-tablero px-4">
             <!-- Componente de Tablero -->
             <Board :datas="apps" :titles="titles">
-                <!-- Esto se remplazara en el <slot> dentro del componente -->
                 <tr class="has-text-centered" v-for="app in apps" :key="app.id">
                     <th @click="actionModal(app)" >{{app.id}}</th>
                     <td @click="actionModal(app)">{{app.nombre}}</td>
@@ -24,13 +21,13 @@
                     <ActionModal :data="app" @onDeleteModal="eliminando" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
+
+            <Loading v-show="loading"/>
         </div>
    
         <Pagination/>
     </div>
-    <!-- Modal de carga exitosa -->
     <ModalAlert :activador="carga_exitosa">
-       <!--  Se cargo con exito la App -->
        <p v-if="comprobar">{{$t('app.modalCarga')}}</p>
        <p v-if="comprobar_edi">{{$t('app.modalEdicion')}}</p>
     </ModalAlert>
@@ -44,16 +41,14 @@ import Pagination from '../../components/Board/Pagination.vue'
 import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
 import ModalAlert from '../../components/Modals/ModalsAlert.vue'
-/* import ispb from '@/assets/ispb2.png'
-import puwic from '@/assets/puwic2.png'
-import geston from '@/assets/geston2.png' */
+import ispb from '@/assets/ispb2.png'
 import { ref } from '@vue/reactivity'
 import store from '@/store';
-import { inject } from '@vue/runtime-core'
 import {  watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js'
 import {GraphQLClient, request as fetchGQL} from 'graphql-request';
 import { useRouter } from 'vue-router';
+import Loading from '../../components/loading.vue'
 
 
 export default {
@@ -65,16 +60,14 @@ export default {
         Modal,
         ActionModal,
         ModalAlert,
+        Loading,
     },
     created(){
         this.comprobar_carga()
         this.comprobar_edicion()
-        this.traerApps()
-        console.log("se recargo")
     },
 
     setup() {
-        const isMobile = inject('isMobile')
         const carga_exitosa = ref(false)
         const comprobar = store.state.carga_exitosa
         const comprobar_edi = store.state.edicion_exitosa
@@ -82,18 +75,10 @@ export default {
         const paso_elim = ref(false)
         const endpoint = store.state.url_backend
         const apps = ref([])
-        const apps_aux = ref([])
         const router = useRouter()
         const app_eliminada = ref(false)
-     
+        const loading = ref(false)
 
-     /*    const datas = ref([
-           {id: 1, name: 'ISPB', logo: ispb, obvservation: 'Licencia x de ISPB', activo: false, modalDelete: false},
-           {id: 2, name: 'PuWiC', logo: puwic, obvservation: 'Licencia x de PuWiC', activo: false, modalDelete: false},
-           {id: 3, name: 'Geston', logo: geston, obvservation: 'Licencia x de Geston', activo: false, modalDelete: false},
-        ])
-        
- */
         const titles = ref([])
 
         const traerApps = () => {
@@ -132,25 +117,20 @@ export default {
             })
             .then((data) => {
                 apps.value = []
+                // element.logo
                 data.data.apps.data.forEach(element => {
-                    apps.value.push({id:element.id, nombre: element.name, logo: element.logo,observacion:element.observation ,activo: false, modalDelete: false})
-                    /*  console.log(typeof element.logo) */
+                    apps.value.push({id:element.id, nombre: element.name, logo: ispb, observacion:element.observation ,activo: false, modalDelete: false})
                 })
-                /* console.log(apps.value) */
-                /* console.log("se ejecuto") */
+                loading.value = false
             }).catch(error => {
-                console.log(error.response);
+                console.log(error.response)
+                loading.value = false
             })
         }
         
         watchEffect(()=>{
-
-            if(i18n.global.locale=='es'){
-                titles.value = ['Nombre','Logo','Obvservación']
-            }
-            if(i18n.global.locale=='en'){
-                titles.value = ['Name','Logo','Obvservation']
-            }
+            i18n.global.locale=='en'? titles.value = ['Name','Logo','Obvservation']
+            : titles.value = ['Nombre','Logo','Obvservación']
         })
 
         const eliminando = (app_id) => {
@@ -178,8 +158,6 @@ export default {
                 let message = data 
                 console.log(message.data)
                 app_eliminada.value = true
-                /*  accion_exitosa.value = true
-                    paso_elim.value = true */
             })
             .catch(error => {
                 let mensaje = error.message
@@ -192,15 +170,8 @@ export default {
             })
         }
 
-        /* watchEffect(()=>{
-            console.log(app_eliminada.value)
-            if(app_eliminada.value){
-                traerApps()
-                app_eliminada.value = false
-            }
-        }) */
-
-        watchEffect(()=>{ 
+        watchEffect(()=>{
+            loading.value = true 
             traerApps()
         })
 
@@ -240,20 +211,14 @@ export default {
 
     
         return {
-            router,
-            app_eliminada,
+            loading,
             eliminando,
-            traerApps,
             apps,
-            apps_aux,
-            endpoint,
-            isMobile,
             carga_exitosa,
             comprobar,
             comprobar_edi,
             accion_exitosa,
             paso_elim,
-       /*      datas, */
             titles,
             actionModal,
             actionModalDelete,

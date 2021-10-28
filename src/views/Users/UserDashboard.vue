@@ -1,10 +1,7 @@
 <template>
     <div class="conteiner-tablero mt-2 py-4">
         <div class="head-tablero">
-             <!--    Utilizo el atributo locale del objeto i18n para saber en que lenguaje esta seteado el sistema  -->
-                <TitleBoard v-show="$i18n.locale=='es'" title="Usuarios" />
-                <TitleBoard v-show="$i18n.locale=='en'" title="Users" />
-         
+            <TitleBoard :title="$i18n.locale=='en'? 'Users': 'Usuarios'" />
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
@@ -28,14 +25,13 @@
 <!--                    <button @click="ChangeState(data)" v-if="data.state == 'Habilitado'" class="button btn-crenein w-100 my-1">{{$t('user.deshabilitar')}}</button>
                         <button @click="ChangeState(data)" v-else class="button btn-crenein w-100 my-1">{{$t('user.habilitar')}}</button> -->
 
-
-
                     </Modal>
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
-        </div>
 
+            <Loading v-show="loading"/>
+        </div>
         <Pagination/>
     </div>
 </template>
@@ -52,6 +48,7 @@ import store from '@/store'
 import {  watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js' 
 import {GraphQLClient, request as fetchGQL} from 'graphql-request';
+import Loading from '../../components/loading.vue'
 
 
 export default {
@@ -62,6 +59,7 @@ export default {
         Pagination,
         Modal,
         ActionModal,
+        Loading
     },
 
     setup () {
@@ -69,8 +67,8 @@ export default {
         const titles = ref([])
         const endpoint = store.state.url_backend
         const users = ref([])
-        const users_aux = ref([])
         const company_id = ref('');
+        const loading = ref(false)
 
         const traerUsersxCompany = (id) => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
@@ -85,22 +83,23 @@ export default {
                 }
             }`,
             {
-                /* page: parseInt(route.params.page),
-                first: mostrar_cantidad.value */
                 company_id: id
             })
             .then((data) => {
-                users.value = []
                 data.data.company.users.forEach(element => {
                     users.value.push({id:element.id, nombre: element.name, email:element.email ,activo: false, modalDelete: false})
                 })
+                loading.value = false
             })
             .catch(error => {
-                console.log(error.response);
+                // console.log(error.response);
+                loading.value = false
             })
         }
 
         watchEffect(()=>{
+            users.value = []
+            loading.value = true
             store.state.company_id
             company_id.value = store.state.company_id
             if (company_id.value) {
@@ -128,12 +127,8 @@ export default {
          *  
          */ 
         watchEffect(()=>{ 
-            if(i18n.global.locale == 'en'){
-                titles.value = ['Full name','Email']
-            }
-            if(i18n.global.locale == 'es'){
-                titles.value = ['Nombre completo','Correo']
-            }
+            i18n.global.locale == 'en'? titles.value = ['Full name','Email'] 
+            : titles.value = ['Nombre completo','Correo']
         })
 
         // Cambia el estado del usuario entre habilitado y deshabilitado
@@ -145,9 +140,9 @@ export default {
             company_id,
             endpoint,
             users,
-            users_aux,
             datas,
             titles,
+            loading,
             actionModal,
             actionModalDelete,
             ChangeState
