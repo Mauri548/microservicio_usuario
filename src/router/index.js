@@ -127,6 +127,12 @@ const routes = [
       }
       ,
       {
+        path: '/UpdateSuscription/:id',
+        name: 'UpdateSuscription',
+        component: () => import(/* webpackCunkName: "LicencesDashboard" */ '../views/Subscripciones/UpdateSuscription.vue')
+      }
+      ,
+      {
         path: '/SubscriptionsDashboard',
         name: 'SubscriptionsDashboard',
         component: () => import(/* webpackCunkName: "LicencesDashboard" */ '../views/Subscripciones/SubscriptionsDashboard.vue')

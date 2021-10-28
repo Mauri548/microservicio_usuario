@@ -135,6 +135,10 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             modalEdicion:'Se edito con exito la licencia.',
             modalCargaError: 'Fallo al cargar la licencia, por favor intentelo mas tarde',
             modalEdicionError: 'Fallo al editar la licencia, por favor intentelo mas tarde',
+            tengo:'Esta suscrito',
+            quiero:'Suscribirse',
+            modalTitulo:'¿Desea cambiar de licencia?',
+            modalParrafo:'Si es asi confirme y se le informara al area de administracion para que le cambien la licencia',
         },
         createCompanyFinish: {
             initext: 'Enhorabuena, has creado tu empresa',
@@ -279,6 +283,11 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             modalEdicion:'The Licence was successfully edited.',
             modalCargaError: 'Failed to load license, please try again later',
             modalEdicionError: 'Failed to edit license, please try again later',
+            tengo:'Is subscribed',
+            quiero:'To subscribe',
+            modalTitulo:'Do you want to change your license?',
+            modalParrafo:'If so, confirm and the administration area will be informed to change the license.',
+
         },
         createCompanyFinish: {
             initext: 'Congratulations you have created your company',

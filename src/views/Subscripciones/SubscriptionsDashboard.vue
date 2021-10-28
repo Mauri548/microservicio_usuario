@@ -22,7 +22,7 @@
            
                     <Modal :data="data" :buttonDefault="false" @onCloseModal="actionModal" 
                      @onOpenModalDelete="actionModalDelete" >
-                         <button  class="button btn-crenein w-100 my-1">
+                         <button @click="actualizar(data)" class="button btn-crenein w-100 my-1">
                             <span class="icon is-small">
                                 <i class="fas fa-pencil-alt"></i>
                             </span>
@@ -57,6 +57,7 @@ import store from '@/store'
 import {  watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js' 
 import {GraphQLClient} from 'graphql-request';
+import { useRouter } from 'vue-router'
 
 
 export default {
@@ -85,13 +86,18 @@ export default {
         const endpoint = store.state.url_backend
         const subscripciones = ref([])
         const subscripciones_aux = ref([])
-
+        const router = useRouter()
 
         /**
          * 
          * Trae las suscripciones de la empresa actual
          * 
          */
+        const actualizar = (data) => {
+            router.push({name: 'UpdateSuscription', params: {id: data.id} })
+        }
+
+
         const traerSuscriptionxCompany = () => {
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */ `
@@ -187,6 +193,7 @@ export default {
         }
 
         return {
+            actualizar,
             company_id,
             comprobar_carga,
             comprobar_edicion ,

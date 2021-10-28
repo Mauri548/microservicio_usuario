@@ -18,8 +18,9 @@
         <div v-if="appSelect" class="description-app">
             <p>{{appSelect.observation}}</p>
         </div>
-        <!-- <SelectLicence v-if="appSelect" :app="appSelect" /> -->
-        <SelectLicence2 v-if="appSelect" :app="appSelect" />
+        
+        <UpdateLicenceSelected v-if="appSelect" :app="appSelect" />
+        
         
     </div>
 </template>
@@ -27,15 +28,15 @@
 <script>
 import { ref } from '@vue/reactivity'
 import { onMounted, watchEffect } from '@vue/runtime-core'
-import SelectLicence2 from './SelectLicence2.vue'
+import UpdateLicenceSelected from './UpdateLicenceSelected.vue'
 import CarrouselSection from './CarrouselSection.vue'
 import Arrow from './Arrow.vue'
 
 export default {
-    name: 'SelectApp',
+    name: 'EditAppSelected',
     components: {
         CarrouselSection,
-        SelectLicence2,
+        UpdateLicenceSelected,
         Arrow,
        
     },
@@ -46,6 +47,7 @@ export default {
         const cantSection = ref(0)
         const desplazamiento = ref(0)
         const appSelect = ref(null)
+        const mostrar = ref(props.apps.mostrar)
 
         // Calculamos la cantidad de secciones que tendra el carrousel
         if ((props.apps.length % 3) > 0) {
@@ -84,6 +86,7 @@ export default {
         }
 
         return {
+            mostrar,
             appSelect,
             selectApp,
             cantSection,
@@ -149,41 +152,6 @@ export default {
         overflow: scroll;
     }
 }
-
-/* .arrow {
-    display: flex;
-    align-items: center;
-    width: 25px;
-    min-height: 80%;
-    position: absolute;
-    background-color: rgba(204,204,204,0.13);
-    z-index: 1;
-}
-
-.arrow-next {
-    top:0%;
-    right: 0%;
-    border-radius: 0 5px 5px 0;
-}
-
-.arrow-prev {
-    display: none;
-    border-radius: 5px 0 0 5px;
-}
-
-i {
-    font-size: 35px;
-    color: rgba(128,128,128,0.38)
-}
-
-.arrow:hover {
-    cursor: pointer;
-    background-color: rgba(204,204,204,0.3);
-}
-
-.arrow:hover i {
-    color: #005395
-} */
 
 
 </style>
