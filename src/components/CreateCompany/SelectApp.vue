@@ -51,7 +51,7 @@ export default {
             console.log(props.apps.length)
     
             // Calculamos la cantidad de secciones que tendra el carrousel
-            if ((props.apps.length % 3) > 0) {
+            if ((props.apps.length % 5) > 0) {
                 console.log('mayor')
                 cantSection.value = Math.trunc(props.apps.length / 3) + 1
             } else if ((props.apps.length % 3) == 0) {
