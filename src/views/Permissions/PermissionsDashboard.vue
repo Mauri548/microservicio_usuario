@@ -1,12 +1,7 @@
 <template>
     <div class="conteiner-tablero mt-2 py-4">
         <div  class="head-tablero">
-            <div v-if="$i18n.locale=='es'">
-                <TitleBoard title="Permisos"/>
-            </div>
-            <div v-if="$i18n.locale=='en'">
-                <TitleBoard title="Permissions"/>
-            </div>
+            <TitleBoard :title="$i18n.locale=='en'? 'Permissions' : 'Permisos'"/>
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
@@ -19,7 +14,7 @@
             <Board :datas="permisos" :titles="titles" >
                 <tr class="has-text-centered" v-for="data in permisos" :key="data.id">
                     <th @click="actionModal(data)">{{data.id}}</th>
-                    <td @click="actionModal(data)">{{data.app}}</td>
+                    <td @click="actionModal(data)">{{data.app.name}}</td>
                     <td @click="actionModal(data)">{{data.key}}</td>
                     <td @click="actionModal(data)">{{data.detail}}</td>
                     <Modal :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" :buttonDefault="false">
@@ -33,6 +28,9 @@
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
+
+            <Loading v-show="loading"/>
+
         </div>
         <Pagination/>
         <!-- <AddPermission :data="addPermission" @tengoAct="mostrarModal2" @onCloseModal="actionModalAddPermission" />  -->
@@ -85,8 +83,8 @@
             </header>
             <section class="modal-card-body">
                 <form action="" class="column">
-                    <select class="column  select1 mb-4" v-model="selectedApp" >
-                        <option v-for="app in apps" :key="app.id" :value="app">{{app.nombre}}</option>
+                    <select class="column  select1 mb-4" v-model="selectedApp.id" >
+                        <option v-for="app in apps" :key="app.id" :value="app.id">{{app.nombre}}</option>
                     </select>
 
                     <CampoForm place="Key" type="text" v-model="key"/>
@@ -111,23 +109,6 @@
         <p v-if="comprobar_edi">{{$t('permisos.modalEdicion')}}</p>
     </ModalAlert>
 
-
-      <!-- <div>
-            <div class="modal" :class="{'is-active': carga_exitosa}">
-                <div class="modal-background " style="background-color: rgb(197, 197, 197, 0.0)"></div>
-                <div class="modal-content-width has-text-black" style="border:1px ridge grey;" :class="{'modal-puntowifi-escritorio' : !isMobile, 'modal-puntowifi-mobil' : isMobile}">
-                    <div class="container has-text-centered has-background-white" :class="{'p-2':isMobile, 'p-5':!isMobile}" id="modal">
-                        <p v-show="comprobar==true" class="has-text-centered has-text-success">Se cargo con exito el permiso.</p>
-                        <p v-show="comprobar_edi==true" class="has-text-centered  has-text-success">Se edito con exito el permiso.</p>
-                        <div class="columns mt-2">
-                            <div class="column">
-                                <button class="button w-100 fondo-crenein is-outline btn has-text-white has-text-weight-blod" @click="cerrarModal">Esta bien</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
 </template>
 
 <script>
@@ -146,6 +127,7 @@ import i18n from '@/i18n.js'
 import {GraphQLClient} from 'graphql-request';
 import store from '@/store';
 import CampoForm from '../../components/CampoForm.vue'
+import Loading from '../../components/loading.vue'
 
 export default {
     components: {
@@ -158,13 +140,10 @@ export default {
         AddPermission,
         EditPermission,
         ModalAlert,
-        CampoForm
+        CampoForm,
+        Loading,
     },
-    created(){
-        this.traerPermisos()
-        this.traerApps()
-    },
-   
+
     setup() {
         const isMobile = inject('isMobile')
         const carga_exitosa = ref(false)
@@ -184,13 +163,15 @@ export default {
         const apps = ref([])
         const titles = ref([])
         const id = ref()
+        const loading = ref(false)
         
 
         const activarEdicion = (data) => {
-                editPermission.value = !editPermission.value 
-                id.value = data.id
-                key.value = data.key
-                detail.value = data.detail
+            editPermission.value = !editPermission.value 
+            id.value = data.id
+            key.value = data.key
+            detail.value = data.detail
+            selectedApp.value = data.app
         }
 
         const traerPermisos = () => {
@@ -222,190 +203,18 @@ export default {
                 {
                     /* page: parseInt(route.params.page),
                     first: mostrar_cantidad.value */
-                },
-                {
-                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
                 })
                 .then((data) => {
                     permisos.value = []
                     data.data.permits.data.forEach(element => {
-                        permisos.value.push({id:element.id, key: element.key, detail: element.detail, app:element.app.name,  activo: false, modalDelete: false})
-                       /*  console.log(typeof element.logo) */
+                        permisos.value.push({id:element.id, key: element.key, detail: element.detail, app:{ id: element.app.id, name:element.app.name },  activo: false, modalDelete: false})
                     })
-
+                    loading.value = false
                 }).catch(error => {
-                    console.log(error.response);
+                    console.log(error.response)
+                    loading.value = false
                 })
         }
-
-        
-        watchEffect(() => {
-             traerPermisos()
-        })
-        
-
-        const closeModal = () => {
-            if(addPermission.value) addPermission.value = !addPermission.value
-            if(editPermission.value) editPermission.value = !editPermission.value
-        }
-
-        const validar = () => {
-
-        
-            msg_error.value.key = ''
-        
-            if (key.value == ""){
-                if(i18n.global.locale == 'en'){
-                    msg_error.value.key = 'key is required'
-                }
-                if(i18n.global.locale == 'es'){
-                    msg_error.value.key = 'La palabra clave es requerido'
-                }
-                
-            } 
-            if (msg_error.value.key == ''){
-                if(addPermission.value){
-                    registrarPermiso()
-                }
-                if(editPermission.value){
-                    editarPermiso() 
-                }
-              
-            } else {
-                console.log('no paso')
-                // Saltar los errores
-            } 
-
-        }
-
-        const editarPermiso = () => {
-          /*   console.log(id.value)  */
-            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            // Estructura FetchQL(url, query, variable, opcions)
-            client.rawRequest(/* GraphQL */ `
-            mutation($id:ID!,$key:String!, $detail:String,$use_app_id:ID!){
-              	modifiesUse_permit (id: $id, input: {
-                    key: $key,
-                    detail:  $detail,
-                    use_app_id: $use_app_id,
-                }) {
-                    id
-                    key
-                    detail
-                   
-                }
-            }`,
-            {
-                id: id.value,
-                key: key.value,       
-                detail: detail.value,
-                use_app_id: selectedApp.value.id,
-            },
-            {
-               /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
-            })
-            .then((data) => {
-             /*    let ide = data.data.modifiesUse_permit.id */
-               /*  console.log("anduvo") */
-                let aux = permisos.value.find(element => element.id == id.value)
-                aux.activo = !aux.activo
-                aux.key = key.value
-            /*     console.log(aux) */
-                let accion = "edicionPermission"
-                store.commit('verificar_carga',accion) 
-                editPermission.value = !editPermission.value
-                carga_exitosa.value = true
-                comprobar_edi.value = true
-                setTimeout(() => {
-                carga_exitosa.value = false
-                comprobar_edi.value = false
-                } ,3000)
-
-            }).catch(error => {
-                let aux = permisos.value.find(element => element.id == id.value)
-                aux.activo = !aux.activo
-                editPermission.value = !editPermission.value
-                console.log(error.response);
-            })
-        }
-
-        const mostrarModal = (act) => {
-            /* console.log(act.value.activo) */
-            carga_exitosa.value = act.value.activo
-            comprobar_edi.value = act.value.edit
-            setTimeout(() => {
-                carga_exitosa.value = false
-                comprobar_edi.value = false
-            } ,3000)
-        }
-
-        const mostrarModal2 = (act) => {
-            /* console.log(act.value.activo) */
-            carga_exitosa.value = act.value.activo
-            comprobar.value = act.value.cargar
-            setTimeout(() => {
-                carga_exitosa.value = false
-                comprobar.value = false
-            } ,3000)
-        }
-
-        const cerrarModal = () => {
-            carga_exitosa.value = false
-            if(comprobar_edi.value==true){
-                comprobar_edi.value = false
-            }
-            if(comprobar.value==true){
-                comprobar.value = false
-            }
-        }
-
-/*    const datas = ref([
-            {id: 1, app: 'ISPB', key: 'customers_table_list', detail: 'Ver lista', activo: false},
-            {id: 2, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-            {id: 3, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-            {id: 4, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-            {id: 5, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-            {id: 6, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-            {id: 7, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-            {id: 8, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-            {id: 9, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-            {id: 10, app: 'ISPB', key: 'customers_table_add', detail: 'Agregar cliente', activo: false},
-        ])  */
-      
-        
-        watchEffect(()=>{
-            if(i18n.global.locale=='es'){
-                titles.value = ['Aplicacion','Clave','Detalle']
-            }
-            if(i18n.global.locale=='en'){
-                titles.value = ['App','Key','Detail']
-            }
-        })  
-
-        // Abre el modal de acciones del elemento que clickeas
-        const actionModal = (data) => {
-            let aux = permisos.value.find(element => element.id == data.id)
-            aux.activo = !aux.activo
-        }
-
-        // Abre la ventana emergente para eliminar un elemento de la lista
-        const actionModalDelete = (data) => {
-            let aux = permisos.value.find(element => element.id == data)
-            aux.activo = false
-            aux.modalDelete = !aux.modalDelete
-        }
-
-        // Abre el modal para agregar un permiso a la lista
-        const actionModalAddPermission = () => {
-            addPermission.value = !addPermission.value
-        }
-
-        // Abre el modal para editar un permiso de la lista
-        const actionModalEditPermission = () => {
-            permisos.value.forEach(element => element.activo = false)
-            editPermission.value = !editPermission.value
-        }
-        
 
         const traerApps = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
@@ -453,12 +262,162 @@ export default {
             })
         }
 
+        
+        watchEffect(() => {
+            loading.value = true
+            traerPermisos()
+            traerApps()
+        })
+        
+
+        const closeModal = () => {
+            if(addPermission.value) addPermission.value = !addPermission.value
+            if(editPermission.value) editPermission.value = !editPermission.value
+        }
+
+        const validar = () => {
+
+        
+            msg_error.value.key = ''
+        
+            if (key.value == ""){
+                if(i18n.global.locale == 'en'){
+                    msg_error.value.key = 'key is required'
+                }
+                if(i18n.global.locale == 'es'){
+                    msg_error.value.key = 'La palabra clave es requerido'
+                }
+                
+            } 
+            if (msg_error.value.key == ''){
+                if(addPermission.value){
+                    registrarPermiso()
+                }
+                if(editPermission.value){
+                    editarPermiso() 
+                }
+              
+            } else {
+                console.log('no paso')
+                // Saltar los errores
+            } 
+
+        }
+
+        const editarPermiso = () => {
+            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            client.rawRequest(/* GraphQL */ `
+            mutation($company_user_id:ID!, $id:ID!, $key:String!, $detail:String,$use_app_id:ID!){
+              	modifiesUse_permit (company_user_id: $company_user_id, id: $id, input: {
+                    key: $key,
+                    detail:  $detail,
+                    use_app_id: $use_app_id,
+                }) {
+                    id
+                    key
+                    detail
+                   
+                }
+            }`,
+            {
+                company_user_id: localStorage.getItem('user_company_id'),
+                id: id.value,
+                key: key.value,       
+                detail: detail.value,
+                use_app_id: selectedApp.value.id,
+            })
+            .then((data) => {
+                let aux = permisos.value.find(element => element.id == id.value)
+                aux.activo = !aux.activo
+                aux.key = key.value
+                let accion = "edicionPermission"
+                store.commit('verificar_carga',accion) 
+                editPermission.value = !editPermission.value
+                carga_exitosa.value = true
+                comprobar_edi.value = true
+                setTimeout(() => {
+                    carga_exitosa.value = false
+                    comprobar_edi.value = false
+                } ,3000)
+
+            }).catch(error => {
+                let aux = permisos.value.find(element => element.id == id.value)
+                aux.activo = !aux.activo
+                editPermission.value = !editPermission.value
+                console.log(error.response);
+            })
+        }
+
+        const mostrarModal = (act) => {
+            carga_exitosa.value = act.value.activo
+            comprobar_edi.value = act.value.edit
+            setTimeout(() => {
+                carga_exitosa.value = false
+                comprobar_edi.value = false
+            } ,3000)
+        }
+
+        const mostrarModal2 = (act) => {
+            carga_exitosa.value = act.value.activo
+            comprobar.value = act.value.cargar
+            setTimeout(() => {
+                carga_exitosa.value = false
+                comprobar.value = false
+            } ,3000)
+        }
+
+        const cerrarModal = () => {
+            carga_exitosa.value = false
+            if(comprobar_edi.value==true){
+                comprobar_edi.value = false
+            }
+            if(comprobar.value==true){
+                comprobar.value = false
+            }
+        }
+        
+        watchEffect(()=>{
+            if(i18n.global.locale=='es'){
+                titles.value = ['Aplicacion','Clave','Detalle']
+            }
+            if(i18n.global.locale=='en'){
+                titles.value = ['App','Key','Detail']
+            }
+        })  
+
+        // Abre el modal de acciones del elemento que clickeas
+        const actionModal = (data) => {
+            let aux = permisos.value.find(element => element.id == data.id)
+            aux.activo = !aux.activo
+        }
+
+        // Abre la ventana emergente para eliminar un elemento de la lista
+        const actionModalDelete = (data) => {
+            let aux = permisos.value.find(element => element.id == data)
+            aux.activo = false
+            aux.modalDelete = !aux.modalDelete
+        }
+
+        // Abre el modal para agregar un permiso a la lista
+        const actionModalAddPermission = () => {
+            addPermission.value = !addPermission.value
+        }
+
+        // Abre el modal para editar un permiso de la lista
+        const actionModalEditPermission = () => {
+            permisos.value.forEach(element => element.activo = false)
+            editPermission.value = !editPermission.value
+        }
+        
+
+        
+
         const registrarPermiso = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             // Estructura FetchQL(url, query, variable, opcions)
             client.rawRequest(/* GraphQL */ `
-            mutation($key:String!, $detail:String,$use_app_id:ID!){
-              	  createsUse_permit(input: {
+            mutation($company_user_id: ID!, $key:String!, $detail:String,$use_app_id:ID!){
+              	  createsUse_permit(company_user_id: $company_user_id, input: {
                     key: $key,
                     detail: $detail,
                     use_app_id: $use_app_id,
@@ -470,6 +429,7 @@ export default {
                     }
             }`,
             {
+                company_user_id: localStorage.getItem('user_company_id'),
                 key: key.value,       
                 detail: detail.value,
                 use_app_id: selectedApp.value.id,
@@ -508,7 +468,7 @@ export default {
             id,
             editarPermiso,
             activarEdicion ,
-            traerApps,
+            // traerApps,
             registrarPermiso,
             validar,
             key,
@@ -520,8 +480,8 @@ export default {
             endpoint,
             permisos,
             permisos_aux,
-            traerPermisos,
-             mostrarModal2 ,
+            // traerPermisos,
+            mostrarModal2 ,
             cerrarModal,
             mostrarModal,
             isMobile,
@@ -529,15 +489,14 @@ export default {
             comprobar ,
             comprobar_edi ,
             accion_exitosa ,
-          /*   datas, */
             titles,
             actionModal,
             actionModalDelete,
             addPermission,
             editPermission,
             actionModalAddPermission,
-            actionModalEditPermission
-
+            actionModalEditPermission,
+            loading,
         }
     }
 }

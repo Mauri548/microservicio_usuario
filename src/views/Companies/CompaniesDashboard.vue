@@ -1,13 +1,7 @@
 <template>
     <div class="conteiner-tablero mt-2 py-4">
         <div class="head-tablero">
-            <div v-show="$i18n.locale=='es'">
-                <TitleBoard title="Empresas" />
-            </div> 
-            <div v-show="$i18n.locale=='en'">
-                <TitleBoard title="Companies" />
-            </div> 
-           
+            <TitleBoard :title="$i18n.locale=='en'? 'Companies' : 'Empresas'" />
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard />
@@ -32,26 +26,9 @@
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
+            <Loading v-show="loading"/>
         </div>
     </div>
-
-    <!--   <div>
-            <div class="modal" :class="{'is-active': carga_exitosa}">
-                <div class="modal-background " style="background-color: rgb(197, 197, 197, 0.0)"></div>
-                <div class="modal-content-width has-text-black" style="border:1px ridge grey;" :class="{'modal-puntowifi-escritorio' : !isMobile, 'modal-puntowifi-mobil' : isMobile}">
-                    <div class="container has-text-centered has-background-white" :class="{'p-2':isMobile, 'p-5':!isMobile}" id="modal">
-                      
-                        <p v-show="comprobar==true" class="has-text-centered has-text-success">Se cargo con exito la empresa.</p>
-                        <p v-show="comprobar_edi==true" class="has-text-centered has-text-success">Se edito con exito la empresa.</p>
-                        <div class="columns mt-2">
-                            <div class="column">
-                                <button class="button w-100 fondo-crenein is-outline btn has-text-white has-text-weight-blod" @click="carga_exitosa = false">Esta bien</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
 
    <ModalAlert :activador="carga_exitosa">
         <p v-if="comprobar_edi">{{$t('company.modalEdicion')}}</p>
@@ -71,10 +48,10 @@ import ActionModal from '../../components/Modals/ActionsModal.vue'
 import ModalAlert from '../../components/Modals/ModalsAlert.vue'
 import { ref } from '@vue/reactivity'
 import store from '@/store';
-import { inject } from '@vue/runtime-core'
 import {  watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js'
 import {GraphQLClient} from 'graphql-request';
+import Loading from '../../components/loading.vue'
 
 
 export default {
@@ -86,59 +63,32 @@ export default {
         Modal,
         ActionModal,
         ModalAlert,
+        Loading,
     },
     created(){
         this.comprobar_carga()
         this.comprobar_edicion()
-      /*  this.traerCompanies()   */
-        this.traerCompaniesxUser()
     },
 
     setup() {
-        const isMobile = inject('isMobile')
         const carga_exitosa = ref(false)
         const comprobar = store.state.carga_exitosa
         const comprobar_edi = store.state.edicion_exitosa
         const accion_exitosa = ref(false)
         const endpoint = store.state.url_backend
         const companies = ref([])
-        const companies_aux = ref([])
         const user_id = ref();
 
-        watchEffect(()=>{
-            store.state.user_id 
-            user_id.value = localStorage.getItem('user_id')
-        })
-        const datas = ref([
-         /*    {id: 1, nameFantasy: 'Internet', businessName: 'Internet', owners: 'Gonzalo Ramitez', cuit: 203688999, email: 'ramirez@gmail.com',
-            phone: 3624624482, taxCondition: 'IVA', direction: 'calle 2', location: 'Resistencia', province: 'Chaco', country: 'Argentina'},
-            {id: 2, nameFantasy: 'Internet', businessName: 'Internet', owners: 'Gonzalo Ramitez', cuit: 203688999, email: 'ramirez@gmail.com',
-            phone: 3624624482, taxCondition: 'IVA', direction: 'calle 2', location: 'Resistencia', province: 'Chaco', country: 'Argentina'},
-            {id: 3, nameFantasy: 'Internet', businessName: 'Internet', owners: 'Gonzalo Ramitez', cuit: 203688999, email: 'ramirez@gmail.com',
-            phone: 3624624482, taxCondition: 'IVA', direction: 'calle 2', location: 'Resistencia', province: 'Chaco', country: 'Argentina'},
-            {id: 4, nameFantasy: 'Internet', businessName: 'Internet', owners: 'Gonzalo Ramitez', cuit: 203688999, email: 'ramirez@gmail.com',
-            phone: 3624624482, taxCondition: 'IVA', direction: 'calle 2', location: 'Resistencia', province: 'Chaco', country: 'Argentina'},
-            {id: 5, nameFantasy: 'Internet', businessName: 'Internet', owners: 'Gonzalo Ramitez', cuit: 203688999, email: 'ramirez@gmail.com',
-            phone: 3624624482, taxCondition: 'IVA', direction: 'calle 2', location: 'Resistencia', province: 'Chaco', country: 'Argentina'},
-            {id: 6, nameFantasy: 'Internet', businessName: 'Internet', owners: 'Gonzalo Ramitez', cuit: 203688999, email: 'ramirez@gmail.com',
-            phone: 3624624482, taxCondition: 'IVA', direction: 'calle 2', location: 'Resistencia', province: 'Chaco', country: 'Argentina'},
-            {id: 7, nameFantasy: 'Internet', businessName: 'Internet', owners: 'Gonzalo Ramitez', cuit: 203688999, email: 'ramirez@gmail.com',
-            phone: 3624624482, taxCondition: 'IVA', direction: 'calle 2', location: 'Resistencia', province: 'Chaco', country: 'Argentina'}, */
-        ])
+        const datas = ref([])
 
         const titles = ref()
+        const loading = ref(false)
 
 
         watchEffect(()=>{
-
-            if(i18n.global.locale=='es'){
-                titles.value = ['Nombre de fantasia', 'Nombre del negocio', 'Propietarios', 'Cuit', 'Correo', 'Telefono', 'Condición fiscal', 'Dirección', 'Localidad','Provincia', 'Pais']
-                 /*  titles.value = ['Nombre de fantasia', 'Nombre del negocio', 'Propietarios', 'Cuit', 'Correo', 'Telefono', 'Condición fiscal', 'Dirección', 'Localidad', 'Provincia', 'Pais'] */
-            }
-            if(i18n.global.locale=='en'){
-                titles.value = ['Name fantasy', 'Business name', 'Owners', 'Cuit', 'Email', 'Phone', 'Tax condition', 'Direction', 'Location','Province', 'Country']
-            }
-
+            i18n.global.locale=='es'?
+            titles.value = ['Nombre de fantasia', 'Nombre del negocio', 'Propietarios', 'Cuit', 'Correo', 'Telefono', 'Condición fiscal', 'Dirección', 'Localidad','Provincia', 'Pais'] 
+            : titles.value = ['Name fantasy', 'Business name', 'Owners', 'Cuit', 'Email', 'Phone', 'Tax condition', 'Direction', 'Location','Province', 'Country']
         })
 
         const traerCompanies = () => {
@@ -203,76 +153,74 @@ export default {
 
         const traerCompaniesxUser = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-                client.rawRequest(/* GraphQL */ `
-                query($id:ID) {
-                     userscompaniesxuser(first: 999, page:1, user_id: $id) {
-                            paginatorInfo {
-                                count
-                                currentPage
-                                firstItem
-                                hasMorePages
-                                lastItem
-                                lastPage
-                                perPage
-                                total
+            client.rawRequest(/* GraphQL */ `
+            query($id:ID) {
+                    userscompaniesxuser(first: 999, page:1, user_id: $id) {
+                        paginatorInfo {
+                            count
+                            currentPage
+                            firstItem
+                            hasMorePages
+                            lastItem
+                            lastPage
+                            perPage
+                            total
+                        }
+                        data {
+                            use_user_id
+                            use_company_id
+                            user {
+                                id
+                                name
+                                email
                             }
-                            data {
-                                use_user_id
-                                use_company_id
-                                user {
-                                    id
-                                    name
-                                    email
-                                }
-                                company {
-                                    id
-                                    name_fantasy
-                                    business_name
-                                    owners
-                                    cuit
-                                    email
-                                    phones
-                                    tax_condition
-                                    direction
-                                    location
-                                    province
-                                    country
-                                }
+                            company {
+                                id
+                                name_fantasy
+                                business_name
+                                owners
+                                cuit
+                                email
+                                phones
+                                tax_condition
+                                direction
+                                location
+                                province
+                                country
                             }
                         }
-                }`,
-                {
-                    /* page: parseInt(route.params.page),
-                    first: mostrar_cantidad.value */
-                    id:user_id.value
+                    }
+            }`,
+            {
+                id:user_id.value   
+            },)
+            .then((data) => {
+                companies.value = []
+                let datos = data.data.userscompaniesxuser.data
+                // console.log(datos[0].company.name_fantasy)
+            
+                datos.forEach(element => {
+                    companies.value.push({id:element.company.id, nameFantasy: element.company.name_fantasy,
+                    businessName: element.company.business_name,owners:element.company.owners ,
+                    cuit:element.company.cuit ,email:element.company.email,phone:element.company.phones,
+                    taxCondition:element.company.tax_condition ,direction:element.company.direction,
+                    location:element.company.location,
+                    province:element.company.province,   
+                    country:element.company.country, activo: false, modalDelete: false}) 
                     
-                },
-                {
-                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
                 })
-                .then((data) => {
-                    companies.value = []
-                    let datos = data.data.userscompaniesxuser.data
-                    console.log(datos[0].company.name_fantasy)
-             
-                    datos.forEach(element => {
-                        companies.value.push({id:element.company.id, nameFantasy: element.company.name_fantasy,
-                        businessName: element.company.business_name,owners:element.company.owners ,
-                        cuit:element.company.cuit ,email:element.company.email,phone:element.company.phones,
-                        taxCondition:element.company.tax_condition ,direction:element.company.direction,
-                        location:element.company.location,
-                        province:element.company.province,   
-                        country:element.company.country, activo: false, modalDelete: false}) 
-                      
-                    }) 
-                  /* console.log(companies.value)  */
-
-                }).catch(error => {
-                    console.log(error.response);
-                })
+                loading.value = false
+            })
+            .catch(error => {
+                console.log(error.response)
+                loading.value = false
+            })
         }
 
         watchEffect(()=>{
+            loading.value = true
+            store.state.user_id 
+            user_id.value = localStorage.getItem('user_id')
             traerCompaniesxUser()
         })
  
@@ -291,7 +239,6 @@ export default {
 
     
         const comprobar_carga = () => {
-            // console.log(comprobar)
             if(comprobar==true){
                 setTimeout(() => carga_exitosa.value = true, 500)
                 let accion = "cargarCompany"
@@ -300,7 +247,6 @@ export default {
             setTimeout(() => carga_exitosa.value = false, 3000)
         }
         const comprobar_edicion = () => {
-            // console.log(comprobar)
             if(comprobar_edi==true){
                 setTimeout(() => carga_exitosa.value = true, 500)
 
@@ -312,12 +258,8 @@ export default {
 
         return {
             user_id,
-            traerCompaniesxUser,
-            traerCompanies,
-            endpoint,
             companies,
-            companies_aux,
-            isMobile ,
+            loading,
             comprobar_carga ,
             comprobar_edicion ,
             carga_exitosa,

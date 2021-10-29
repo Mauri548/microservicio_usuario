@@ -1,14 +1,6 @@
 <template>
   	<div>
 		<div class="form-row columns is-mobile mb-1">
-
-			<!-- <div class="column pr-0 is-flex-grow-0">
-				<div class="control">
-					<a class="button btn" @click="switchVisibility" >
-						<i class="fas fa-eye"></i>
-					</a>
-				</div>
-			</div> -->
 			<div class="column">
 				<div class="control">
 					<input class="input" :type="type"  v-model="modelValue"

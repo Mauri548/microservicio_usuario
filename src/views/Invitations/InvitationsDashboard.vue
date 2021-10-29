@@ -1,10 +1,7 @@
 <template>
     <div class="conteiner-tablero mt-2 py-4">
         <div class="head-tablero">
-             <!--    Utilizo el atributo locale del objeto i18n para saber en que lenguaje esta seteado el sistema  -->
-                <TitleBoard v-show="$i18n.locale=='es'" title="Invitaciones" />
-                <TitleBoard v-show="$i18n.locale=='en'" title="Invitations" />
-         
+            <TitleBoard :title="$i18n.locale=='en'? 'Invitations' : 'Invitaciones'" />
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
@@ -26,6 +23,8 @@
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
+
+            <Loading v-show="loading"/>
         </div>
 
         <Pagination/>
@@ -44,7 +43,7 @@ import store from '@/store'
 import {  watch, watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js' 
 import {GraphQLClient, request as fetchGQL} from 'graphql-request';
-
+import Loading from '../../components/loading.vue'
 
 export default {
     components: {
@@ -54,6 +53,7 @@ export default {
         Pagination,
         Modal,
         ActionModal,
+        Loading
     },
 
     setup () {
@@ -62,8 +62,8 @@ export default {
         const titles = ref([])
         const endpoint = store.state.url_backend
         const invitaciones = ref([])
-        const users_aux = ref([])
         const company_id = ref();
+        const loading = ref(false)
 
         /**
          * 
@@ -113,10 +113,16 @@ export default {
                 data.data.invitationsxcompany.data.forEach(element => {
                     invitaciones.value.push({id:element.id, nombre: element.name, email:element.email ,activo: false, modalDelete: false})
                 })
-            }).catch(error => {console.log(error.response);})
+                loading.value = false
+            })
+            .catch(error => {
+                console.log(error.response)
+                loading.value = false
+            })
         }
 
         watchEffect(()=>{
+            loading.value = true
             store.state.company_id 
             company_id.value = localStorage.getItem('id_company_selected')
             traerInvitaciones()
@@ -134,13 +140,9 @@ export default {
             aux.activo = false
             aux.modalDelete = !aux.modalDelete
         }
-        watchEffect(()=>{ // utilizamos watcheffect para detectar que valor tiene el atributo locale del objeto i18n al momento de estar en la pagina o al momento de cambiar el valor a traves del boton del lenguaje
-            if(i18n.global.locale == 'en'){
-                titles.value = ['Full name','Email']
-            }
-            if(i18n.global.locale == 'es'){
-                titles.value = ['Nombre completo','Correo']
-            }
+        watchEffect(()=>{
+            i18n.global.locale == 'en'? titles.value = ['Full name','Email']
+            : titles.value = ['Nombre completo','Correo']
         })
 
         // Cambia el estado del usuario entre habilitado y deshabilitado
@@ -149,12 +151,10 @@ export default {
         }
 
         return {
-            company_id ,
             invitaciones,
-            endpoint,
-            users_aux,
             datas,
             titles,
+            loading,
             actionModal,
             actionModalDelete,
             ChangeState

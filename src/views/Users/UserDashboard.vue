@@ -1,10 +1,7 @@
 <template>
     <div class="conteiner-tablero mt-2 py-4">
         <div class="head-tablero">
-             <!--    Utilizo el atributo locale del objeto i18n para saber en que lenguaje esta seteado el sistema  -->
-                <TitleBoard v-show="$i18n.locale=='es'" title="Usuarios" />
-                <TitleBoard v-show="$i18n.locale=='en'" title="Users" />
-         
+            <TitleBoard :title="$i18n.locale=='en'? 'Users': 'Usuarios'" />
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
@@ -28,14 +25,13 @@
 <!--                    <button @click="ChangeState(data)" v-if="data.state == 'Habilitado'" class="button btn-crenein w-100 my-1">{{$t('user.deshabilitar')}}</button>
                         <button @click="ChangeState(data)" v-else class="button btn-crenein w-100 my-1">{{$t('user.habilitar')}}</button> -->
 
-
-
                     </Modal>
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
-        </div>
 
+            <Loading v-show="loading"/>
+        </div>
         <Pagination/>
     </div>
 </template>
@@ -52,6 +48,7 @@ import store from '@/store'
 import {  watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js' 
 import {GraphQLClient, request as fetchGQL} from 'graphql-request';
+import Loading from '../../components/loading.vue'
 
 
 export default {
@@ -62,123 +59,53 @@ export default {
         Pagination,
         Modal,
         ActionModal,
-    },
-    created(){
-        /* this.traerUsers() */
-        this.traerUsersxCompany()
+        Loading
     },
 
     setup () {
-        const datas = ref([
-/*           {id: 1, avatar: 'foto', fullName: 'Mauricio Ferreyra', email: 'mauricioferreyra548@gmail.com', created: '24/07/2021', state: 'Habilitado', activo: false},
-            {id: 2, avatar: 'foto', fullName: 'Luis Ferreyra', email: 'luis548@gmail.com', created: '24/07/2021', state: 'Habilitado', activo: false},
-            {id: 3, avatar: 'foto', fullName: 'Ema Ferreyra', email: 'emaCorreo@gmail.com', created: '24/07/2021', state: 'Deshabilitado', activo: false},
-            {id: 4, avatar: 'foto', fullName: 'Glo Ferreyra', email: 'gloquita@gmail.com', created: '24/07/2021', state: 'Habilitado', activo: false},
-            {id: 5, avatar: 'foto', fullName: 'Leonardo Ferreyra', email: 'loreto@gmail.com', created: '24/07/2021', state: 'Pendiente', activo: false}, */
-        ])
-      
-
+        const datas = ref([])
         const titles = ref([])
         const endpoint = store.state.url_backend
         const users = ref([])
-        const users_aux = ref([])
-        const company_id = ref();
+        const company_id = ref('');
+        const loading = ref(false)
 
-
-        watchEffect(()=>{
-            store.state.company_id 
-            company_id.value = localStorage.getItem('id_company_selected')
-        })
-
-        const traerUsers = () => {
+        const traerUsersxCompany = (id) => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            watchEffect(() => {
-                client.rawRequest(/* GraphQL */ `
-                query{
-                    users(first: 999, page: 1) {
-                    paginatorInfo {
-                        count
-                        currentPage
-                        firstItem
-                        hasMorePages
-                        lastItem
-                        lastPage
-                        perPage
-                        total
-                    } 
-                    data {
-                            id
-                            name
-                            email
-                            companies {
-                                id
-                                name_fantasy
-                            }
-                        }
+            client.rawRequest(/* GraphQL */ `
+            query($company_id:ID){
+                company(id:$company_id) {
+                    users {
+                        id
+                        name
+                        email
                     }
-                }`,
-                {
-                    /* page: parseInt(route.params.page),
-                    first: mostrar_cantidad.value */
-                },
-                {
-                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
+                }
+            }`,
+            {
+                company_id: id
+            })
+            .then((data) => {
+                data.data.company.users.forEach(element => {
+                    users.value.push({id:element.id, nombre: element.name, email:element.email ,activo: false, modalDelete: false})
                 })
-                .then((data) => {
-                    users.value = []
-                    console.log(data.data.users.data)
-                    data.data.users.data.forEach(element => {
-                        users.value.push({id:element.id, nombre: element.name, avatar: element.avatar, email:element.email ,activo: false, modalDelete: false})
-                      /*   console.log(typeof element.logo) */
-                    })
-
-                }).catch(error => {
-                    console.log(error.response);
-                })
+                loading.value = false
+            })
+            .catch(error => {
+                // console.log(error.response);
+                loading.value = false
             })
         }
 
-
-
-        const traerUsersxCompany = () => {
-            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-                client.rawRequest(/* GraphQL */ `
-                query($company_id:ID){
-                    company(id:$company_id) {
-                      users {
-                            id
-                            name
-                            email
-                        }
-                    }
-                }`,
-                {
-                    /* page: parseInt(route.params.page),
-                    first: mostrar_cantidad.value */
-                    company_id:company_id.value
-                })
-                .then((data) => {
-                    users.value = []
-                    /* console.log(data.data.company) */
-                    data.data.company.users.forEach(element => {
-                        users.value.push({id:element.id, nombre: element.name, email:element.email ,activo: false, modalDelete: false})
-                  
-                    })
-                    /* console.log(users.value) */
-
-                }).catch(error => {
-                    console.log(error.response);
-                })
-           
-        }
-
-
-        watchEffect(() => {
-           /*  console.log("cambiando") */
-            traerUsersxCompany()
-
+        watchEffect(()=>{
+            users.value = []
+            loading.value = true
+            store.state.company_id
+            company_id.value = store.state.company_id
+            if (company_id.value) {
+                traerUsersxCompany(company_id.value)
+            }
         })
-
 
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
@@ -192,13 +119,16 @@ export default {
             aux.activo = false
             aux.modalDelete = !aux.modalDelete
         }
-        watchEffect(()=>{ // utilizamos watcheffect para detectar que valor tiene el atributo locale del objeto i18n al momento de estar en la pagina o al momento de cambiar el valor a traves del boton del lenguaje
-            if(i18n.global.locale == 'en'){
-                titles.value = ['Full name','Email']
-            }
-            if(i18n.global.locale == 'es'){
-                titles.value = ['Nombre completo','Correo']
-            }
+
+        /**
+         *
+         * utilizamos watcheffect para detectar que valor tiene el atributo locale del objeto i18n 
+         * al momento de estar en la pagina o al momento de cambiar el valor a traves del boton del lenguaje
+         *  
+         */ 
+        watchEffect(()=>{ 
+            i18n.global.locale == 'en'? titles.value = ['Full name','Email'] 
+            : titles.value = ['Nombre completo','Correo']
         })
 
         // Cambia el estado del usuario entre habilitado y deshabilitado
@@ -208,13 +138,11 @@ export default {
 
         return {
             company_id,
-            traerUsersxCompany,
-            traerUsers ,
             endpoint,
             users,
-            users_aux,
             datas,
             titles,
+            loading,
             actionModal,
             actionModalDelete,
             ChangeState
