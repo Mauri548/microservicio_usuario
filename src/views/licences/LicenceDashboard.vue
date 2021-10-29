@@ -280,8 +280,8 @@ export default {
         const createLicence = () => {
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */ `
-            mutation($app_id:Int!, $name:String!, $price_arg:Float, $price_usd: Float) {
-                createsLic_license(input: {
+            mutation($company_user_id:ID!,$app_id:Int!, $name:String!, $price_arg:Float, $price_usd: Float) {
+                createsLic_license(company_user_id:$company_user_id,input: {
                     app_id: $app_id,
                     name: $name,
                     price_arg: $price_arg,
@@ -291,6 +291,7 @@ export default {
                 }
             }`,
             {
+                company_user_id:localStorage.getItem('user_company_id'),
                 app_id: parseInt(selectedApp.value),
                 name: name.value,
                 price_arg: parseFloat(price_arg.value),
@@ -311,14 +312,15 @@ export default {
             .catch(error => {
                 ModalAdd()
                 changeStateModal(false)
+                console.log(error.response)
             })
         }
 
         const editLicence = () => {
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */ `
-            mutation($id: ID!, $app_id: Int, $name: String, $price_arg: Float, $price_usd: Float) {
-                modifiesLic_license(id: $id, input: {
+            mutation($company_user_id:ID!,$id: ID!, $app_id: Int, $name: String, $price_arg: Float, $price_usd: Float) {
+                modifiesLic_license(company_user_id:$company_user_id,id: $id, input: {
                     name: $name,
                     app_id: $app_id,
                     price_arg: $price_arg,
@@ -328,6 +330,7 @@ export default {
                 }
             }`,
             {
+                company_user_id:localStorage.getItem('user_company_id'),
                 id: licenceEdition.value,
                 name: name.value,
                 price_arg: parseFloat(price_arg.value),
