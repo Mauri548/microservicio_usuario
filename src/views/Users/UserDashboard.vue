@@ -70,9 +70,9 @@ export default {
         const company_id = ref('');
         const loading = ref(false)
 
-        const traerUsersxCompany = (id) => {
+        const traerUsersxCompany = async (id) => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            client.rawRequest(/* GraphQL */ `
+            await client.rawRequest(/* GraphQL */ `
             query($company_id:ID){
                 company(id:$company_id) {
                     users {
@@ -86,6 +86,7 @@ export default {
                 company_id: id
             })
             .then((data) => {
+                users.value = []
                 data.data.company.users.forEach(element => {
                     users.value.push({id:element.id, nombre: element.name, email:element.email ,activo: false, modalDelete: false})
                 })
@@ -95,15 +96,16 @@ export default {
                 // console.log(error.response);
                 loading.value = false
             })
+            return
         }
 
-        watchEffect(()=>{
-            users.value = []
+        watchEffect( async ()=>{
             loading.value = true
+            users.value = []
             store.state.company_id
             company_id.value = store.state.company_id
             if (company_id.value) {
-                traerUsersxCompany(company_id.value)
+                await traerUsersxCompany(company_id.value)
             }
         })
 
