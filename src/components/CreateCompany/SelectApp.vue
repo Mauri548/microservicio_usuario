@@ -48,21 +48,15 @@ export default {
         const appSelect = ref(null)
 
         watchEffect(() => {
-            console.log(props.apps.length)
-            console.log(props.apps.length % 3)
-    
             // Calculamos la cantidad de secciones que tendra el carrousel
+
             if ((props.apps.length / 3) > 0) {
-                console.log('mayor')
                 cantSection.value = Math.trunc(props.apps.length / 3) + 1
             } else if ((props.apps.length / 3) == 0) {
-                console.log('igual')
                 cantSection.value = 1
             } else {
-                console.log('nose')
                 cantSection.value = Math.trunc(props.apps.length / 3) 
             }
-            console.log(cantSection.value)
             // Calculamos el desplazamiento que hara por seccion
             // desplazamiento.value = -(100/cantSection.value).toFixed(1)
             desplazamiento.value = -33
@@ -70,7 +64,6 @@ export default {
         })
  
         const selectApp = (e) => {
-            console.log(e)
             appSelect.value = e
         }
 

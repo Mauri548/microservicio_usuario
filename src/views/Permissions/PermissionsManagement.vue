@@ -148,7 +148,7 @@ export default {
             query($app_id: ID) {
                 permitsxapp(first: 999, page: 1, app_id: $app_id) {
                     data {
-                        id, key
+                        id, key, detail
                     }
                 }
             }`,
@@ -159,7 +159,7 @@ export default {
                 let aux = datas.value.find(app => app.id == id)
                 aux.permissions = []
                 data.data.permitsxapp.data.forEach(permit => {
-                    aux.permissions.push({id: permit.id, key: permit.key, activo: false})
+                    aux.permissions.push({id: permit.id, key: permit.key, detail: permit.detail, activo: false})
                 })
             })
             // .catch(error => console.log(error))

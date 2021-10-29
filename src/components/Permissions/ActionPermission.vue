@@ -13,7 +13,7 @@
                                     <SelectPermission @onMovePermission="asignarPermisos" :appId="data.id" 
                                         :title="$i18n.locale=='en'? 'Availables': 'Disponibles'" :assigned="false" >
                                         <option v-for="item in data.permissions" :key="item.id" 
-                                        v-show="!item.activo" :value="item.id">{{item.key}}</option>
+                                        v-show="!item.activo" :value="item.id">{{item.detail}}</option>
                                     </SelectPermission>
                                 </div>
                                 <div class="buttons-action-permission mt-5">
@@ -34,7 +34,7 @@
                                     <SelectPermission  @onMovePermission="asignarPermisos" :appId="data.id" 
                                         :title="$i18n.locale=='en'? 'Assigneds': 'Asignados'" :assigned="true">
                                         <option v-for="item in data.permissions" :key="item.id" 
-                                        v-show="item.activo" :value="item.id">{{item.key}}</option>
+                                        v-show="item.activo" :value="item.id">{{item.detail}}</option>
                                     </SelectPermission>
                                 </div>
                             </div>

@@ -85,8 +85,8 @@ export default {
 			const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             // Estructura FetchQL(url, query, variable, opcions)
             client.rawRequest(/* GraphQL */ `
-            mutation($use_company_id:ID!, $use_app_id:ID!,$lic_license_id:ID!){
-              		createsUse_subscription (input:{
+            mutation($company_user_id:ID!,$use_company_id:ID!, $use_app_id:ID!,$lic_license_id:ID!){
+              		createsUse_subscription (company_user_id:$company_user_id, input:{
                     use_company_id: $use_company_id,
                     use_app_id: $use_app_id,
                     lic_license_id: $lic_license_id,
@@ -100,6 +100,7 @@ export default {
                     }
             }`,
             {
+				company_user_id:localStorage.getItem('user_company_id'),
                 use_company_id: use_company_id.value,       
                 use_app_id: use_app_id.value,
                 lic_license_id: lic_license_id.value,
