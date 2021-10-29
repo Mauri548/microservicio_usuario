@@ -10,6 +10,7 @@ export default {
     props: ['conteiner','punto','cantSection','desplazamiento','arrow','icon'],
 
     setup(props){
+        console.log(props.cantSection)
 
         const positionApp = ref(0)
         const positionLic = ref(0)

@@ -47,16 +47,26 @@ export default {
         const desplazamiento = ref(0)
         const appSelect = ref(null)
 
-        // Calculamos la cantidad de secciones que tendra el carrousel
-        if ((props.apps.length % 3) > 0) {
-            cantSection.value = Math.trunc(props.apps.length / 3) + 1
-        } else if ((props.apps.length % 3) == 0) {
-            cantSection.value = 1
-        } else {
-            cantSection.value = Math.trunc(props.apps.length / 3) 
-        }
-        // Calculamos el desplazamiento que hara por seccion
-        desplazamiento.value = -(100/cantSection.value).toFixed(1)
+        watchEffect(() => {
+            console.log(props.apps.length)
+    
+            // Calculamos la cantidad de secciones que tendra el carrousel
+            if ((props.apps.length % 3) > 0) {
+                console.log('mayor')
+                cantSection.value = Math.trunc(props.apps.length / 3) + 1
+            } else if ((props.apps.length % 3) == 0) {
+                console.log(props.apps.length % 3)
+                console.log('igual')
+                cantSection.value = 1
+            } else {
+                console.log('nose')
+                cantSection.value = Math.trunc(props.apps.length / 3) 
+            }
+            console.log(cantSection.value)
+            // Calculamos el desplazamiento que hara por seccion
+            desplazamiento.value = -(100/cantSection.value).toFixed(1)
+
+        })
 
 
         // Dejare comentado esto de momento
