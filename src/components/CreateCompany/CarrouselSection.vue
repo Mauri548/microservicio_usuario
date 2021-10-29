@@ -1,7 +1,7 @@
 <template>
-    <ul class="puntos mb-2">
+    <ul v-if="cantSection" class="puntos mb-2">
         <li class="punto activo" :class="type"></li>
-        <li v-for="i in cantSection" :key="i" class="punto" :class="type"></li>
+        <li v-for="i in cantSection-1" :key="i" class="punto" :class="type"></li>
     </ul>
 </template>
 
@@ -16,15 +16,9 @@ export default {
         type: String,
         pos: Number
     },
-    // props: ['size','carrousel','type','pos'],
 
     setup(props) {
-        let cantSection = ref(0)
-
-        // Calculamos la cantidad de secciones que tendra el carrousel
-        
-        // Calculamos el desplazamiento que hara por seccion
-        // let desplazamiento = -(100/cantSection).toFixed(1)
+        let cantSection = ref(null)
 
         const carrousel = ref('')
 

@@ -64,7 +64,8 @@ export default {
             }
             console.log(cantSection.value)
             // Calculamos el desplazamiento que hara por seccion
-            desplazamiento.value = -(100/cantSection.value).toFixed(1)
+            // desplazamiento.value = -(100/cantSection.value).toFixed(1)
+            desplazamiento.value = -33
 
         })
  

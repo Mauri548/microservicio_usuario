@@ -10,32 +10,24 @@ export default {
     props: ['conteiner','punto','cantSection','desplazamiento','arrow','icon'],
 
     setup(props){
-        // console.log(props.cantSection)
 
         const positionApp = ref(0)
         const positionLic = ref(0)
         const arrowNext = ref('')
 
-        console.log(positionApp.value)
-
         onMounted(() => {
-            // const arrowNext = document.querySelector(`.arrow-next.${props.punto}`)
             arrowNext.value = document.querySelector(`.arrow-next.${props.punto}`)
-            if(props.cantSection == 1) {
-                arrowNext.value.style.display = 'none'
-            }
         })
 
         watchEffect(() => {
             props.cantSection
-            console.log(props.cantSection)
             if (arrowNext.value) {
                 if(props.cantSection == 1) {
-                    console.log('a')
                     arrowNext.value.style.display = 'none'
                 } else {
-                    console.log('b')
-                    arrowNext.value.style.display = 'flex'
+                    if (window.screen.width > 425) {
+                        arrowNext.value.style.display = 'flex'
+                    }
                 }
             }
         })
@@ -77,7 +69,8 @@ export default {
         const moveCarrousel = (carrousel,punto,arrowPrev,arrowNext) => {
             // calculamos el desplazamiento que hara el carrousel
             let operacion = null
-            props.punto == 'app' ? operacion = positionApp.value * props.desplazamiento : operacion = positionLic.value * props.desplazamiento
+            props.punto == 'app' ? operacion = positionApp.value * props.desplazamiento 
+            : operacion = positionLic.value * props.desplazamiento
 
             // movemos la posicion x del carrousel correspondiente            
             carrousel.style.transform = `translateX(${operacion}%)`
@@ -87,13 +80,12 @@ export default {
                 punto[index].classList.remove('activo')
             })
             props.punto == 'app' ? punto[positionApp.value].classList.add('activo') : punto[positionLic.value].classList.add('activo')
-
             // Mostramos o ocultamos la flecha del carrousel si esta en el comienzo o en el final
             if (props.punto == 'app') {
                 // Si el valor es igual a 0 ocultamos la flecha de prev y si es igual al valor maximo oculamos la flecha next
                 positionApp.value == 0 ? arrowPrev.style.display = 'none' : arrowPrev.style.display = 'flex'
                 // positionApp.value == props.cantSection -1 ? arrowNext.style.display = 'none' : arrowNext.style.display = 'flex'
-                if (positionApp.value == props.cantSection - 1 || props.cantSection == 0) {
+                if (positionApp.value == props.cantSection - 2 || props.cantSection == 0) {
                     arrowNext.style.display = 'none'
                 } else {
                     arrowNext.style.display = 'flex'
@@ -101,7 +93,7 @@ export default {
             } else {
                 // Si el valor es igual a 0 ocultamos la flecha de prev y si es igual al valor maximo oculamos la flecha next
                 positionLic.value == 0 ? arrowPrev.style.display = 'none' : arrowPrev.style.display = 'flex'
-                positionLic.value == props.cantSection -1 ? arrowNext.style.display = 'none' : arrowNext.style.display = 'flex'
+                positionLic.value == props.cantSection -2 ? arrowNext.style.display = 'none' : arrowNext.style.display = 'flex'
             }
 
         }
