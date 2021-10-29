@@ -32,12 +32,12 @@
 
             <div class="column ">
                 <div v-show="$i18n.locale=='es'">
-                    <CampoForm   type="text" place="Correo" />
+                    
                     <CampoForm   type="text" place="Nombre completo"/>
                     <CampoForm   type="password" place="Contraseña"/> 
                 </div>
                 <div v-show="$i18n.locale=='en'">
-                    <CampoForm   type="text" place="Email" />
+                    
                     <CampoForm   type="text" place="Full name"/>
                     <CampoForm   type="password" place="Password"/> 
                 </div>
@@ -87,7 +87,6 @@
 
 
             <div class="column ">
-                <CampoForm   type="text" place="Email" />
                 <CampoForm   type="text" place="Full name"/>
                 <CampoForm   type="password" place="Password"/> 
             </div>
