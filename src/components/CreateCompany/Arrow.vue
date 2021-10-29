@@ -3,22 +3,40 @@
 </template>
 
 <script>
-import { onMounted, ref } from '@vue/runtime-core'
+import { onMounted, ref, watchEffect } from '@vue/runtime-core'
 export default {
     name: 'Arrow',
 
     props: ['conteiner','punto','cantSection','desplazamiento','arrow','icon'],
 
     setup(props){
-        console.log(props.cantSection)
+        // console.log(props.cantSection)
 
         const positionApp = ref(0)
         const positionLic = ref(0)
+        const arrowNext = ref('')
+
+        console.log(positionApp.value)
 
         onMounted(() => {
-            const arrowNext = document.querySelector(`.arrow-next.${props.punto}`)
+            // const arrowNext = document.querySelector(`.arrow-next.${props.punto}`)
+            arrowNext.value = document.querySelector(`.arrow-next.${props.punto}`)
             if(props.cantSection == 1) {
-                arrowNext.style.display = 'none'
+                arrowNext.value.style.display = 'none'
+            }
+        })
+
+        watchEffect(() => {
+            props.cantSection
+            console.log(props.cantSection)
+            if (arrowNext.value) {
+                if(props.cantSection == 1) {
+                    console.log('a')
+                    arrowNext.value.style.display = 'none'
+                } else {
+                    console.log('b')
+                    arrowNext.value.style.display = 'flex'
+                }
             }
         })
 

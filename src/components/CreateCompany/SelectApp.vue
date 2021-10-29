@@ -49,13 +49,13 @@ export default {
 
         watchEffect(() => {
             console.log(props.apps.length)
+            console.log(props.apps.length % 3)
     
             // Calculamos la cantidad de secciones que tendra el carrousel
-            if ((props.apps.length % 3) > 0) {
+            if ((props.apps.length / 3) > 0) {
                 console.log('mayor')
                 cantSection.value = Math.trunc(props.apps.length / 3) + 1
-            } else if ((props.apps.length % 3) == 0) {
-                console.log(props.apps.length % 3)
+            } else if ((props.apps.length / 3) == 0) {
                 console.log('igual')
                 cantSection.value = 1
             } else {
@@ -67,30 +67,10 @@ export default {
             desplazamiento.value = -(100/cantSection.value).toFixed(1)
 
         })
-
-
-        // Dejare comentado esto de momento
-        // En teoría debería de calcular el tamaño para cada elemento o app
-        // onMounted(() =>  {
-        //     const imgApp = document.querySelectorAll('.img-app')
-
-        //     // Caclulamos el tamaño para cada app
-        //     imgApp.forEach((cadaImage, i) => {
-        //         imgApp[i].style.width = `calc(33.3% / ${cantSection.value})`
-        //         // Agregamos el evento de seleccionar app
-        //         imgApp[i].addEventListener('click', () => {
-        //             imgApp.forEach((cadaImage, i) => {
-        //                 imgApp[i].classList.remove('activo')
-        //             })
-        //             imgApp[i].classList.add('activo')
-        //         })
-        //     })
-        // })
  
         const selectApp = (e) => {
             console.log(e)
             appSelect.value = e
-           /*  console.log(appSelect.value) */
         }
 
         return {
@@ -159,41 +139,5 @@ export default {
         overflow: scroll;
     }
 }
-
-/* .arrow {
-    display: flex;
-    align-items: center;
-    width: 25px;
-    min-height: 80%;
-    position: absolute;
-    background-color: rgba(204,204,204,0.13);
-    z-index: 1;
-}
-
-.arrow-next {
-    top:0%;
-    right: 0%;
-    border-radius: 0 5px 5px 0;
-}
-
-.arrow-prev {
-    display: none;
-    border-radius: 5px 0 0 5px;
-}
-
-i {
-    font-size: 35px;
-    color: rgba(128,128,128,0.38)
-}
-
-.arrow:hover {
-    cursor: pointer;
-    background-color: rgba(204,204,204,0.3);
-}
-
-.arrow:hover i {
-    color: #005395
-} */
-
 
 </style>

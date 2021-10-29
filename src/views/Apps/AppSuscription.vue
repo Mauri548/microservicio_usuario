@@ -75,4 +75,10 @@ export default {
     margin: 0 auto;
 }
 
+@media (max-width: 425px) {
+    .conteiner-inicial-app {
+        width: 90%;
+    }
+}
+
 </style>
