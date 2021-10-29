@@ -111,36 +111,35 @@ export default {
          * 
          */
         const createInvitation = () => {
+            console.log(localStorage.getItem('user_company_id'))
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */`
-            mutation($name: String!, $email: String!, $use_company_id: ID!, $use_user_id: ID) {
-                createsUse_invitation(input: {
+            mutation($company_user_id: ID!, $name: String!, $email: String!) {
+                createsUse_invitation(company_user_id: $company_user_id,input: {
                     name: $name,
                     email: $email,
-                    use_company_id: $use_company_id,
-                    use_user_id: $use_user_id
                 }) {
-                    name, email, use_company_id, use_user_id
+                    name, email, use_company_id
                 }
             }`,
             {
+                company_user_id: localStorage.getItem('user_company_id'),
                 name: name.value,
                 email: email.value,
-                use_user_id: store.state.user_id,
-                use_company_id: localStorage.getItem('id_company_selected')
             },
             {
                 authorization: `Bearer ${localStorage.getItem('user-token')}`
             })
             .then((data) => {
+                console.log(data)
                 normalizeState()
                 deliveryStatus.value = true
             })
             .catch(error => {
+                console.log(error.response)
                 normalizeState()
                 deliveryStatus.value = false
             })
-
         }
 
         /**
