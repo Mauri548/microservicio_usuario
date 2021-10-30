@@ -32,7 +32,7 @@ export default {
 
         const endpoint = store.state.url_backend
         const companies = ref([])
-        const companyActual = ref({id: localStorage.getItem('id_company_selected'), name_fantasy: ''})
+        const companyActual = ref({id: '', name_fantasy: ''})
 
         const activo = ref(false)
 
@@ -43,6 +43,7 @@ export default {
          * 
          */
         const changeCompany = (company) => {
+            console.log(company)
             changeValueCompany(company)
             activar()
         }
@@ -108,11 +109,9 @@ export default {
                 companies.value = []
                 let companiesData = data.data.user.companies
                 companiesData.forEach(company => {
-                    if (company.id == localStorage.getItem('id_company_selected')) {
-                        changeValueCompany(company)
-                    }
                     companies.value.push({id: company.id, name_fantasy: company.name_fantasy})
                 })
+                changeValueCompany(companiesData[0])
             })
             .catch(error => console.log(error))
             return

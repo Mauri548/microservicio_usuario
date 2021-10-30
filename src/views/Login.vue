@@ -100,12 +100,12 @@ export default {
                 username: email.value,
                 password: password.value,
             })
-            .then((data) => {
+            .then( async (data) => {
                 console.log(data)
                 let token = data.data.login.access_token
                 localStorage.setItem('user-token', token)
                 store.commit('setToken', token)
-                FetchMe()
+                await FetchMe()
                 router.push({name: 'UserDashboard'})
             })
             .catch(error => {

@@ -18,7 +18,6 @@ export default async function FetchMe() {
     }
     )
     .then((data) => {
-        // console.log(data)
         store.commit('setUserId', data.data.me.id)
         localStorage.setItem('user_id',data.data.me.id)
     })
