@@ -105,6 +105,7 @@ export default {
                 let token = data.data.login.access_token
                 localStorage.setItem('user-token', token)
                 store.commit('setToken', token)
+                store.commit('setCompanyId', null)
                 await FetchMe()
                 router.push({name: 'UserDashboard'})
             })
