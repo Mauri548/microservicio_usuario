@@ -107,7 +107,9 @@
                       
         </form>
     </div>
-
+    <ModalAlert :activador="carga_exitosa">
+       <p v-if="comprobar">{{$t('contraseña.msmPassActualizado')}}</p>
+    </ModalAlert>
 
 </template>
 
@@ -120,11 +122,13 @@ import {GraphQLClient} from 'graphql-request';
 import store from '@/store';
 import i18n from '@/i18n.js'
 import FetchMe from '../../helper/FetchMe'
+import ModalAlert from '../../components/Modals/ModalsAlert.vue'
 
 export default {
     name:'PersonalForm',
     components: {
         CampoForm,
+        ModalAlert,
     }, 
  
     setup(){
@@ -136,6 +140,8 @@ export default {
         const passConfirm = ref("")
         const endpoint = store.state.url_backend
         const msg_error = ref({ oldPass: '',newPass: '',confirmPass: ''})
+        const carga_exitosa = ref(false)
+        const comprobar = ref(false)
         FetchMe()
 
 
@@ -182,7 +188,7 @@ export default {
             } 
         }
 
-
+     
 
         const updatePassword = () => {
             const client = new GraphQLClient(endpoint)
@@ -206,13 +212,12 @@ export default {
                authorization: `Bearer ${localStorage.getItem('user-token')}` 
             })
             .then((data) => {
-                /* router.push({name: 'AppDashboard'}) 
-                let accion = "cargarApp"
-                store.commit('verificar_carga',accion)  */
-
-                console.log("Se actualizo con exito")
-                console.log(data.data.updatePassword.message)
-
+               
+                comprobar.value = !comprobar.value 
+                setTimeout(() => carga_exitosa.value = true ,500)
+                setTimeout(() =>carga_exitosa.value = false ,3000)
+                setTimeout(() =>comprobar.value = !comprobar.value   ,3000)
+              
             }).catch(error => {
                 console.log(error.response);
             })
@@ -232,6 +237,8 @@ export default {
 
 
         return{ 
+            carga_exitosa,
+            comprobar,
             validar,
             msg_error,
             updatePassword,

@@ -121,6 +121,7 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             btnQuiero:'Lo quiero'
         },
         contraseña:{
+            msmPassActualizado:'Se actualizo con exito la contraseña!',
             msmRecupera:'Recupera tu contraseña',
             msmCambio:'Recibirá en un momento un enlace para recuperar su contraseña',
             msmCambiado:'Tu contraseña ha cambiado',
@@ -267,6 +268,7 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             btnQuiero:'I want'
         },
         contraseña:{
+            msmPassActualizado:'The password was updated successfully !',
             msmRecupera:'Recover your password',
             msmCambio:'You will receive in a moment a link to retrieve your password',
             msmCambiado:'You password has changed',
