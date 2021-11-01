@@ -99,10 +99,10 @@
                 </div>
             </div>
             <div class="column    ">
-                <button class=" button has-text-white button1 "  style="background-color:#005395; font-weight:bold;">Save</button>
+                <button class=" button has-text-white button1 "  type="button" @click="validar" style="background-color:#005395; font-weight:bold;">{{$t('personalForm.guardar')}}</button>
             </div>  
             <div class="column  ">
-                <button class=" button  button1 has-text-white has-background-danger " @click="volver" style="font-weight:bold;">Cancel</button>
+                <button class=" button  button1 has-text-white has-background-danger " @click="volver" style="font-weight:bold;">{{$t('personalForm.cancel')}}</button>
             </div> 
                       
         </form>
