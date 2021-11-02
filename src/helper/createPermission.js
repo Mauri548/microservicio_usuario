@@ -18,10 +18,10 @@ const createPermission = (permit_id, use_company_id, company_user_id) => {
         use_company_use_user_id: use_company_id,
         company_user_id: company_user_id
     })
-    .then((data) => {
-        console.log(data)
-    })
-    .catch(error => console.log(error.response))
+    // .then((data) => {
+    //     console.log(data)
+    // })
+    .catch(error => console.log('Error en la consulta'))
 }
 
 export default createPermission
