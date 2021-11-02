@@ -7,8 +7,8 @@
         </div>
         <div class="column is-centered cuadro-border">
             <form class="column  mx-5  px-0">
-                <CampoForm v-if="valorLocale=='en'" place="Email" type="text" />
-                <CampoForm v-if="valorLocale=='es'" place="Correo" type="text" />
+                <CampoForm v-if="valorLocale=='en'" place="Email" v-model="email" type="text"  :error="msg_error.email"/>
+                <CampoForm v-if="valorLocale=='es'" place="Correo" v-model="email" type="text" :error="msg_error.email"/>
             </form>
             <div class="column mx-5 ">
                 <div class="columns">
@@ -17,8 +17,8 @@
                         <button v-if="valorLocale=='es'" class=" button color-btn has-background-danger ">Cancelar</button>
                     </div>
                     <div class="column has-text-right  px-0  " >
-                            <button v-if="valorLocale=='en'" class="button tam-btn color-btn title-box">Send</button>
-                            <button v-if="valorLocale=='es'" class="button tam-btn color-btn title-box">Enviar</button>
+                        <button v-if="valorLocale=='en'" @click="validar" class="button tam-btn color-btn title-box">Send</button>
+                        <button v-if="valorLocale=='es'" @click="validar" class="button tam-btn color-btn title-box">Enviar</button>
                     </div>
                 </div>
             </div>
@@ -31,46 +31,119 @@
         </div>
         <div class="column  cuadro-border" >
             <form class="column  mx-5  px-0" >
-                <CampoForm v-if="$i18n.locale=='en'" place="Email" type="text" />
-                <CampoForm v-if="$i18n.locale=='es'" place="Correo" type="text" />
-
+                <CampoForm v-if="valorLocale=='en'" place="Email" v-model="email" type="text"  :error="msg_error.email"/>
+                <CampoForm v-if="valorLocale=='es'" place="Correo" v-model="email" type="text" :error="msg_error.email"/>
                 <div class="column ">
-                    <button class="button  color-btn title-box " style="width:100%">{{$t('contraseña.enviar')}}</button>
+                    <button class="button  color-btn title-box " type="button" @click="validar" style="width:100%">{{$t('contraseña.enviar')}}</button>
                     <button class="button color-btn has-background-danger mt-2 " style="width:100%">{{$t('contraseña.cancel')}}</button>
                 </div>
-              
-                
-                
             </form>
         </div>
     </div>
 
-
+    <ModalAlert :activador="carga_exitosa">
+       <p v-if="comprobar">{{mensaje}}</p>
+    </ModalAlert>
 </template>
 
 <script>
 import CampoForm from '../../components/CampoForm.vue'
 import { inject, watchEffect } from '@vue/runtime-core'
 import { ref } from '@vue/reactivity'
+import {GraphQLClient} from 'graphql-request';
+import store from '@/store';
+import ModalAlert from '../../components/Modals/ModalsAlert.vue'
+import i18n from '@/i18n.js'
+
 export default {
     
     name:'RecoverPass1',
     components:{
-        CampoForm
+        CampoForm,
+        ModalAlert,
     }, 
     setup(){
         const isMobile = inject('isMobile')
         const valorLocale = ref('')
         const langStorage = window.localStorage
-       
-
+        const email = ref("")
+        const endpoint = store.state.url_backend
+        const msg_error = ref({ email: ''})
+        const carga_exitosa = ref(false)
+        const comprobar = ref(false)
+        const mensaje = ref("")
+      
         watchEffect(()=>{
             valorLocale.value = langStorage.getItem('lang')
-          /*   console.log(valorLocale.value) */
         })
+
+        const validar = () => {
+            msg_error.value.email = ''
+    
+            if (email.value == ""){
+                if(i18n.global.locale == 'en'){
+                    msg_error.value.email = 'Email is required'
+                }
+                if(i18n.global.locale == 'es'){
+                    msg_error.value.email  = 'El correo es requerido'
+                }
+            } 
+            
+            if (msg_error.value.email == ''){
+                console.log("Paso las validaciones")
+                forgotPass()
+            } else {
+                console.log('no paso')
+            } 
+        }
+        
+        const forgotPass = () => {
+            const client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */ `
+            mutation($email:String!){
+              		forgotPassword(input:{
+                        email:$email,
+                    }){
+                        status
+                        message
+                    }
+            }`,
+            {
+               email:email.value,
+            },
+            {
+               authorization: `Bearer ${localStorage.getItem('user-token')}` 
+            })
+            .then((data) => {
+                console.log("Paso: ",data.data.forgotPassword.message)
+                mensaje.value = "El envio de correo para actualizar la contraseña fue un exito!"
+                comprobar.value = !comprobar.value 
+                setTimeout(() => carga_exitosa.value = true ,500)
+                setTimeout(() =>carga_exitosa.value = false ,2000)
+                setTimeout(() =>comprobar.value = !comprobar.value   ,2000)
+              
+            }).catch(error => {
+                console.log(error.response.errors[0].message);
+                mensaje.value = error.response.errors[0].message
+                comprobar.value = !comprobar.value 
+                setTimeout(() => carga_exitosa.value = true ,500)
+                setTimeout(() =>carga_exitosa.value = false ,2000)
+                setTimeout(() =>comprobar.value = !comprobar.value   ,2000)
+
+                
+            })
+
+        }
+
         
 
         return { 
+            mensaje,
+            carga_exitosa,
+            comprobar,
+            msg_error ,
+            validar,
+            email,
             isMobile,
             valorLocale
         }
