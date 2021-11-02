@@ -129,8 +129,6 @@ export default {
                 setTimeout(() => carga_exitosa.value = true ,500)
                 setTimeout(() =>carga_exitosa.value = false ,2000)
                 setTimeout(() =>comprobar.value = !comprobar.value   ,2000)
-
-                
             })
 
         }
