@@ -146,77 +146,11 @@ export default {
             return
         }
 
-        /**
-         * 
-         * Trae las suscripciones de una empresa
-         * 
-         * @param id ID de la empresa
-         * 
-         */
-        // const traerSubscriptionsxCompany = (id) => {
-        //     const client = new GraphQLClient(endpoint)
-        //     client.rawRequest(/* GraphQL */`
-        //     query($company_id: ID){
-        //         subscriptionsxcompany(first: 999, page: 1, company_id: $company_id) {
-        //             data {
-        //                 use_app_id,
-        //                 app {
-        //                     name
-        //                 }
-        //             }
-        //         }
-        //     }`,
-        //     {
-        //         company_id: id
-        //     })
-        //     .then((data) => {
-        //         datas.value = []
-        //         data.data.subscriptionsxcompany.data.forEach( async (app) => {
-        //             datas.value.push({id: app.use_app_id, app: app.app.name, activo: false, permissions: []})
-        //             await traerPermitsxApp(app.use_app_id)
-        //         })
-        //     })
-        // }
-
-        /**
-         * 
-         * Trae los permisos de una app
-         * 
-         * @param id ID de la aplicación
-         * 
-         */
-        // const traerPermitsxApp = async (id) => {
-        //     const client = new GraphQLClient(endpoint)
-        //     await client.rawRequest(/* GraphQL */`
-        //     query($app_id: ID) {
-        //         permitsxapp(first: 999, page: 1, app_id: $app_id) {
-        //             data {
-        //                 id, key, detail
-        //             }
-        //         }
-        //     }`,
-        //     {
-        //         app_id: id
-        //     })
-        //     .then((data) => {
-        //         let aux = datas.value.find(app => app.id == id)
-        //         aux.permissions = []
-        //         data.data.permitsxapp.data.forEach(permit => {
-        //             aux.permissions.push({id: permit.id, key: permit.key, detail: permit.detail, activo: false})
-        //         })
-        //     })
-        //     // .catch(error => console.log(error))
-        //     return
-            
-        // }
-
         watchEffect( async () => {
             store.state.company_id
             if (localStorage.getItem('id_company_selected')) {
                 await traerUsersxCompany(localStorage.getItem('id_company_selected'))
-                // traerSubscriptionsxCompany(localStorage.getItem('id_company_selected'))
                 generalQuery(localStorage.getItem('user_company_id'))
-                // changeUserSelected(users.value[0].id)
             }
         })
 
@@ -256,14 +190,10 @@ export default {
          * 
          */
         const changeUserSelected = async (id) => {
-            console.log(id)
-            console.log(datas.value)
             users.value.forEach(user => user.activo = false)
             let aux = users.value.find(user => user.id == id)
-            console.log(aux)
             aux.activo = true
             userSelected.value = aux
-            console.log(userSelected.value)
         }
 
         const savePermission = async (id_app) => {
@@ -271,7 +201,6 @@ export default {
             let listAssignedPermission = app.permissions.filter(permit => permit.activo == true)
             compareList(listAssignedPermission, userPermission.value)
         }
-
 
         /**
          * 
@@ -520,11 +449,4 @@ export default {
         flex-direction: column;
     }
 }
-/* @media (max-width: 425px) {
-    .buttons-permission {
-        justify-content: left;
-        overflow-x: scroll;
-    }
-} */
-
 </style>
