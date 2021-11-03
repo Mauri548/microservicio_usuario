@@ -9,11 +9,11 @@
                 <CampoForm v-if="valorLocale=='en'" place="Email" v-model="email" type="text"  :error="msg_error.email"/>
                 <CampoForm v-if="valorLocale=='es'" place="Correo" v-model="email" type="text" :error="msg_error.email"/>   
 
-                <CampoForm v-if="valorLocale=='en'"  v-model="passNueva" class="mb-3" place="New password" type="password" :error="msg_error.newPass" />
-                <CampoForm v-if="valorLocale=='es'" v-model="passNueva" class="mb-3" place="Nueva contraseña" type="password" :error="msg_error.newPass" />
+                <CampoForm v-if="valorLocale=='en'"  v-model="passNueva" class="mb-3" place="New password" type="text" :error="msg_error.newPass" />
+                <CampoForm v-if="valorLocale=='es'" v-model="passNueva" class="mb-3" place="Nueva contraseña" type="text" :error="msg_error.newPass" />
 
-                <CampoForm  v-if="valorLocale=='en'" v-model="passConfirm" place="Confirm password" type="password" :error="msg_error.confirmPass"/>
-                <CampoForm  v-if="valorLocale=='es'" v-model="passConfirm" place="Confirmar contraseña" type="password" :error="msg_error.confirmPass" />
+                <CampoForm  v-if="valorLocale=='en'" v-model="passConfirm" place="Confirm password" type="text" :error="msg_error.confirmPass"/>
+                <CampoForm  v-if="valorLocale=='es'" v-model="passConfirm" place="Confirmar contraseña" type="text" :error="msg_error.confirmPass" />
 
                 <div class="column  ">
                     <div class="columns ">
