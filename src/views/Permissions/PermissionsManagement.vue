@@ -30,6 +30,7 @@
                 <div v-if="!isTablet">
                     <!-- Lista de permisos para asignar o deshabilitar -->
                     <ActionPermission v-for="data in datas" :key="data.id" :data="data"
+                        :isLoading="loadingSave"
                         @onActivePermissionApp="activePermissionApp"
                         @onMoveAvailableToAssigned="moveAvailableToAssigned"
                         @onMoveAssignedToAvailable="moveAssignedToAvailable"
@@ -42,6 +43,9 @@
             
         </div>
     </div>
+
+    
+
 </template>
 
 <script>
@@ -56,12 +60,14 @@ import { inject } from '@vue/runtime-core'
 import { GraphQLClient } from 'graphql-request'
 import createPermission from '../../helper/createPermission'
 import removePermission from '../../helper/removePermission'
+
 export default {
     components: {
         TitleBoard,
         UserList,
         PermissionsList,
         ActionPermission,
+
     },
 
     setup() {
@@ -72,6 +78,7 @@ export default {
         const endpoint = store.state.url_backend
         const userSelected = ref('')
         const userPermission = ref([])
+        const loadingSave = ref(false)
 
         const generalQuery = (id) => {
             const client = new GraphQLClient(endpoint)
@@ -266,7 +273,8 @@ export default {
          * Si existe solo en el de usuario lo elimina de la lista de usuario
          * si existe en solo en la lista de permiso se agrega a la lista de usuario
          */
-        const compareList = (list1, list2) => {
+        const compareList = async (list1, list2) => {
+            loadingSave.value = true
             list1 = list1.map(item => parseInt(item.id))
             list2 = list2.sort((a,b) => a.permit_id - b.permit_id)
 
@@ -278,27 +286,29 @@ export default {
                     index1 ++
                     index2 ++
                 } else if (list1[index1] > list2[index2].permit_id) {
-                    removePermission(list2[index2].id, localStorage.getItem('user_company_id'))
+                    await removePermission(list2[index2].id, localStorage.getItem('user_company_id'))
                     index2++
                 } else {
-                    createPermission(list1[index1], userSelected.value.user_company_id, localStorage.getItem('user_company_id'))
+                    await createPermission(list1[index1], userSelected.value.user_company_id, localStorage.getItem('user_company_id'))
                     index1++
                 }
             }
 
             if (index1 <= list1.length-1) {
                 for (let i = index1; i <= list1.length-1; i++) {
-                    createPermission(list1[i], userSelected.value.user_company_id, localStorage.getItem('user_company_id'))
+                    await createPermission(list1[i], userSelected.value.user_company_id, localStorage.getItem('user_company_id'))
                 }
                 index1 = list1.length-1
             }
 
             if (index2 <= list2.length-1) {
                 for (let i = index2; i <= list2.length-1; i++) {
-                    removePermission(list2[i].id, localStorage.getItem('user_company_id'))
+                    await removePermission(list2[i].id, localStorage.getItem('user_company_id'))
                 }
                 index2 = list2.length-1
             }
+
+            loadingSave.value = false
         }
 
 
@@ -413,17 +423,10 @@ export default {
         }
 
         return {
-            datas,
-            users,
-            isTablet,
-            activePermissionApp,
-            moveAvailableToAssigned,
-            moveAssignedToAvailable,
-            moveAllAvailableToAssigned,
-            moveAllAssignedToAvailable,
-            movePermits,
-            changeUserSelected,
-            savePermission
+            datas, users, isTablet, loadingSave, 
+            activePermissionApp, moveAvailableToAssigned, moveAssignedToAvailable,
+            moveAllAvailableToAssigned, moveAllAssignedToAvailable, movePermits,
+            changeUserSelected, savePermission
         }
     }
 }
