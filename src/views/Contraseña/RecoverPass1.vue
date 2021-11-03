@@ -13,8 +13,8 @@
             <div class="column mx-5 ">
                 <div class="columns">
                     <div class="column px-0 is-flex-grow-0 ">
-                        <button v-if="valorLocale=='en'" class=" button color-btn has-background-danger ">Cancel</button>
-                        <button v-if="valorLocale=='es'" class=" button color-btn has-background-danger ">Cancelar</button>
+                        <button v-if="valorLocale=='en'" @click="volver" class=" button color-btn has-background-danger ">Cancel</button>
+                        <button v-if="valorLocale=='es'" @click="volver" class=" button color-btn has-background-danger ">Cancelar</button>
                     </div>
                     <div class="column has-text-right  px-0  " >
                         <button v-if="valorLocale=='en'" @click="validar" class="button tam-btn color-btn title-box">Send</button>
@@ -35,7 +35,7 @@
                 <CampoForm v-if="valorLocale=='es'" place="Correo" v-model="email" type="text" :error="msg_error.email"/>
                 <div class="column ">
                     <button class="button  color-btn title-box " type="button" @click="validar" style="width:100%">{{$t('contraseña.enviar')}}</button>
-                    <button class="button color-btn has-background-danger mt-2 " style="width:100%">{{$t('contraseña.cancel')}}</button>
+                    <button class="button color-btn has-background-danger mt-2 " @click="volver" style="width:100%">{{$t('contraseña.cancel')}}</button>
                 </div>
             </form>
         </div>
@@ -80,10 +80,12 @@ export default {
             valorLocale.value = langStorage.getItem('lang')
         })
 
-        const recuperarPass = () =>{
-            router.push({name: 'RecoverPass3'})
+        const siguientePaso = () =>{
+            router.push({name: 'RecoverPass2'})
         }
-
+        const volver = () => {
+            router.go(-1)
+        }
 
         const validar = () => {
             msg_error.value.email = ''
@@ -130,6 +132,7 @@ export default {
                 setTimeout(() => carga_exitosa.value = true ,500)
                 setTimeout(() =>carga_exitosa.value = false ,2000)
                 setTimeout(() =>comprobar.value = !comprobar.value   ,2000)
+                siguientePaso()
               
             }).catch(error => {
                 console.log(error.response.errors[0].message);
@@ -147,8 +150,9 @@ export default {
         
 
         return { 
+            volver,
             estado,
-            recuperarPass,
+            siguientePaso,
             mensaje,
             carga_exitosa,
             comprobar,

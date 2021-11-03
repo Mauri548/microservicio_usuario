@@ -42,7 +42,7 @@
                     >Login
                     </button>
                     
-                    <p  style="color: #005395">¿Olvidaste tu contraseña?</p>
+                    <router-link :to="{name: 'RecoverPass1'}" style="color: #005395; font-weight:bold;">¿Olvidaste tu contraseña?</router-link>
                 </div>
 
                 <div class="column has-text-centered">
@@ -81,6 +81,9 @@ export default {
         const endpoint = store.state.url_backend
         const registerError = ref(false)
         const isLoading = ref(false)
+
+     
+
 
         const Login = () => {
             isLoading.value = true
@@ -131,6 +134,7 @@ export default {
         }
 
         return{
+            
             Login, 
             email, password, registerError, isLoading
         }
