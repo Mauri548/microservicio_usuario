@@ -84,7 +84,7 @@ export default {
             router.push({name: 'RecoverPass2'})
         }
         const volver = () => {
-            router.go(-1)
+            router.push({name: 'login'})
         }
 
         const validar = () => {
