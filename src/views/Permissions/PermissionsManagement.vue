@@ -73,6 +73,49 @@ export default {
         const userSelected = ref('')
         const userPermission = ref([])
 
+        const generalQuery = (id) => {
+            const client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */`
+            query($id: ID) {
+                company_user(id: $id) {
+                    id
+                    use_user_id
+                    use_company_id
+                    company {
+                        users {
+                            id
+                            name
+                        }
+                        subscriptions {
+                            id
+                            use_app_id
+                            app {
+                                id
+                                name
+                                permits {
+                                    id
+                                    key
+                                    detail
+                                }
+                            }
+                        }
+                    }
+                }
+            }`,
+            {
+                id: id
+            })
+            .then( async (data) => {
+                datas.value = []
+                await data.data.company_user.company.subscriptions.forEach(app => {
+                    datas.value.push({id: app.app.id, app: app.app.name, activo: false, permissions: app.app.permits})
+                })
+                let user_id = data.data.company_user.use_user_id
+                changeUserSelected(user_id)
+            })
+            .catch(error => console.log(error))
+        }
+
         /**
          * 
          * Trae los usuarios que pertenecen a una empresa
@@ -103,76 +146,11 @@ export default {
             return
         }
 
-        /**
-         * 
-         * Trae las suscripciones de una empresa
-         * 
-         * @param id ID de la empresa
-         * 
-         */
-        const traerSubscriptionsxCompany = (id) => {
-            const client = new GraphQLClient(endpoint)
-            client.rawRequest(/* GraphQL */`
-            query($company_id: ID){
-                subscriptionsxcompany(first: 999, page: 1, company_id: $company_id) {
-                    data {
-                        use_app_id,
-                        app {
-                            name
-                        }
-                    }
-                }
-            }`,
-            {
-                company_id: id
-            })
-            .then((data) => {
-                datas.value = []
-                data.data.subscriptionsxcompany.data.forEach( async (app) => {
-                    datas.value.push({id: app.use_app_id, app: app.app.name, activo: false, permissions: []})
-                    await traerPermitsxApp(app.use_app_id)
-                })
-            })
-        }
-
-        /**
-         * 
-         * Trae los permisos de una app
-         * 
-         * @param id ID de la aplicación
-         * 
-         */
-        const traerPermitsxApp = async (id) => {
-            const client = new GraphQLClient(endpoint)
-            await client.rawRequest(/* GraphQL */`
-            query($app_id: ID) {
-                permitsxapp(first: 999, page: 1, app_id: $app_id) {
-                    data {
-                        id, key, detail
-                    }
-                }
-            }`,
-            {
-                app_id: id
-            })
-            .then((data) => {
-                let aux = datas.value.find(app => app.id == id)
-                aux.permissions = []
-                data.data.permitsxapp.data.forEach(permit => {
-                    aux.permissions.push({id: permit.id, key: permit.key, detail: permit.detail, activo: false})
-                })
-            })
-            // .catch(error => console.log(error))
-            return
-            
-        }
-
         watchEffect( async () => {
             store.state.company_id
             if (localStorage.getItem('id_company_selected')) {
                 await traerUsersxCompany(localStorage.getItem('id_company_selected'))
-                traerSubscriptionsxCompany(localStorage.getItem('id_company_selected'))
-                // changeUserSelected(users.value[0].id)
+                generalQuery(localStorage.getItem('user_company_id'))
             }
         })
 
@@ -223,7 +201,6 @@ export default {
             let listAssignedPermission = app.permissions.filter(permit => permit.activo == true)
             compareList(listAssignedPermission, userPermission.value)
         }
-
 
         /**
          * 
@@ -472,11 +449,4 @@ export default {
         flex-direction: column;
     }
 }
-/* @media (max-width: 425px) {
-    .buttons-permission {
-        justify-content: left;
-        overflow-x: scroll;
-    }
-} */
-
 </style>
