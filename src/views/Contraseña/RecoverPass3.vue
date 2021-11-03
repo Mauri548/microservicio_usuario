@@ -18,8 +18,8 @@
                 <div class="column  ">
                     <div class="columns ">
                         <div class="column px-0 is-flex-grow-0 ">
-                            <button v-if="valorLocale=='en'"  class=" button color-btn has-background-danger ">Cancel</button>
-                            <button v-if="valorLocale=='es'"  class=" button color-btn has-background-danger ">Cancelar</button>
+                            <button v-if="valorLocale=='en'"  @click="volver"  class=" button color-btn has-background-danger ">Cancel</button>
+                            <button v-if="valorLocale=='es'"  @click="volver" class=" button color-btn has-background-danger ">Cancelar</button>
                         </div>
                         <div class="column   has-text-right px-0 ">
                             <button v-if="valorLocale=='en'" type="button" @click="validar" class="button tam-btn color-btn title-box">Send</button>
@@ -45,6 +45,7 @@ import {GraphQLClient} from 'graphql-request';
 import store from '@/store';
 import ModalAlert from '../../components/Modals/ModalsAlert.vue'
 import i18n from '@/i18n.js'
+import { useRouter } from 'vue-router';
 export default {
     
     name:'RecoverPass3',
@@ -64,11 +65,14 @@ export default {
         const carga_exitosa = ref(false)
         const comprobar = ref(false)
         const email = ref("")
+        const router = useRouter()
 
         watchEffect(()=>{
             valorLocale.value = langStorage.getItem('lang')
         })
-
+        const volver = () => {
+            router.push({name: 'RecoverPass2'})
+        }
         const validar = () => {
             msg_error.value.email = ''
             msg_error.value.newPass = ''
@@ -151,6 +155,7 @@ export default {
         }
 
         return { 
+            volver ,
             email,
             updateForgottenPass,
             validar,

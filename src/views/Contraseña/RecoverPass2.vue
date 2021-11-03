@@ -44,13 +44,13 @@ export default {
         const isMobile = inject('isMobile')
         const valorLocale = ref('')
         const langStorage = window.localStorage
-         const router = useRouter()
+        const router = useRouter()
 
         watchEffect(()=>{
             valorLocale.value = langStorage.getItem('lang')
         })
         const volver = () => {
-            router.go(-1)
+            router.push({name: 'RecoverPass1'})
         }
 
         return { 
