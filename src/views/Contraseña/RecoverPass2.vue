@@ -11,7 +11,7 @@
                 <!-- <button class="button color-letras has-background-success">{{$t('contraseña.msmCambio')}}</button> -->
                     <p v-if="valorLocale=='en'" style="padding:10px ;" class=" color-letras has-background-success">You will receive in a moment a link to retrieve your password</p>
                     <p v-if="valorLocale=='es'" style="padding:10px ;" class=" color-letras has-background-success">Recibirá en un momento un enlace para recuperar su contraseña</p>
-                <button class="button tam-btn mt-2 color-letras title-box">ok</button>
+                <button class="button tam-btn mt-2 color-letras title-box" @click="volver">Volver a enviar</button>
             </div>
         </div>
     </div>
@@ -25,7 +25,7 @@
             <div class="column">
                 <p v-if="valorLocale=='en'" style="padding:5px;" class=" color-letras has-background-success">You will receive in a moment a link to retrieve your password</p>
                 <p v-if="valorLocale=='es'" style="padding:5px;" class=" color-letras has-background-success">Recibirá en un momento un enlace para recuperar su contraseña</p>
-                <button class="button mt-2 color-letras title-box">ok</button>
+                <button class="button mt-2 color-letras title-box" @click="volver">Volver a enviar</button>
             </div>
         </div>
     </div>
@@ -36,18 +36,25 @@
 <script>
 import { inject, watchEffect } from '@vue/runtime-core'
 import { ref } from '@vue/reactivity'
+import { useRouter } from 'vue-router'
+
 export default {
     name:'RecoverPass2',
     setup(){
         const isMobile = inject('isMobile')
         const valorLocale = ref('')
         const langStorage = window.localStorage
+         const router = useRouter()
 
         watchEffect(()=>{
             valorLocale.value = langStorage.getItem('lang')
         })
+        const volver = () => {
+            router.go(-1)
+        }
 
         return { 
+            volver,
             valorLocale ,
             isMobile
         }
@@ -85,7 +92,7 @@ export default {
     
 }
 .tam-btn{
-    width: 5rem;
+    width: 9rem;
 }
 .color-btn:hover{
      color:white;
