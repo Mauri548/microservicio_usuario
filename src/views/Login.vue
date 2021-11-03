@@ -41,6 +41,7 @@
                         style="font-weight:5px;" :class="{'is-loading': isLoading}"
                     >Login
                     </button>
+                    
                     <p  style="color: #005395">¿Olvidaste tu contraseña?</p>
                 </div>
 

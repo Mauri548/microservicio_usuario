@@ -41,7 +41,7 @@
         </div>
     </div>
 
-    <ModalAlert :activador="carga_exitosa">
+    <ModalAlert :state="estado" :activador="carga_exitosa">
        <p v-if="comprobar">{{mensaje}}</p>
     </ModalAlert>
 </template>
@@ -54,6 +54,7 @@ import {GraphQLClient} from 'graphql-request';
 import store from '@/store';
 import ModalAlert from '../../components/Modals/ModalsAlert.vue'
 import i18n from '@/i18n.js'
+import { useRouter } from 'vue-router';
 
 export default {
     
@@ -72,10 +73,17 @@ export default {
         const carga_exitosa = ref(false)
         const comprobar = ref(false)
         const mensaje = ref("")
-      
+        const router = useRouter()
+        const estado = ref(false)
+
         watchEffect(()=>{
             valorLocale.value = langStorage.getItem('lang')
         })
+
+        const recuperarPass = () =>{
+            router.push({name: 'RecoverPass3'})
+        }
+
 
         const validar = () => {
             msg_error.value.email = ''
@@ -118,6 +126,7 @@ export default {
                 console.log("Paso: ",data.data.forgotPassword.message)
                 mensaje.value = "El envio de correo para actualizar la contraseña fue un exito!"
                 comprobar.value = !comprobar.value 
+                estado.value = !estado.value
                 setTimeout(() => carga_exitosa.value = true ,500)
                 setTimeout(() =>carga_exitosa.value = false ,2000)
                 setTimeout(() =>comprobar.value = !comprobar.value   ,2000)
@@ -138,6 +147,8 @@ export default {
         
 
         return { 
+            estado,
+            recuperarPass,
             mensaje,
             carga_exitosa,
             comprobar,
