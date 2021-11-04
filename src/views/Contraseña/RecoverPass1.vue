@@ -2,6 +2,7 @@
   
     <div v-show="isMobile==false" class="column tam-box mt-2 container  has-text-centered">
         <div class="column title-box ">
+            
             <h2 v-if="valorLocale=='en'" class="color-letras">Recover your password</h2>
             <h2 v-if="valorLocale=='es'" class="color-letras">Recupera tu contraseña</h2>
         </div>
@@ -41,9 +42,9 @@
         </div>
     </div>
 
-    <ModalAlert :state="estado" :activador="carga_exitosa">
+   <!--  <ModalAlert :state="estado" :activador="carga_exitosa">
        <p v-if="comprobar">{{mensaje}}</p>
-    </ModalAlert>
+    </ModalAlert> -->
 </template>
 
 <script>
@@ -77,7 +78,8 @@ export default {
         const estado = ref(false)
 
         watchEffect(()=>{
-            valorLocale.value = langStorage.getItem('lang')
+            /* valorLocale.value = langStorage.getItem('lang') */
+            valorLocale.value = i18n.global.locale
         })
 
         const siguientePaso = () =>{
