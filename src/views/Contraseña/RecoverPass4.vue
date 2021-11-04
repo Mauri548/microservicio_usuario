@@ -12,8 +12,8 @@
                 <p v-if="valorLocale=='es'" style="padding:5px ;" class=" color-letras has-background-success">Tu contraseña ha sido cambiado</p>
             </div>
              <div class="column is-centered">
-                <button v-if="valorLocale=='en'" class=" button tam-btn color-letras title-box ">Accept</button>
-                <button v-if="valorLocale=='es'" class=" button tam-btn color-letras title-box ">Aceptar</button>
+                <button v-if="valorLocale=='en'" @click="irLogin" class=" button tam-btn color-letras title-box ">Accept</button>
+                <button v-if="valorLocale=='es'" @click="irLogin" class=" button tam-btn color-letras title-box ">Aceptar</button>
             </div>
         </div>
     </div>
@@ -23,18 +23,27 @@
 <script>
 import { ref } from '@vue/reactivity'
 import { watchEffect } from '@vue/runtime-core';
+import i18n from '@/i18n.js'
+import { useRouter } from 'vue-router'
 
 export default {
     name:'RecoverPass4',
     setup(){
         const valorLocale = ref('')
         const langStorage = window.localStorage
+        const router = useRouter()
 
         watchEffect(()=>{
-            valorLocale.value = langStorage.getItem('lang')
+            /* valorLocale.value = langStorage.getItem('lang') */
+            let que = langStorage.getItem('lang')
+            valorLocale.value = i18n.global.locale
         })
 
+        const irLogin = () => {
+            router.push({name: 'login'})
+        }
         return { 
+            irLogin,
             valorLocale ,
         }
     }

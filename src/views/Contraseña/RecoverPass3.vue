@@ -68,7 +68,8 @@ export default {
         const router = useRouter()
 
         watchEffect(()=>{
-            valorLocale.value = langStorage.getItem('lang')
+            /* valorLocale.value = langStorage.getItem('lang') */
+            valorLocale.value = i18n.global.locale
         })
         const volver = () => {
             router.push({name: 'RecoverPass2'})
