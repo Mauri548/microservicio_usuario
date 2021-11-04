@@ -29,7 +29,7 @@
                 </tr>
             </Board>
 
-            <Loading v-show="loading"/>
+            <Loading v-show="loadingTable"/>
 
         </div>
         <Pagination/>
@@ -82,7 +82,11 @@
                    
                     <div class="column has-text-centered" >
                         <button class="button has-background-danger has-text-white mr-2"  type="button" style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
-                        <button class="button  has-text-white  ml-2" type="button" style="background-color:#005395; font-weight:bold;" @click="validar">{{$t('permisos.guardar')}}</button>
+                        <button class="button has-text-white ml-2" type="button" 
+                         style="background-color:#005395; font-weight:bold;" 
+                         @click="validar" :class="{'is-loading':loading}" >
+                         {{$t('permisos.guardar')}}
+                        </button>
                     </div>
                 </form>
             </section>
@@ -127,8 +131,12 @@
                     </textarea>
                 
                     <div class="column has-text-centered" >
-                        <button class="button has-background-danger has-text-white mr-2"  type="button" style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
-                        <button class="button  has-text-white  ml-2"  type="button"  style="background-color:#005395; font-weight:bold;"  @click="validar">{{$t('permisos.guardar')}}</button>
+                        <button class="button has-background-danger has-text-white mr-2" type="button" style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
+                        <button class="button has-text-white ml-2" type="button" 
+                         style="background-color:#005395; font-weight:bold;" 
+                         @click="validar" :class="{'is-loading':loading}">
+                         {{$t('permisos.guardar')}}
+                        </button>
                     </div>
                 </form>
             </section>
@@ -194,11 +202,12 @@ export default {
         const detail = ref('')
         const selectedApp = ref('')
         const visible = ref('Visible_to_customers')
-        const automatic = ref('Automatic_assigned')
+        const automatic = ref('Assigned_not_automatic')
         const msg_error = ref({ key: ''})
         const apps = ref([])
         const titles = ref([])
         const id = ref()
+        const loadingTable = ref(false)
         const loading = ref(false)
         
 
@@ -254,10 +263,10 @@ export default {
                             activo: false, modalDelete: false
                         })
                     })
-                    loading.value = false
+                    loadingTable.value = false
                 }).catch(error => {
                     console.log(error.response)
-                    loading.value = false
+                    loadingTable.value = false
                 })
         }
 
@@ -306,7 +315,7 @@ export default {
 
         
         watchEffect(() => {
-            loading.value = true
+            loadingTable.value = true
             traerPermisos()
             traerApps()
         })
@@ -317,7 +326,8 @@ export default {
             if(editPermission.value) editPermission.value = !editPermission.value
         }
 
-        const validar = () => {
+        const validar = async () => {
+            loading.value = true
         
             msg_error.value.key = ''
         
@@ -331,22 +341,23 @@ export default {
             } 
             if (msg_error.value.key == ''){
                 if(addPermission.value){
-                    registrarPermiso()
+                    await registrarPermiso()
                 }
                 if(editPermission.value){
-                    editarPermiso() 
-                }
-              
+                    await editarPermiso() 
+                }              
             } else {
                 console.log('no paso')
                 // Saltar los errores
-            } 
+            }
+
+            loading.value = false
 
         }
 
-        const editarPermiso = () => {
+        const editarPermiso = async () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            client.rawRequest(/* GraphQL */ `
+            await client.rawRequest(/* GraphQL */ `
             mutation($company_user_id:ID!, $id:ID!, $key:String!, $detail:String,$use_app_id:ID!,
                     $public: Public, $automatic: Automatic){
               	modifiesUse_permit (company_user_id: $company_user_id, id: $id, input: {
@@ -458,10 +469,9 @@ export default {
 
         
 
-        const registrarPermiso = () => {
-            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            // Estructura FetchQL(url, query, variable, opcions)
-            client.rawRequest(/* GraphQL */ `
+        const registrarPermiso = async () => {
+            const client = new GraphQLClient(endpoint)
+            await client.rawRequest(/* GraphQL */ `
             mutation($company_user_id: ID!, $key:String!, $detail:String,$use_app_id:ID!
                     $public: Public!, $automatic: Automatic!){
               	  createsUse_permit(company_user_id: $company_user_id, input: {
@@ -545,9 +555,10 @@ export default {
             editPermission,
             actionModalAddPermission,
             actionModalEditPermission,
-            loading,
+            loadingTable,
             visible,
             automatic,
+            loading,
         }
     }
 }
