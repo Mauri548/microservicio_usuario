@@ -49,6 +49,8 @@
                         <p >o registrate usando: </p>
                         <button type="button" class="button button2 has-background-info has-text-white" ><i class="fab fa-facebook-f"></i></button>
                         <button type="button" class="button mt-1 button2 has-background-danger has-text-white" ><i class="fab fa-google-plus-g"></i></button>
+                        <p style="color: #005395">¿Ya tienes cuenta?</p>
+                        <router-link :to="{name: 'login'}" style="color: #005395; font-weight:bold;">Inicia sesión</router-link>
                     </div>
                 </form>
             </div>
