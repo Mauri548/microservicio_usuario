@@ -30,9 +30,9 @@
             </form>
         </div>
     </div>
-    <ModalAlert :activador="carga_exitosa">
-       <p v-if="comprobar">Se realizo con exito la actualizacion de nueva contraseña</p>
-    </ModalAlert>
+  <!--   <ModalAlert :activador="carga_exitosa" :state="estado">
+       <p v-if="comprobar">{{mensaje}}</p>
+    </ModalAlert> -->
 
 </template>
 
@@ -66,6 +66,9 @@ export default {
         const comprobar = ref(false)
         const email = ref("")
         const router = useRouter()
+        const estado = ref(false)
+        const token = store.state.token
+        const mensaje = ref("")
 
         watchEffect(()=>{
             /* valorLocale.value = langStorage.getItem('lang') */
@@ -78,7 +81,6 @@ export default {
             msg_error.value.email = ''
             msg_error.value.newPass = ''
             msg_error.value.confirmPass = ''
-
             if (email.value == ""){
                 if(i18n.global.locale == 'en'){
                     msg_error.value.email = 'Email is required'
@@ -87,9 +89,17 @@ export default {
                     msg_error.value.email  = 'El correo es requerido'
                 }
             } 
-
-          
-            
+            if (email.value != ""){
+                console.log(validadorFormato(email.value)) 
+                if(!validadorFormato(email.value)) {
+                    if(i18n.global.locale == 'en'){
+                        msg_error.value.email = 'The email must have a correct format'
+                    }
+                    if(i18n.global.locale == 'es'){
+                        msg_error.value.email  = 'El email debe tener un formato correcto'
+                    }
+                }
+            }
             if (passNueva.value == ""){
                 if(i18n.global.locale == 'en'){
                     msg_error.value.newPass = 'New password is required'
@@ -98,7 +108,6 @@ export default {
                     msg_error.value.newPass = 'La contraseña nueva es requerido'
                 }
             } 
-            
             if (passConfirm.value == ""){
                 if(i18n.global.locale == 'en'){
                     msg_error.value.confirmPass = 'Confirm Password is required'
@@ -107,10 +116,7 @@ export default {
                     msg_error.value.confirmPass = 'Se requiere confirmar la contraseña nueva'
                 }
             } 
-
-
-
-            if ( msg_error.value.newPass == '' && msg_error.value.confirmPass == '' && msg_error.value.email == ''){
+            if ( msg_error.value.newPass == '' && msg_error.value.confirmPass == '' && msg_error.value.email == '' && validadorFormato(email.value)){
                 console.log("Paso las validaciones")
                 updateForgottenPass()
             } else {
@@ -118,8 +124,12 @@ export default {
             } 
         }
 
+        const validadorFormato = () => {
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email.value)
+        }
 
-         const updateForgottenPass = () => {
+        const updateForgottenPass = () => {
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */ `
             mutation($email:String!,$token:String!,$password:String!, $password_confirmation:String!){
@@ -135,7 +145,7 @@ export default {
             }`,
             {
                 email:email.value,
-                token:localStorage.getItem('user-token'),
+                token:token,
                 password:passNueva.value,
                 password_confirmation: passConfirm.value
             },
@@ -144,18 +154,25 @@ export default {
             })
             .then((data) => {
                 console.log(data.data.updateForgottenPassword.message);
-           /*   comprobar.value = !comprobar.value 
+                router.push({name: 'RecoverPass4'})
+                /* comprobar.value = !comprobar.value 
+                estado.value = true
+                mensaje.value =""
                 setTimeout(() => carga_exitosa.value = true ,500)
                 setTimeout(() =>carga_exitosa.value = false ,3000)
-                setTimeout(() =>comprobar.value = !comprobar.value   ,3000) */
+                setTimeout(() =>comprobar.value = !comprobar.value   ,3000)  */
               
             }).catch(error => {
+                /* estado.value = false */
                 console.log(error.response);
             })
 
         }
 
         return { 
+            mensaje ,
+            estado,
+            validadorFormato  ,
             volver ,
             email,
             updateForgottenPass,

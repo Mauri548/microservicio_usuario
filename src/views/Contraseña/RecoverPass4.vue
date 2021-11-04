@@ -8,8 +8,8 @@
         <div class="column is-centered cuadro-border">
             <div class="column  has-text-centered">
               <!--   <button class=" button tam-btn color-letras has-background-success ">{{$t('contraseña.msmCambiado')}}</button> -->
-                <p v-if="valorLocale=='en'" style="padding:5px ;" class=" color-letras has-background-success">You password has changed</p>
-                <p v-if="valorLocale=='es'" style="padding:5px ;" class=" color-letras has-background-success">Tu contraseña ha sido cambiado</p>
+                <p v-if="valorLocale=='en'" style="padding:5px ;" class="color-letras has-background-success">You password has changed</p>
+                <p v-if="valorLocale=='es'" style="padding:5px ;" class="color-letras has-background-success">Tu contraseña ha sido cambiado</p>
             </div>
              <div class="column is-centered">
                 <button v-if="valorLocale=='en'" @click="irLogin" class=" button tam-btn color-letras title-box ">Accept</button>
