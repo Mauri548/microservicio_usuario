@@ -1,8 +1,8 @@
 <template>
     <div class="column tam-box mt-2 container has-text-centered  ">
         <div class="column title-box ">
-            <h2 v-if="valorLocale=='en'" class="color-letras">Recover your password</h2>
-            <h2 v-if="valorLocale=='es'" class="color-letras">Recupera tu contraseña</h2>
+            <h2 v-if="valorLocale=='en'" class="color-letras">Recover your password - Step 3</h2>
+            <h2 v-if="valorLocale=='es'" class="color-letras">Recupera tu contraseña - Paso 3</h2>
         </div>
         <div class="column is-centered  cuadro-border">
             <form action="" class="column  mx-5  px-0 ">
