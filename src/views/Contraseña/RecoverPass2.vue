@@ -36,6 +36,7 @@
 <script>
 import { inject, watchEffect } from '@vue/runtime-core'
 import { ref } from '@vue/reactivity'
+import i18n from '@/i18n.js'
 export default {
     name:'RecoverPass2',
     setup(){
@@ -44,7 +45,8 @@ export default {
         const langStorage = window.localStorage
 
         watchEffect(()=>{
-            valorLocale.value = langStorage.getItem('lang')
+            /* valorLocale.value = langStorage.getItem('lang') */
+            valorLocale.value = i18n.global.locale
         })
 
         return { 
