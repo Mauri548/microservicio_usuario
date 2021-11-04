@@ -152,6 +152,10 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             modalCarga:'Se realizo con exito la subscripcion.',
             modalEdicion:'Se edito con exito la subscripcion.',
             actualizar:'Actualizar suscripción'
+        },
+        managementPermission: {
+            saveSuccessful: 'Los permisos se asignaron con exito',
+            saveFailed: 'Ocurrio un error al asignar los permisos, por favor intentelo más tarde'
         }
 
     },
@@ -302,7 +306,10 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             modalCarga:'The subscription was successful.',
             modalEdicion:'The subscription was successfully edited.',
             actualizar:'Update subscription'
-
+        },
+        managementPermission: {
+            saveSuccessful: 'Permissions are assigned successfully',
+            saveFailed: 'An error occurred while assigning the permissions. She will try again later.'
         }
     }
 }

@@ -44,7 +44,14 @@
         </div>
     </div>
 
-    
+    <ModalAlert :activador="activeAlert" :state="state">
+        <div v-if="state">
+            <p v-t="'managementPermission.saveSuccessful'"></p>
+        </div>
+        <div v-else>
+            <p v-t="'managementPermission.saveFailed'"></p>
+        </div>
+    </ModalAlert>
 
 </template>
 
@@ -60,6 +67,7 @@ import { inject } from '@vue/runtime-core'
 import { GraphQLClient } from 'graphql-request'
 import createPermission from '../../helper/createPermission'
 import removePermission from '../../helper/removePermission'
+import ModalAlert from '../../components/Modals/ModalsAlert.vue'
 
 export default {
     components: {
@@ -67,7 +75,7 @@ export default {
         UserList,
         PermissionsList,
         ActionPermission,
-
+        ModalAlert
     },
 
     setup() {
@@ -79,6 +87,8 @@ export default {
         const userSelected = ref('')
         const userPermission = ref([])
         const loadingSave = ref(false)
+        const activeAlert = ref(false)
+        const state = ref(true)
 
         const generalQuery = (id) => {
             const client = new GraphQLClient(endpoint)
@@ -308,7 +318,26 @@ export default {
                 index2 = list2.length-1
             }
 
+            isStatusError()
+            console.log(state.value)
+
             loadingSave.value = false
+            store.commit("setStatusError", false)
+
+            activeAlert.value = true
+            checkLoad()
+        }
+
+        const checkLoad = () => {
+            if (activeAlert.value == true) {
+                setTimeout(() => {
+                    activeAlert.value = false
+                },3000)
+            }
+        }
+
+        const isStatusError = () => {
+            store.state.status_error? state.value = false : state.value = true
         }
 
 
@@ -423,7 +452,7 @@ export default {
         }
 
         return {
-            datas, users, isTablet, loadingSave, 
+            datas, users, isTablet, loadingSave, activeAlert, state,
             activePermissionApp, moveAvailableToAssigned, moveAssignedToAvailable,
             moveAllAvailableToAssigned, moveAllAssignedToAvailable, movePermits,
             changeUserSelected, savePermission

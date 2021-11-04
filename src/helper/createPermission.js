@@ -21,7 +21,10 @@ const createPermission = async (permit_id, use_company_id, company_user_id) => {
     .then((data) => {
         console.log(data)
     })
-    .catch(error => console.log('Error en la consulta'))
+    .catch(error => {
+        console.log('Error en la consulta')
+        store.commit("setStatusError", true)
+    })
 }
 
 export default createPermission

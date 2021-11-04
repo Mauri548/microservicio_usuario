@@ -17,7 +17,10 @@ const removePermission = async (id, company_user_id) => {
     .then((data) => {
         console.log(data)
     })
-    .catch(error => console.log(error.response))
+    .catch(error => {
+        console.log(error.response)
+        store.commit("setStatusError", true)
+    })
 }
 
 export default removePermission
