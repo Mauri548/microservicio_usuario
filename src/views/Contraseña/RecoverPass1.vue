@@ -3,8 +3,8 @@
     <div v-show="isMobile==false" class="column tam-box mt-2 container  has-text-centered">
         <div class="column title-box ">
             
-            <h2 v-if="valorLocale=='en'" class="color-letras">Recover your password</h2>
-            <h2 v-if="valorLocale=='es'" class="color-letras">Recupera tu contraseña</h2>
+            <h2 v-if="valorLocale=='en'" class="color-letras">Recover your password - Step 1</h2>
+            <h2 v-if="valorLocale=='es'" class="color-letras">Recupera tu contraseña - Paso 1</h2>
         </div>
         <div class="column is-centered cuadro-border">
             <form class="column  mx-5  px-0">
@@ -88,6 +88,11 @@ export default {
         const volver = () => {
             router.push({name: 'login'})
         }
+        
+        const validadorFormato = () => {
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email.value)
+        }
 
         const validar = () => {
             msg_error.value.email = ''
@@ -100,8 +105,20 @@ export default {
                     msg_error.value.email  = 'El correo es requerido'
                 }
             } 
+
+            if (email.value != ""){
+                console.log(validadorFormato(email.value)) 
+                if(!validadorFormato(email.value)) {
+                    if(i18n.global.locale == 'en'){
+                        msg_error.value.email = 'The email must have a correct format'
+                    }
+                    if(i18n.global.locale == 'es'){
+                        msg_error.value.email  = 'El email debe tener un formato correcto'
+                    }
+                }
+            }
             
-            if (msg_error.value.email == ''){
+            if (msg_error.value.email == '' &&  validadorFormato(email.value)){
                 console.log("Paso las validaciones")
                 forgotPass()
             } else {
@@ -124,25 +141,29 @@ export default {
                email:email.value,
             },
             {
-               authorization: `Bearer ${localStorage.getItem('user-token')}` 
+               /* authorization: `Bearer ${localStorage.getItem('user-token')}`  */
             })
             .then((data) => {
-                console.log("Paso: ",data.data.forgotPassword.message)
+                console.log("Paso: ",data.data.forgotPassword)
                 mensaje.value = "El envio de correo para actualizar la contraseña fue un exito!"
                 comprobar.value = !comprobar.value 
-                estado.value = !estado.value
-                setTimeout(() => carga_exitosa.value = true ,500)
+
+                setTimeout(() =>carga_exitosa.value = true ,500)
+                setTimeout(() =>estado.value = true ,2000)
                 setTimeout(() =>carga_exitosa.value = false ,2000)
                 setTimeout(() =>comprobar.value = !comprobar.value   ,2000)
                 siguientePaso()
               
             }).catch(error => {
+                console.log(error.response)
                 console.log(error.response.errors[0].message);
-                mensaje.value = error.response.errors[0].message
-                comprobar.value = !comprobar.value 
+                /* mensaje.value = error.response.errors[0].message */
+               
+                /* comprobar.value = !comprobar.value 
                 setTimeout(() => carga_exitosa.value = true ,500)
+                setTimeout(() =>estado.value = false  ,2000)
                 setTimeout(() =>carga_exitosa.value = false ,2000)
-                setTimeout(() =>comprobar.value = !comprobar.value   ,2000)
+                setTimeout(() =>comprobar.value = !comprobar.value   ,2000) */
             })
 
         }
@@ -150,6 +171,7 @@ export default {
         
 
         return { 
+            validadorFormato,
             volver,
             estado,
             siguientePaso,
