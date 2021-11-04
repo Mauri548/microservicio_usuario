@@ -124,49 +124,30 @@ export default {
             })
             .then( async (data) => {
                 datas.value = []
+                users.value = []
                 await data.data.company_user.company.subscriptions.forEach(app => {
                     datas.value.push({id: app.app.id, app: app.app.name, activo: false, permissions: app.app.permits})
                 })
+
+                await data.data.company_user.company.users.forEach((user, index) => {
+                    if (index == 0) {
+                        users.value.push({id: user.id, name: user.name, 
+                        user_company_id: data.data.company_user.id ,activo: false})
+                        return
+                    }
+                    users.value.push({id: user.id, name: user.name, user_company_id: '' ,activo: false})
+                    fetchUsersCompaniesXUser(user.id)
+                })
+                
                 let user_id = data.data.company_user.use_user_id
                 changeUserSelected(user_id)
             })
             .catch(error => console.log(error))
         }
 
-        /**
-         * 
-         * Trae los usuarios que pertenecen a una empresa
-         * 
-         * @param id Id de la empresa
-         * 
-         */
-        const traerUsersxCompany = async (id) => {
-            const client = new GraphQLClient(endpoint)
-            await client.rawRequest(/* GraphQL */ `
-            query($company_id:ID){
-                company(id:$company_id) {
-                    users {
-                        id, name
-                    }
-                }
-            }`,
-            {
-                company_id: id
-            })
-            .then((data) => {
-                users.value = []
-                data.data.company.users.forEach( async (element) => {
-                    users.value.push({id:element.id, name: element.name, user_company_id: '' ,activo: false})
-                    fetchUsersCompaniesXUser(element.id)
-                })
-            })
-            return
-        }
-
         watchEffect( async () => {
             store.state.company_id
             if (localStorage.getItem('id_company_selected')) {
-                await traerUsersxCompany(localStorage.getItem('id_company_selected'))
                 generalQuery(localStorage.getItem('user_company_id'))
             }
         })
@@ -179,6 +160,11 @@ export default {
             }
         })
 
+        /**
+         * 
+         * Resetea los permisos al cambiar de usuario
+         * 
+         */
         const resetPermits = () => {
             datas.value.forEach(app => {
                 app.permissions.forEach(permit => {
@@ -187,6 +173,11 @@ export default {
             })
         }
 
+        /**
+         * 
+         * Cambia los valores a true de los permisos que tiene el usuario asignado
+         * 
+         */
         const changeVisibilityByUser = () => {
             userPermission.value.forEach(permit => {
                 datas.value.forEach(app => {
@@ -226,9 +217,9 @@ export default {
          * @param id id del usuario
          * 
          */
-        const fetchUsersCompaniesXUser = (id) => {
+        const fetchUsersCompaniesXUser = async (id) => {
             const client = new GraphQLClient(endpoint)
-            client.rawRequest(/* GraphQL */`
+            await  client.rawRequest(/* GraphQL */`
             query($user_id: ID){
                 userscompaniesxuser(first: 999, page: 1, user_id: $user_id) {
                     data {
@@ -319,7 +310,6 @@ export default {
             }
 
             isStatusError()
-            console.log(state.value)
 
             loadingSave.value = false
             store.commit("setStatusError", false)
