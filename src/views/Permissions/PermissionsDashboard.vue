@@ -49,19 +49,36 @@
             <section class="modal-card-body">
                 <form action="" class="column">
             
-                    <select class="column  select1 mb-4" v-model="selectedApp" >
-                        <option v-for="app in apps" :key="app.id" :value="app">{{app.nombre}}</option>
+                    <div>
+                        <p class="blue-crenein">Aplicación</p>
+                        <select class="column  select1 mb-4" v-model="selectedApp" >
+                            <option v-for="app in apps" :key="app.id" :value="app">{{app.nombre}}</option>
+                        </select>
+                    </div>
+
+                    <CampoForm type="text" :place="$i18n.locale=='en' ? 'Key':'Llave'" 
+                     v-model="key" :error="msg_error.key" 
+                    />
+
+                    <div>
+                        <p class="blue-crenein">Visibilidad para usuario</p>
+                        <select class="column select1 mb-4" v-model="visible" >
+                            <option value="Visible_to_customers">Visible</option>
+                            <option value="Not_visible_to_customers">No visible</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <p class="blue-crenein">Asignación automática</p>
+                    </div>
+                    <select class="column select1 mb-4" v-model="automatic" >
+                        <option value="Automatic_assigned">automática</option>
+                        <option value="Assigned_not_automatic">No automática</option>
                     </select>
 
-                    <CampoForm type="text" :place="$i18n.locale=='en' ? 'Key':'Llave'" v-model="key" :error="msg_error.key" />
-                    
-                
-                    <div v-show="$i18n.locale=='es'">
-                        <textarea class="textarea" v-model="detail" placeholder="Detalles"></textarea>
-                    </div>
-                    <div v-show="$i18n.locale=='en'">
-                        <textarea class="textarea" v-model="detail" placeholder="Details"></textarea>
-                    </div>
+                    <textarea class="textarea" v-model="detail" 
+                     :placeholder="$i18n.locale=='es'? 'Detalles':'Detail'">
+                    </textarea>
                    
                     <div class="column has-text-centered" >
                         <button class="button has-background-danger has-text-white mr-2"  type="button" style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
@@ -89,7 +106,25 @@
 
                     <CampoForm place="Key" type="text" v-model="key"/>
 
-                    <textarea class="textarea " placeholder="Details" v-model="detail"></textarea>
+                    <div>
+                        <p class="blue-crenein">Visibilidad para usuario</p>
+                        <select class="column select1 mb-4" v-model="visible" >
+                            <option value="Visible_to_customers">Visible</option>
+                            <option value="Not_visible_to_customers">No visible</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <p class="blue-crenein">Asignación automática</p>
+                    </div>
+                    <select class="column select1 mb-4" v-model="automatic" >
+                        <option value="Automatic_assigned">automática</option>
+                        <option value="Assigned_not_automatic">No automática</option>
+                    </select>
+
+                    <textarea class="textarea" :placeholder="$i18n.locale=='es'? 'Detalles':'Detail'"
+                     v-model="detail">
+                    </textarea>
                 
                     <div class="column has-text-centered" >
                         <button class="button has-background-danger has-text-white mr-2"  type="button" style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
@@ -147,7 +182,6 @@ export default {
     setup() {
         const isMobile = inject('isMobile')
         const carga_exitosa = ref(false)
-       /*  const comprobar = store.state.carga_exitosa */
         const comprobar = ref(false)
         const comprobar_edi = ref(false)
         const accion_exitosa = ref(false)
@@ -159,6 +193,8 @@ export default {
         const key = ref('')
         const detail = ref('')
         const selectedApp = ref('')
+        const visible = ref('Visible_to_customers')
+        const automatic = ref('Automatic_assigned')
         const msg_error = ref({ key: ''})
         const apps = ref([])
         const titles = ref([])
@@ -172,6 +208,8 @@ export default {
             key.value = data.key
             detail.value = data.detail
             selectedApp.value = data.app
+            visible.value = data.public
+            automatic.value = data.automatic
         }
 
         const traerPermisos = () => {
@@ -193,6 +231,8 @@ export default {
                             id
                             key
                             detail
+                            public
+                            automatic
                             app{
                                 id
                                 name
@@ -207,7 +247,12 @@ export default {
                 .then((data) => {
                     permisos.value = []
                     data.data.permits.data.forEach(element => {
-                        permisos.value.push({id:element.id, key: element.key, detail: element.detail, app:{ id: element.app.id, name:element.app.name },  activo: false, modalDelete: false})
+                        permisos.value.push({
+                            id:element.id, key: element.key, detail: element.detail,
+                            app:{ id: element.app.id, name:element.app.name },
+                            public: element.public, automatic: element.automatic,
+                            activo: false, modalDelete: false
+                        })
                     })
                     loading.value = false
                 }).catch(error => {
@@ -253,10 +298,7 @@ export default {
                 if (datos) selectedApp.value = datos[0].id
                 datos.forEach(element => {
                     apps.value.push({id:element.id, nombre: element.name})
-                    /*  console.log(typeof element.logo) */
                 })
-               /*  console.log(apps.value)
-                console.log("se ejecuto") */
             }).catch(error => {
                 console.log(error.response);
             })
@@ -276,7 +318,6 @@ export default {
         }
 
         const validar = () => {
-
         
             msg_error.value.key = ''
         
@@ -287,7 +328,6 @@ export default {
                 if(i18n.global.locale == 'es'){
                     msg_error.value.key = 'La palabra clave es requerido'
                 }
-                
             } 
             if (msg_error.value.key == ''){
                 if(addPermission.value){
@@ -307,16 +347,20 @@ export default {
         const editarPermiso = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             client.rawRequest(/* GraphQL */ `
-            mutation($company_user_id:ID!, $id:ID!, $key:String!, $detail:String,$use_app_id:ID!){
+            mutation($company_user_id:ID!, $id:ID!, $key:String!, $detail:String,$use_app_id:ID!,
+                    $public: Public, $automatic: Automatic){
               	modifiesUse_permit (company_user_id: $company_user_id, id: $id, input: {
                     key: $key,
                     detail:  $detail,
                     use_app_id: $use_app_id,
+                    public: $public,
+                    automatic: $automatic
                 }) {
                     id
                     key
                     detail
-                   
+                    public
+                    automatic
                 }
             }`,
             {
@@ -325,6 +369,8 @@ export default {
                 key: key.value,       
                 detail: detail.value,
                 use_app_id: selectedApp.value.id,
+                public: visible.value,
+                automatic: automatic.value
             })
             .then((data) => {
                 let aux = permisos.value.find(element => element.id == id.value)
@@ -416,11 +462,14 @@ export default {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             // Estructura FetchQL(url, query, variable, opcions)
             client.rawRequest(/* GraphQL */ `
-            mutation($company_user_id: ID!, $key:String!, $detail:String,$use_app_id:ID!){
+            mutation($company_user_id: ID!, $key:String!, $detail:String,$use_app_id:ID!
+                    $public: Public!, $automatic: Automatic!){
               	  createsUse_permit(company_user_id: $company_user_id, input: {
                     key: $key,
                     detail: $detail,
                     use_app_id: $use_app_id,
+                    public: $public,
+                    automatic: $automatic,
                     }) {
                         id
                         key
@@ -433,13 +482,13 @@ export default {
                 key: key.value,       
                 detail: detail.value,
                 use_app_id: selectedApp.value.id,
+                public: visible.value,
+                automatic: automatic.value
             },
             {
                /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
             })
             .then((data) => {
-
-                /* console.log(data.data.createsUse_permit.id) */
                 let id = data.data.createsUse_permit.id
                 permisos.value.push({id:id, key: key.value, detail: detail.value, app: selectedApp.value.nombre,  activo: false, modalDelete: false})
                 let accion = "cargarPermission"
@@ -497,6 +546,8 @@ export default {
             actionModalAddPermission,
             actionModalEditPermission,
             loading,
+            visible,
+            automatic,
         }
     }
 }
