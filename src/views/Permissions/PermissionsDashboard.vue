@@ -52,7 +52,7 @@
                     <div>
                         <p class="blue-crenein">Aplicación</p>
                         <select class="column select1 mb-4 has-text-dark" v-model="selectedApp" >
-                            <option v-for="app in apps" :key="app.id" :value="app">{{app.name}}</option>
+                            <option v-for="app in apps" :key="app.id" :value="app.id">{{app.name}}</option>
                         </select>
                     </div>
 
@@ -201,6 +201,7 @@ export default {
         const key = ref('')
         const detail = ref('')
         const selectedApp = ref('')
+        const firtsApp = ref('')
         const visible = ref('Visible_to_customers')
         const automatic = ref('Assigned_not_automatic')
         const msg_error = ref({ key: ''})
@@ -260,7 +261,6 @@ export default {
                     first: mostrar_cantidad.value */
                 })
                 .then((data) => {
-                    console.log(data)
                     permisos.value = []
                     data.data.permits.data.forEach(element => {
                         permisos.value.push({
@@ -308,11 +308,9 @@ export default {
                 /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
             })
             .then((data) => {
-                console.log(data)
                 apps.value = []
                 let datos = data.data.apps.data
-                console.log(datos[0].id)
-                if (datos) selectedApp.value = datos[0].id
+                if (datos) firtsApp.value = datos[0].id
                 datos.forEach(element => {
                     apps.value.push({id:element.id, name: element.name})
                 })
@@ -530,7 +528,7 @@ export default {
         const resetField = () => {
             key.value = ''
             detail.value = ''
-            selectedApp.value = ''
+            selectedApp.value = firtsApp.value
             visible.value = 'Visible_to_customers'
             automatic.value = 'Assigned_not_automatic'
         }
