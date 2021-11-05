@@ -52,7 +52,7 @@
                     <div>
                         <p class="blue-crenein">Aplicación</p>
                         <select class="column  select1 mb-4" v-model="selectedApp" >
-                            <option v-for="app in apps" :key="app.id" :value="app">{{app.nombre}}</option>
+                            <option v-for="app in apps" :key="app.id" :value="app">{{app.name}}</option>
                         </select>
                     </div>
 
@@ -105,7 +105,7 @@
             <section class="modal-card-body">
                 <form action="" class="column">
                     <select class="column  select1 mb-4" v-model="selectedApp.id" >
-                        <option v-for="app in apps" :key="app.id" :value="app.id">{{app.nombre}}</option>
+                        <option v-for="app in apps" :key="app.id" :value="app.id">{{app.name}}</option>
                     </select>
 
                     <CampoForm place="Key" type="text" v-model="key"/>
@@ -314,7 +314,7 @@ export default {
                 console.log(datos[0].id)
                 if (datos) selectedApp.value = datos[0].id
                 datos.forEach(element => {
-                    apps.value.push({id:element.id, nombre: element.name})
+                    apps.value.push({id:element.id, name: element.name})
                 })
             }).catch(error => {
                 console.log(error.response);
@@ -505,7 +505,10 @@ export default {
             })
             .then((data) => {
                 let id = data.data.createsUse_permit.id
-                permisos.value.push({id:id, key: key.value, detail: detail.value, app: selectedApp.value.nombre,  activo: false, modalDelete: false})
+                permisos.value.push(
+                    {id:id, key: key.value, detail: detail.value, app: selectedApp.value, 
+                    activo: false, modalDelete: false}
+                )
                 let accion = "cargarPermission"
                 store.commit('verificar_carga',accion) 
                 addPermission.value = !addPermission.value
