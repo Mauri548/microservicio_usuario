@@ -51,18 +51,18 @@
             
                     <div>
                         <p class="blue-crenein">Aplicación</p>
-                        <select class="column  select1 mb-4" v-model="selectedApp" >
-                            <option v-for="app in apps" :key="app.id" :value="app">{{app.nombre}}</option>
+                        <select class="column select1 mb-4 has-text-dark" v-model="selectedApp" >
+                            <option v-for="app in apps" :key="app.id" :value="app">{{app.name}}</option>
                         </select>
                     </div>
 
                     <CampoForm type="text" :place="$i18n.locale=='en' ? 'Key':'Llave'" 
-                     v-model="key" :error="msg_error.key" 
+                     v-model="key" :error="msg_error.key" class="has-text-dark"
                     />
 
                     <div>
                         <p class="blue-crenein">Visibilidad para usuario</p>
-                        <select class="column select1 mb-4" v-model="visible" >
+                        <select class="column select1 mb-4 has-text-dark" v-model="visible" >
                             <option value="Visible_to_customers">Visible</option>
                             <option value="Not_visible_to_customers">No visible</option>
                         </select>
@@ -71,12 +71,12 @@
                     <div>
                         <p class="blue-crenein">Asignación automática</p>
                     </div>
-                    <select class="column select1 mb-4" v-model="automatic" >
+                    <select class="column select1 mb-4 has-text-dark" v-model="automatic" >
                         <option value="Automatic_assigned">automática</option>
                         <option value="Assigned_not_automatic">No automática</option>
                     </select>
 
-                    <textarea class="textarea" v-model="detail" 
+                    <textarea class="textarea has-text-dark" v-model="detail" 
                      :placeholder="$i18n.locale=='es'? 'Detalles':'Detail'">
                     </textarea>
                    
@@ -104,15 +104,15 @@
             </header>
             <section class="modal-card-body">
                 <form action="" class="column">
-                    <select class="column  select1 mb-4" v-model="selectedApp.id" >
-                        <option v-for="app in apps" :key="app.id" :value="app.id">{{app.nombre}}</option>
+                    <select class="column  select1 mb-4 has-text-dark" v-model="selectedApp" >
+                        <option v-for="app in apps" :key="app.id" :value="app">{{app.name}}</option>
                     </select>
 
-                    <CampoForm place="Key" type="text" v-model="key"/>
+                    <CampoForm class="has-text-dark" place="Key" type="text" v-model="key"/>
 
                     <div>
                         <p class="blue-crenein">Visibilidad para usuario</p>
-                        <select class="column select1 mb-4" v-model="visible" >
+                        <select class="column select1 mb-4 has-text-dark" v-model="visible" >
                             <option value="Visible_to_customers">Visible</option>
                             <option value="Not_visible_to_customers">No visible</option>
                         </select>
@@ -121,12 +121,12 @@
                     <div>
                         <p class="blue-crenein">Asignación automática</p>
                     </div>
-                    <select class="column select1 mb-4" v-model="automatic" >
+                    <select class="column select1 mb-4 has-text-dark" v-model="automatic" >
                         <option value="Automatic_assigned">automática</option>
                         <option value="Assigned_not_automatic">No automática</option>
                     </select>
 
-                    <textarea class="textarea" :placeholder="$i18n.locale=='es'? 'Detalles':'Detail'"
+                    <textarea class="textarea has-text-dark" :placeholder="$i18n.locale=='es'? 'Detalles':'Detail'"
                      v-model="detail">
                     </textarea>
                 
@@ -201,6 +201,7 @@ export default {
         const key = ref('')
         const detail = ref('')
         const selectedApp = ref('')
+        const firtsApp = ref('')
         const visible = ref('Visible_to_customers')
         const automatic = ref('Assigned_not_automatic')
         const msg_error = ref({ key: ''})
@@ -208,8 +209,7 @@ export default {
         const titles = ref([])
         const id = ref()
         const loadingTable = ref(false)
-        const loading = ref(false)
-        
+        const loading = ref(false)        
 
         const activarEdicion = (data) => {
             editPermission.value = !editPermission.value 
@@ -220,6 +220,13 @@ export default {
             visible.value = data.public
             automatic.value = data.automatic
         }
+
+        /**
+         * 
+         * al crear un permit el nombre de la aplicacion se pone en blanco
+         * los datos no se borran cuando voy de editar a table y luego a agregar
+         * 
+         */
 
         const traerPermisos = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
@@ -303,10 +310,9 @@ export default {
             .then((data) => {
                 apps.value = []
                 let datos = data.data.apps.data
-                console.log(datos[0].id)
-                if (datos) selectedApp.value = datos[0].id
+                if (datos) firtsApp.value = {id: datos[0].id, name: datos[0].name}
                 datos.forEach(element => {
-                    apps.value.push({id:element.id, nombre: element.name})
+                    apps.value.push({id:element.id, name: element.name})
                 })
             }).catch(error => {
                 console.log(error.response);
@@ -386,6 +392,7 @@ export default {
             .then((data) => {
                 let aux = permisos.value.find(element => element.id == id.value)
                 aux.activo = !aux.activo
+                aux.app = selectedApp.value
                 aux.key = key.value
                 aux.detail = detail.value
                 let accion = "edicionPermission"
@@ -455,12 +462,14 @@ export default {
         // Abre el modal para agregar un permiso a la lista
         const actionModalAddPermission = () => {
             addPermission.value = !addPermission.value
+            resetField()
         }
 
         // Abre el modal para editar un permiso de la lista
         const actionModalEditPermission = () => {
             permisos.value.forEach(element => element.activo = false)
             editPermission.value = !editPermission.value
+            resetField()
         }
         
 
@@ -495,14 +504,14 @@ export default {
             })
             .then((data) => {
                 let id = data.data.createsUse_permit.id
-                permisos.value.push({id:id, key: key.value, detail: detail.value, app: selectedApp.value.nombre,  activo: false, modalDelete: false})
+                permisos.value.push(
+                    {id:id, key: key.value, detail: detail.value, app: selectedApp.value, 
+                    activo: false, modalDelete: false}
+                )
                 let accion = "cargarPermission"
                 store.commit('verificar_carga',accion) 
                 addPermission.value = !addPermission.value
-                selectedApp.value.id = ""
-                selectedApp.value.nombre = ""
-                key.value = ""
-                detail.value =""
+                resetField()
 
                 carga_exitosa.value = true
                 comprobar.value = true
@@ -515,6 +524,14 @@ export default {
                 addPermission.value = !addPermission.value
                 console.log(error.response);
             })
+        }
+
+        const resetField = () => {
+            key.value = ''
+            detail.value = ''
+            selectedApp.value = firtsApp.value
+            visible.value = 'Visible_to_customers'
+            automatic.value = 'Assigned_not_automatic'
         }
 
         return {
