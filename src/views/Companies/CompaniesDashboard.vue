@@ -4,7 +4,9 @@
             <TitleBoard :title="$i18n.locale=='en'? 'Companies' : 'Empresas'" />
             <hr>
             <div class="body-tablero my-3 px-4">
-                <HeadBoard />
+                <HeadBoard :buttonDefault="false">
+                    <router-link :to="{name: 'CreateCompany'}" class="button btn-crenein">{{$t('appSuscription.agregar')}}</router-link>
+                </HeadBoard>    
             </div>
         </div>
         <div class="body-tablero px-4">
