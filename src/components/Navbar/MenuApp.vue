@@ -8,7 +8,7 @@
             </button>  
         </div>
      
-        <div class="dropdown-menu shadow close-apps" id="dropdown-menu" role="menu" style="width: 18rem">
+        <div class="dropdown-menu shadow close-apps" id="dropdown-menu" role="menu" style="width: 18rem; margin-top:10px;">
             <div class="dropdown-content close-apps has-text-centered">
                 <h2 class="blue-crenein has-text-weight-medium close-apps">{{$t('navbar.menuApp.creneinProduct')}}</h2>
                 <hr class="my-1 close-apps">
