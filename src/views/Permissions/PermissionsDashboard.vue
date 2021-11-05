@@ -387,6 +387,7 @@ export default {
                 let aux = permisos.value.find(element => element.id == id.value)
                 aux.activo = !aux.activo
                 aux.key = key.value
+                aux.detail = detail.value
                 let accion = "edicionPermission"
                 store.commit('verificar_carga',accion) 
                 editPermission.value = !editPermission.value
@@ -434,12 +435,8 @@ export default {
         }
         
         watchEffect(()=>{
-            if(i18n.global.locale=='es'){
-                titles.value = ['Aplicacion','Clave','Detalle']
-            }
-            if(i18n.global.locale=='en'){
-                titles.value = ['App','Key','Detail']
-            }
+            i18n.global.locale=='es'? titles.value = ['Aplicacion','Clave','Detalle'] 
+            : titles.value = ['App','Key','Detail']
         })  
 
         // Abre el modal de acciones del elemento que clickeas
@@ -465,8 +462,6 @@ export default {
             permisos.value.forEach(element => element.activo = false)
             editPermission.value = !editPermission.value
         }
-        
-
         
 
         const registrarPermiso = async () => {
@@ -512,12 +507,11 @@ export default {
                 carga_exitosa.value = true
                 comprobar.value = true
                 setTimeout(() => {
-                carga_exitosa.value = false
-                comprobar.value = false
+                    carga_exitosa.value = false
+                    comprobar.value = false
                 } ,3000)
 
             }).catch(error => {
-
                 addPermission.value = !addPermission.value
                 console.log(error.response);
             })
