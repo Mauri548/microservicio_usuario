@@ -51,18 +51,18 @@
             
                     <div>
                         <p class="blue-crenein">Aplicación</p>
-                        <select class="column  select1 mb-4" v-model="selectedApp" >
+                        <select class="column select1 mb-4 has-text-dark" v-model="selectedApp" >
                             <option v-for="app in apps" :key="app.id" :value="app">{{app.name}}</option>
                         </select>
                     </div>
 
                     <CampoForm type="text" :place="$i18n.locale=='en' ? 'Key':'Llave'" 
-                     v-model="key" :error="msg_error.key" 
+                     v-model="key" :error="msg_error.key" class="has-text-dark"
                     />
 
                     <div>
                         <p class="blue-crenein">Visibilidad para usuario</p>
-                        <select class="column select1 mb-4" v-model="visible" >
+                        <select class="column select1 mb-4 has-text-dark" v-model="visible" >
                             <option value="Visible_to_customers">Visible</option>
                             <option value="Not_visible_to_customers">No visible</option>
                         </select>
@@ -71,12 +71,12 @@
                     <div>
                         <p class="blue-crenein">Asignación automática</p>
                     </div>
-                    <select class="column select1 mb-4" v-model="automatic" >
+                    <select class="column select1 mb-4 has-text-dark" v-model="automatic" >
                         <option value="Automatic_assigned">automática</option>
                         <option value="Assigned_not_automatic">No automática</option>
                     </select>
 
-                    <textarea class="textarea" v-model="detail" 
+                    <textarea class="textarea has-text-dark" v-model="detail" 
                      :placeholder="$i18n.locale=='es'? 'Detalles':'Detail'">
                     </textarea>
                    
@@ -104,15 +104,15 @@
             </header>
             <section class="modal-card-body">
                 <form action="" class="column">
-                    <select class="column  select1 mb-4" v-model="selectedApp.id" >
+                    <select class="column  select1 mb-4 has-text-dark" v-model="selectedApp.id" >
                         <option v-for="app in apps" :key="app.id" :value="app.id">{{app.name}}</option>
                     </select>
 
-                    <CampoForm place="Key" type="text" v-model="key"/>
+                    <CampoForm class="has-text-dark" place="Key" type="text" v-model="key"/>
 
                     <div>
                         <p class="blue-crenein">Visibilidad para usuario</p>
-                        <select class="column select1 mb-4" v-model="visible" >
+                        <select class="column select1 mb-4 has-text-dark" v-model="visible" >
                             <option value="Visible_to_customers">Visible</option>
                             <option value="Not_visible_to_customers">No visible</option>
                         </select>
@@ -121,12 +121,12 @@
                     <div>
                         <p class="blue-crenein">Asignación automática</p>
                     </div>
-                    <select class="column select1 mb-4" v-model="automatic" >
+                    <select class="column select1 mb-4 has-text-dark" v-model="automatic" >
                         <option value="Automatic_assigned">automática</option>
                         <option value="Assigned_not_automatic">No automática</option>
                     </select>
 
-                    <textarea class="textarea" :placeholder="$i18n.locale=='es'? 'Detalles':'Detail'"
+                    <textarea class="textarea has-text-dark" :placeholder="$i18n.locale=='es'? 'Detalles':'Detail'"
                      v-model="detail">
                     </textarea>
                 
