@@ -16,7 +16,7 @@
                     <h5 class="blue-crenein has-text-weight-semibold close-apps">{{$t('navbar.menuApp.conectarse')}}</h5>
                     <div class="columns is-multiline is-flex is-justify-content-space-between w-100 my-2 close-apps is-align-items-center" style="margin: auto">
                       <!--   <AppCrenein v-for="app in apps" :key="app.id" :name="app.nombre" :licencia="app.licencia" :logo="app.logo" :activo="app.activo" /> -->
-                      <AppCrenein v-for="app in apps" :key="app.id" :name="app.nombre"  :logo="app.logo" :activo="app.activo" />
+                      <AppCrenein v-for="app in apps" :key="app.id" :name="app.nombre" :cant="apps.length" :logo="app.logo" :activo="app.activo" />
                     </div>
                     <h2 class="has-text-weight-semibold close-apps">{{$t('navbar.menuApp.descubrir')}}</h2>
                     <div class="is-flex is-flex-direction-column close-apps">
