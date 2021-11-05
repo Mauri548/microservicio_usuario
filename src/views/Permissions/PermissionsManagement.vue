@@ -30,6 +30,7 @@
                 <div v-if="!isTablet">
                     <!-- Lista de permisos para asignar o deshabilitar -->
                     <ActionPermission v-for="data in datas" :key="data.id" :data="data"
+                        :isLoading="loadingSave"
                         @onActivePermissionApp="activePermissionApp"
                         @onMoveAvailableToAssigned="moveAvailableToAssigned"
                         @onMoveAssignedToAvailable="moveAssignedToAvailable"
@@ -42,6 +43,16 @@
             
         </div>
     </div>
+
+    <ModalAlert :activador="activeAlert" :state="state">
+        <div v-if="state">
+            <p v-t="'managementPermission.saveSuccessful'"></p>
+        </div>
+        <div v-else>
+            <p v-t="'managementPermission.saveFailed'"></p>
+        </div>
+    </ModalAlert>
+
 </template>
 
 <script>
@@ -56,12 +67,15 @@ import { inject } from '@vue/runtime-core'
 import { GraphQLClient } from 'graphql-request'
 import createPermission from '../../helper/createPermission'
 import removePermission from '../../helper/removePermission'
+import ModalAlert from '../../components/Modals/ModalsAlert.vue'
+
 export default {
     components: {
         TitleBoard,
         UserList,
         PermissionsList,
         ActionPermission,
+        ModalAlert
     },
 
     setup() {
@@ -72,6 +86,9 @@ export default {
         const endpoint = store.state.url_backend
         const userSelected = ref('')
         const userPermission = ref([])
+        const loadingSave = ref(false)
+        const activeAlert = ref(false)
+        const state = ref(true)
 
         const generalQuery = (id) => {
             const client = new GraphQLClient(endpoint)
@@ -107,49 +124,30 @@ export default {
             })
             .then( async (data) => {
                 datas.value = []
+                users.value = []
                 await data.data.company_user.company.subscriptions.forEach(app => {
                     datas.value.push({id: app.app.id, app: app.app.name, activo: false, permissions: app.app.permits})
                 })
+
+                await data.data.company_user.company.users.forEach((user, index) => {
+                    if (index == 0) {
+                        users.value.push({id: user.id, name: user.name, 
+                        user_company_id: data.data.company_user.id ,activo: false})
+                        return
+                    }
+                    users.value.push({id: user.id, name: user.name, user_company_id: '' ,activo: false})
+                    fetchUsersCompaniesXUser(user.id)
+                })
+                
                 let user_id = data.data.company_user.use_user_id
                 changeUserSelected(user_id)
             })
             .catch(error => console.log(error))
         }
 
-        /**
-         * 
-         * Trae los usuarios que pertenecen a una empresa
-         * 
-         * @param id Id de la empresa
-         * 
-         */
-        const traerUsersxCompany = async (id) => {
-            const client = new GraphQLClient(endpoint)
-            await client.rawRequest(/* GraphQL */ `
-            query($company_id:ID){
-                company(id:$company_id) {
-                    users {
-                        id, name
-                    }
-                }
-            }`,
-            {
-                company_id: id
-            })
-            .then((data) => {
-                users.value = []
-                data.data.company.users.forEach( async (element) => {
-                    users.value.push({id:element.id, name: element.name, user_company_id: '' ,activo: false})
-                    fetchUsersCompaniesXUser(element.id)
-                })
-            })
-            return
-        }
-
         watchEffect( async () => {
             store.state.company_id
             if (localStorage.getItem('id_company_selected')) {
-                await traerUsersxCompany(localStorage.getItem('id_company_selected'))
                 generalQuery(localStorage.getItem('user_company_id'))
             }
         })
@@ -162,6 +160,11 @@ export default {
             }
         })
 
+        /**
+         * 
+         * Resetea los permisos al cambiar de usuario
+         * 
+         */
         const resetPermits = () => {
             datas.value.forEach(app => {
                 app.permissions.forEach(permit => {
@@ -170,6 +173,11 @@ export default {
             })
         }
 
+        /**
+         * 
+         * Cambia los valores a true de los permisos que tiene el usuario asignado
+         * 
+         */
         const changeVisibilityByUser = () => {
             userPermission.value.forEach(permit => {
                 datas.value.forEach(app => {
@@ -209,9 +217,9 @@ export default {
          * @param id id del usuario
          * 
          */
-        const fetchUsersCompaniesXUser = (id) => {
+        const fetchUsersCompaniesXUser = async (id) => {
             const client = new GraphQLClient(endpoint)
-            client.rawRequest(/* GraphQL */`
+            await  client.rawRequest(/* GraphQL */`
             query($user_id: ID){
                 userscompaniesxuser(first: 999, page: 1, user_id: $user_id) {
                     data {
@@ -266,7 +274,8 @@ export default {
          * Si existe solo en el de usuario lo elimina de la lista de usuario
          * si existe en solo en la lista de permiso se agrega a la lista de usuario
          */
-        const compareList = (list1, list2) => {
+        const compareList = async (list1, list2) => {
+            loadingSave.value = true
             list1 = list1.map(item => parseInt(item.id))
             list2 = list2.sort((a,b) => a.permit_id - b.permit_id)
 
@@ -278,27 +287,47 @@ export default {
                     index1 ++
                     index2 ++
                 } else if (list1[index1] > list2[index2].permit_id) {
-                    removePermission(list2[index2].id, localStorage.getItem('user_company_id'))
+                    await removePermission(list2[index2].id, localStorage.getItem('user_company_id'))
                     index2++
                 } else {
-                    createPermission(list1[index1], userSelected.value.user_company_id, localStorage.getItem('user_company_id'))
+                    await createPermission(list1[index1], userSelected.value.user_company_id, localStorage.getItem('user_company_id'))
                     index1++
                 }
             }
 
             if (index1 <= list1.length-1) {
                 for (let i = index1; i <= list1.length-1; i++) {
-                    createPermission(list1[i], userSelected.value.user_company_id, localStorage.getItem('user_company_id'))
+                    await createPermission(list1[i], userSelected.value.user_company_id, localStorage.getItem('user_company_id'))
                 }
                 index1 = list1.length-1
             }
 
             if (index2 <= list2.length-1) {
                 for (let i = index2; i <= list2.length-1; i++) {
-                    removePermission(list2[i].id, localStorage.getItem('user_company_id'))
+                    await removePermission(list2[i].id, localStorage.getItem('user_company_id'))
                 }
                 index2 = list2.length-1
             }
+
+            isStatusError()
+
+            loadingSave.value = false
+            store.commit("setStatusError", false)
+
+            activeAlert.value = true
+            checkLoad()
+        }
+
+        const checkLoad = () => {
+            if (activeAlert.value == true) {
+                setTimeout(() => {
+                    activeAlert.value = false
+                },3000)
+            }
+        }
+
+        const isStatusError = () => {
+            store.state.status_error? state.value = false : state.value = true
         }
 
 
@@ -413,17 +442,10 @@ export default {
         }
 
         return {
-            datas,
-            users,
-            isTablet,
-            activePermissionApp,
-            moveAvailableToAssigned,
-            moveAssignedToAvailable,
-            moveAllAvailableToAssigned,
-            moveAllAssignedToAvailable,
-            movePermits,
-            changeUserSelected,
-            savePermission
+            datas, users, isTablet, loadingSave, activeAlert, state,
+            activePermissionApp, moveAvailableToAssigned, moveAssignedToAvailable,
+            moveAllAvailableToAssigned, moveAllAssignedToAvailable, movePermits,
+            changeUserSelected, savePermission
         }
     }
 }

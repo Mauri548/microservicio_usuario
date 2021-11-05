@@ -13,10 +13,10 @@ const store = createStore({
             creating_company: false,
             url_backend: process.env.VUE_APP_URL_BACKEND,
             token: localStorage.getItem('user-token') || '',
-            status: '',
+            status_error: false,
             user_id: null | localStorage.getItem('user_id'),
             company_id: null | localStorage.getItem('id_company_selected'),
-            comes_from_register : false
+            comes_from_register : false,
         }
     },
 
@@ -46,6 +46,10 @@ const store = createStore({
             console.log(data)
             data ? state.creating_company = true : state.creating_company = false
             // state.creating_company = !state.creating_company
+        },
+
+        setStatusError(state,data) {
+            state.status_error = data
         },
 
         cambiarLan(state){

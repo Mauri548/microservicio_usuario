@@ -41,7 +41,7 @@
                         </div>
 
                         <div class="column is-flex is-justify-content-flex-end px-0">
-                            <button class="button btn-crenein" @click="savePermission(data.id)">Guardar cambios</button>
+                            <button class="button btn-crenein" :class="{'is-loading': isLoading}" @click="savePermission(data.id)">Guardar cambios</button>
                         </div>
                     </div>
                 </div>
@@ -62,7 +62,7 @@ export default {
         ButtonIcon,
         SelectPermission,
     },
-    props: ['data'],
+    props: ['data','isLoading'],
     emits: ['onActivePermissionApp',
             'onMoveAvailableToAssigned',
             'onMoveAssignedToAvailable',
@@ -71,6 +71,7 @@ export default {
             'onSavePermission'
             ],
     setup(props,{emit}) {
+        console.log(props.isLoading)
         /**
          * 
          * Variables para almacenar las id de los datos que se van a pasar en la tabla
