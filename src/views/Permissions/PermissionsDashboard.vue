@@ -208,8 +208,7 @@ export default {
         const titles = ref([])
         const id = ref()
         const loadingTable = ref(false)
-        const loading = ref(false)
-        
+        const loading = ref(false)        
 
         const activarEdicion = (data) => {
             editPermission.value = !editPermission.value 
@@ -220,6 +219,13 @@ export default {
             visible.value = data.public
             automatic.value = data.automatic
         }
+
+        /**
+         * 
+         * al crear un permit el nombre de la aplicacion se pone en blanco
+         * los datos no se borran cuando voy de editar a table y luego a agregar
+         * 
+         */
 
         const traerPermisos = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
@@ -254,6 +260,7 @@ export default {
                     first: mostrar_cantidad.value */
                 })
                 .then((data) => {
+                    console.log(data)
                     permisos.value = []
                     data.data.permits.data.forEach(element => {
                         permisos.value.push({
@@ -301,6 +308,7 @@ export default {
                 /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
             })
             .then((data) => {
+                console.log(data)
                 apps.value = []
                 let datos = data.data.apps.data
                 console.log(datos[0].id)
@@ -455,12 +463,14 @@ export default {
         // Abre el modal para agregar un permiso a la lista
         const actionModalAddPermission = () => {
             addPermission.value = !addPermission.value
+            resetField()
         }
 
         // Abre el modal para editar un permiso de la lista
         const actionModalEditPermission = () => {
             permisos.value.forEach(element => element.activo = false)
             editPermission.value = !editPermission.value
+            resetField()
         }
         
 
@@ -499,10 +509,7 @@ export default {
                 let accion = "cargarPermission"
                 store.commit('verificar_carga',accion) 
                 addPermission.value = !addPermission.value
-                selectedApp.value.id = ""
-                selectedApp.value.nombre = ""
-                key.value = ""
-                detail.value =""
+                resetField()
 
                 carga_exitosa.value = true
                 comprobar.value = true
@@ -515,6 +522,14 @@ export default {
                 addPermission.value = !addPermission.value
                 console.log(error.response);
             })
+        }
+
+        const resetField = () => {
+            key.value = ''
+            detail.value = ''
+            selectedApp.value = ''
+            visible.value = 'Visible_to_customers'
+            automatic.value = 'Assigned_not_automatic'
         }
 
         return {
