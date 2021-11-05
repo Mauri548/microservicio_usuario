@@ -4,7 +4,7 @@
         <div class="column has-text-centered" style="margin:auto;">
             <h2  style="font-weight:bold; font-size:1.6em">{{$t('inviteUser.titulo')}}</h2>
             <h3 class="mt-4">{{$t('inviteUser.ingresarMail')}}</h3>
-            <form class="mt-4">
+            <form v-on:keyup.enter="sendInvitation" class="mt-4">
                 <div class="conteiner-button">
                     <CampoForm v-model="name" :place="$i18n.locale=='en'? 'Name': 'Nombre'" type="text" :error="msg_error.name" />
                     <CampoForm class="input-email" v-model="email" :place="$i18n.locale=='en'? 'Email': 'Correo'" type="email" :error="msg_error.email" />

@@ -84,13 +84,16 @@ export default {
         const entering = ref(false)
         const endpoint = store.state.url_backend
         const router = useRouter()
+        const id = ref('')
 
         localStorage.removeItem('id_company_selected')
         localStorage.removeItem('user_id')
 
-        const mutationRegister = () => {
+        const mutationRegister = async () => {
+            console.log('2')
+
             let client = new GraphQLClient(endpoint)
-            client.rawRequest(/* GraphQL */`
+            await client.rawRequest(/* GraphQL */`
             mutation($name: String!, $email: String!, $password: String!, $password_confirmation: String!) {
                 register(input: {
                     name: $name,
@@ -114,19 +117,54 @@ export default {
                 password_confirmation: password_confirmation.value,
             })
             .then((data) => {
-                // console.log(data)
+                console.log(data)
                 let token = data.data.register.tokens.access_token
                 if (isSuccess(data.data.register.status)) {
                     localStorage.setItem('user-token', token)
                     store.commit('setToken', token)
                     FetchMe()
-                    store.commit('setComesfromRegister', true)
-                    router.push({name: 'CreateCompany'})
+                    // store.commit('setComesfromRegister', true)
+                    id.value = data.data.register.tokens.user.id
+                    // router.push({name: 'CreateCompany'})
+                    console.log('3')
+
                 }
             })
             .catch(error => {
                 localStorage.removeItem('user-token')
                 console.log(error.response)
+            })
+            console.log('4')
+
+        }
+
+        // userCrenein@gmail.com
+        const isInvited = () => {
+            console.log('6')
+            const client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */`
+            query($user_id: ID) {
+                userscompaniesxuser(first: 999, page: 1, user_id: $user_id) {
+                    data {
+                        id, use_user_id, use_company_id,
+                        user {
+                            id, name
+                        }
+                    }
+                }
+            }`,
+            {
+                user_id: id.value
+            })
+            .then((data) => {
+                console.log(data)
+                if (data.data.userscompaniesxuser.data.length > 0) {
+                    store.commit('setComesfromRegister', false)
+                    router.push({name: 'UserDashboard'})
+                } else {
+                    store.commit('setComesfromRegister', true)
+                    router.push({name: 'CreateCompany'})
+                }
             })
         }
 
@@ -139,18 +177,27 @@ export default {
          * resetea los mensaje de errores a vacio
          * 
          */
-        const resetErrorMessage = () => {
+        const resetErrorMessage = async () => {
             msg_error.value.name = ''
             msg_error.value.email = ''
             msg_error.value.password = ''
             msg_error.value.password_confirmation = ''
         }
 
-        const register = () => {
+        const register = async () => {
             entering.value = true
             resetErrorMessage()
             
-            isValid()? mutationRegister() : entering.value = false
+            // isValid()? mutationRegister() : entering.value = false
+            if (isValid) {
+                console.log('1')
+                await mutationRegister()
+                console.log('5')
+                await FetchMe()
+                isInvited()
+            } else {
+                entering.value
+            }
         }
 
         /**
