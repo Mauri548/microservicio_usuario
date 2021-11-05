@@ -52,7 +52,7 @@
                     <div>
                         <p class="blue-crenein">Aplicación</p>
                         <select class="column select1 mb-4 has-text-dark" v-model="selectedApp" >
-                            <option v-for="app in apps" :key="app.id" :value="app.id">{{app.name}}</option>
+                            <option v-for="app in apps" :key="app.id" :value="app">{{app.name}}</option>
                         </select>
                     </div>
 
@@ -104,8 +104,8 @@
             </header>
             <section class="modal-card-body">
                 <form action="" class="column">
-                    <select class="column  select1 mb-4 has-text-dark" v-model="selectedApp.id" >
-                        <option v-for="app in apps" :key="app.id" :value="app.id">{{app.name}}</option>
+                    <select class="column  select1 mb-4 has-text-dark" v-model="selectedApp" >
+                        <option v-for="app in apps" :key="app.id" :value="app">{{app.name}}</option>
                     </select>
 
                     <CampoForm class="has-text-dark" place="Key" type="text" v-model="key"/>
@@ -310,7 +310,7 @@ export default {
             .then((data) => {
                 apps.value = []
                 let datos = data.data.apps.data
-                if (datos) firtsApp.value = datos[0].id
+                if (datos) firtsApp.value = {id: datos[0].id, name: datos[0].name}
                 datos.forEach(element => {
                     apps.value.push({id:element.id, name: element.name})
                 })
@@ -392,6 +392,7 @@ export default {
             .then((data) => {
                 let aux = permisos.value.find(element => element.id == id.value)
                 aux.activo = !aux.activo
+                aux.app = selectedApp.value
                 aux.key = key.value
                 aux.detail = detail.value
                 let accion = "edicionPermission"
