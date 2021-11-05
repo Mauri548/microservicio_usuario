@@ -55,7 +55,7 @@ export default {
         AppCrenein,
     },
     created() {
-        this.traerSuscripcionesxCompany()
+        /* this.traerSuscripcionesxCompany()  */
     },
 
     setup(){
@@ -98,9 +98,9 @@ export default {
             store.state.company_id 
             company_id.value = localStorage.getItem('id_company_selected')
 
-            if(activo.value){
+        /*  if(activo.value){
                 traerSuscripcionesxCompany()
-            }
+            } */
         })
 
         
@@ -165,12 +165,12 @@ export default {
             
         }
 
-        
-
+        watchEffect(()=>{
+            traerSuscripcionesxCompany()
+        })
 
         const activar = () => {
             activo.value = !activo.value
-            
         }
 
         // agrege una clase vacia llamada "close-apps" que al hacer click fuera de esa clase se cierre el menu de app
