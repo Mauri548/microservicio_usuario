@@ -202,6 +202,7 @@ export default {
 
         watchEffect( async () => {
             await FetchMe()
+            console.log(store.state.comes_from_register)
             if (store.state.comes_from_register) {
                 store.commit("setCreatingCompany",true)
                 store.commit("setComesfromRegister", false)

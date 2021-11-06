@@ -40,6 +40,7 @@ const store = createStore({
 
         setComesfromRegister(state, value) {
             state.comes_from_register = value
+            console.log(state.comes_from_register)
         },
 
         setCreatingCompany(state,data) {

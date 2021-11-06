@@ -139,8 +139,9 @@ export default {
         }
 
         // userCrenein@gmail.com
-        const isInvited = () => {
+        const isInvited = (id) => {
             console.log('6')
+
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */`
             query($user_id: ID) {
@@ -154,10 +155,11 @@ export default {
                 }
             }`,
             {
-                user_id: id.value
+                user_id: id
             })
             .then((data) => {
                 console.log(data)
+                console.log(data.data.userscompaniesxuser.data.length)
                 if (data.data.userscompaniesxuser.data.length > 0) {
                     store.commit('setComesfromRegister', false)
                     router.push({name: 'UserDashboard'})
@@ -194,7 +196,11 @@ export default {
                 await mutationRegister()
                 console.log('5')
                 await FetchMe()
-                isInvited()
+
+                // Hablar con Marce de si se puede hacer eso o si tarda demasiado
+                setTimeout(() => {
+                    isInvited(id.value)
+                },2000)
             } else {
                 entering.value
             }

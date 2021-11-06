@@ -46,6 +46,7 @@ export default {
         const router = useRouter()
         const Lan = ref(false)
         const creating_company = ref(false)
+        console.log(creating_company.value)
         const listas = ref([
                 {nombre: i18n.global.local == 'en'? 'Personal Info': 'Información personal', activo: false, link: true, name_link: 'PersonalForm'},
                 {nombre: 'Permissions', activo: false, link: true, name_link: 'PermissionsDashboard'},
@@ -104,6 +105,7 @@ export default {
             listas.value[2].opc[5].nombre = i18n.global.locale == 'en'? 'Licences management': 'Gestión de licencias'
             listas.value[2].opc[6].nombre = i18n.global.locale == 'en'? 'Permissions management': 'Gestión de permisos'
 
+            console.log(store.state.creating_company)
             creating_company.value = store.state.creating_company
         })
 
