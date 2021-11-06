@@ -2,11 +2,11 @@
     <div class="has-text-centered">
         <h3 class="fondo-crenein has-text-white py-1">{{$t('user.usuarios')}}</h3>
         <ul>
-            <li v-for="user in users" :key="user.id" 
+            <li class="label-user" v-for="user in users" :key="user.id" 
              :class="{'active': user.activo}"
              @click="selectUser(user.id)"
             >
-                <a>{{user.name}}</a>
+                <a class="label-user-text">{{user.name}}</a>
             </li>
         </ul>
     </div>
@@ -41,24 +41,27 @@ export default {
 </script>
 
 <style scoped>
-li {
-    border: 1px solid #ccc;
-    padding: 4px
+.label-user {
+    border-bottom: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    padding: 4px;
 }
-li:hover {
+
+.label-user:hover {
     background: #cccccc4a;
     cursor: pointer;
 }
-li a {
+
+.label-user-text {
     color: black
 }
 
-li.active {
-    /* color: #fff; */
-    background-color: #005395;
+.label-user.active {
+    background-color: #0771c6;
 }
 
-li.active > a {
+.label-user.active > .label-user-text {
     color: #fff;
 }
 

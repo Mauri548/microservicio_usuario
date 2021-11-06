@@ -30,7 +30,7 @@
                 <div v-if="!isTablet">
                     <!-- Lista de permisos para asignar o deshabilitar -->
                     <ActionPermission v-for="data in datas" :key="data.id" :data="data"
-                        :isLoading="loadingSave"
+                        :isLoading="loadingSave" :isLoadingTable="loadingTable"
                         @onActivePermissionApp="activePermissionApp"
                         @onMoveAvailableToAssigned="moveAvailableToAssigned"
                         @onMoveAssignedToAvailable="moveAssignedToAvailable"
@@ -89,6 +89,7 @@ export default {
         const loadingSave = ref(false)
         const activeAlert = ref(false)
         const state = ref(true)
+        const loadingTable = ref(false)
 
         const generalQuery = (id) => {
             const client = new GraphQLClient(endpoint)
@@ -136,7 +137,6 @@ export default {
                         return
                     }
                     users.value.push({id: user.id, name: user.name, user_company_id: '' ,activo: false})
-                    fetchUsersCompaniesXUser(user.id)
                 })
                 
                 let user_id = data.data.company_user.use_user_id
@@ -153,7 +153,11 @@ export default {
         })
 
         watch(userSelected, async () => {
+            if (userSelected.value.user_company_id == '') {
+                await fetchUsersCompaniesXUser(userSelected.value.id)
+            }
             if (userSelected.value.user_company_id) {
+                loadingTable.value = true
                 await fetchPermissionXCompanyUser(userSelected.value.user_company_id)
                 resetPermits()
                 changeVisibilityByUser()
@@ -263,6 +267,7 @@ export default {
                 data.data.permissionsxcompanyuser.data.forEach(item => {
                     userPermission.value.push({ id: item.id, permit_id: parseInt(item.use_permit_id) })
                 })
+                loadingTable.value = false
             })
             // .catch(error => console.log(error))
         }
@@ -442,7 +447,7 @@ export default {
         }
 
         return {
-            datas, users, isTablet, loadingSave, activeAlert, state,
+            datas, users, isTablet, loadingSave, activeAlert, state, loadingTable,
             activePermissionApp, moveAvailableToAssigned, moveAssignedToAvailable,
             moveAllAvailableToAssigned, moveAllAssignedToAvailable, movePermits,
             changeUserSelected, savePermission
