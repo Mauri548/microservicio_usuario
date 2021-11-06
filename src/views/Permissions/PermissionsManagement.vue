@@ -136,7 +136,6 @@ export default {
                         return
                     }
                     users.value.push({id: user.id, name: user.name, user_company_id: '' ,activo: false})
-                    fetchUsersCompaniesXUser(user.id)
                 })
                 
                 let user_id = data.data.company_user.use_user_id
@@ -153,6 +152,9 @@ export default {
         })
 
         watch(userSelected, async () => {
+            if (userSelected.value.user_company_id == '') {
+                await fetchUsersCompaniesXUser(userSelected.value.id)
+            }
             if (userSelected.value.user_company_id) {
                 await fetchPermissionXCompanyUser(userSelected.value.user_company_id)
                 resetPermits()
