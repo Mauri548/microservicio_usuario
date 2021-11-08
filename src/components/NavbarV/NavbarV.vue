@@ -5,6 +5,7 @@
             <aside class="menu mx-3">
                 <ul class="menu-list">
                     <li v-for="lista in listas" :key="lista.nombre">
+
                         <div v-if="lista.link">
                             <a class="menu-link item" :class="{'not-active': creating_company, 'is-active':lista.activo}" @click="activar(lista)">{{lista.nombre}}</a>
                         </div>
@@ -30,6 +31,22 @@
 
     <div v-show="isTablet">
         <nav class="nav" :class="{'active': active}">
+
+            <div class="nav-movile">
+                <div>
+                    <a class="navbar-item" href="#">
+                    <img src="@/assets/logo_crenein.png" style="max-height: 3rem">
+                    </a>
+                </div>
+
+                <ButtonLang class="mb-0" />
+
+                <div class="group-navbar">
+                    <MenuApp />
+                    <MenuHamburger/>
+                </div>
+            </div>
+
             <ul class="menu-movile">
                 <li v-for="lista in listas" :key="lista.nombre">
                     <div class="item" @click="activar(lista, true)" v-if="lista.link" :class="{'not-active': creating_company, 'is-active':lista.activo}">
@@ -64,10 +81,18 @@ import { inject, onMounted, watch, watchEffect } from '@vue/runtime-core'
 import { useRoute, useRouter } from 'vue-router'
 import store from '@/store'
 import i18n from '@/i18n.js'
-
+import MenuApp from '../Navbar/MenuApp.vue'
+import MenuHamburger from '../MenuHamburger.vue'
+import ButtonLang from '../Buttons/ButtonLang.vue'
 
 export default {
     name:'NavbarV',
+
+    components: {
+        MenuApp,
+        MenuHamburger,
+        ButtonLang,
+    },
 
     setup(){
         const router = useRouter()
@@ -255,6 +280,7 @@ a.not-active {
     width: 100%;
     height: 100%;
     display: flex;
+    flex-direction: column;
     z-index: 10;
     transition: all .5s ease;
     transform: translateX(-100%);
@@ -262,6 +288,13 @@ a.not-active {
 
 .nav.active {
     transform: translateX(0%);
+}
+
+.nav-movile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #f1f1f1;
 }
 
 .menu-movile {
@@ -286,6 +319,12 @@ a.not-active {
     .item {
         padding: 13px 25px;
     }
+}
+
+.group-navbar{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav class="navbar shadow-navbar" role="navigation" aria-label="main navigation">
+    <nav class="navbar shadow-navbar" :class="{'is-hidden': menuNavbar}" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a class="navbar-item" href="#">
           <img src="@/assets/logo_crenein.png" style="max-height: 3rem">
@@ -24,7 +24,7 @@
           <div class="navbar-item">
             <div class="buttons" :class="{'buttons-mobile':isMobile}">
               <!-- <button @click="cambiar" class="button blue-crenein has-text-weight-semibold">{{text}}</button> -->
-              <ButtonLang  />
+              <ButtonLang class="mb-2" />
               <SelectCompany/>
               <MenuApp v-show="!isMobile"/>
               <MenuPerfil/>
