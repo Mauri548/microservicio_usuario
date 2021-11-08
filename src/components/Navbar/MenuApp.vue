@@ -40,8 +40,6 @@ import ispb from '@/assets/ispb2.png'
 import puwic from '@/assets/puwic2.png'
 import geston from '@/assets/geston2.png'
 import blog from '@/assets/blog.jpg'
-// import '../../assets/candado.png'
-// *****************************
 import AppCrenein from './AppsCrenein.vue'
 import { ref } from '@vue/reactivity'
 import i18n from '@/i18n.js' 
@@ -61,15 +59,7 @@ export default {
     setup(){
         const endpoint = store.state.url_backend
         // ****** Datos de prueba ******
-        const apps = ref([
-       /*      {id: 1, name: 'ISPBrain', logo: ispb, activo: true},
-            {id: 2, name: 'PuWiC', logo: puwic, activo: true},
-            {id: 3, name: 'Geston', logo: geston, activo: true},
-            {id: 3, name: 'Geston', logo: geston, activo: false},
-            {id: 3, name: 'Geston', logo: geston, activo: false},
-            {id: 3, name: 'Geston', logo: geston, activo: false},
-            {id: 3, name: 'Geston', logo: geston, activo: false} */
-        ])
+        const apps = ref([])
 
         const discovers = ref([])
         // ******************************

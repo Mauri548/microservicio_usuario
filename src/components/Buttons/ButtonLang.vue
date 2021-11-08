@@ -1,9 +1,8 @@
 <template>
   
-  <div>
-      <!-- <button @click="cambiarLang" class="button blue-crenein has-text-weight-semibold">{{language}}</button> -->
+    <div>
 
-        <div class="select mb-2 blue-crenein has-text-weight-semibold">
+        <div class="select blue-crenein has-text-weight-semibold">
             <select  v-model="$i18n.locale"> <!--  con el v-model capturamos la opcion seleccionada y lo asignamos al atributo de locale -->
                     <option 
                         v-for="(lang,i) in langs"
@@ -14,7 +13,7 @@
             </select>
         </div>
     
-  </div>
+    </div>
 
 </template>
 
@@ -36,18 +35,10 @@ export default {
             console.log(langStorage.getItem('lang'))
         })
 
-
-
-
         return{ 
             langs
         }
     },
-/*     data(){
-        return {
-            langs: [{id:'es',lan:'Español'},{id:'en',lan:'English'}]
-        }
-    }, */
 
 }
 </script>
