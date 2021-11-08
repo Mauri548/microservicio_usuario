@@ -26,17 +26,11 @@ export default {
     },
     setup(props){
         const cant = ref()
-        /* watchEffect(()=>{
-
-        }) */
         cant.value = props.cant
         return { 
             cant
         }
     }
-
-
-
 }
 </script>
 
