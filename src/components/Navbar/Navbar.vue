@@ -38,7 +38,7 @@
 
 <script>
 import { ref } from '@vue/reactivity'
-import { inject } from '@vue/runtime-core'
+import { inject, watchEffect } from '@vue/runtime-core'
 import SelectCompany from './SelectCompany.vue'
 import MenuApp from './MenuApp.vue'
 import MenuPerfil from './MenuPerfil.vue'
@@ -73,9 +73,12 @@ export default {
     
 
     const OpenMenuNavbar = () => {
-      menuNavbar.value = !menuNavbar.value
-      /* console.log(menuNavbar.value) */
+      store.commit('setActiveMenuMovile')
     }
+
+    watchEffect(() => {
+      menuNavbar.value = store.state.active_menu_movile
+    })
 
     return{
       

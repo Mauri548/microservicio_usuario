@@ -1,12 +1,12 @@
 <template>
-    <div  class="conteiner-nabvarV">
+    <div v-show="!isTablet" class="conteiner-nabvarV">
 
         <div>
             <aside class="menu mx-3">
                 <ul class="menu-list">
                     <li v-for="lista in listas" :key="lista.nombre">
                         <div v-if="lista.link">
-                            <a class="menu-link" :class="{'not-active': creating_company, 'is-active':lista.activo}" @click="activar(lista)">{{lista.nombre}}</a>
+                            <a class="menu-link item" :class="{'not-active': creating_company, 'is-active':lista.activo}" @click="activar(lista)">{{lista.nombre}}</a>
                         </div>
                         <div v-else>
                             <a class="menu-link companyOption btn-company" :class="{'not-active': creating_company}" @click="activar(lista)">
@@ -28,12 +28,39 @@
 
     </div>
 
+    <div v-show="isTablet">
+        <nav class="nav" :class="{'active': active}">
+            <ul class="menu-movile">
+                <li v-for="lista in listas" :key="lista.nombre">
+                    <div class="item" @click="activar(lista, true)" v-if="lista.link" :class="{'not-active': creating_company, 'is-active':lista.activo}">
+                        <a class="menu-link"  >{{lista.nombre}}</a>
+                    </div>
+                    <div v-else>
+                        <a class="menu-link companyOption btn-company item" :class="{'not-active': creating_company}" @click="activar(lista)">
+                            <span class="column has-text-left ">{{lista.nombre}}</span>
+                            <span class="column has-text-right  icon is-small">
+                                <i  class="fas fa-chevron-down"></i>
+                            </span>
+                        </a>
+                        <ul v-show="lista.activo">
+                            <li class="item" v-for="sublist in lista.opc" :key="sublist.name" :class="{'not-active': creating_company, 'is-active':sublist.activo}" @click="activarSublist(lista,sublist)">
+                                <div class="sublist">
+                                    <a class="menu-link">{{sublist.nombre}}</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </li> 
+            </ul>
+        </nav>
+    </div>
+
 </template>
 
 <script>
 
 import {ref} from '@vue/reactivity' 
-import { onMounted, watch, watchEffect } from '@vue/runtime-core'
+import { inject, onMounted, watch, watchEffect } from '@vue/runtime-core'
 import { useRoute, useRouter } from 'vue-router'
 import store from '@/store'
 import i18n from '@/i18n.js'
@@ -46,7 +73,14 @@ export default {
         const router = useRouter()
         const Lan = ref(false)
         const creating_company = ref(false)
-        console.log(creating_company.value)
+        const isTablet = inject('isTablet')
+        const active = ref(false)
+
+        watchEffect(() => {
+            // store.state.active_menu_movile
+            active.value = store.state.active_menu_movile
+        })
+        
         const listas = ref([
                 {nombre: i18n.global.local == 'en'? 'Personal Info': 'Información personal', activo: false, link: true, name_link: 'PersonalForm'},
                 {nombre: 'Permissions', activo: false, link: true, name_link: 'PermissionsDashboard'},
@@ -88,7 +122,6 @@ export default {
   
         // Redirige al usuario a otra vista        
         const push = (path) => {
-            console.log(path)
             router.push({name: path})
         }
 
@@ -105,27 +138,11 @@ export default {
             listas.value[2].opc[5].nombre = i18n.global.locale == 'en'? 'Licences management': 'Gestión de licencias'
             listas.value[2].opc[6].nombre = i18n.global.locale == 'en'? 'Permissions management': 'Gestión de permisos'
 
-            console.log(store.state.creating_company)
             creating_company.value = store.state.creating_company
         })
 
-        // Le damos una funcion a cada etiqueta "a" para que pueda agregar o quitar la clase "is-active"
-        // esta funcion se crea dentro de onMounted() porque el template no se carga todavia entonces debe de 
-        // esperar a que este cargado para agregar los elementos del html
-        onMounted(() => {
-            const item = document.querySelectorAll('.menu-link')
-            item.forEach((element, index) => {
-                item[index].addEventListener('click', () => {
-                    item.forEach((element, i) => {
-                        item[i].classList.remove('is-active')
-                    })
-                    item[index].classList.add('is-active')
-                }) 
-            })
-        })
-
         // Activa el elemento seleccionado del menu
-        const activar = (lista) => {
+        const activar = (lista, movile = false) => {
             // Recorremos la lista de elementos
             listas.value.forEach(element => {
                 // Ponemos en falso todos los elementos menos el seleccionado
@@ -141,28 +158,21 @@ export default {
             })
             // activamos el elementos seleccionado
             lista.activo = !lista.activo
+            if (movile) {
+                store.commit("setActiveMenuMovile")
+            }
             push(lista.name_link)
         }
 
         const activarSublist = (lista, sublist) => {
-            activar(sublist)
+            activar(sublist, true)
             lista.activo = !lista.activo
         }
-
-        // document.addEventListener('click', function(e) {
-            // let clic = e.target
-            // console.log(e.target)
-            // if (!clic.includes('companyOption')) {
-            //     showCompanyOption.value = false
-            // }
-        // }, false)
-
-       
 
         return {
             Lan,
             creating_company,
-            listas,
+            listas, isTablet, active,
             push,
             activar,
             activarSublist
@@ -182,8 +192,10 @@ a:hover {
     border: 1px solid #005395;
     color: #005395;
 }
-a.is-active {
+.item.is-active {
     background-color: #005395;
+}
+.item.is-active a, .item.is-active span {
     color: #fff
 }
 a.not-active {
@@ -203,7 +215,12 @@ a.not-active {
         box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.2);
         border-radius: 5px;
         color: #005395;
-        border: 1px solid #fff
+        border: 1px solid #fff;
+    }
+
+    a.is-active {
+        background-color: #005395;
+        color: #fff
     }
 }
 
@@ -229,6 +246,46 @@ a.not-active {
         text-align: left;
     }
     
+}
+
+
+.nav {
+    position: absolute;
+    background-color:#fff;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    z-index: 10;
+    transition: all .5s ease;
+    transform: translateX(-100%);
+}
+
+.nav.active {
+    transform: translateX(0%);
+}
+
+.menu-movile {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* justify-content: center; */
+}
+
+.menu-movile li {
+    width: 100%;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.sublist {
+    padding-left: 13px;
+}
+
+@media screen and (max-width: 800px) {
+    .item {
+        padding: 13px 25px;
+    }
 }
 
 </style>

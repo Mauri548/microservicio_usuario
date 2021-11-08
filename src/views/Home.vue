@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div style="position: relative">
       <Navbar />
-      <div class="contenedor-principal mt-5">
+      <div class="contenedor-principal">
           <NavbarV />
           <router-view/>
       </div> 

@@ -17,6 +17,7 @@ const store = createStore({
             user_id: null | localStorage.getItem('user_id'),
             company_id: null | localStorage.getItem('id_company_selected'),
             comes_from_register : false,
+            active_menu_movile: false,
         }
     },
 
@@ -51,6 +52,10 @@ const store = createStore({
 
         setStatusError(state,data) {
             state.status_error = data
+        },
+
+        setActiveMenuMovile(state) {
+            state.active_menu_movile = !state.active_menu_movile
         },
 
         cambiarLan(state){
