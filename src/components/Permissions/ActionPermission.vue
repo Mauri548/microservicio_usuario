@@ -9,6 +9,8 @@
                         </div>
                         <div class="column is-flex is-flex-wrap-wrap is-align-items-center" style="border: 1px solid #cccccc78">
                             <div class="columns is-flex w-100" style="margin: 0">
+
+                                <!-- Lista de los permisos disponibles -->
                                 <div class="permissions-available">
                                     <SelectPermission @onMovePermission="asignarPermisos" :appId="data.id" 
                                         :title="$i18n.locale=='en'? 'Availables': 'Disponibles'" :assigned="false" >
@@ -16,7 +18,9 @@
                                         v-show="!item.activo" :value="item.id">{{item.detail}}</option>
                                     </SelectPermission>
                                 </div>
-                                <div class="buttons-action-permission mt-5">
+
+                                <!-- Accion de flechas para mover los permisos -->
+                                <div v-show="!isLoadingTable" class="buttons-action-permission mt-5">
                                     <button @click="moveAvailableToAssigned()" class="button my-1">
                                         <i class="fas fa-angle-right"></i>
                                     </button>
@@ -30,6 +34,13 @@
                                         <i class="fas fa-angle-double-left"></i>
                                     </button>
                                 </div>
+
+                                <!-- Loading al cambiar de usuario -->
+                                <div v-show="isLoadingTable" style="width: 20%">
+                                    <Loading />
+                                </div>
+
+                                <!-- Lista de los permisos asignados -->
                                 <div class=" permissions-assigned">
                                     <SelectPermission  @onMovePermission="asignarPermisos" :appId="data.id" 
                                         :title="$i18n.locale=='en'? 'Assigneds': 'Asignados'" :assigned="true">
@@ -55,14 +66,16 @@ import { ref } from '@vue/reactivity'
 import Searcher from '../Board/Searcher.vue'
 import ButtonIcon from '../Buttons/ButtonIcon.vue'
 import SelectPermission from './SelectPermission.vue'
+import Loading from '../loading.vue'
 export default {
     name: 'ActionPermission',
     components: {
         Searcher,
         ButtonIcon,
         SelectPermission,
+        Loading
     },
-    props: ['data','isLoading'],
+    props: ['data','isLoading','isLoadingTable'],
     emits: ['onActivePermissionApp',
             'onMoveAvailableToAssigned',
             'onMoveAssignedToAvailable',
@@ -71,7 +84,6 @@ export default {
             'onSavePermission'
             ],
     setup(props,{emit}) {
-        console.log(props.isLoading)
         /**
          * 
          * Variables para almacenar las id de los datos que se van a pasar en la tabla

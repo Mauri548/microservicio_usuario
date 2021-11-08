@@ -8,7 +8,7 @@
             </button>  
         </div>
      
-        <div class="dropdown-menu shadow close-apps" id="dropdown-menu" role="menu" style="width: 18rem">
+        <div class="dropdown-menu shadow close-apps" id="dropdown-menu" role="menu" style="width: 18rem; margin-top:10px;">
             <div class="dropdown-content close-apps has-text-centered">
                 <h2 class="blue-crenein has-text-weight-medium close-apps">{{$t('navbar.menuApp.creneinProduct')}}</h2>
                 <hr class="my-1 close-apps">
@@ -16,7 +16,7 @@
                     <h5 class="blue-crenein has-text-weight-semibold close-apps">{{$t('navbar.menuApp.conectarse')}}</h5>
                     <div class="columns is-multiline is-flex is-justify-content-space-between w-100 my-2 close-apps is-align-items-center" style="margin: auto">
                       <!--   <AppCrenein v-for="app in apps" :key="app.id" :name="app.nombre" :licencia="app.licencia" :logo="app.logo" :activo="app.activo" /> -->
-                      <AppCrenein v-for="app in apps" :key="app.id" :name="app.nombre"  :logo="app.logo" :activo="app.activo" />
+                      <AppCrenein v-for="app in apps" :key="app.id" :name="app.nombre" :cant="apps.length" :logo="app.logo" :activo="app.activo" />
                     </div>
                     <h2 class="has-text-weight-semibold close-apps">{{$t('navbar.menuApp.descubrir')}}</h2>
                     <div class="is-flex is-flex-direction-column close-apps">
@@ -55,7 +55,7 @@ export default {
         AppCrenein,
     },
     created() {
-        this.traerSuscripcionesxCompany()
+        /* this.traerSuscripcionesxCompany()  */
     },
 
     setup(){
@@ -98,9 +98,9 @@ export default {
             store.state.company_id 
             company_id.value = localStorage.getItem('id_company_selected')
 
-            if(activo.value){
+        /*  if(activo.value){
                 traerSuscripcionesxCompany()
-            }
+            } */
         })
 
         
@@ -165,12 +165,12 @@ export default {
             
         }
 
-        
-
+        watchEffect(()=>{
+            traerSuscripcionesxCompany()
+        })
 
         const activar = () => {
             activo.value = !activo.value
-            
         }
 
         // agrege una clase vacia llamada "close-apps" que al hacer click fuera de esa clase se cierre el menu de app
