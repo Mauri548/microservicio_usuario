@@ -1,18 +1,19 @@
 <template>
     <div class="columns is-align-items-center">
-        <ShowRows />
-        
-        <div class="column has-text-centered">
-            <!-- <input type="text" placeholder="Search .."> -->
-            <Searcher/>
-        </div>
-        <div class="column has-text-right">
+        <Searcher class="mt-3 mb-0 movile" />
 
-            <div>
-              <!--   con la expresion {{$t('')}} podemos traer la palabra que queremos mostrar traducida en el lenguaje seleccionado -->
-                <button v-if="buttonDefault" @click="push" class="button btn-crenein">{{$t('board.headBoard.agregar')}}</button>
-                <slot></slot>
-                <!-- <button class="button btn-crenein">{{$t('board.headBoard.masOps')}}</button> -->
+        <div class="w-100 is-flex">
+            <ShowRows />
+            <Searcher class="mt-3 mb-0 desktop" />
+            <div class="column has-text-right">
+
+                <div>
+                    <button v-if="buttonDefault" @click="push" class="button btn-crenein">
+                        {{$t('board.headBoard.agregar')}}
+                    </button>
+                    <slot></slot>
+                </div>
+
             </div>
 
         </div>
@@ -60,9 +61,25 @@ export default {
     display: flex;
 }
 
+
 @media (max-width: 425px) {
     .columns {
         flex-direction: column;
+    }
+    .movile {
+        display: flex;
+    }
+    .desktop {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 426px) {
+    .desktop {
+        display: flex;
+    }
+    .movile {
+        display: none;
     }
 }
 
