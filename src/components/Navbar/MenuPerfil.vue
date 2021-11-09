@@ -1,5 +1,6 @@
 <template>
-    <div class="dropdown mx-2 close-perfil" :class="{'is-active':activo, 'is-right':!isMobile}">
+<!-- 'is-right':!isMobile -->
+    <div class="dropdown mx-2 close-perfil is-right" :class="{'is-active':activo, }">
         <div class="dropdown-trigger">
             <a @click="activar" href="#" class="close-perfil">
                 <img class="circle close-perfil" src="@/assets/perfil.jpg" alt="">

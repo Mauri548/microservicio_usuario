@@ -29,7 +29,8 @@
 
     </div>
 
-    <div v-show="isTablet">
+    <!-- v-show="isTablet" -->
+    <div>
         <nav class="nav" :class="{'active': active}">
 
             <div class="nav-movile">
@@ -60,7 +61,7 @@
                             </span>
                         </a>
                         <ul v-show="lista.activo">
-                            <li class="item" v-for="sublist in lista.opc" :key="sublist.name" :class="{'not-active': creating_company, 'is-active':sublist.activo}" @click="activarSublist(lista,sublist)">
+                            <li class="item" v-for="sublist in lista.opc" :key="sublist.name" :class="{'not-active': creating_company, 'is-active':sublist.activo}" @click="activarSublist(lista,sublist, true)">
                                 <div class="sublist">
                                     <a class="menu-link">{{sublist.nombre}}</a>
                                 </div>
@@ -189,8 +190,8 @@ export default {
             push(lista.name_link)
         }
 
-        const activarSublist = (lista, sublist) => {
-            activar(sublist, true)
+        const activarSublist = (lista, sublist, movile = false) => {
+            activar(sublist, movile)
             lista.activo = !lista.activo
         }
 
@@ -251,9 +252,11 @@ a.not-active {
 
 @media screen and (max-width: 1024px) {
     .conteiner-nabvarV {
+        /* background-color: red;
         width: 100%;
         margin: 0px;
-        overflow-x: auto;
+        overflow-x: auto; */
+        display: none;
     }
     .conteiner-nabvarV aside {
         width: 97%;
@@ -276,14 +279,15 @@ a.not-active {
 
 .nav {
     position: absolute;
+    top: 0;
     background-color:#fff;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    z-index: 10;
-    transition: all .5s ease;
-    transform: translateX(-100%);
+    z-index: 31;
+    transition: all .6s ease;
+    transform: translateX(-150%);
 }
 
 .nav.active {
@@ -315,7 +319,7 @@ a.not-active {
     padding-left: 13px;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1024px) {
     .item {
         padding: 13px 25px;
     }
