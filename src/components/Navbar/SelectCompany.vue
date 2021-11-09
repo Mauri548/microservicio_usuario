@@ -117,9 +117,14 @@ export default {
         }
 
         watchEffect( async () => {
+            localStorage.getItem('id_company_selected')
             store.state.company_id
             if (store.state.user_id) {
                 await companySelected()
+                if (localStorage.getItem('id_company_selected')) {
+                    let company = companies.value.find(company => company.id == localStorage.getItem('id_company_selected'))
+                    changeValueCompany(company)
+                }
                 if (!companyActual.value.id) {
                     changeValueCompany(companies.value[0])
                 }

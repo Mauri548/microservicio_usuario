@@ -5,13 +5,9 @@
         <a class="navbar-item" href="#">
           <img src="@/assets/logo_crenein.png" style="max-height: 3rem">
         </a>
-
-        <!-- <SelectCompany/> -->
-
         
         <div class="group-navbar">
-          <!-- <MenuApp v-show="isMobile" /> -->
-          <MenuPerfil  style="width: 35px"/>
+          <MenuPerfil  style="width: 30px"/>
           <MenuHamburger />
         </div>
         
@@ -108,6 +104,12 @@ export default {
   justify-content: flex-end;
   align-items: center;
   margin-left: auto;
+}
+
+@media screen and (min-width: 1024px) {
+  .group-navbar {
+    display: none;
+  }
 }
 
 </style>
