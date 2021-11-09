@@ -235,46 +235,6 @@ a.not-active {
     padding: 0;
 }
 
-@media screen and (min-width: 1025px) {
-    a {
-        margin: 0 0 8px 0;
-        box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.2);
-        border-radius: 5px;
-        color: #005395;
-        border: 1px solid #fff;
-    }
-
-    a.is-active {
-        background-color: #005395;
-        color: #fff
-    }
-}
-
-@media screen and (max-width: 1024px) {
-    .conteiner-nabvarV {
-        /* background-color: red;
-        width: 100%;
-        margin: 0px;
-        overflow-x: auto; */
-        display: none;
-    }
-    .conteiner-nabvarV aside {
-        width: 97%;
-        margin: 0px 12px;
-    }
-    .conteiner-nabvarV aside .menu-list {
-        display: flex;
-        justify-content: space-between;
-    }
-    .conteiner-nabvarV aside .menu-list li {
-        width: 100%;
-        text-align: center;
-    }
-    .conteiner-nabvarV aside .menu-list li ul li {
-        text-align: left;
-    }
-    
-}
 
 
 .nav {
@@ -287,7 +247,7 @@ a.not-active {
     flex-direction: column;
     z-index: 31;
     transition: all .6s ease;
-    transform: translateX(-150%);
+    transform: translateX(-100%);
 }
 
 .nav.active {
@@ -320,9 +280,59 @@ a.not-active {
 }
 
 @media screen and (max-width: 1024px) {
+    /* .item {
+        padding: 13px 25px;
+    } */
+}
+
+
+@media screen and (min-width: 1024px) {
+    a {
+        margin: 0 0 8px 0;
+        box-shadow: 0px 0px 16px 0px rgba(0,0,0,0.2);
+        border-radius: 5px;
+        color: #005395;
+        border: 1px solid #fff;
+    }
+
+    a.is-active {
+        background-color: #005395;
+        color: #fff
+    }
+
+    .nav {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .conteiner-nabvarV {
+        /* background-color: red;
+        width: 100%;
+        margin: 0px;
+        overflow-x: auto; */
+        display: none;
+    }
+    .conteiner-nabvarV aside {
+        width: 97%;
+        margin: 0px 12px;
+    }
+    .conteiner-nabvarV aside .menu-list {
+        display: flex;
+        justify-content: space-between;
+    }
+    .conteiner-nabvarV aside .menu-list li {
+        width: 100%;
+        text-align: center;
+    }
+    .conteiner-nabvarV aside .menu-list li ul li {
+        text-align: left;
+    }
+
     .item {
         padding: 13px 25px;
     }
+    
 }
 
 .group-navbar{
