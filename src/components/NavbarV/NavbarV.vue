@@ -267,7 +267,6 @@ a.not-active {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    /* justify-content: center; */
 }
 
 .menu-movile li {
@@ -278,13 +277,6 @@ a.not-active {
 .sublist {
     padding-left: 13px;
 }
-
-@media screen and (max-width: 1024px) {
-    /* .item {
-        padding: 13px 25px;
-    } */
-}
-
 
 @media screen and (min-width: 1024px) {
     a {
@@ -307,10 +299,6 @@ a.not-active {
 
 @media screen and (max-width: 1024px) {
     .conteiner-nabvarV {
-        /* background-color: red;
-        width: 100%;
-        margin: 0px;
-        overflow-x: auto; */
         display: none;
     }
     .conteiner-nabvarV aside {
