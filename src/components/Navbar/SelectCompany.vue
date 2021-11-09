@@ -43,7 +43,6 @@ export default {
          * 
          */
         const changeCompany = (company) => {
-            console.log(company)
             changeValueCompany(company)
             activar()
         }
@@ -57,6 +56,7 @@ export default {
             companyActual.value.id = company.id
             companyActual.value.name_fantasy = company.name_fantasy
             store.commit('setCompanyId', company.id)
+
             fetchUserCompanyId(localStorage.getItem('user_id'))
         }
 
@@ -111,7 +111,6 @@ export default {
                 companiesData.forEach(company => {
                     companies.value.push({id: company.id, name_fantasy: company.name_fantasy})
                 })
-                changeValueCompany(companiesData[0])
             })
             .catch(error => console.log(error))
             return
