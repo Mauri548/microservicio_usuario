@@ -14,7 +14,9 @@
                     </button>
                 </div>
 
-                <button type="button" class="mt-4 px-6 button btn" @click="goToPermissions">{{$t('inviteUser.continuar')}}</button>
+                <router-link :to="{name: 'PermissionsManagement'}" class="mt-4 px-6 button btn">
+                    {{$t('inviteUser.continuar')}}
+                </router-link>
             </form>
         </div>
 
@@ -153,19 +155,9 @@ export default {
             activeAlert.value = true
         }
 
-        /**
-         * 
-         * Redirecciona al usuario a la ventana de permisos
-         * 
-         */
-        const goToPermissions = () => {
-            router.push({name: 'PermissionsManagement'})
-        }
-
-
         return{ 
             email, name, msg_error, sending, activeAlert, deliveryStatus,
-            sendInvitation, goToPermissions, changeValue
+            sendInvitation, changeValue
         }
     }
 
