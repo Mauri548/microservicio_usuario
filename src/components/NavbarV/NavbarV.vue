@@ -7,10 +7,10 @@
                     <li v-for="lista in listas" :key="lista.nombre">
 
                         <div v-if="lista.link">
-                            <a class="menu-link item" :class="{'not-active': creating_company, 'is-active':lista.activo}" @click="activar(lista)">{{lista.nombre}}</a>
+                            <a class="menu-link" :class="{'not-active': creating_company, 'is-active':lista.activo}" @click="activar(lista)">{{lista.nombre}}</a>
                         </div>
                         <div v-else>
-                            <a class="menu-link companyOption btn-company" :class="{'not-active': creating_company}" @click="activar(lista)">
+                            <a class="menu-link companyOption btn-company" :class="{'not-active': creating_company}" @click="lista.activo = !lista.activo">
                                 <span class="column has-text-left ">{{lista.nombre}}</span>
                                 <span class="column has-text-right  icon is-small">
                                     <i  class="fas fa-chevron-down"></i>
@@ -78,7 +78,7 @@
 <script>
 
 import {ref} from '@vue/reactivity' 
-import { inject, onMounted, watch, watchEffect } from '@vue/runtime-core'
+import { inject, watchEffect } from '@vue/runtime-core'
 import { useRoute, useRouter } from 'vue-router'
 import store from '@/store'
 import i18n from '@/i18n.js'
@@ -97,18 +97,16 @@ export default {
 
     setup(){
         const router = useRouter()
-        const Lan = ref(false)
         const creating_company = ref(false)
         const isTablet = inject('isTablet')
         const active = ref(false)
 
         watchEffect(() => {
-            // store.state.active_menu_movile
             active.value = store.state.active_menu_movile
         })
         
         const listas = ref([
-                {nombre: i18n.global.local == 'en'? 'Personal Info': 'Información personal', activo: false, link: true, name_link: 'PersonalForm'},
+                {nombre: 'Personal Info', activo: false, link: true, name_link: 'PersonalForm'},
                 {nombre: 'Permissions', activo: false, link: true, name_link: 'PermissionsDashboard'},
                 {nombre: 'Company', activo: false, link: false, opc: [
                     {nombre: 'User management', activo: false, name_link: 'UserDashboard'},
@@ -123,36 +121,119 @@ export default {
             ])
         const route = useRoute()
 
-        // Funcion para el link correspondiente del navbar al recargar la página
-        // Verifica que se aya guardado el nombre de la url
-        if (route.matched[route.matched.length-1].name) {
-            // buscamos en nuesta lista de direcciones la path correspondiente
-            listas.value.forEach(element => {
-                if (element.name_link == route.matched[route.matched.length-1].name) {
+        /**
+         * 
+         * Busca la url coincidente en la lista de navegación y la activa para que se
+         * vea que el usuario esta en esa sección
+         * 
+         * @param pathName Es el valor de la url en la que se encuentra el usuario 
+         * 
+         */
+        const activeList = (pathName) => {
+            desactiveList()
+            listas.value.forEach(list => {
+                if (list.name_link == pathName) {
                     // Activamos el elemento
-                    element.activo = true
-
+                    list.activo = true
                 }
                 // En el caso de que tenga una sublista se hara lo mismo pero con la sublista
-                if (!element.link) {
-                    element.opc.forEach(item => {
-                        if (item.name_link == route.matched[route.matched.length-1].name) {
+                if (!list.link) {
+                    list.opc.forEach(sublist => {
+                        if (sublist.name_link == pathName) {
                             // Se activa la lista principal y la sublista
-                            item.activo = true
-                            element.activo = true
+                            sublist.activo = true
+                            list.activo = true
                         }
                     })
                 }
             })
         }
-  
-        // Redirige al usuario a otra vista        
+
+
+        /**
+         * 
+         * Activa el elemento de la lista seleccionada por el usuario y desactiva los demás
+         * 
+         * @param lista Elemento de la lista seleccionada por el usuario
+         * @param movile variable booleana para saber si esta en un movil o desktop
+         * 
+         */
+        const activar = (lista, movile = false) => {
+            desactiveList(lista)
+            lista.activo = !lista.activo
+            if (movile) {
+                store.commit("setActiveMenuMovile")
+            }
+            push(lista.name_link)
+        }
+
+        /**
+         * 
+         * Pone en falso todos los item de la lista menos el seleccionado
+         * 
+         * @param SelectedList lista seleccionada
+         * 
+         */
+        const desactiveList = (SelectedList = null) => {
+            listas.value.forEach(list => {
+                // Ponemos en falso todos los elementos menos el seleccionado
+                if (SelectedList != list) {
+                    list.activo = false
+                }
+                // Pone en falso los sub elementos de la lista
+                if (!list.link) {
+                    list.opc.forEach(sublist => {
+                        sublist.activo = false
+                    })
+                }
+            })
+        }
+
+        const activarSublist = (lista, sublist, movile = false) => {
+            activar(sublist, movile)
+            lista.activo = !lista.activo
+        }
+
+        const pathNameExist = (pathName) => {
+            let listName 
+            listas.value.forEach(list => {
+                if (list.name_link == pathName) {
+                    return listName = list
+                }
+                if (!list.link) {
+                    list.opc.forEach(sublist => {
+                        if (sublist.name_link == pathName) {
+                            return listName = sublist
+                        }
+                    })
+                }
+            })
+            return listName
+        }
+        
+        /**
+         *
+         * Redirigue al usuario a otra vista
+         *  
+         */    
         const push = (path) => {
             router.push({name: path})
         }
 
+        /**
+         * 
+         * Activa el elemento al recargar la página y al navegar sin hacer click en el menu
+         * 
+         */
+        watchEffect(() => {
+            let pathName = route.matched[route.matched.length-1].name
+            if (pathNameExist(pathName)) {
+                activeList(pathName)
+            }
+        })     
+
+        // Cambiamos el texto en ingles o español dependiendo de la variable i18n
         watchEffect(()=>{
-            // Cambiamos el texto en ingles o español dependiendo de la variable i18n
             listas.value[0].nombre = i18n.global.locale == 'en'? 'Personal Info': 'Información personal'
             listas.value[1].nombre = i18n.global.locale == 'en'? 'Permissions': 'Permisos'
             listas.value[2].nombre = i18n.global.locale == 'en'? 'Company': 'Empresa'
@@ -167,39 +248,9 @@ export default {
             creating_company.value = store.state.creating_company
         })
 
-        // Activa el elemento seleccionado del menu
-        const activar = (lista, movile = false) => {
-            // Recorremos la lista de elementos
-            listas.value.forEach(element => {
-                // Ponemos en falso todos los elementos menos el seleccionado
-                if (lista != element) {
-                    element.activo = false
-                }
-                // Pone en falso los sub elementos de la lista
-                if (!element.link) {
-                    element.opc.forEach(it => {
-                        it.activo = false
-                    })
-                }
-            })
-            // activamos el elementos seleccionado
-            lista.activo = !lista.activo
-            if (movile) {
-                store.commit("setActiveMenuMovile")
-            }
-            push(lista.name_link)
-        }
-
-        const activarSublist = (lista, sublist, movile = false) => {
-            activar(sublist, movile)
-            lista.activo = !lista.activo
-        }
-
         return {
-            Lan,
             creating_company,
             listas, isTablet, active,
-            push,
             activar,
             activarSublist
         }
