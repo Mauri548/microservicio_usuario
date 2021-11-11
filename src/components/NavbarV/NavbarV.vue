@@ -1,6 +1,5 @@
 <template>
     <div v-show="!isTablet" class="conteiner-nabvarV">
-
         <div>
             <aside class="menu mx-3">
                 <ul class="menu-list">
@@ -26,10 +25,8 @@
                 </ul>
             </aside>
         </div>
-
     </div>
 
-    <!-- v-show="isTablet" -->
     <div>
         <nav class="nav" :class="{'active': active}">
 
@@ -54,7 +51,7 @@
                         <a class="menu-link"  >{{lista.nombre}}</a>
                     </div>
                     <div v-else>
-                        <a class="menu-link companyOption btn-company item" :class="{'not-active': creating_company}" @click="activar(lista)">
+                        <a class="menu-link companyOption btn-company item" :class="{'not-active': creating_company}" @click="lista.activo = !lista.activo">
                             <span class="column has-text-left ">{{lista.nombre}}</span>
                             <span class="column has-text-right  icon is-small">
                                 <i  class="fas fa-chevron-down"></i>
