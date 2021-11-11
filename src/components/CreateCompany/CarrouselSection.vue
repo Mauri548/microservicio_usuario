@@ -21,11 +21,8 @@ export default {
     setup(props) {
         const carrousel = ref('')
 
-        // Hacer la misma funcion que en SelectApp pero que se pueda usar en ambas situaciones
         onMounted(() => {
             carrousel.value = document.querySelector(`.${props.carrousel}`)
-            
-            calWidthCarrusel()
         })
 
         /**
@@ -33,24 +30,16 @@ export default {
          */
         const calWidthCarrusel = () => {
             if (window.screen.width <= 768) {
-                if (props.type == 'app') {
-                    carrousel.value.style.width = `${(props.cantSection * 100)}%`
-                } else {
-                    carrousel.value.style.width = '95%'
-                }
-            } else {
-                props.size <= 3? carrousel.value.style.width = `${(props.cantSection * 100)}%` : 
-                carrousel.value.style.width = `${(props.cantSection * 100)}%`
+                return (props.type == 'app')? `${(props.cantSection * 100)}%` : '95%'
             }
+
+            return props.size <= 3? `${(props.cantSection * 100)}%` : `${(props.cantSection * 100)}%`
         }
 
         watchEffect(() => {
             if (carrousel.value) {
-                console.log('b')
-                props.size <= 3? carrousel.value.style.width = `${(props.cantSection * 100)}%` : 
-                carrousel.value.style.width = `${(props.cantSection * 100)}%`
+                carrousel.value.style.width = calWidthCarrusel()
             }
-            
         })
 
         return{
