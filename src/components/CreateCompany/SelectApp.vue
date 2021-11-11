@@ -46,10 +46,16 @@ export default {
         const cantSection = ref(0)
         const desplazamiento = ref(0)
         const appSelect = ref(null)
+        const app = ref('')
+
+        onMounted(() => {
+            app.value = document.querySelectorAll('.img-app')
+        })
 
         watchEffect(() => {
-            // Calculamos la cantidad de secciones que tendra el carrousel
+            props.apps
 
+            // Calculamos la cantidad de secciones que tendra el carrousel
             if ((props.apps.length / 3) > 0) {
                 cantSection.value = Math.trunc(props.apps.length / 3) + 1
             } else if ((props.apps.length / 3) == 0) {
@@ -58,9 +64,13 @@ export default {
                 cantSection.value = Math.trunc(props.apps.length / 3) 
             }
             // Calculamos el desplazamiento que hara por seccion
-            // desplazamiento.value = -(100/cantSection.value).toFixed(1)
-            desplazamiento.value = -33
+            desplazamiento.value = -(100/cantSection.value).toFixed(1)
 
+            if (app.value) {
+                app.value.forEach(item => {
+                    item.style.width = `calc(${33.3}% / ${cantSection.value})`
+                })
+            }
         })
  
         const selectApp = (e) => {
@@ -89,8 +99,6 @@ export default {
 }
 
 .carrousel .conteiner-app {
-    /* width: 300%; */
-    /* width: 500%; */
     width: 100%;
     display: flex;
     flex-flow: row nowrap;

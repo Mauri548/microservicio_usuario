@@ -85,7 +85,7 @@ export default {
                 // Si el valor es igual a 0 ocultamos la flecha de prev y si es igual al valor maximo oculamos la flecha next
                 positionApp.value == 0 ? arrowPrev.style.display = 'none' : arrowPrev.style.display = 'flex'
                 // positionApp.value == props.cantSection -1 ? arrowNext.style.display = 'none' : arrowNext.style.display = 'flex'
-                if (positionApp.value == props.cantSection - 2 || props.cantSection == 0) {
+                if (positionApp.value == props.cantSection - 1 || props.cantSection == 0) {
                     arrowNext.style.display = 'none'
                 } else {
                     arrowNext.style.display = 'flex'
@@ -93,7 +93,7 @@ export default {
             } else {
                 // Si el valor es igual a 0 ocultamos la flecha de prev y si es igual al valor maximo oculamos la flecha next
                 positionLic.value == 0 ? arrowPrev.style.display = 'none' : arrowPrev.style.display = 'flex'
-                positionLic.value == props.cantSection -2 ? arrowNext.style.display = 'none' : arrowNext.style.display = 'flex'
+                positionLic.value == props.cantSection -1 ? arrowNext.style.display = 'none' : arrowNext.style.display = 'flex'
             }
 
         }

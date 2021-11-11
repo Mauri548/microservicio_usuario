@@ -32,22 +32,18 @@ export default {
             // Calculamos el width del carrousel dependiendo del tamaño del dispositivo
             if (window.screen.width <= 768) {
                 if (props.type == 'app') {
-                    carrousel.value.style.width = `${(cantSection * 100)}%`
+                    carrousel.value.style.width = `${(cantSection.value * 100)}%`
                 } else {
                     carrousel.value.style.width = '95%'
                 }
             } else {
-                props.size <= 3? carrousel.value.style.width = `${(cantSection * 100)}%` : 
-                carrousel.value.style.width = `${(props.size / 3) * 100}%`
+                props.size <= 3? carrousel.value.style.width = `${(cantSection.value * 100)}%` : 
+                carrousel.value.style.width = `${(cantSection.value * 100)}%`
             }
-            
         })
 
         watchEffect(() => {
             if (carrousel.value) {
-                props.size <= 3? carrousel.value.style.width = `${(cantSection * 100)}%` : 
-                carrousel.value.style.width = `${(props.size / 3) * 100}%`
-
                 if (props.size != 0 ) {
                     if ((props.size % 3) > 0) {
                         cantSection.value = Math.trunc(props.size / 3) + 1
@@ -57,6 +53,9 @@ export default {
                 } else {
                     cantSection.value = 1
                 }
+
+                props.size <= 3? carrousel.value.style.width = `${(cantSection * 100)}%` : 
+                carrousel.value.style.width = `${(cantSection.value * 100)}%`
             }
             
         })
