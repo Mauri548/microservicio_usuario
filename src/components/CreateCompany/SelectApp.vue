@@ -62,17 +62,17 @@ export default {
          */
         const calcCantSection = (c) => {
             cant.value = c
-            console.log(props.apps.length / c)
+            let aux = 0
             if ((props.apps.length / c) > 0) {
-                cantSection.value = Math.trunc(props.apps.length / c)
-                if (props.apps.length % c != 0) {
-                    cantSection.value++
-                }
-            } else if ((props.apps.length / c) == 0) {
-                cantSection.value = 1
-            } else {
-                cantSection.value = Math.trunc(props.apps.length / c) 
-            }  
+                aux = Math.trunc(props.apps.length / c)
+                return props.apps.length % c != 0? aux+1 : aux
+            }
+
+            if ((props.apps.length / c) == 0) {
+                return 1
+            }
+
+            return Math.trunc(props.apps.length / c)
         }
 
         /**
@@ -85,11 +85,10 @@ export default {
         watchEffect(() => {
             props.apps
 
-            window.screen.width > 425? calcCantSection(3) : calcCantSection(2)
+            cantSection.value = window.screen.width > 425? calcCantSection(3) : calcCantSection(2)
 
             desplazamiento.value = calcDisplacement()
 
-            console.log(cantSection.value)
             if (app.value) {
                 app.value.forEach(item => {
                     item.style.width = `calc((${100}%/${cant.value}) / ${cantSection.value})`
