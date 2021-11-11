@@ -96,6 +96,11 @@ export default {
   background: #005395;
 }
 
+.row-table:hover {
+  cursor: pointer;
+  background-color: #82c1f12b;
+}
+
 @media (max-width: 1024px) {
   .conteiner-tablero {
     width: 98%;

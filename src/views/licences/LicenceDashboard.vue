@@ -438,10 +438,7 @@ export default {
 </script>
 
 <style scoped>
-    .row-table:hover {
-        cursor: pointer;
-        background-color: #82c1f12b;
-    }
+    
     .modal-action:hover {
         cursor: default;
     }

@@ -10,7 +10,7 @@
         <div class="body-tablero px-4">
             <!-- Componente de Tablero -->
             <Board :datas="apps" :titles="titles">
-                <tr class="has-text-centered" v-for="app in apps" :key="app.id">
+                <tr class="has-text-centered row-table" v-for="app in apps" :key="app.id">
                     <th @click="actionModal(app)" >{{app.id}}</th>
                     <td @click="actionModal(app)">{{app.nombre}}</td>
                     <td @click="actionModal(app)">

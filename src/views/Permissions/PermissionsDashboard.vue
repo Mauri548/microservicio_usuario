@@ -12,7 +12,7 @@
         
         <div class="body-tablero px-4">
             <Board :datas="permisos" :titles="titles" >
-                <tr class="has-text-centered" v-for="data in permisos" :key="data.id">
+                <tr class="has-text-centered row-table" v-for="data in permisos" :key="data.id">
                     <th @click="actionModal(data)">{{data.id}}</th>
                     <td @click="actionModal(data)">{{data.app.name}}</td>
                     <td @click="actionModal(data)">{{data.key}}</td>
