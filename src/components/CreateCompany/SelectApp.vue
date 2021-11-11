@@ -12,7 +12,9 @@
             <Arrow arrow="arrow-next" icon="fa-chevron-right" conteiner="conteiner-app" punto="app"
             :cantSection="cantSection" :desplazamiento="desplazamiento" />
 
-            <CarrouselSection :size="apps.length" carrousel="conteiner-app" type="app" :pos="0"/>
+            <CarrouselSection :size="apps.length" carrousel="conteiner-app" 
+                type="app" :pos="0" :cantSection="cantSection"
+            />
             
         </div>
         <div v-if="appSelect" class="description-app">
@@ -47,30 +49,53 @@ export default {
         const desplazamiento = ref(0)
         const appSelect = ref(null)
         const app = ref('')
+        const cant = ref(0)
 
         onMounted(() => {
             app.value = document.querySelectorAll('.img-app')
         })
 
+        /**
+         * Calcula la cantidad de secciones del carrusel
+         * 
+         * @param c cantidad de elementos por secciones que va a tener el carrusel
+         */
+        const calcCantSection = (c) => {
+            cant.value = c
+            console.log(props.apps.length / c)
+            if ((props.apps.length / c) > 0) {
+                cantSection.value = Math.trunc(props.apps.length / c)
+                if (props.apps.length % c != 0) {
+                    cantSection.value++
+                }
+            } else if ((props.apps.length / c) == 0) {
+                cantSection.value = 1
+            } else {
+                cantSection.value = Math.trunc(props.apps.length / c) 
+            }  
+        }
+
+        /**
+         * Calcula la cantidad de desplazamiento que tiene que hacer el carrusel
+         */
+        const calcDisplacement = () => {
+            return -(100/cantSection.value).toFixed(1)
+        }
+
         watchEffect(() => {
             props.apps
 
-            // Calculamos la cantidad de secciones que tendra el carrousel
-            if ((props.apps.length / 3) > 0) {
-                cantSection.value = Math.trunc(props.apps.length / 3) + 1
-            } else if ((props.apps.length / 3) == 0) {
-                cantSection.value = 1
-            } else {
-                cantSection.value = Math.trunc(props.apps.length / 3) 
-            }
-            // Calculamos el desplazamiento que hara por seccion
-            desplazamiento.value = -(100/cantSection.value).toFixed(1)
+            window.screen.width > 425? calcCantSection(3) : calcCantSection(2)
 
+            desplazamiento.value = calcDisplacement()
+
+            console.log(cantSection.value)
             if (app.value) {
                 app.value.forEach(item => {
-                    item.style.width = `calc(${33.3}% / ${cantSection.value})`
+                    item.style.width = `calc((${100}%/${cant.value}) / ${cantSection.value})`
                 })
             }
+
         })
  
         const selectApp = (e) => {

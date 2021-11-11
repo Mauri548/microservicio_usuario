@@ -14,54 +14,46 @@ export default {
         size: Number,
         carrousel: String,
         type: String,
-        pos: Number
+        pos: Number,
+        cantSection: Number
     },
 
     setup(props) {
-        let cantSection = ref(null)
-
         const carrousel = ref('')
-
-
 
         // Hacer la misma funcion que en SelectApp pero que se pueda usar en ambas situaciones
         onMounted(() => {
-            // const carrousel = document.querySelector(`.${props.carrousel}`)
             carrousel.value = document.querySelector(`.${props.carrousel}`)
             
-            // Calculamos el width del carrousel dependiendo del tamaño del dispositivo
+            calWidthCarrusel()
+        })
+
+        /**
+         * Calcula el ancho del carrusel dependiendo del dispositivo
+         */
+        const calWidthCarrusel = () => {
             if (window.screen.width <= 768) {
                 if (props.type == 'app') {
-                    carrousel.value.style.width = `${(cantSection.value * 100)}%`
+                    carrousel.value.style.width = `${(props.cantSection * 100)}%`
                 } else {
                     carrousel.value.style.width = '95%'
                 }
             } else {
-                props.size <= 3? carrousel.value.style.width = `${(cantSection.value * 100)}%` : 
-                carrousel.value.style.width = `${(cantSection.value * 100)}%`
+                props.size <= 3? carrousel.value.style.width = `${(props.cantSection * 100)}%` : 
+                carrousel.value.style.width = `${(props.cantSection * 100)}%`
             }
-        })
+        }
 
         watchEffect(() => {
             if (carrousel.value) {
-                if (props.size != 0 ) {
-                    if ((props.size % 3) > 0) {
-                        cantSection.value = Math.trunc(props.size / 3) + 1
-                    } else {
-                        cantSection.value = Math.trunc(props.size / 3) 
-                    }
-                } else {
-                    cantSection.value = 1
-                }
-
-                props.size <= 3? carrousel.value.style.width = `${(cantSection * 100)}%` : 
-                carrousel.value.style.width = `${(cantSection.value * 100)}%`
+                console.log('b')
+                props.size <= 3? carrousel.value.style.width = `${(props.cantSection * 100)}%` : 
+                carrousel.value.style.width = `${(props.cantSection * 100)}%`
             }
             
         })
 
         return{
-            cantSection
         }
     }
 
