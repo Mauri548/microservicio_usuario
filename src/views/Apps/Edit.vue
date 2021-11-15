@@ -202,9 +202,9 @@ export default {
                /*  authorization: `Bearer ${ localStorage.getItem('user_token') }` */
             })
             .then((data) => {
-                router.push({name: 'AppDashboard'})
                 let accion = "edicionApp"
                 store.commit('verificar_carga',accion)
+                router.push({name: 'AppDashboard'})
             }).catch(error => {
                 console.log(error.response);
             })
