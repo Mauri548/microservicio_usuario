@@ -95,7 +95,6 @@ export default {
 
         const Activar = () => {
             activo.value = !activo.value
-            console.log(activo.value)
         }
         const volver = () => {
             router.push({name: 'AppDashboard'})
@@ -224,18 +223,6 @@ export default {
                         logo
                         observation
                         visible
-                        created_at
-                        updated_at
-                        deleted_at
-                        licenses {
-                            id
-                            name
-                            price_arg
-                            price_usd
-                            deleted_at
-                            created_at
-                            updated_at
-                        }
                     }
                 }
             `,
