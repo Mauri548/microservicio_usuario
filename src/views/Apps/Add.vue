@@ -68,7 +68,12 @@
                         <button class=" button  has-text-white has-background-danger " type="button" @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
                     </div>
                     <div class="column   pl-0  ">
-                        <button class=" button has-text-white button1 " type="button" @click="validar" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
+                        <button 
+                            class="button has-text-white button1 has-text-weight-bold fondo-crenein"
+                            :class="{'is-loading':loading}"
+                            type="button" @click="validar" >
+                            {{$t('app.guardar')}}
+                        </button>
                     </div>     
                 </div>
             </div>
@@ -175,13 +180,11 @@ export default {
        /*  const url_storage = store.state.url_storage */
         const path = ref('');
         const msg_error = ref({ name: ''})
+        const loading = ref(false)
 
-        const validar = () => {
+        const validar = async () => {
+            loading.value = true
 
-          /*console.log(nombre.value)
-            console.log(observation.value)
-            console.log(logo.value)
-            console.log(visible.value) */
             msg_error.value.name = ''
         
             if (nombre.value == ""){
@@ -192,13 +195,16 @@ export default {
                     msg_error.value.name = 'El nombre es requerido'
                 }
                 
-            } 
+            }
+
             if (msg_error.value.name == ''){
-                registrarApp()
+                await registrarApp()
             } else {
                 console.log('no paso')
                 // Saltar los errores
-            } 
+            }
+            loading.value = false
+
 
         }
 
@@ -232,7 +238,6 @@ export default {
         }
 
         const SubirImage = () => {
-            // console.log(imagen.value)
             subiendo_imagen.value = true
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */ `
@@ -246,7 +251,6 @@ export default {
                     authorization: `Bearer ${ localStorage.getItem('user_token') }`
                 }
             ).then((data) => {
-                // console.log(data.data.uploadFile)
                 path.value = data.data.uploadFile
                 nuevo_app.value = true
                 subiendo_imagen.value = false
@@ -260,10 +264,10 @@ export default {
             })
         }
 
-        const registrarApp = () => {
-            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            // Estructura FetchQL(url, query, variable, opcions)
-            client.rawRequest(/* GraphQL */ `
+        const registrarApp = async () => {
+            
+            const client = new GraphQLClient(endpoint)
+            await client.rawRequest(/* GraphQL */ `
             mutation($company_user_id:ID!,$observation:String, $name:String!,$logo:String,$visible:Visible!){
               		createsUse_app(company_user_id:$company_user_id, input:{
                     name: $name,
@@ -317,7 +321,8 @@ export default {
             isMobile,
             activo,
             Activar,
-            endpoint
+            endpoint,
+            loading
          }
     }
 }

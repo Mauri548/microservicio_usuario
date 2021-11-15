@@ -46,7 +46,10 @@
 
             <div class="column is-flex is-grouped is-justify-content-space-between">
                 <button class="button button-cancel has-text-white has-background-danger" type="button" @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
-                <button class="button has-text-white button-confirm " type="button" @click="validar" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
+                <button class="button has-text-white button-confirm has-text-weight-bold fondo-crenein" 
+                    type="button" @click="validar" :class="{'is-loading': loading}">
+                    {{$t('app.guardar')}}
+                </button>
             </div>
             
         </form>
@@ -91,6 +94,7 @@ export default {
         const subiendo_imagen = ref(false)
         const path = ref('');
         const msg_error = ref({ name: ''})
+        const loading = ref(false)
 
 
         const Activar = () => {
@@ -100,7 +104,8 @@ export default {
             router.push({name: 'AppDashboard'})
         }
 
-        const validar = () => {
+        const validar = async () => {
+            loading.value = true
 
             msg_error.value.name = ''
         
@@ -114,11 +119,12 @@ export default {
                 
             } 
             if (msg_error.value.name == ''){
-                modificarApp()
+                await modificarApp()
             } else {
                 console.log('no paso')
                 // Saltar los errores
-            } 
+            }
+            loading.value = false
 
         }
 
@@ -171,10 +177,10 @@ export default {
             })
         }
 
-        const modificarApp = () => {
+        const modificarApp = async () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             // Estructura FetchQL(url, query, variable, opcions)
-            client.rawRequest(/* GraphQL */ `
+            await client.rawRequest(/* GraphQL */ `
             mutation($company_user_id:ID!,$id:ID!,$observation:String, $name:String!,$logo:String,$visible:Visible!){
               	modifiesUse_app (company_user_id:$company_user_id,id: $id, input: {
                     name: $name,
@@ -270,8 +276,9 @@ export default {
             volver,
             isMobile,
             activo,
-            Activar
-         }
+            Activar,
+            loading
+        }
     }
 }
 </script>
