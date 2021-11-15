@@ -53,9 +53,18 @@
                     <CampoForm type="number" :place="$i18n.locale=='en'? 'Price ARG': 'Precio ARG'" v-model="price_arg" :error="msg_error.price_arg" />
                     <CampoForm type="number" :place="$i18n.locale=='en'? 'Price USD': 'Precio USD'" v-model="price_usd" :error="msg_error.price_usd" />
                 
-                    <div class="column p-0 has-text-centered" >
-                        <button type="button" class="button has-background-danger has-text-white mr-2"  style="font-weight:bold;" @click="ModalAdd" >{{$t('permisos.cancel')}}</button>
-                        <button type="button" class="button  has-text-white  ml-2" style="background-color:#005395; font-weight:bold;" @click="register">{{$t('permisos.guardar')}}</button>
+                    <div class="column p-0 has-text-centered">
+                        <button type="button" 
+                            class="button has-background-danger has-text-white mr-2 has-text-weight-bold"
+                            @click="ModalAdd">
+                            {{$t('permisos.cancel')}}
+                        </button>
+                        <button type="button" 
+                            class="button has-text-white ml-2 fondo-crenein has-text-weight-bold"
+                            :class="{'is-loading': loading_form}"
+                            @click="register">
+                            {{$t('permisos.guardar')}}
+                        </button>
                     </div>
                 </form>
             </section>
@@ -125,6 +134,7 @@ export default {
         const succesLoad = ref(false)
         const activeAlert = ref(false)
         const loading = ref(false)
+        const loading_form = ref(false)
         
         /**
          * 
@@ -219,19 +229,21 @@ export default {
             .catch(error => console.log(error))
         }
 
-        const register = () => {
-            succesLoad.value = false
+        const register = async () => {
+            succesLoad.value = true
+            loading_form.value = true
             document.getElementById('form-create-app').addEventListener('submit', function(e) {
                 e.preventDefault()
             })
             resetErrorMessage(msg_error.value)
 
             if (isValid()) {
-                typeAction.value == 'licence.agregar' ? createLicence() : editLicence()
+                typeAction.value == 'licence.agregar' ? await createLicence() : await editLicence()
             } else {
                 console.log('no valido')
             }
 
+            loading_form.value = false
         }
 
         /**
@@ -277,9 +289,9 @@ export default {
         }
 
         // Funcion para crear una nueva licencia
-        const createLicence = () => {
+        const createLicence = async () => {
             const client = new GraphQLClient(endpoint)
-            client.rawRequest(/* GraphQL */ `
+            await client.rawRequest(/* GraphQL */ `
             mutation($company_user_id:ID!,$app_id:Int!, $name:String!, $price_arg:Float, $price_usd: Float) {
                 createsLic_license(company_user_id:$company_user_id,input: {
                     app_id: $app_id,
@@ -316,9 +328,9 @@ export default {
             })
         }
 
-        const editLicence = () => {
+        const editLicence = async () => {
             const client = new GraphQLClient(endpoint)
-            client.rawRequest(/* GraphQL */ `
+            await client.rawRequest(/* GraphQL */ `
             mutation($company_user_id:ID!,$id: ID!, $app_id: Int, $name: String, $price_arg: Float, $price_usd: Float) {
                 modifiesLic_license(company_user_id:$company_user_id,id: $id, input: {
                     name: $name,
@@ -431,6 +443,7 @@ export default {
             typeAction,
             succesLoad,
             activeAlert,
+            loading_form
         }
     }
 
