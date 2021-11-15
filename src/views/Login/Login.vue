@@ -1,14 +1,15 @@
 <template>
-    <transition name="alert-error">
+    <!-- <transition name="alert-error">
         <div v-show="registerError" class="w-100 has-background-danger p-4 has-text-centered">
             <span class="has-text-white is-size-5">Usuario o contraseña incorrecta</span>
         </div>    
-    </transition>
+    </transition> -->
+    <AlertErrorLogin v-show="registerError" />
 
     <div class="column  is-mobile  container mt-2 mb-2 cuadro-form" >
 
         <div class="column " >
-            <img src="../assets/logo_crenein.png" width="250" height="200" alt="">
+            <img src="../../assets/logo_crenein.png" width="250" height="200" alt="">
         </div>
     
         <div class="column ">
@@ -61,18 +62,20 @@
 <script>
 
 import { useRouter } from 'vue-router'
-import CampoForm from '../components/CampoForm.vue'
-import CampoFormPassword from '../components/CampoFormPass.vue'
+import CampoForm from '../../components/CampoForm.vue'
+import CampoFormPassword from '../../components/CampoFormPass.vue'
 import {ref} from '@vue/reactivity'
-import FetchMe from '../helper/FetchMe'
+import FetchMe from '../../helper/FetchMe'
 import { GraphQLClient } from 'graphql-request'
 import store from '@/store'
+import AlertErrorLogin from './AlertErrorLogin.vue'
 
 export default {
     name:'Login',
     components:{
         CampoForm,
-        CampoFormPassword
+        CampoFormPassword,
+        AlertErrorLogin,
     },
     setup(){
         const email = ref('')
@@ -81,9 +84,6 @@ export default {
         const endpoint = store.state.url_backend
         const registerError = ref(false)
         const isLoading = ref(false)
-
-     
-
 
         const Login = () => {
             isLoading.value = true
@@ -180,7 +180,7 @@ export default {
 }
 
 /* modalAlert transitions */
-.alert-error-leave-to {
+/* .alert-error-leave-to {
     opacity: 0;
     transform: translateY(-90px)
 }
@@ -199,6 +199,6 @@ export default {
     80% {transform: translateX(4px);}
     90% {transform: translateX(-4px);}
     100% {transform: translateX(0px);}
-}
+} */
 
 </style>
