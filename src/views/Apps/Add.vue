@@ -188,30 +188,19 @@ export default {
             msg_error.value.name = ''
         
             if (nombre.value == ""){
-                if(i18n.global.locale == 'en'){
-                    msg_error.value.name = 'Name is required'
-                }
-                if(i18n.global.locale == 'es'){
-                    msg_error.value.name = 'El nombre es requerido'
-                }
-                
+                msg_error.value.name = i18n.global.locale == 'en'? 
+                    'Name is required' : 'El nombre es requerido' 
             }
 
             if (msg_error.value.name == ''){
                 await registrarApp()
-            } else {
-                console.log('no paso')
-                // Saltar los errores
             }
             loading.value = false
-
-
         }
 
 
         const Activar = () => {
             activo.value = !activo.value
-            console.log(activo.value)
         }
         const volver = () => {
             router.push({name: 'AppDashboard'}) 
