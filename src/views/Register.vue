@@ -200,6 +200,7 @@ export default {
                 // Hablar con Marce de si se puede hacer eso o si tarda demasiado
                 setTimeout(() => {
                     isInvited(id.value)
+                    entering.value
                 },2000)
             } else {
                 entering.value
