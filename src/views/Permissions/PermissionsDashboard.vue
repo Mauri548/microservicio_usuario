@@ -30,6 +30,7 @@
             </Board>
 
             <Loading v-show="loadingTable"/>
+            <NoFoundData v-if="!loadingTable && permisos.length == 0" />
 
         </div>
         <Pagination/>
@@ -171,6 +172,8 @@ import {GraphQLClient} from 'graphql-request';
 import store from '@/store';
 import CampoForm from '../../components/CampoForm.vue'
 import Loading from '../../components/loading.vue'
+import NoFoundData from '../../components/NoFoundData.vue'
+
 
 export default {
     components: {
@@ -185,6 +188,7 @@ export default {
         ModalAlert,
         CampoForm,
         Loading,
+        NoFoundData,
     },
 
     setup() {
@@ -221,60 +225,53 @@ export default {
             automatic.value = data.automatic
         }
 
-        /**
-         * 
-         * al crear un permit el nombre de la aplicacion se pone en blanco
-         * los datos no se borran cuando voy de editar a table y luego a agregar
-         * 
-         */
-
         const traerPermisos = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-                client.rawRequest(/* GraphQL */ `
-                query {
-                        permits(first:999,page:1) {
-                            paginatorInfo{
-                                count
-                                currentPage
-                                firstItem
-                                hasMorePages
-                                lastItem
-                                lastPage
-                                perPage
-                                total
-                            }	
-                        data{
+            client.rawRequest(/* GraphQL */ `
+            query {
+                permits(first:999,page:1) {
+                    paginatorInfo{
+                        count
+                        currentPage
+                        firstItem
+                        hasMorePages
+                        lastItem
+                        lastPage
+                        perPage
+                        total
+                    }	
+                    data{
+                        id
+                        key
+                        detail
+                        public
+                        automatic
+                        app{
                             id
-                            key
-                            detail
-                            public
-                            automatic
-                            app{
-                                id
-                                name
-                            }
+                            name
                         }
                     }
-                }`,
-                {
-                    /* page: parseInt(route.params.page),
-                    first: mostrar_cantidad.value */
-                })
-                .then((data) => {
-                    permisos.value = []
-                    data.data.permits.data.forEach(element => {
-                        permisos.value.push({
-                            id:element.id, key: element.key, detail: element.detail,
-                            app:{ id: element.app.id, name:element.app.name },
-                            public: element.public, automatic: element.automatic,
-                            activo: false, modalDelete: false
-                        })
+                }
+            }`,
+            {
+                /* page: parseInt(route.params.page),
+                first: mostrar_cantidad.value */
+            })
+            .then((data) => {
+                permisos.value = []
+                data.data.permits.data.forEach(element => {
+                    permisos.value.push({
+                        id:element.id, key: element.key, detail: element.detail,
+                        app:{ id: element.app.id, name:element.app.name },
+                        public: element.public, automatic: element.automatic,
+                        activo: false, modalDelete: false
                     })
-                    loadingTable.value = false
-                }).catch(error => {
-                    console.log(error.response)
-                    loadingTable.value = false
                 })
+                loadingTable.value = false
+            }).catch(error => {
+                console.log(error.response)
+                loadingTable.value = false
+            })
         }
 
         const traerApps = () => {
