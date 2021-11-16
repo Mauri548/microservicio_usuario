@@ -33,6 +33,7 @@
             </Board>
 
             <Loading v-show="loading"/>
+            <NoFoundData v-if="!loading && licenses.length == 0" />
         </div>
         <Pagination/>
     </div>
@@ -101,6 +102,7 @@ import { GraphQLClient } from 'graphql-request'
 import resetErrorMessage from '../../helper/resetErrorMessage'
 import isEmpty from '../../helper/FieldIsEmpty'
 import Loading from '../../components/loading.vue'
+import NoFoundData from '../../components/NoFoundData.vue'
 
 
 export default {
@@ -115,6 +117,7 @@ export default {
         AddLicence,
         CampoForm,
         Loading,
+        NoFoundData
     },
 
     setup() {
