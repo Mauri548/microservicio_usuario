@@ -31,6 +31,7 @@
             </Board>
 
             <Loading v-show="loading"/>
+            <NoFoundData v-if="!loading && subscripciones.length == 0" />
         </div>
 
         <Pagination/>
@@ -57,6 +58,7 @@ import i18n from '@/i18n.js'
 import {GraphQLClient} from 'graphql-request';
 import { useRouter } from 'vue-router'
 import Loading from '../../components/loading.vue'
+import NoFoundData from '../../components/NoFoundData.vue'
 
 export default {
     components: {
@@ -68,6 +70,7 @@ export default {
         ActionModal,
         ModalAlert,
         Loading,
+        NoFoundData
     },
     created(){
         this.comprobar_carga()
