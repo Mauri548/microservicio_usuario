@@ -25,6 +25,7 @@
             </Board>
 
             <Loading v-show="loading"/>
+            <NoFoundData v-if="!loading && invitaciones.length == 0" />
         </div>
 
         <Pagination/>
@@ -44,6 +45,7 @@ import {  watch, watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js' 
 import {GraphQLClient, request as fetchGQL} from 'graphql-request';
 import Loading from '../../components/loading.vue'
+import NoFoundData from '../../components/NoFoundData.vue'
 
 export default {
     components: {
@@ -53,7 +55,8 @@ export default {
         Pagination,
         Modal,
         ActionModal,
-        Loading
+        Loading,
+        NoFoundData
     },
 
     setup () {
