@@ -45,6 +45,9 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             pagination:{
                 al:'al',
                 de:'de',
+            },
+            body: {
+                emptyBoard: 'No se encontraton datos'
             }
         },
         modal:{
@@ -197,6 +200,9 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             pagination:{
                 al:'to',
                 de:'of',
+            },
+            body: {
+                emptyBoard: 'No data found'
             }
         },
         modal:{
