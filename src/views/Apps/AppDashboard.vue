@@ -23,6 +23,7 @@
             </Board>
 
             <Loading v-show="loading"/>
+            <NoFoundData v-if="!loading && apps.length == 0" />
         </div>
    
         <Pagination/>
@@ -49,6 +50,7 @@ import i18n from '@/i18n.js'
 import {GraphQLClient, request as fetchGQL} from 'graphql-request';
 import { useRouter } from 'vue-router';
 import Loading from '../../components/loading.vue'
+import NoFoundData from '../../components/NoFoundData.vue'
 
 
 export default {
@@ -61,6 +63,7 @@ export default {
         ActionModal,
         ModalAlert,
         Loading,
+        NoFoundData,
     },
     created(){
         this.comprobar_carga()
@@ -117,7 +120,6 @@ export default {
             })
             .then((data) => {
                 apps.value = []
-                // element.logo
                 data.data.apps.data.forEach(element => {
                     apps.value.push({id:element.id, nombre: element.name, logo: ispb, observacion:element.observation ,activo: false, modalDelete: false})
                 })
