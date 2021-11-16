@@ -52,7 +52,9 @@
                         </div>
 
                         <div class="column is-flex is-justify-content-flex-end px-0">
-                            <button class="button btn-crenein" :class="{'is-loading': isLoading}" @click="savePermission(data.id)">Guardar cambios</button>
+                            <Button :loading="isLoading" @click="savePermission(data.id)">
+                                {{$t('permisos.guardar')}}
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -64,16 +66,17 @@
 <script>
 import { ref } from '@vue/reactivity'
 import Searcher from '../Board/Searcher.vue'
-import ButtonIcon from '../Buttons/ButtonIcon.vue'
 import SelectPermission from './SelectPermission.vue'
 import Loading from '../loading.vue'
+import Button from '../Buttons/Button.vue'
+
 export default {
     name: 'ActionPermission',
     components: {
         Searcher,
-        ButtonIcon,
         SelectPermission,
-        Loading
+        Loading,
+        Button,
     },
     props: ['data','isLoading','isLoadingTable'],
     emits: ['onActivePermissionApp',

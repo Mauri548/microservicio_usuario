@@ -45,11 +45,12 @@
             </div>
 
             <div class="column is-flex is-grouped is-justify-content-space-between">
-                <button class="button button-cancel has-text-white has-background-danger" type="button" @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
-                <button class="button has-text-white button-confirm has-text-weight-bold fondo-crenein" 
-                    type="button" @click="validar" :class="{'is-loading': loading}">
+                <Button class="button-cancel has-background-danger" @click="volver">
+                    {{$t('app.cancel')}}
+                </Button>
+                <Button class="button-confirm" :loading="loading" @click="validar">
                     {{$t('app.guardar')}}
-                </button>
+                </Button>
             </div>
             
         </form>
@@ -61,17 +62,17 @@
 import { useRouter,useRoute } from 'vue-router';
 import CampoForm from '../../components/CampoForm.vue'
 import { inject } from '@vue/runtime-core'
-/* import Action from '../../components/Modals/ActionsModal.vue' */
 import {ref} from '@vue/reactivity'
 import store from '@/store';
 import { GraphQLClient } from 'graphql-request'
 import i18n from '@/i18n.js'
+import Button from '../../components/Buttons/Button.vue'
 
 export default {
     name:'EditApp',
       components: {
         CampoForm,
-       
+        Button,
     }, 
     created(){
         this.traerApp()

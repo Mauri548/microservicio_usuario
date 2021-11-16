@@ -37,10 +37,10 @@
                 </div>      
 
                 <div class="column has-text-centered">
-                    <button type="button" @click="validate" class="button button2 has-text-white" 
-                        style="font-weight:5px;" :class="{'is-loading': isLoading}"
-                    >Login
-                    </button>
+                    <Button class="button2" :loading="isLoading" @click="validate">
+                        Iniciar sesion
+                    </Button>
+
                     
                     <router-link :to="{name: 'RecoverPass1'}" class="blue-crenein has-text-weight-bold">
                         ¿Olvidaste tu contraseña?
@@ -80,6 +80,7 @@ import FetchMe from '../../helper/FetchMe'
 import { GraphQLClient } from 'graphql-request'
 import store from '@/store'
 import AlertErrorLogin from './AlertErrorLogin.vue'
+import Button from '../../components/Buttons/Button.vue'
 
 export default {
     name:'Login',
@@ -87,6 +88,7 @@ export default {
         CampoForm,
         CampoFormPassword,
         AlertErrorLogin,
+        Button,
     },
     setup(){
         const email = ref('')

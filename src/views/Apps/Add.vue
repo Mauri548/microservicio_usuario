@@ -62,18 +62,18 @@
                 </div>
             </div>
             
-            <div class="column ">
-                <div class="columns  ">
-                    <div class="column  is-flex-grow-0">
-                        <button class=" button  has-text-white has-background-danger " type="button" @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
+            <div class="column">
+                <div class="columns">
+                    <div class="column is-flex-grow-0">
+                        <Button class="has-background-danger" @click="volver">
+                            {{$t('app.cancel')}}
+                        </Button>
                     </div>
-                    <div class="column   pl-0  ">
-                        <button 
-                            class="button has-text-white button1 has-text-weight-bold fondo-crenein"
-                            :class="{'is-loading':loading}"
-                            type="button" @click="validar" >
+
+                    <div class="column pl-0">
+                        <Button :loading="loading" class="w-100" @click="validar">
                             {{$t('app.guardar')}}
-                        </button>
+                        </Button>
                     </div>     
                 </div>
             </div>
@@ -136,10 +136,14 @@
                 </div>
             </div>
             <div class="column">
-                <button class=" button has-text-white button1 " type="button" @click="validar" style="background-color:#005395; font-weight:bold;">{{$t('app.guardar')}}</button>
+                <Button class="w-100" @click="validar">
+                    {{$t('app.guardar')}}
+                </Button>
             </div>  
-            <div class="column">
-                <button class="button  button1 has-text-white has-background-danger " type="button" @click="volver" style="font-weight:bold;">{{$t('app.cancel')}}</button>
+            <div class="column py-0">
+                <Button class="w-100 has-background-danger" @click="volver">
+                    {{$t('app.cancel')}}
+                </Button>
             </div>
      <!--    </div>       -->        
         </form>
@@ -151,17 +155,18 @@
 <script>
 import CampoForm from '../../components/CampoForm.vue'
 import { inject } from '@vue/runtime-core'
-/* import Action from '../../components/Modals/ActionsModal.vue' */
 import {ref} from '@vue/reactivity'
 import { useRouter } from 'vue-router';
 import i18n from '@/i18n.js'
 import {GraphQLClient, request as fetchGQL} from 'graphql-request';
 import store from '@/store';
+import Button from '../../components/Buttons/Button.vue'
+
 export default {
     name:'AddApp',
     components: {
         CampoForm,
-       
+        Button,
     }, 
     setup(){
         const endpoint = store.state.url_backend

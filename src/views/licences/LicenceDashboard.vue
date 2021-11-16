@@ -55,17 +55,14 @@
                     <CampoForm type="number" :place="$i18n.locale=='en'? 'Price USD': 'Precio USD'" v-model="price_usd" :error="msg_error.price_usd" />
                 
                     <div class="column p-0 has-text-centered">
-                        <button type="button" 
-                            class="button has-background-danger has-text-white mr-2 has-text-weight-bold"
+                        <Button class="has-background-danger mr-2"
                             @click="ModalAdd">
                             {{$t('permisos.cancel')}}
-                        </button>
-                        <button type="button" 
-                            class="button has-text-white ml-2 fondo-crenein has-text-weight-bold"
-                            :class="{'is-loading': loading_form}"
+                        </Button>
+                        <Button :loading="loading_form" class="ml-2"
                             @click="register">
                             {{$t('permisos.guardar')}}
-                        </button>
+                        </Button>
                     </div>
                 </form>
             </section>
@@ -103,6 +100,7 @@ import resetErrorMessage from '../../helper/resetErrorMessage'
 import isEmpty from '../../helper/FieldIsEmpty'
 import Loading from '../../components/loading.vue'
 import NoFoundData from '../../components/NoFoundData.vue'
+import Button from '../../components/Buttons/Button.vue'
 
 
 export default {
@@ -117,7 +115,8 @@ export default {
         AddLicence,
         CampoForm,
         Loading,
-        NoFoundData
+        NoFoundData,
+        Button,
     },
 
     setup() {

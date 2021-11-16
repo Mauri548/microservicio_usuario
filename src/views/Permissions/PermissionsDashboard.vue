@@ -5,7 +5,9 @@
             <hr>
             <div class="body-tablero my-3 px-4">
                 <HeadBoard :buttonDefault="false">
-                    <button @click="actionModalAddPermission" class="button btn-crenein">{{$t('board.headBoard.agregar')}}</button>
+                    <Button @click="actionModalAddPermission">
+                        {{$t('board.headBoard.agregar')}}
+                    </Button>
                 </HeadBoard>
             </div>
         </div>
@@ -74,7 +76,7 @@
                     </div>
                     <select class="column select1 mb-4 has-text-dark" v-model="automatic" >
                         <option value="Automatic_assigned">automática</option>
-                        <option value="Assigned_not_automatic">No automática</option>
+                        <option value="Not_automatic">No automática</option>
                     </select>
 
                     <textarea class="textarea has-text-dark" v-model="detail" 
@@ -82,12 +84,12 @@
                     </textarea>
                    
                     <div class="column has-text-centered" >
-                        <button class="button has-background-danger has-text-white mr-2"  type="button" style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
-                        <button class="button has-text-white ml-2" type="button" 
-                         style="background-color:#005395; font-weight:bold;" 
-                         @click="validar" :class="{'is-loading':loading}" >
-                         {{$t('permisos.guardar')}}
-                        </button>
+                        <Button class="has-background-danger mr-2" @click="closeModal">
+                            {{$t('permisos.cancel')}}
+                        </Button>
+                        <Button :loading="loading" @click="validar">
+                            {{$t('permisos.guardar')}}
+                        </Button>
                     </div>
                 </form>
             </section>
@@ -101,7 +103,7 @@
         <div class="modal-card " >
             <header class="modal-card-head has-background-white " >
             <p class="modal-card-title has-text-centered blue-crenein" style="font-size:1.5em; font-weight:bold;">{{$t('permisos.editar')}}</p>
-            <button class="delete" @click="closeModal"  aria-label="close"></button>
+            <button class="delete" @click="closeModal" aria-label="close"></button>
             </header>
             <section class="modal-card-body">
                 <form action="" class="column">
@@ -124,20 +126,20 @@
                     </div>
                     <select class="column select1 mb-4 has-text-dark" v-model="automatic" >
                         <option value="Automatic_assigned">automática</option>
-                        <option value="Assigned_not_automatic">No automática</option>
+                        <option value="Not_automatic">No automática</option>
                     </select>
 
                     <textarea class="textarea has-text-dark" :placeholder="$i18n.locale=='es'? 'Detalles':'Detail'"
-                     v-model="detail">
+                        v-model="detail">
                     </textarea>
                 
                     <div class="column has-text-centered" >
-                        <button class="button has-background-danger has-text-white mr-2" type="button" style="font-weight:bold;" @click="closeModal" >{{$t('permisos.cancel')}}</button>
-                        <button class="button has-text-white ml-2" type="button" 
-                         style="background-color:#005395; font-weight:bold;" 
-                         @click="validar" :class="{'is-loading':loading}">
-                         {{$t('permisos.guardar')}}
-                        </button>
+                        <Button class="has-background-danger mr-2" @click="closeModal">
+                            {{$t('permisos.cancel')}}
+                        </Button>
+                        <Button :loading="loading" @click="validar">
+                            {{$t('permisos.guardar')}}
+                        </Button>
                     </div>
                 </form>
             </section>
@@ -173,6 +175,7 @@ import store from '@/store';
 import CampoForm from '../../components/CampoForm.vue'
 import Loading from '../../components/loading.vue'
 import NoFoundData from '../../components/NoFoundData.vue'
+import Button from '../../components/Buttons/Button.vue'
 
 
 export default {
@@ -189,6 +192,7 @@ export default {
         CampoForm,
         Loading,
         NoFoundData,
+        Button,
     },
 
     setup() {
@@ -207,7 +211,7 @@ export default {
         const selectedApp = ref('')
         const firtsApp = ref('')
         const visible = ref('Visible_to_customers')
-        const automatic = ref('Assigned_not_automatic')
+        const automatic = ref('Not_automatic')
         const msg_error = ref({ key: ''})
         const apps = ref([])
         const titles = ref([])
@@ -528,7 +532,7 @@ export default {
             detail.value = ''
             selectedApp.value = firtsApp.value
             visible.value = 'Visible_to_customers'
-            automatic.value = 'Assigned_not_automatic'
+            automatic.value = 'Not_automatic'
         }
 
         return {

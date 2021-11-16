@@ -8,9 +8,9 @@
             <div class="column has-text-right">
 
                 <div>
-                    <button v-if="buttonDefault" @click="push" class="button btn-crenein">
+                    <Button v-if="buttonDefault" @click="push">
                         {{$t('board.headBoard.agregar')}}
-                    </button>
+                    </Button>
                     <slot></slot>
                 </div>
 
@@ -24,6 +24,7 @@
 import ShowRows from './ShowRows.vue'
 import Searcher from './Searcher.vue'
 import { useRouter } from 'vue-router'
+import Button from '../Buttons/Button.vue'
 
 
 export default {
@@ -31,6 +32,7 @@ export default {
     components: {
         ShowRows,
         Searcher,
+        Button
     },
     props: {
         namePath: String,

@@ -41,7 +41,9 @@
                     </div>      
 
                     <div class="column has-text-centered">
-                        <button type="button" @click="register" class="button button2 btn-register has-text-white has-text-weight-semibold" :class="{'is-loading': entering}" style="font-weight:5px;">Registrarse</button>
+                        <Button class="button2" :loading="entering" @click="register">
+                            Registrarse
+                        </Button>
                     </div>
 
                     <div class="column has-text-centered">
@@ -66,13 +68,15 @@ import { useRouter } from 'vue-router'
 import store from '@/store'
 import { GraphQLClient } from 'graphql-request'
 import FetchMe from '../helper/FetchMe'
+import Button from '../components/Buttons/Button.vue'
 
 export default {
     name:'Register',
 
     components: {
         CampoForm,
-        CampoFormPassword
+        CampoFormPassword,
+        Button
     },
 
     setup(){
@@ -200,10 +204,10 @@ export default {
                 // Hablar con Marce de si se puede hacer eso o si tarda demasiado
                 setTimeout(() => {
                     isInvited(id.value)
-                    entering.value
+                    entering.value = false
                 },2000)
             } else {
-                entering.value
+                entering.value = false
             }
         }
 
