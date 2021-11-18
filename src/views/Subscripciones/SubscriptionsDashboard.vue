@@ -100,9 +100,9 @@ export default {
         }
 
 
-        const traerSuscriptionxCompany = () => {
+        const traerSuscriptionxCompany = async () => {
             const client = new GraphQLClient(endpoint)
-            client.rawRequest(/* GraphQL */ `
+            await client.rawRequest(/* GraphQL */ `
                 query($company_id:ID) {
                     subscriptionsxcompany(first: 100, page: 1,company_id:$company_id) {
                         paginatorInfo {
@@ -130,14 +130,12 @@ export default {
                     authorization: `Bearer ${ localStorage.getItem('user-token') }` 
                 })
                 .then((data) => {
-                    // subscripciones.value = []
+                    subscripciones.value = []
                     data.data.subscriptionsxcompany.data.forEach(element => {
                         subscripciones.value.push({id:element.id, nombreApp: element.app.name, licence:element.license.name ,companyName:element.company.name_fantasy,activo: false, modalDelete: false})
                     })
-                    loading.value = false
                 }).catch(error => {
                     console.log(error.response)
-                    loading.value = false
                 })
         }
 
@@ -146,12 +144,13 @@ export default {
          * Reacciona cuando se cambia la empresa
          * 
          */
-        watchEffect(()=>{
+        watchEffect( async ()=>{
             loading.value = true
             subscripciones.value = []
             store.state.company_id 
             company_id.value = localStorage.getItem('id_company_selected')
-            traerSuscriptionxCompany()
+            await traerSuscriptionxCompany()
+            loading.value = false
         })
 
         // Activa el valor para abrir una ventana modal de ese elemento

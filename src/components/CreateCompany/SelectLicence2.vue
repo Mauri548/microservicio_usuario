@@ -25,7 +25,7 @@
 			<h1 class="card-title has-text-white has-text-weight-semibold">{{license.name}}</h1>
 			<span v-show="coinSelect.name == 'ARS'" class="card-price has-text-white">${{license.price_arg}}</span>
 			<span v-show="coinSelect.name == 'USD'" class="card-price has-text-white">${{license.price_usd}}</span>
-			<button @click="crearSuscripcion(license)" class="button has-text-weight-semibold">I want</button>
+			<button @click="validar(license)" class="button has-text-weight-semibold">I want</button>
 		</div>
   </div>
 </template>
@@ -46,13 +46,10 @@ export default {
             {id: 1, name: 'ARS'},{id:2, name: 'USD'}
         ])
 		const endpoint = store.state.url_backend
-		const use_app_id = ref("")
-		const lic_license_id =  ref("")
 		const use_company_id = ref(localStorage.getItem('id_company_selected'))
         const coinActivo = ref(false)
         const coinSelect = ref({id: 1, name: 'ARS'})
 		const router = useRouter()
-		
 
 		// Abre el desplegable de monedas
         const openSelectCoin = () => {
@@ -66,24 +63,8 @@ export default {
             openSelectCoin()
         }
 
-		const agarrar = (dato) => {
-	/* 		use_app_id.value = props.app.id
-			lic_license_id.value = dato.id
-			console.log(use_company_id.value)
-			console.log(use_app_id.value)
-			console.log(lic_license_id.value) */
-		}
-
-		const crearSuscripcion = (dato) => {
-
-			use_app_id.value = props.app.id
-			lic_license_id.value = dato.id
-			console.log(use_company_id.value)
-			console.log(use_app_id.value)
-			console.log(lic_license_id.value)
-
-			const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
-            // Estructura FetchQL(url, query, variable, opcions)
+		const crearSuscripcion = (dato, user_company_id) => {
+			const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */ `
             mutation($company_user_id:ID!,$use_company_id:ID!, $use_app_id:ID!,$lic_license_id:ID!){
               		createsUse_subscription (company_user_id:$company_user_id, input:{
@@ -100,29 +81,44 @@ export default {
                     }
             }`,
             {
-				company_user_id:localStorage.getItem('user_company_id'),
+				company_user_id:user_company_id,
                 use_company_id: use_company_id.value,       
-                use_app_id: use_app_id.value,
-                lic_license_id: lic_license_id.value,
-        
+                use_app_id: props.app.id,
+                lic_license_id: dato.id,
             },
             {
              	authorization: `Bearer ${ localStorage.getItem('user_token')}` 
             })
             .then((data) => {
 				console.log("Paso la carga de suscripcion")
-                router.push({name: 'SubscriptionsDashboard'}) 
                 let accion = "cargarSus"
                 store.commit('verificar_carga',accion) 
+                setTimeout(() => {
+					router.push({name: 'SubscriptionsDashboard'}) 
+				},2000)
             }).catch(error => {
                 console.log(error.response);
             })
 		}
 
+		const validar = (data) => {
+			let user_company_id = localStorage.getItem('user_company_id')
 
+			if (user_company_id) {
+				crearSuscripcion(data, user_company_id)
+			}
+		}
 
-
-		return {crearSuscripcion,use_company_id ,lic_license_id,use_app_id ,agarrar,coins, coinActivo, coinSelect, changeCoin, openSelectCoin}
+		return {
+			crearSuscripcion,
+			use_company_id, 
+			coins, 
+			coinActivo, 
+			coinSelect, 
+			changeCoin, 
+			openSelectCoin, 
+			validar
+		}
   	}
 
 }
