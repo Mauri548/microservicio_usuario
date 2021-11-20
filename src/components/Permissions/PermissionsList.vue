@@ -1,6 +1,9 @@
 <template>
     <div class="prueba">
-        <button @click="activePermissionApp(data.id)" class="button btn-crenein button-permission-app ">
+        <button @click="activePermissionApp(data.id)" 
+            class="button btn-crenein button-permission-app"
+            :class="{'activo':data.activo}"
+        >
             <span >{{data.app}}</span>
             <span class="icon is-small">
                 <i class="fas fa-chevron-down"></i>
@@ -88,6 +91,9 @@ export default {
 }
 .button-permission-app {
     width: 100%;
+}
+.button-permission-app.activo {
+    background: #0771c6;
 }
 @media (max-width: 768px) {
     .button-permission-app {
