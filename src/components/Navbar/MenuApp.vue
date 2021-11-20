@@ -37,8 +37,6 @@
 
 // ****** dato de prueba ******
 import ispb from '@/assets/ispb2.png'
-import puwic from '@/assets/puwic2.png'
-import geston from '@/assets/geston2.png'
 import blog from '@/assets/blog.jpg'
 import AppCrenein from './AppsCrenein.vue'
 import { ref } from '@vue/reactivity'
@@ -52,19 +50,12 @@ export default {
     components: {
         AppCrenein,
     },
-    created() {
-        /* this.traerSuscripcionesxCompany()  */
-    },
-
     setup(){
         const endpoint = store.state.url_backend
-        // ****** Datos de prueba ******
         const apps = ref([])
-
         const discovers = ref([])
-        // ******************************
 
-        watchEffect(()=>{ // utilizamos watcheffect para detectar que valor tiene el atributo locale del objeto i18n al momento de estar en la pagina o al momento de cambiar el valor a traves del boton del lenguaje
+        watchEffect(()=>{
             if(i18n.global.locale == 'en'){
                 discovers.value = [
                     {id: 1, name: 'Blog', image: blog},
@@ -87,15 +78,11 @@ export default {
         watchEffect(()=>{
             store.state.company_id 
             company_id.value = localStorage.getItem('id_company_selected')
-
-        /*  if(activo.value){
-                traerSuscripcionesxCompany()
-            } */
         })
 
         
         const traerSuscripcionesxCompany = () => {
-            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            const client = new GraphQLClient(endpoint)
             
                 client.rawRequest(/* GraphQL */ `
                 query($company_id:ID) {
@@ -131,21 +118,18 @@ export default {
                     }
                 }`,
                 {
-                    /* page: parseInt(route.params.page),
-                    first: mostrar_cantidad.value */
                     company_id: company_id.value
-                },
-                {
-                    /* authorization: `Bearer ${ localStorage.getItem('user_token') }` */
                 })
                 .then((data) => {
-                  /*   let datos = data.data.subscriptionsxcompany.data
-                    console.log(datos)  */
                     apps.value = []
                    
                     data.data.subscriptionsxcompany.data.forEach(element => {
-                        apps.value.push({id:element.app.id,licencia:element.license.name, nombre: element.app.name,logo: ispb, activo: true})
-                        
+                        apps.value.push({
+                            id:element.app.id,
+                            licencia:element.license.name, 
+                            nombre: element.app.name,
+                            logo: ispb, activo: true
+                        })
                     })
                     console.log(apps.value)
 
@@ -156,7 +140,9 @@ export default {
         }
 
         watchEffect(()=>{
-            traerSuscripcionesxCompany()
+            if (company_id.value) {
+                traerSuscripcionesxCompany()
+            }
         })
 
         const activar = () => {
@@ -173,7 +159,6 @@ export default {
 
         return {
             company_id,
-            traerSuscripcionesxCompany,
             apps,
             discovers,
             activo,

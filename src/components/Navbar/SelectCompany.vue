@@ -52,12 +52,12 @@ export default {
          * 
          * @param company el objeto con los valores de la compañia actual
          */
-        const changeValueCompany = (company) => {
+        const changeValueCompany = async (company) => {
             companyActual.value.id = company.id
             companyActual.value.name_fantasy = company.name_fantasy
-            store.commit('setCompanyId', company.id)
 
-            fetchUserCompanyId(localStorage.getItem('user_id'))
+            await fetchUserCompanyId(localStorage.getItem('user_id'))
+            store.commit('setCompanyId', company.id)
         }
 
         const fetchUserCompanyId = async (id) => {

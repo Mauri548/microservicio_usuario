@@ -13,7 +13,6 @@
         
       </div>
 
-       <!-- :class="{'is-active':menuNavbar}" -->
       <div id="navbarBasicExample" class="navbar-menu">
 
         <div class="navbar-end">
@@ -56,7 +55,6 @@ export default {
 
   setup(){
     const optionActive = ref(false)
-    const menuNavbar = ref(false)
     const isMobile = inject('isMobile')
     const isTablet = inject('isTablet')
     let Lan = store.state.cambio_lang
@@ -66,16 +64,10 @@ export default {
       optionActive.value = !optionActive.value
     }
 
-    watchEffect(() => {
-      menuNavbar.value = store.state.active_menu_movile
-    })
-
-    return{
-      
+    return{  
       Lan,
       optionActive,
       isMobile,
-      menuNavbar,
       showOption,
       isTablet,
     }
