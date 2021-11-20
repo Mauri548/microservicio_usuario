@@ -91,9 +91,9 @@ export default {
         const state = ref(true)
         const loadingTable = ref(false)
 
-        const generalQuery = (id) => {
+        const generalQuery = async (id) => {
             const client = new GraphQLClient(endpoint)
-            client.rawRequest(/* GraphQL */`
+            await client.rawRequest(/* GraphQL */`
             query($id: ID) {
                 company_user(id: $id) {
                     id
@@ -127,14 +127,15 @@ export default {
                 console.log('company_user')
                 datas.value = []
                 users.value = []
-                await data.data.company_user.company.subscriptions.forEach(app => {
+                let result = data.data.company_user
+                await result.company.subscriptions.forEach(app => {
                     datas.value.push({id: app.app.id, app: app.app.name, activo: false, permissions: app.app.permits})
                 })
 
-                await data.data.company_user.company.users.forEach((user, index) => {
-                    if (index == 0) {
+                await result.company.users.forEach((user, index) => {
+                    if (result.use_company_id == user.id) {
                         users.value.push({id: user.id, name: user.name, 
-                        user_company_id: data.data.company_user.id ,activo: false})
+                        user_company_id: result.id ,activo: false})
                         return
                     }
                     users.value.push({id: user.id, name: user.name, user_company_id: '' ,activo: false})
@@ -146,11 +147,39 @@ export default {
             .catch(error => console.log(error))
         }
 
+        const getCrenein = () => {
+            const client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */`
+            query{
+                permitsxappVisible(first: 999, page: 1, app_id: 1) {
+                    data {
+                        id
+                        key
+                        detail
+                        app {
+                            id
+                            name
+                        }
+                    }
+                }
+            }`,
+            )
+            .then((data) => {
+                let app = data.data.permitsxappVisible.data[0].app
+                let crenein = {id: app.id, app: app.name, activo: false, permissions: []}
+                data.data.permitsxappVisible.data.forEach(permit => {
+                    crenein.permissions.push({ id: permit.id, key: permit.key, detail: permit.detail })
+                })
+                datas.value.push(crenein)
+            })
+        }
+
         watchEffect( async () => {
             console.log('hola')
             store.state.company_id
             if (localStorage.getItem('id_company_selected')) {
-                generalQuery(localStorage.getItem('user_company_id'))
+                await generalQuery(localStorage.getItem('user_company_id'))
+                getCrenein()
             }
         })
 
