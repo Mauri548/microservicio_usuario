@@ -39,8 +39,15 @@
                 <CampoForm v-model="country" :place="$i18n.locale=='en'? 'Country': 'País'" type="text" :required="true" :error="msg_error.country" />
 
                 <div class="field is-grouped is-justify-content-space-between">
-                    <button type="button" class="button has-background-danger has-text-weight-semibold has-text-white cancel">{{$t('personalForm.cancel')}}</button>
-                    <button type="button" class="button btn-crenein accept" @click="register">{{$t('personalForm.guardar')}}</button>
+                    <Button class="has-background-danger cancel"
+                     >
+                        {{$t('personalForm.cancel')}}
+                    </Button>
+                    <Button class="accept" :loading="isLoading"
+                        @click="register"
+                     >
+                        {{$t('personalForm.guardar')}}
+                    </Button>
                 </div>
 
             </form>
@@ -58,17 +65,14 @@ import { GraphQLClient } from 'graphql-request'
 import { useRouter } from 'vue-router'
 import emailValidate from '../../helper/EmailValidate'
 import { watchEffect } from '@vue/runtime-core'
+import Button from '../../components/Buttons/Button.vue'
 
 
 export default {
     components: {
-        CampoForm
+        CampoForm,
+        Button
     },
-
-    created(){
-        // FetchMe()
-    },
-
 
     setup() {
         const nameFantasy = ref('')
@@ -94,6 +98,7 @@ export default {
         })
         const endpoint = store.state.url_backend
         const router = useRouter()
+        const isLoading = ref(false)
 
         /**
          * 
@@ -106,12 +111,15 @@ export default {
             }
         }
 
-        const register = () => {
+        const register = async () => {
+            isLoading.value = true
             resetErrorMessage()
 
             if (isValid()) {
-                createCompany()
+                await createCompany()
             }
+
+            isLoading.value = false
         }
 
         const isValid = () => {
@@ -146,9 +154,9 @@ export default {
             }
         }
 
-        const createCompany = () => {
+        const createCompany = async () => {
             const client = new GraphQLClient(endpoint)
-            client.rawRequest(/* GraphQL */ `
+            await client.rawRequest(/* GraphQL */ `
             mutation($name_fantasy: String!, $business_name: String!, $owners: String, 
                 $cuit: String!, $email: String!, $phones: String, $tax_condition: Tax_condition!,
                 $direction: String, $location: String!, $province: String!, $country: String!, $user_id: ID) {
@@ -212,6 +220,7 @@ export default {
         return {
             nameFantasy, bussinesName, owner, cuit, email, phone, direction, 
             location, province, country, taxCondition, selectTaxCondition, msg_error,
+            isLoading,
 
             register
         }
