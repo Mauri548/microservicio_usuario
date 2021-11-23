@@ -74,14 +74,25 @@ export default {
         const loading = ref(false)
 
         const traerUsersxCompany = async (id) => {
-            const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
+            const client = new GraphQLClient(endpoint) 
             await client.rawRequest(/* GraphQL */ `
             query($company_id:ID){
-                company(id:$company_id) {
-                    users {
-                        id
-                        name
-                        email
+                userscompaniesxcompany(first:888,page:1,company_id:$company_id) {
+                    data{
+                        user {
+                            id
+                            name
+                            email
+                        }
+                    }
+                    paginatorInfo{
+                        count
+                        total
+                        currentPage
+                        firstItem
+                        lastItem
+                        perPage
+                        hasMorePages
                     }
                 }
             }`,
@@ -90,13 +101,14 @@ export default {
             })
             .then((data) => {
                 users.value = []
-                data.data.company.users.forEach(element => {
-                    users.value.push({id:element.id, nombre: element.name, email:element.email ,activo: false, modalDelete: false})
-                })
+                let datos = data.data.userscompaniesxcompany.data
+                datos.forEach(element => {
+                    users.value.push({id:element.user.id, nombre: element.user.name, email:element.user.email ,activo: false, modalDelete: false})
+                }) 
                 loading.value = false
             })
             .catch(error => {
-                // console.log(error.response);
+                console.log(error)
                 loading.value = false
             })
             return
