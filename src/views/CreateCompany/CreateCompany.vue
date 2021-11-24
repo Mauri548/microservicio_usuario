@@ -4,59 +4,27 @@
             <h1 v-t="'createCompany.crear'"></h1>
         </div>
         <div>
-            <form>
-
-                <CampoForm v-model="nameFantasy" :place="$i18n.locale=='en'? 'Name fantasy': 'Nombre de fantasia'" type="text" :required="true" :error="msg_error.nameFantasy" />
-
-                <CampoForm v-model="bussinesName" :place="$i18n.locale=='en'? 'Business name': 'Nombre del negocio'" type="text" :required="true" :error="msg_error.bussinesName" />
-
-                <CampoForm v-model="owner" :place="$i18n.locale=='en'? 'Owner': 'Propietario'" type="text" />
-
-                <CampoForm v-model="cuit" place="Cuit" type="number" :required="true" :error="msg_error.cuit" />
-
-                <CampoForm v-model="email" :place="$i18n.locale=='en'? 'Email': 'Correo'" type="email" :required="true" :error="msg_error.email" />
-
-                <CampoForm v-model="phone" :place="$i18n.locale=='en'? 'Phone': 'Teléfono'" type="number" />
-
-                <div class="mb-4">
-                    <div class="select w-100" style="position: relative">
-                        <select class="w-100 mb-4" v-model="selectTaxCondition" >
-                            <option disabled selected :value="0">Condición Fiscal</option>
-                            <option v-for="condition in taxCondition" :key="condition.id" :value="condition">{{condition.name}}</option>
-                        </select>
-                        <span class="required">*</span>
-                    </div>
-                    <p v-show="msg_error.taxCondition" class="msg-error">{{msg_error.taxCondition}}</p>
-
-                </div>
-
-                <CampoForm v-model="direction" :place="$i18n.locale=='en'? 'Direction': 'Dirección'" type="text" />
-
-                <CampoForm v-model="location" :place="$i18n.locale=='en'? 'Location': 'Localidad'" type="text" :required="true" :error="msg_error.location" />
-
-                <CampoForm v-model="province" :place="$i18n.locale=='en'? 'Province': 'Provincia'" type="text" :required="true" :error="msg_error.province" />
-
-                <CampoForm v-model="country" :place="$i18n.locale=='en'? 'Country': 'País'" type="text" :required="true" :error="msg_error.country" />
-
-                <div class="field is-grouped is-justify-content-space-between">
-                    <Button class="has-background-danger cancel"
-                     >
-                        {{$t('personalForm.cancel')}}
-                    </Button>
-                    <Button class="accept" :loading="isLoading"
-                        @click="register"
-                     >
-                        {{$t('personalForm.guardar')}}
-                    </Button>
-                </div>
-
-            </form>
+            <CompanyForm
+                :nameFantasy="nameFantasy"
+                :bussinesName="bussinesName"
+                :owner="owner"
+                :cuit="cuit"
+                :email="email"
+                :phone="phone"
+                :selectTaxCondition="selectTaxCondition"
+                :direction="direction"
+                :location="location"
+                :province="province"
+                :country="country"
+                :isLoading="isLoading"
+                :msg_error="msg_error"
+                @onSaveChange="saveChange"
+            />
         </div>
     </div>
 </template>
 
 <script>
-import CampoForm from '../../components/CampoForm.vue'
 import store from '@/store'
 import FetchMe from '../../helper/FetchMe'
 import { ref } from '@vue/reactivity'
@@ -65,13 +33,12 @@ import { GraphQLClient } from 'graphql-request'
 import { useRouter } from 'vue-router'
 import emailValidate from '../../helper/EmailValidate'
 import { watchEffect } from '@vue/runtime-core'
-import Button from '../../components/Buttons/Button.vue'
+import CompanyForm from '../Companies/CompanyForm.vue'
 
 
 export default {
     components: {
-        CampoForm,
-        Button
+        CompanyForm
     },
 
     setup() {
@@ -85,13 +52,6 @@ export default {
         const location = ref('')
         const province = ref('')
         const country = ref('')
-        const taxCondition = ref([
-            {id: 1 ,name: 'IVA Responsable Inscripto', value: 'IVA_Resp_Inscripto'},
-            {id: 2 ,name: 'IVA Sujeto Exento', value: 'IVA_Sujeto_Exento'},
-            {id: 3 ,name: 'Consumidor Final', value: 'Consumidor_Final'},
-            {id: 4 ,name: 'Responsable Monotributo', value: 'Resp_Monotributo'},
-            {id: 5 ,name: 'Cliente Exterior', value: 'Cliente_Exterior'},
-        ])
         const selectTaxCondition = ref(0)
         const msg_error = ref({nameFantasy: '', bussinesName: '', cuit: '', email: '', taxCondition: '',
             location: '', province: '', country: ''
@@ -189,7 +149,7 @@ export default {
                 cuit: cuit.value, 
                 email: email.value, 
                 phones: phone.value, 
-                tax_condition: selectTaxCondition.value.value,
+                tax_condition: selectTaxCondition.value,
                 direction: direction.value, 
                 location: location.value,
                 province: province.value, 
@@ -204,7 +164,9 @@ export default {
                 store.commit("setCreatingCompany",false)
                 localStorage.setItem('id_company_selected', data.data.createsUse_company.id)
                 store.commit("setCompanyId", data.data.createsUse_company.id)
-                router.push({name: 'CreateFinishedCompany'})
+                setTimeout(() => {
+                    router.push({name: 'CreateFinishedCompany'})
+                },1500)
             })
         }
 
@@ -217,12 +179,34 @@ export default {
             }
         })
 
+        /**
+         * 
+         * Guarda los valores ingresado en el campo y recibido por el componente "CompanyForm"
+         * 
+         * @param data es un objeto con los campos del formulario
+         * 
+         */
+        const saveChange = (data) => {
+            nameFantasy.value = data.nameFantasy
+            bussinesName.value = data.bussinesName 
+            owner.value = data.owner 
+            cuit.value = data.cuit 
+            email.value = data.email
+            phone.value = data.phone 
+            direction.value = data.direction 
+            location.value = data.location 
+            province.value = data.province 
+            country.value = data.country 
+            selectTaxCondition.value = data.selectTaxCondition
+            register()
+        }
+
         return {
             nameFantasy, bussinesName, owner, cuit, email, phone, direction, 
-            location, province, country, taxCondition, selectTaxCondition, msg_error,
+            location, province, country, selectTaxCondition, msg_error,
             isLoading,
 
-            register
+            register, saveChange
         }
     }
 }
@@ -232,26 +216,6 @@ export default {
 .conteiner-create-company {
     width: 80%;
     margin: 20px auto;
-    
-}
-.accept {
-    width: 70%;
-}
-.cancel {
-    width: 28%;
-}
-
-
-.required{
-  color: red;
-  position: absolute;
-  left: -6px;
-  top: -9px;
-}
-
-.msg-error{
-  font-size: .7em;
-  color: red
 }
 
 @media (min-width: 1024px) {
