@@ -166,7 +166,7 @@ export default {
                 store.commit("setCompanyId", data.data.createsUse_company.id)
                 setTimeout(() => {
                     router.push({name: 'CreateFinishedCompany'})
-                },1500)
+                },2000)
             })
         }
 
