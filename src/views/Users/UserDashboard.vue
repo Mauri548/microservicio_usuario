@@ -13,18 +13,17 @@
             <Board :datas="users" :titles="titles" >
                 <tr class="has-text-centered row-table" v-for="data in users" :key="data.id">
                     <th @click="actionModal(data)">{{data.id}}</th>
-                <!--     <td @click="actionModal(data)">{{data.avatar}}</td> -->
+                    <!-- <td @click="actionModal(data)">{{data.avatar}}</td> -->
                     <td @click="actionModal(data)">{{data.nombre}}</td>
                     <td @click="actionModal(data)">{{data.email}}</td>
                     <!-- <td @click="actionModal(data)">{{data.created}}</td> -->
 
-                  <!--   Preguntar sobre el estado de los usuarios porq no figura en la query -->
-                   <!--  <td @click="actionModal(data)">{{data.state}}</td> -->
+                    <!-- Preguntar sobre el estado de los usuarios porq no figura en la query -->
+                    <!-- <td @click="actionModal(data)">{{data.state}}</td> -->
                     <Modal :data="data" :buttonDefault="false" @onCloseModal="actionModal" 
-                     @onOpenModalDelete="actionModalDelete" >
-<!--                    <button @click="ChangeState(data)" v-if="data.state == 'Habilitado'" class="button btn-crenein w-100 my-1">{{$t('user.deshabilitar')}}</button>
-                        <button @click="ChangeState(data)" v-else class="button btn-crenein w-100 my-1">{{$t('user.habilitar')}}</button> -->
-
+                    @onOpenModalDelete="actionModalDelete" >
+                    <!-- <button @click="ChangeState(data)" v-if="data.state == 'Habilitado'" class="button btn-crenein w-100 my-1">{{$t('user.deshabilitar')}}</button>
+                    <button @click="ChangeState(data)" v-else class="button btn-crenein w-100 my-1">{{$t('user.habilitar')}}</button> -->
                     </Modal>
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
@@ -33,7 +32,8 @@
             <Loading v-show="loading"/>
             <NoFoundData v-if="!loading && users.length == 0" />
         </div>
-        <Pagination/>
+<!--         <Pagination :count="count" :total="total" :currentPage="currentPage" :firstItem="firstItem" :lastItem="lastItem" :perPage="perPage" :hasMorePages="hasMorePages" /> -->
+          <Pagination :currentPage=count :count="count" :total="total" :firstItem="firstItem" :lastItem="lastItem" :perPage="perPage" :hasMorePages="hasMorePages" />
     </div>
 </template>
 
@@ -73,6 +73,14 @@ export default {
         const company_id = ref('');
         const loading = ref(false)
 
+        const count = ref();
+        const total = ref()
+        const currentPage = ref()
+        const firstItem = ref()
+        const lastItem = ref()
+        const perPage = ref()
+        const hasMorePages = ref()
+
         const traerUsersxCompany = async (id) => {
             const client = new GraphQLClient(endpoint) 
             await client.rawRequest(/* GraphQL */ `
@@ -102,9 +110,21 @@ export default {
             .then((data) => {
                 users.value = []
                 let datos = data.data.userscompaniesxcompany.data
+                let paginacion = data.data.userscompaniesxcompany.paginatorInfo
                 datos.forEach(element => {
                     users.value.push({id:element.user.id, nombre: element.user.name, email:element.user.email ,activo: false, modalDelete: false})
                 }) 
+                count.value = paginacion.count
+                total.value = paginacion.total
+                currentPage.value = paginacion.currentPage
+                firstItem.value = paginacion.firstItem
+                lastItem.value = paginacion.lastItem
+                perPage.value = paginacion.perPage
+                hasMorePages.value = paginacion.hasMorePages
+                
+                console.log(typeof(count.value))
+
+
                 loading.value = false
             })
             .catch(error => {
@@ -162,7 +182,15 @@ export default {
             loading,
             actionModal,
             actionModalDelete,
-            ChangeState
+            ChangeState,
+
+            count,
+            total,
+            currentPage,
+            firstItem,
+            lastItem, 
+            perPage,
+            hasMorePages,
         }
     }
 }
