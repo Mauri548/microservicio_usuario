@@ -19,14 +19,14 @@
                     <td @click="actionModal(data)">{{data.app.name}}</td>
                     <td @click="actionModal(data)">{{data.key}}</td>
                     <td @click="actionModal(data)">{{data.detail}}</td>
-                    <Modal :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" :buttonDefault="false">
+                    <!-- <Modal :data="data" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete" :buttonDefault="false">
                         <button @click="activarEdicion(data)" class="button btn-crenein w-100 my-1">
                             <span class="icon is-small">
                                 <i class="fas fa-pencil-alt"></i>
                             </span>
                             <span>{{$t('modal.editar')}}</span>
                         </button>
-                    </Modal>
+                    </Modal> -->
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
@@ -38,6 +38,20 @@
         <Pagination/>
         <!-- <AddPermission :data="addPermission" @tengoAct="mostrarModal2" @onCloseModal="actionModalAddPermission" />  -->
   <!--       <EditPermission :data="editPermission" @tengoAct="mostrarModal"  @onCloseModal="actionModalEditPermission" /> -->
+    
+        <Modal v-show="permitSelect != null" :data="permitSelect" 
+            @onCloseModal="actionModal" 
+            @onOpenModalDelete="actionModalDelete" 
+            :buttonDefault="false"
+         >
+            <button @click="activarEdicion(permitSelect)" class="button btn-crenein w-100 my-1">
+                <span class="icon is-small">
+                    <i class="fas fa-pencil-alt"></i>
+                </span>
+                <span>{{$t('modal.editar')}}</span>
+            </button>
+        </Modal>
+    
     </div>
 
 
@@ -217,7 +231,8 @@ export default {
         const titles = ref([])
         const id = ref()
         const loadingTable = ref(false)
-        const loading = ref(false)        
+        const loading = ref(false)
+        const permitSelect = ref(null)     
 
         const activarEdicion = (data) => {
             editPermission.value = !editPermission.value 
@@ -451,6 +466,7 @@ export default {
         const actionModal = (data) => {
             let aux = permisos.value.find(element => element.id == data.id)
             aux.activo = !aux.activo
+            !permitSelect.value ? permitSelect.value = data : permitSelect.value = null
         }
 
         // Abre la ventana emergente para eliminar un elemento de la lista
@@ -571,6 +587,7 @@ export default {
             visible,
             automatic,
             loading,
+            permitSelect
         }
     }
 }
