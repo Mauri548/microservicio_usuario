@@ -20,12 +20,13 @@
 
                   <!--   Preguntar sobre el estado de los usuarios porq no figura en la query -->
                    <!--  <td @click="actionModal(data)">{{data.state}}</td> -->
-                    <Modal :data="data" :buttonDefault="false" @onCloseModal="actionModal" 
-                     @onOpenModalDelete="actionModalDelete" >
-<!--                    <button @click="ChangeState(data)" v-if="data.state == 'Habilitado'" class="button btn-crenein w-100 my-1">{{$t('user.deshabilitar')}}</button>
-                        <button @click="ChangeState(data)" v-else class="button btn-crenein w-100 my-1">{{$t('user.habilitar')}}</button> -->
 
-                    </Modal>
+                    <!-- <Modal :data="data" :buttonDefault="false" @onCloseModal="actionModal" 
+                     @onOpenModalDelete="actionModalDelete" >
+                   <button @click="ChangeState(data)" v-if="data.state == 'Habilitado'" class="button btn-crenein w-100 my-1">{{$t('user.deshabilitar')}}</button>
+                        <button @click="ChangeState(data)" v-else class="button btn-crenein w-100 my-1">{{$t('user.habilitar')}}</button>
+
+                    </Modal> -->
                     <ActionModal :data="data" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
@@ -34,6 +35,12 @@
             <NoFoundData v-if="!loading && users.length == 0" />
         </div>
         <Pagination/>
+
+        <Modal v-show="userSelect != null"
+            :data="userSelect" :buttonDefault="false"
+            @onCloseModal="actionModal"
+            @onOpenModalDelete="actionModalDelete"
+        />
     </div>
 </template>
 
@@ -72,6 +79,7 @@ export default {
         const users = ref([])
         const company_id = ref('');
         const loading = ref(false)
+        const userSelect = ref(null)
 
         const traerUsersxCompany = async (id) => {
             const client = new GraphQLClient(endpoint) 
@@ -128,6 +136,7 @@ export default {
         const actionModal = (data) => {
             let aux = users.value.find(element => element.id == data.id)
             aux.activo = !aux.activo
+            !userSelect.value ? userSelect.value = data : userSelect.value = null
         }
 
         // Activa el valor de modalDelete para abrir el modal de aviso 
@@ -160,6 +169,7 @@ export default {
             datas,
             titles,
             loading,
+            userSelect,
             actionModal,
             actionModalDelete,
             ChangeState
