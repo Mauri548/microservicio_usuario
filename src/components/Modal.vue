@@ -90,6 +90,7 @@ export default {
     align-content: center;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     overflow: hidden;
     position: fixed;
     z-index: 40;
@@ -98,6 +99,7 @@ export default {
     right: 0;
     top: 0;
 }
+
 .modal-content {
     width: 300px;
     padding: 20px;
@@ -106,8 +108,8 @@ export default {
 }
 
 .modal-background {
-    /* background: rgb(10 10 10 / 14%); */
-    background: transparent;
+    background: rgb(10 10 10 / 10%);
+    /* background: transparent; */
 }
 
 .modal-content hr {
@@ -126,22 +128,10 @@ export default {
 .MenuAction-enter-from, .MenuAction-leave-to {
     opacity: 0;
     transform: scale(0.6);
-    /* transform: translateY(-600px); */
 }
-/* .MenuAction-enter-to, .MenuAction-leave-from {
-    transform: translateY(0px);
-} */
+
 .MenuAction-enter-active, .MenuAction-leave-active {
     transition: all ease .3s;
 }
-
-/* .modal.is-active {
-    animation: enterFormTop ease .5s
-}
-
-@keyframes enterFormTop {
-    0% {top: -1000px}
-    100% {top: 0px;}
-} */
 
 </style>

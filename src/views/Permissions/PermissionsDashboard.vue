@@ -366,15 +366,15 @@ export default {
                     await registrarPermiso()
                 }
                 if(editPermission.value){
-                    await editarPermiso() 
+                    await editarPermiso()
                 }              
             } else {
                 console.log('no paso')
                 // Saltar los errores
             }
 
+            permitSelect.value = null
             loading.value = false
-
         }
 
         const editarPermiso = async () => {
