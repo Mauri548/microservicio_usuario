@@ -4,22 +4,35 @@
         <nav class="pagination is-right" role="navigation" aria-label="pagination">
             <p class="ml-1">{{currentPage}} {{$t('board.pagination.al')}} {{count}} {{$t('board.pagination.de')}} {{total}}</p>
             <ul class="pagination-list">
-                <li><a class="pagination-link" aria-label="Goto page 1">{{firstItem}}</a></li>
-                <li><span class="pagination-ellipsis">&hellip;</span></li>
-                <li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
-                <li><a class="pagination-link is-current" aria-label="Page 46" aria-current="page">{{currentPage}}</a></li>
-                <li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
-                <li><span class="pagination-ellipsis">&hellip;</span></li>
-                <li><a class="pagination-link" aria-label="Goto page 86">{{lastItem}}</a></li>
+                <!-- <li v-show="(currentPage-2)>=0"><a class="pagination-link" >{{currentPage - firstItem}}</a></li>  -->
+                <!-- <li><span class="pagination-ellipsis">&hellip;</span></li> -->
+                <li v-show="(currentPage-1)>0 &&  currentPage-1!=currentPage"><a @click="$emit('previous',!valorNext)" class="pagination-link" >{{currentPage - 1}}</a></li>
+                <li><a class="pagination-link is-current"  aria-current="page">{{currentPage}}</a></li>
+                
+                <li v-show="hasMorePages">
+                    <a @click="$emit('next',valorNext)"   class="pagination-link" >{{currentPage + 1}}</a>
+                </li>
+
+                <!-- <li><span class="pagination-ellipsis">&hellip;</span></li> -->
+                <!-- <li v-show="(currentPage+2)>=0"><a class="pagination-link" >{{lastPage}}</a></li>   -->
             </ul>
         </nav>
     </div>
 </template>
 
 <script>
-/* import { ref } from '@vue/reactivity'; */
+
+import { useRoute, useRouter } from 'vue-router'
+
 export default {
     name: 'Pagination',
+    data () {
+        return {
+            valorNext:true, 
+        }
+    },
+    emits:['next','previous']
+    ,
     props: {
         count:Number,
         total:Number,
@@ -27,12 +40,10 @@ export default {
         firstItem:Number,
         lastItem:Number,
         perPage:Number,
+        lastPage:Number,
         hasMorePages:Boolean,
-    },
-    setup(props) {
-        console.log(props.count)
     }
-
+  
    /*  setup(props) { 
         const count = ref(props.count);
         const total = ref(props.total)

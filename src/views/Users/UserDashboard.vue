@@ -33,7 +33,7 @@
             <NoFoundData v-if="!loading && users.length == 0" />
         </div>
 <!--         <Pagination :count="count" :total="total" :currentPage="currentPage" :firstItem="firstItem" :lastItem="lastItem" :perPage="perPage" :hasMorePages="hasMorePages" /> -->
-          <Pagination :currentPage=count :count="count" :total="total" :firstItem="firstItem" :lastItem="lastItem" :perPage="perPage" :hasMorePages="hasMorePages" />
+          <Pagination :currentPage=currentPage :count="count" :total="total" :firstItem="firstItem" :lastItem="lastItem" :perPage="perPage" :hasMorePages="hasMorePages" />
     </div>
 </template>
 

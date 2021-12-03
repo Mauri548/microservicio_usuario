@@ -35,7 +35,7 @@
             <NoFoundData v-if="!loadingTable && permisos.length == 0" />
 
         </div>
-        <Pagination/>
+        <Pagination @next="camb_pagina" @previous="atras" :lastPage=lastPage :currentPage=currentPage :count="count" :total="total" :firstItem="firstItem" :lastItem="lastItem" :perPage="perPage" :hasMorePages="hasMorePages" />
         <!-- <AddPermission :data="addPermission" @tengoAct="mostrarModal2" @onCloseModal="actionModalAddPermission" />  -->
   <!--       <EditPermission :data="editPermission" @tengoAct="mostrarModal"  @onCloseModal="actionModalEditPermission" /> -->
     </div>
@@ -217,7 +217,41 @@ export default {
         const titles = ref([])
         const id = ref()
         const loadingTable = ref(false)
-        const loading = ref(false)        
+        const loading = ref(false)     
+
+        const page = ref(1);
+        const count = ref();
+        const lastPage = ref();
+        const total = ref()
+        const currentPage = ref()
+        const firstItem = ref()
+        const lastItem = ref()
+        const perPage = ref()
+        const hasMorePages = ref()
+
+
+        const camb_pagina = (valorNext) => {
+            console.log('valor sig',valorNext)
+            page.value +=1
+            
+          /*   if (valorNext==true){
+                page.value +=1
+            }
+            else {
+                page.value -=1
+            } */
+        }
+        const atras = (valorNext) => {
+            console.log('valor sig',valorNext)
+            if(valorNext==false) page.value -=1
+            
+          /*   if (valorNext==true){
+                page.value +=1
+            }
+            else {
+                page.value -=1
+            } */
+        }
 
         const activarEdicion = (data) => {
             editPermission.value = !editPermission.value 
@@ -232,8 +266,8 @@ export default {
         const traerPermisos = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             client.rawRequest(/* GraphQL */ `
-            query {
-                permits(first:999,page:1) {
+            query($page:Int) {
+                permits(first:10,page:$page) {
                     paginatorInfo{
                         count
                         currentPage
@@ -258,11 +292,14 @@ export default {
                 }
             }`,
             {
-                /* page: parseInt(route.params.page),
-                first: mostrar_cantidad.value */
+                page:page.value
+               /* page: parseInt(route.params.page),
+                 first: mostrar_cantidad.value */ 
             })
             .then((data) => {
                 permisos.value = []
+                let paginacion = data.data.permits.paginatorInfo
+                console.log(paginacion)
                 data.data.permits.data.forEach(element => {
                     permisos.value.push({
                         id:element.id, key: element.key, detail: element.detail,
@@ -271,7 +308,17 @@ export default {
                         activo: false, modalDelete: false
                     })
                 })
+                lastPage.value = paginacion.lastPage
+                count.value = paginacion.count
+                total.value = paginacion.total
+                currentPage.value = paginacion.currentPage
+                firstItem.value = paginacion.firstItem
+                lastItem.value = paginacion.lastItem
+                perPage.value = paginacion.perPage
+                hasMorePages.value = paginacion.hasMorePages
+
                 loadingTable.value = false
+
             }).catch(error => {
                 console.log(error.response)
                 loadingTable.value = false
@@ -323,6 +370,7 @@ export default {
         
         watchEffect(() => {
             loadingTable.value = true
+           /*  camb_pagina() */
             traerPermisos()
             traerApps()
         })
@@ -536,6 +584,8 @@ export default {
         }
 
         return {
+            atras ,
+            camb_pagina,
             id,
             editarPermiso,
             activarEdicion ,
@@ -571,6 +621,16 @@ export default {
             visible,
             automatic,
             loading,
+            //traer datos de paginacion
+            lastPage,
+            page,
+            count,
+            total,
+            currentPage,
+            firstItem,
+            lastItem, 
+            perPage,
+            hasMorePages,
         }
     }
 }

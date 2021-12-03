@@ -68,7 +68,22 @@ const store = createStore({
               /* console.log(state.cambio_lang) */
         },
 
-
+        /* paginacion(state, dato){
+            dato.info.count = dato.pageInfo.count
+            dato.info.pages = dato.pageInfo.lastPage
+            if (dato.pageInfo.currentPage + 1 > dato.pageInfo.lastPage) {
+                dato.info.next = null
+            } else {
+                dato.info.next = dato.pageInfo.currentPage + 1
+            }
+            if (dato.pageInfo.currentPage - 1 < 1) {
+                dato.info.prev = null
+            } else {
+                dato.info.prev = dato.pageInfo.currentPage - 1
+            }
+            dato.info.page = dato.pageInfo.currentPage
+            dato.info.total = dato.pageInfo.total
+        }, */
 
         verificar_carga(state,accion){
 

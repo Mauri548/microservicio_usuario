@@ -30,7 +30,7 @@
 import { ref } from '@vue/reactivity'
 export default {
     name: 'ShowRows',
-
+   
     setup () {
         const cantRows = ref([
             {valor: 50},{valor: 100},{valor: 200}
@@ -45,6 +45,7 @@ export default {
         const changeCantRow = (valor) => {
             console.log(valor)
             cantSelect.value = valor
+            
         }
 
         // funcion que cerrara el desplegable con la class "select-row" cuando no se haga click a este
