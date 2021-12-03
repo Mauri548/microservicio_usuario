@@ -28,7 +28,7 @@
             <NoFoundData v-if="!loading && invitaciones.length == 0" />
         </div>
 
-        <Pagination/>
+        <Pagination @next="camb_pagina" @previous="atras" :lastPage=lastPage :currentPage=currentPage :count="count" :total="total" :firstItem="firstItem" :lastItem="lastItem" :perPage="perPage" :hasMorePages="hasMorePages" />
     </div>
 </template>
 
@@ -68,6 +68,16 @@ export default {
         const company_id = ref();
         const loading = ref(false)
 
+        const page = ref(1);
+        const count = ref();
+        const total = ref()
+        const currentPage = ref()
+        const firstItem = ref()
+        const lastItem = ref()
+        const perPage = ref()
+        const hasMorePages = ref()
+        const lastPage = ref();
+
         /**
          * 
          * Trae las invitaciones por empresa
@@ -76,8 +86,8 @@ export default {
         const traerInvitaciones =() => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             client.rawRequest(/* GraphQL */ `
-            query($company_id:ID) {
-                    invitationsxcompany(first: 999, page: 1,company_id:$company_id)  {
+            query($company_id:ID,$page:Int) {
+                    invitationsxcompany(first: 999, page: $page,company_id:$company_id)  {
                     data{
                         id
                         name
@@ -106,6 +116,7 @@ export default {
                 }
             }`,
             {
+                page:page.value,
                 company_id: company_id.value
             },
             {
@@ -113,9 +124,19 @@ export default {
             })
             .then((data) => {
                 invitaciones.value = []
+                let paginacion = data.data.invitationsxcompany.paginatorInfo
                 data.data.invitationsxcompany.data.forEach(element => {
                     invitaciones.value.push({id:element.id, nombre: element.name, email:element.email ,activo: false, modalDelete: false})
                 })
+
+                lastPage.value = paginacion.lastPage
+                count.value = paginacion.count
+                total.value = paginacion.total
+                currentPage.value = paginacion.currentPage
+                firstItem.value = paginacion.firstItem
+                lastItem.value = paginacion.lastItem
+                perPage.value = paginacion.perPage
+                hasMorePages.value = paginacion.hasMorePages
                 loading.value = false
             })
             .catch(error => {
@@ -160,7 +181,17 @@ export default {
             loading,
             actionModal,
             actionModalDelete,
-            ChangeState
+            ChangeState,
+              
+            page ,
+            count,
+            total,
+            currentPage,
+            firstItem,
+            lastItem, 
+            perPage,
+            hasMorePages,
+            lastPage
         }
     }
 }

@@ -234,23 +234,10 @@ export default {
             console.log('valor sig',valorNext)
             page.value +=1
             
-          /*   if (valorNext==true){
-                page.value +=1
-            }
-            else {
-                page.value -=1
-            } */
         }
         const atras = (valorNext) => {
             console.log('valor sig',valorNext)
             if(valorNext==false) page.value -=1
-            
-          /*   if (valorNext==true){
-                page.value +=1
-            }
-            else {
-                page.value -=1
-            } */
         }
 
         const activarEdicion = (data) => {
@@ -267,7 +254,7 @@ export default {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             client.rawRequest(/* GraphQL */ `
             query($page:Int) {
-                permits(first:10,page:$page) {
+                permits(first:50,page:$page) {
                     paginatorInfo{
                         count
                         currentPage

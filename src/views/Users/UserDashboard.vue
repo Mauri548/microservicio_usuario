@@ -33,7 +33,7 @@
             <NoFoundData v-if="!loading && users.length == 0" />
         </div>
 <!--         <Pagination :count="count" :total="total" :currentPage="currentPage" :firstItem="firstItem" :lastItem="lastItem" :perPage="perPage" :hasMorePages="hasMorePages" /> -->
-          <Pagination :currentPage=currentPage :count="count" :total="total" :firstItem="firstItem" :lastItem="lastItem" :perPage="perPage" :hasMorePages="hasMorePages" />
+          <Pagination @next="camb_pagina" @previous="atras" :lastPage=lastPage :currentPage=currentPage :count="count" :total="total" :firstItem="firstItem" :lastItem="lastItem" :perPage="perPage" :hasMorePages="hasMorePages" />
     </div>
 </template>
 
@@ -73,6 +73,7 @@ export default {
         const company_id = ref('');
         const loading = ref(false)
 
+        const page = ref(1);
         const count = ref();
         const total = ref()
         const currentPage = ref()
@@ -80,12 +81,23 @@ export default {
         const lastItem = ref()
         const perPage = ref()
         const hasMorePages = ref()
+        const lastPage = ref();
+
+        const camb_pagina = (valorNext) => {
+            console.log('valor sig',valorNext)
+            page.value +=1
+            
+        }
+        const atras = (valorNext) => {
+            console.log('valor sig',valorNext)
+            if(valorNext==false) page.value -=1
+        }
 
         const traerUsersxCompany = async (id) => {
             const client = new GraphQLClient(endpoint) 
             await client.rawRequest(/* GraphQL */ `
-            query($company_id:ID){
-                userscompaniesxcompany(first:888,page:1,company_id:$company_id) {
+            query($company_id:ID,$page:Int){
+                userscompaniesxcompany(first:888,page:$page,company_id:$company_id) {
                     data{
                         user {
                             id
@@ -105,6 +117,7 @@ export default {
                 }
             }`,
             {
+                page:page.value,
                 company_id: id
             })
             .then((data) => {
@@ -114,6 +127,7 @@ export default {
                 datos.forEach(element => {
                     users.value.push({id:element.user.id, nombre: element.user.name, email:element.user.email ,activo: false, modalDelete: false})
                 }) 
+                lastPage.value = paginacion.lastPage
                 count.value = paginacion.count
                 total.value = paginacion.total
                 currentPage.value = paginacion.currentPage
@@ -174,6 +188,8 @@ export default {
         }
 
         return {
+            atras ,
+            camb_pagina,
             company_id,
             endpoint,
             users,
@@ -184,6 +200,7 @@ export default {
             actionModalDelete,
             ChangeState,
 
+            page ,
             count,
             total,
             currentPage,
@@ -191,6 +208,7 @@ export default {
             lastItem, 
             perPage,
             hasMorePages,
+            lastPage
         }
     }
 }

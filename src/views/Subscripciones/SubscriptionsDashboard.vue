@@ -34,7 +34,7 @@
             <NoFoundData v-if="!loading && subscripciones.length == 0" />
         </div>
 
-        <Pagination/>
+        <Pagination @next="camb_pagina" @previous="atras" :lastPage=lastPage :currentPage=currentPage :count="count" :total="total" :firstItem="firstItem" :lastItem="lastItem" :perPage="perPage" :hasMorePages="hasMorePages" />
     </div>
        <!-- Modal de carga exitosa -->
     <ModalAlert :activador="carga_exitosa">
@@ -79,7 +79,6 @@ export default {
 
     setup () {
         const datas = ref([])
-      
         const carga_exitosa = ref(false)
         const comprobar = store.state.carga_exitosa
         const comprobar_edi = store.state.edicion_exitosa
@@ -89,6 +88,16 @@ export default {
         const subscripciones = ref([])
         const router = useRouter()
         const loading = ref(false)
+
+        const page = ref(1);
+        const count = ref();
+        const total = ref()
+        const currentPage = ref()
+        const firstItem = ref()
+        const lastItem = ref()
+        const perPage = ref()
+        const hasMorePages = ref()
+        const lastPage = ref();
 
         /**
          * 
@@ -103,8 +112,8 @@ export default {
         const traerSuscriptionxCompany = async () => {
             const client = new GraphQLClient(endpoint)
             await client.rawRequest(/* GraphQL */ `
-                query($company_id:ID) {
-                    subscriptionsxcompany(first: 100, page: 1,company_id:$company_id) {
+                query($company_id:ID,$page:Int) {
+                    subscriptionsxcompany(first: 100, page: $page,company_id:$company_id) {
                         paginatorInfo {
                             count, currentPage, firstItem, hasMorePages
                             lastItem, lastPage, perPage, total
@@ -124,16 +133,27 @@ export default {
                     }
                 }`,
                 {
+                    page:page.value,
                     company_id: company_id.value
                 },
                 {
                     authorization: `Bearer ${ localStorage.getItem('user-token') }` 
                 })
                 .then((data) => {
+                    let paginacion = data.data.subscriptionsxcompany.paginatorInfo
                     subscripciones.value = []
                     data.data.subscriptionsxcompany.data.forEach(element => {
                         subscripciones.value.push({id:element.id, nombreApp: element.app.name, licence:element.license.name ,companyName:element.company.name_fantasy,activo: false, modalDelete: false})
                     })
+                    lastPage.value = paginacion.lastPage
+                    count.value = paginacion.count
+                    total.value = paginacion.total
+                    currentPage.value = paginacion.currentPage
+                    firstItem.value = paginacion.firstItem
+                    lastItem.value = paginacion.lastItem
+                    perPage.value = paginacion.perPage
+                    hasMorePages.value = paginacion.hasMorePages
+
                 }).catch(error => {
                     console.log(error.response)
                 })
@@ -208,7 +228,17 @@ export default {
             titles,
             actionModal,
             actionModalDelete,
-            ChangeState
+            ChangeState,
+
+            page ,
+            count,
+            total,
+            currentPage,
+            firstItem,
+            lastItem, 
+            perPage,
+            hasMorePages,
+            lastPage
         }
     }
 }

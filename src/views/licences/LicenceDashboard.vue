@@ -35,7 +35,7 @@
             <Loading v-show="loading"/>
             <NoFoundData v-if="!loading && licenses.length == 0" />
         </div>
-        <Pagination/>
+         <Pagination @next="camb_pagina" @previous="atras" :lastPage=lastPage :currentPage=currentPage :count="count" :total="total" :firstItem="firstItem" :lastItem="lastItem" :perPage="perPage" :hasMorePages="hasMorePages" />
     </div>
 
     <!-- Ventana modal de formulario -->
@@ -137,6 +137,15 @@ export default {
         const activeAlert = ref(false)
         const loading = ref(false)
         const loading_form = ref(false)
+        const page = ref(1);
+        const count = ref();
+        const lastPage = ref();
+        const total = ref()
+        const currentPage = ref()
+        const firstItem = ref()
+        const lastItem = ref()
+        const perPage = ref()
+        const hasMorePages = ref()
         
         /**
          * 
@@ -156,8 +165,8 @@ export default {
         const fetchLicenses = () => {
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */ `
-            query{
-                licenses(first: 999, page: 1) {
+            query($page: Int){
+                licenses(first: 999, page: $page) {
                     data {
                         id,
                         name,
@@ -169,19 +178,29 @@ export default {
                         }
                     }
                     paginatorInfo {
-                        count, currentPage, hasMorePages, total
+                        count, currentPage, firstItem, hasMorePages
+                        lastItem, lastPage, perPage, total
                     }
                 }
             }`,
             {
-                // asignar la pagina 
+                page:page.value
             })
             .then((data) => {
+                let paginacion = data.data.licenses.paginatorInfo
                 licenses.value = []
                 data.data.licenses.data.forEach(element => {
                     licenses.value.push({id:element.id, name:element.name, price_arg:element.price_arg, 
                         price_usd:element.price_usd, app: {id:element.app.id, name: element.app.name}, activo: false, modalDelete: false})
                 })
+                lastPage.value = paginacion.lastPage
+                count.value = paginacion.count
+                total.value = paginacion.total
+                currentPage.value = paginacion.currentPage
+                firstItem.value = paginacion.firstItem
+                lastItem.value = paginacion.lastItem
+                perPage.value = paginacion.perPage
+                hasMorePages.value = paginacion.hasMorePages
                 loading.value = false
             })
             .catch(error => {
@@ -445,7 +464,17 @@ export default {
             typeAction,
             succesLoad,
             activeAlert,
-            loading_form
+            loading_form,
+            //traer datos de paginacion
+            lastPage,
+            page,
+            count,
+            total,
+            currentPage,
+            firstItem,
+            lastItem, 
+            perPage,
+            hasMorePages,
         }
     }
 

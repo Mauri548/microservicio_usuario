@@ -26,7 +26,7 @@
             <NoFoundData v-if="!loading && apps.length == 0" />
         </div>
    
-        <Pagination/>
+        <Pagination @next="camb_pagina" @previous="atras" :lastPage=lastPage :currentPage=currentPage :count="count" :total="total" :firstItem="firstItem" :lastItem="lastItem" :perPage="perPage" :hasMorePages="hasMorePages" />
     </div>
     <ModalAlert :activador="carga_exitosa">
        <p v-if="comprobar">{{$t('app.modalCarga')}}</p>
@@ -82,13 +82,23 @@ export default {
         const app_eliminada = ref(false)
         const loading = ref(false)
 
+        const page = ref(1);
+        const count = ref();
+        const total = ref()
+        const currentPage = ref()
+        const firstItem = ref()
+        const lastItem = ref()
+        const perPage = ref()
+        const hasMorePages = ref()
+        const lastPage = ref();
+
         const titles = ref([])
 
         const traerApps = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             client.rawRequest(/* GraphQL */ `
-            query{
-                apps(first: 999, page: 1){
+            query($page:Int){
+                apps(first: 999, page: $page){
                     data{
                         id
                         name
@@ -106,24 +116,35 @@ export default {
                         }
                     }
                     paginatorInfo {
-                        count, currentPage, hasMorePages, total
+                        count, currentPage, firstItem, hasMorePages
+                        lastItem, lastPage, perPage, total
                     }
                    
                 }
             }`,
             {
-                /* page: parseInt(route.params.page),
-                first: mostrar_cantidad.value */
+                page: page.value
+                /* first: mostrar_cantidad.value  */
             },
             {
                 authorization: `Bearer ${ localStorage.getItem('user-token') }`
             })
             .then((data) => {
+                let paginacion = data.data.apps.paginatorInfo
                 apps.value = []
                 data.data.apps.data.forEach(element => {
                     apps.value.push({id:element.id, nombre: element.name, logo: ispb, observacion:element.observation ,activo: false, modalDelete: false})
                 })
+                lastPage.value = paginacion.lastPage
+                count.value = paginacion.count
+                total.value = paginacion.total
+                currentPage.value = paginacion.currentPage
+                firstItem.value = paginacion.firstItem
+                lastItem.value = paginacion.lastItem
+                perPage.value = paginacion.perPage
+                hasMorePages.value = paginacion.hasMorePages
                 loading.value = false
+
             }).catch(error => {
                 console.log(error.response)
                 loading.value = false
@@ -225,7 +246,17 @@ export default {
             actionModal,
             actionModalDelete,
             comprobar_carga,
-            comprobar_edicion
+            comprobar_edicion,
+
+            page ,
+            count,
+            total,
+            currentPage,
+            firstItem,
+            lastItem, 
+            perPage,
+            hasMorePages,
+            lastPage
         }
     }
 }

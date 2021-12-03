@@ -30,6 +30,7 @@
             </Board>
             <Loading v-show="loading"/>
         </div>
+        <Pagination @next="camb_pagina" @previous="atras" :lastPage=lastPage :currentPage=currentPage :count="count" :total="total" :firstItem="firstItem" :lastItem="lastItem" :perPage="perPage" :hasMorePages="hasMorePages" />
     </div>
 
    <ModalAlert :activador="carga_exitosa">
@@ -80,11 +81,18 @@ export default {
         const endpoint = store.state.url_backend
         const companies = ref([])
         const user_id = ref();
-
         const datas = ref([])
-
         const titles = ref()
         const loading = ref(false)
+        const page = ref(1);
+        const count = ref();
+        const lastPage = ref();
+        const total = ref()
+        const currentPage = ref()
+        const firstItem = ref()
+        const lastItem = ref()
+        const perPage = ref()
+        const hasMorePages = ref()
 
 
         watchEffect(()=>{
@@ -156,8 +164,8 @@ export default {
         const traerCompaniesxUser = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             client.rawRequest(/* GraphQL */ `
-            query($id:ID) {
-                    userscompaniesxuser(first: 999, page:1, user_id: $id) {
+            query($id:ID,$page:Int) {
+                    userscompaniesxuser(first: 999, page:$page, user_id: $id) {
                         paginatorInfo {
                             count
                             currentPage
@@ -194,10 +202,12 @@ export default {
                     }
             }`,
             {
+                page:page.value,
                 id:user_id.value   
             },)
             .then((data) => {
                 companies.value = []
+                let paginacion = data.data.userscompaniesxuser.paginatorInfo
                 let datos = data.data.userscompaniesxuser.data
                 // console.log(datos[0].company.name_fantasy)
             
@@ -211,6 +221,14 @@ export default {
                     country:element.company.country, activo: false, modalDelete: false}) 
                     
                 })
+                lastPage.value = paginacion.lastPage
+                count.value = paginacion.count
+                total.value = paginacion.total
+                currentPage.value = paginacion.currentPage
+                firstItem.value = paginacion.firstItem
+                lastItem.value = paginacion.lastItem
+                perPage.value = paginacion.perPage
+                hasMorePages.value = paginacion.hasMorePages
                 loading.value = false
             })
             .catch(error => {
@@ -271,7 +289,17 @@ export default {
             datas,
             titles,
             actionModal,
-            actionModalDelete
+            actionModalDelete,
+            //traer datos de paginacion
+            lastPage,
+            page,
+            count,
+            total,
+            currentPage,
+            firstItem,
+            lastItem, 
+            perPage,
+            hasMorePages,
         }
     }
 }
