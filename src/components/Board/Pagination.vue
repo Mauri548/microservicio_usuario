@@ -2,7 +2,7 @@
     <div class="conteiner-pagination px-4 mt-3">
           <!--   con la expresion {{$t('')}} podemos traer la palabra que queremos mostrar traducida en el lenguaje seleccionado -->
         <nav class="pagination is-right" role="navigation" aria-label="pagination">
-            <p class="ml-1">{{currentPage}} {{$t('board.pagination.al')}} {{count}} {{$t('board.pagination.de')}} {{total}}</p>
+            <p class="ml-1">{{firstItem}} {{$t('board.pagination.al')}} {{lastItem}} {{$t('board.pagination.de')}} {{total}}</p>
             <ul class="pagination-list">
                 <!-- <li v-show="(currentPage-2)>=0"><a class="pagination-link" >{{currentPage - firstItem}}</a></li>  -->
                 <!-- <li><span class="pagination-ellipsis">&hellip;</span></li> -->
