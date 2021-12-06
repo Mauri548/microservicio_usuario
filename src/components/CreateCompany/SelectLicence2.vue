@@ -18,16 +18,24 @@
 				</div> 
 			</div>
 		</div>
+
+		
 	</div>
 
 	<div class="conteiner-license">
-		<div class="card-license" v-for="license in app.licenses" :key="license.id">
-			<h1 class="card-title has-text-white has-text-weight-semibold">{{license.name}}</h1>
-			<span v-show="coinSelect.name == 'ARS'" class="card-price has-text-white">${{license.price_arg}}</span>
-			<span v-show="coinSelect.name == 'USD'" class="card-price has-text-white">${{license.price_usd}}</span>
-			<button @click="validar(license)" class="button has-text-weight-semibold">I want</button>
+		<CardLicence v-for="license in app.licenses" :key="license.id" 
+			:coinSelect="coinSelect" :license="license"
+			@onValidate="validar"
+		/> 
+  	</div>
+
+	<ModalAlert :activador="activeAlert" :state="false">
+		<div>
+			<p v-if="typeAction == 'licence.agregar'" v-t="'licence.modalCargaError'"></p>
+			<p v-else v-t="'licence.modalEdicionError'"></p>
 		</div>
-  </div>
+	</ModalAlert>
+
 </template>
 
 <script>
@@ -35,9 +43,16 @@ import { ref } from '@vue/reactivity'
 import {GraphQLClient} from 'graphql-request';
 import store from '@/store';
 import { useRouter } from 'vue-router';
+import CardLicence from './CardLicence.vue'
+import ModalAlert from '../Modals/ModalsAlert.vue'
 
 export default {
   	name:"SelectLicence",
+
+	components: {
+		CardLicence,
+		ModalAlert,
+	},
 
   	props: ['app'],
 
@@ -50,6 +65,7 @@ export default {
         const coinActivo = ref(false)
         const coinSelect = ref({id: 1, name: 'ARS'})
 		const router = useRouter()
+		const activeAlert = ref(false)
 
 		// Abre el desplegable de monedas
         const openSelectCoin = () => {
@@ -63,9 +79,9 @@ export default {
             openSelectCoin()
         }
 
-		const crearSuscripcion = (dato, user_company_id) => {
+		const crearSuscripcion = async (dato, user_company_id) => {
 			const client = new GraphQLClient(endpoint)
-            client.rawRequest(/* GraphQL */ `
+            await client.rawRequest(/* GraphQL */ `
             mutation($company_user_id:ID!,$use_company_id:ID!, $use_app_id:ID!,$lic_license_id:ID!){
               		createsUse_subscription (company_user_id:$company_user_id, input:{
                     use_company_id: $use_company_id,
@@ -97,27 +113,38 @@ export default {
 					router.push({name: 'SubscriptionsDashboard'}) 
 				},2000)
             }).catch(error => {
+				activeAlert.value = true
+				checkLoad()
                 console.log(error.response);
             })
 		}
 
-		const validar = (data) => {
+		const checkLoad = () => {
+            if (activeAlert.value == true) {
+                setTimeout(() => {
+                    activeAlert.value = false
+                },3000)
+            }
+        }
+
+		const validar = async (data) => {
 			let user_company_id = localStorage.getItem('user_company_id')
 
 			if (user_company_id) {
-				crearSuscripcion(data, user_company_id)
+				await crearSuscripcion(data, user_company_id)
 			}
 		}
 
 		return {
-			crearSuscripcion,
-			use_company_id, 
+			activeAlert,
 			coins, 
 			coinActivo, 
 			coinSelect, 
+			use_company_id, 
 			changeCoin, 
+			crearSuscripcion,
 			openSelectCoin, 
-			validar
+			validar,
 		}
   	}
 
