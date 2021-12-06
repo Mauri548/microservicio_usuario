@@ -18,6 +18,8 @@ const store = createStore({
             company_id: null | localStorage.getItem('id_company_selected'),
             comes_from_register : false,
             active_menu_movile: false,
+            cant: 20,
+
         }
     },
 
@@ -84,6 +86,11 @@ const store = createStore({
             dato.info.page = dato.pageInfo.currentPage
             dato.info.total = dato.pageInfo.total
         }, */
+
+        mostrar_filas(state,filas){
+            state.cant = filas
+            console.log(state.cant)
+        },
 
         verificar_carga(state,accion){
 

@@ -86,8 +86,8 @@ export default {
         const traerInvitaciones =() => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             client.rawRequest(/* GraphQL */ `
-            query($company_id:ID,$page:Int) {
-                    invitationsxcompany(first: 999, page: $page,company_id:$company_id)  {
+            query($company_id:ID,$page:Int,$first:Int!) {
+                    invitationsxcompany(first: $first, page: $page,company_id:$company_id)  {
                     data{
                         id
                         name
@@ -117,7 +117,8 @@ export default {
             }`,
             {
                 page:page.value,
-                company_id: company_id.value
+                company_id: company_id.value,
+                first: store.state.cant
             },
             {
                 authorization: `Bearer ${ localStorage.getItem('user-token') }`

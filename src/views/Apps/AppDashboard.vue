@@ -97,8 +97,8 @@ export default {
         const traerApps = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             client.rawRequest(/* GraphQL */ `
-            query($page:Int){
-                apps(first: 999, page: $page){
+            query($page:Int,$first: Int!){
+                apps(first: $first, page: $page){
                     data{
                         id
                         name
@@ -123,8 +123,9 @@ export default {
                 }
             }`,
             {
-                page: page.value
+                page: page.value,
                 /* first: mostrar_cantidad.value  */
+                first: store.state.cant
             },
             {
                 authorization: `Bearer ${ localStorage.getItem('user-token') }`

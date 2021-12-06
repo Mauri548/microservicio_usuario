@@ -164,8 +164,8 @@ export default {
         const traerCompaniesxUser = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             client.rawRequest(/* GraphQL */ `
-            query($id:ID,$page:Int) {
-                    userscompaniesxuser(first: 999, page:$page, user_id: $id) {
+            query($id:ID,$page:Int,$first:Int!) {
+                    userscompaniesxuser(first: $first, page:$page, user_id: $id) {
                         paginatorInfo {
                             count
                             currentPage
@@ -203,7 +203,8 @@ export default {
             }`,
             {
                 page:page.value,
-                id:user_id.value   
+                id:user_id.value,
+                first: store.state.cant
             },)
             .then((data) => {
                 companies.value = []

@@ -25,7 +25,8 @@ import ShowRows from './ShowRows.vue'
 import Searcher from './Searcher.vue'
 import { useRouter } from 'vue-router'
 import Button from '../Buttons/Button.vue'
-
+import store from '@/store';
+import { watchEffect } from '@vue/runtime-core'
 
 export default {
     name: 'HeadBoard',
@@ -44,13 +45,17 @@ export default {
 
     setup(props) {
         const router = useRouter()
+        const numFila = store.state.cant
+       
 
+    
         // Te redirecciona al path indicado por el prop "namePath"
         const push = () => {
             router.push({name: props.namePath})
         }
 
         return {
+            numFila,
             push
         }
     }

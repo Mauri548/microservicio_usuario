@@ -112,8 +112,8 @@ export default {
         const traerSuscriptionxCompany = async () => {
             const client = new GraphQLClient(endpoint)
             await client.rawRequest(/* GraphQL */ `
-                query($company_id:ID,$page:Int) {
-                    subscriptionsxcompany(first: 100, page: $page,company_id:$company_id) {
+                query($company_id:ID,$page:Int,$first: Int!) {
+                    subscriptionsxcompany(first: $first, page: $page,company_id:$company_id) {
                         paginatorInfo {
                             count, currentPage, firstItem, hasMorePages
                             lastItem, lastPage, perPage, total
@@ -134,7 +134,8 @@ export default {
                 }`,
                 {
                     page:page.value,
-                    company_id: company_id.value
+                    company_id: company_id.value,
+                    first: store.state.cant
                 },
                 {
                     authorization: `Bearer ${ localStorage.getItem('user-token') }` 

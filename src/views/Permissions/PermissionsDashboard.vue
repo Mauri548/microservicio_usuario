@@ -253,8 +253,8 @@ export default {
         const traerPermisos = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             client.rawRequest(/* GraphQL */ `
-            query($page:Int) {
-                permits(first:50,page:$page) {
+            query($page:Int,$first:Int!) {
+                permits(first:$first,page:$page) {
                     paginatorInfo{
                         count
                         currentPage
@@ -279,9 +279,9 @@ export default {
                 }
             }`,
             {
-                page:page.value
-               /* page: parseInt(route.params.page),
-                 first: mostrar_cantidad.value */ 
+                page:page.value,
+               /* page: parseInt(route.params.page), */
+                first: store.state.cant
             })
             .then((data) => {
                 permisos.value = []

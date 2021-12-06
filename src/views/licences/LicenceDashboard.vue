@@ -165,8 +165,8 @@ export default {
         const fetchLicenses = () => {
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */ `
-            query($page: Int){
-                licenses(first: 999, page: $page) {
+            query($page: Int,$first:Int!){
+                licenses(first: $first, page: $page) {
                     data {
                         id,
                         name,
@@ -184,7 +184,8 @@ export default {
                 }
             }`,
             {
-                page:page.value
+                page:page.value,
+                first: store.state.cant
             })
             .then((data) => {
                 let paginacion = data.data.licenses.paginatorInfo

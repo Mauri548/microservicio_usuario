@@ -96,8 +96,8 @@ export default {
         const traerUsersxCompany = async (id) => {
             const client = new GraphQLClient(endpoint) 
             await client.rawRequest(/* GraphQL */ `
-            query($company_id:ID,$page:Int){
-                userscompaniesxcompany(first:888,page:$page,company_id:$company_id) {
+            query($company_id:ID,$page:Int,$first:Int!){
+                userscompaniesxcompany(first:$first,page:$page,company_id:$company_id) {
                     data{
                         user {
                             id
@@ -118,7 +118,8 @@ export default {
             }`,
             {
                 page:page.value,
-                company_id: id
+                company_id: id, 
+                first: store.state.cant
             })
             .then((data) => {
                 users.value = []
