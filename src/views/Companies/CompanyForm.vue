@@ -70,7 +70,7 @@
 
         <div class="field is-grouped is-justify-content-space-between">
             <Button class="has-background-danger cancel"
-                >
+                @click="volver">
                 {{$t('personalForm.cancel')}}
             </Button>
             <Button class="accept" :loading="isLoading"
@@ -87,6 +87,7 @@
 import CampoForm from '../../components/CampoForm.vue'
 import Button from '../../components/Buttons/Button.vue'
 import { ref } from '@vue/reactivity'
+import { useRoute, useRouter } from 'vue-router'
 
 export default {
     name: 'CompanyForm',
@@ -109,7 +110,7 @@ export default {
         'country', 
         'selectTaxCondition', 
         'isLoading',
-        'msg_error'
+        'msg_error',
     ],
 
     emits: ['onSaveChange'],
@@ -122,6 +123,17 @@ export default {
             {id: 4 ,name: 'Responsable Monotributo', value: 'Resp_Monotributo'},
             {id: 5 ,name: 'Cliente Exterior', value: 'Cliente_Exterior'},
         ])
+        const route = useRoute()
+        const router = useRouter()
+
+
+        const volver = () => {
+           /* console.log(window.history.state) */
+           if(window.history.state.back != '/login'){
+               /* console.log("la vista anterior es tabla de companies") */
+               router.go(-1)
+           }
+        }
 
         const register = () => {
             let data = {
@@ -141,7 +153,7 @@ export default {
         }
 
         return {
-            taxCondition, register
+            volver,router,route,taxCondition, register
         }
     }
 }
