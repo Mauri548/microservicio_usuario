@@ -36,7 +36,7 @@ export default {
         const cantRows = ref([
             {valor: 50},{valor: 100},{valor: 200}
         ])
-        const cantSelect = ref(20)
+        const cantSelect = ref(50)
         const activo = ref(false)
         
        

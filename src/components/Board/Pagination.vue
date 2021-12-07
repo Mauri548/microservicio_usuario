@@ -2,12 +2,12 @@
     <div class="conteiner-pagination px-4 mt-3">
           <!--   con la expresion {{$t('')}} podemos traer la palabra que queremos mostrar traducida en el lenguaje seleccionado -->
         <nav class="pagination is-right" role="navigation" aria-label="pagination">
-            <p class="ml-1">{{firstItem}} {{$t('board.pagination.al')}} {{lastItem}} {{$t('board.pagination.de')}} {{total}}</p>
+            <p v-show="total>0" class="ml-1">{{firstItem}} {{$t('board.pagination.al')}} {{lastItem}} {{$t('board.pagination.de')}} {{total}}</p>
             <ul class="pagination-list">
                 <!-- <li v-show="(currentPage-2)>=0"><a class="pagination-link" >{{currentPage - firstItem}}</a></li>  -->
                 <!-- <li><span class="pagination-ellipsis">&hellip;</span></li> -->
                 <li v-show="(currentPage-1)>0 &&  currentPage-1!=currentPage"><a @click="$emit('previous',!valorNext)" class="pagination-link" >{{currentPage - 1}}</a></li>
-                <li><a class="pagination-link is-current"  aria-current="page">{{currentPage}}</a></li>
+                <li v-show="total>0"><a class="pagination-link is-current"  aria-current="page">{{currentPage}}</a></li>
                 
                 <li v-show="hasMorePages">
                     <a @click="$emit('next',valorNext)"   class="pagination-link" >{{currentPage + 1}}</a>

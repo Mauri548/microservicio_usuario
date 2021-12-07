@@ -175,7 +175,7 @@ export default {
         }
 
         watchEffect( async () => {
-            console.log('hola')
+            /* console.log('hola') */
             store.state.company_id
             if (localStorage.getItem('id_company_selected')) {
                 await generalQuery(localStorage.getItem('user_company_id'))
@@ -266,7 +266,7 @@ export default {
                 user_id: id
             })
             .then((data) => {
-                console.log('userscompaniesxuser')
+                /* console.log('userscompaniesxuser') */
                 let user_company_id = data.data.userscompaniesxuser.data.find(el => el.use_company_id == localStorage.getItem('id_company_selected'))
                 let aux = users.value.find(user => user.id == id)
                 aux.user_company_id = user_company_id.id
@@ -295,7 +295,7 @@ export default {
                 companyuser_id: id
             })
             .then((data) => {
-                console.log('permissionsxcompanyuser')
+                /* console.log('permissionsxcompanyuser') */
                 userPermission.value = []
                 data.data.permissionsxcompanyuser.data.forEach(item => {
                     userPermission.value.push({ id: item.id, permit_id: parseInt(item.use_permit_id) })

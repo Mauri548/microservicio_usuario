@@ -286,7 +286,7 @@ export default {
             .then((data) => {
                 permisos.value = []
                 let paginacion = data.data.permits.paginatorInfo
-                console.log(paginacion)
+               /*  console.log(paginacion) */
                 data.data.permits.data.forEach(element => {
                     permisos.value.push({
                         id:element.id, key: element.key, detail: element.detail,

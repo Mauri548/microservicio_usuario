@@ -137,7 +137,7 @@ export default {
                 perPage.value = paginacion.perPage
                 hasMorePages.value = paginacion.hasMorePages
                 
-                console.log(typeof(count.value))
+                /* console.log(typeof(count.value)) */
 
 
                 loading.value = false

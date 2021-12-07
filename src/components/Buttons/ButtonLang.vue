@@ -32,7 +32,7 @@ export default {
 
             langStorage.setItem('lang',i18n.global.locale)
 
-            console.log(langStorage.getItem('lang'))
+            /* console.log(langStorage.getItem('lang')) */
         })
 
         return{ 

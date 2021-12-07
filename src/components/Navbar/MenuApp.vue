@@ -131,7 +131,7 @@ export default {
                             logo: ispb, activo: true
                         })
                     })
-                    console.log(apps.value)
+                   /*  console.log(apps.value) */
 
                 }).catch(error => {
                     console.log(error.response);
