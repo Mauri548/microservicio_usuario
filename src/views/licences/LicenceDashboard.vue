@@ -425,6 +425,15 @@ export default {
                 }
             }
         }
+        const camb_pagina = (valorNext) => {
+            /* console.log('valor sig',valorNext) */
+            page.value +=1
+            
+        }
+        const atras = (valorNext) => {
+          /*   console.log('valor sig',valorNext) */
+            if(valorNext==false) page.value -=1
+        }
 
         const actionModal = (data) => {
             let aux = licenses.value.find(element => element.id == data.id)
@@ -476,6 +485,8 @@ export default {
             lastItem, 
             perPage,
             hasMorePages,
+            atras ,
+            camb_pagina,
         }
     }
 

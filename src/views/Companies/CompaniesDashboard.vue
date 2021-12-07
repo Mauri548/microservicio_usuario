@@ -101,6 +101,16 @@ export default {
             : titles.value = ['Name fantasy', 'Business name', 'Owners', 'Cuit', 'Email', 'Phone', 'Tax condition', 'Direction', 'Location','Province', 'Country']
         })
 
+        const camb_pagina = (valorNext) => {
+           /*  console.log('valor sig',valorNext) */
+            page.value +=1
+            
+        }
+        const atras = (valorNext) => {
+           /*  console.log('valor sig',valorNext) */
+            if(valorNext==false) page.value -=1
+        }
+
         const traerCompanies = () => {
             const client = new GraphQLClient(endpoint) // creamos la consulta para usarlo luego
             watchEffect(() => {
@@ -301,6 +311,8 @@ export default {
             lastItem, 
             perPage,
             hasMorePages,
+            atras,
+            camb_pagina,
         }
     }
 }

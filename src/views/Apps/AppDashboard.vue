@@ -193,6 +193,15 @@ export default {
                 } */
             })
         }
+        const camb_pagina = (valorNext) => {
+            /* console.log('valor sig',valorNext) */
+            page.value +=1
+            
+        }
+        const atras = (valorNext) => {
+          /*   console.log('valor sig',valorNext) */
+            if(valorNext==false) page.value -=1
+        }
 
         watchEffect(()=>{
             loading.value = true 
@@ -257,7 +266,9 @@ export default {
             lastItem, 
             perPage,
             hasMorePages,
-            lastPage
+            lastPage,
+            atras ,
+            camb_pagina,
         }
     }
 }

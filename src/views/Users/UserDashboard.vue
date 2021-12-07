@@ -84,12 +84,12 @@ export default {
         const lastPage = ref();
 
         const camb_pagina = (valorNext) => {
-            console.log('valor sig',valorNext)
+            /* console.log('valor sig',valorNext) */
             page.value +=1
             
         }
         const atras = (valorNext) => {
-            console.log('valor sig',valorNext)
+          /*   console.log('valor sig',valorNext) */
             if(valorNext==false) page.value -=1
         }
 

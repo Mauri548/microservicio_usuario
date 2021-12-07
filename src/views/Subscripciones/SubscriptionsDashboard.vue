@@ -173,6 +173,15 @@ export default {
             await traerSuscriptionxCompany()
             loading.value = false
         })
+        const camb_pagina = (valorNext) => {
+            /* console.log('valor sig',valorNext) */
+            page.value +=1
+            
+        }
+        const atras = (valorNext) => {
+          /*   console.log('valor sig',valorNext) */
+            if(valorNext==false) page.value -=1
+        }
 
         // Activa el valor para abrir una ventana modal de ese elemento
         const actionModal = (data) => {
@@ -239,7 +248,9 @@ export default {
             lastItem, 
             perPage,
             hasMorePages,
-            lastPage
+            lastPage,
+            atras ,
+            camb_pagina,
         }
     }
 }
