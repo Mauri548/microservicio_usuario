@@ -524,7 +524,8 @@ export default {
                         id
                         key
                         detail
-                 
+                        public
+                        automatic
                     }
             }`,
             {
@@ -541,7 +542,8 @@ export default {
             .then((data) => {
                 let id = data.data.createsUse_permit.id
                 permisos.value.push(
-                    {id:id, key: key.value, detail: detail.value, app: selectedApp.value, 
+                    {id:id, key: key.value, detail: detail.value, app: selectedApp.value,
+                    public: data.data.createsUse_permit.public, automatic: data.data.createsUse_permit.automatic,
                     activo: false, modalDelete: false}
                 )
                 let accion = "cargarPermission"
