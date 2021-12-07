@@ -11,7 +11,6 @@
 <script>
 import { watchEffect } from '@vue/runtime-core'
 export default {
-//  props: ['activador','state'],
     props: {
         activador: Boolean,
         state: {

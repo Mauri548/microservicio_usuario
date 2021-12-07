@@ -1,5 +1,8 @@
 <template>
-    <button type="button" class="button btn-crenein" :class="{'is-loading': loading}">
+    <button type="button" 
+      class="button btn-crenein" :class="{'is-loading': loading}"
+      :disabled="loading"
+      >
         <slot></slot>
     </button>
 </template>
