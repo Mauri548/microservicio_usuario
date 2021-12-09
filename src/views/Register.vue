@@ -166,7 +166,7 @@ export default {
                 console.log(data.data.userscompaniesxuser.data.length)
                 if (data.data.userscompaniesxuser.data.length > 0) {
                     store.commit('setComesfromRegister', false)
-                    router.push({name: 'UserDashboard'})
+                    router.push({name: 'PersonalForm'})
                 } else {
                     store.commit('setComesfromRegister', true)
                     router.push({name: 'CreateCompany'})
