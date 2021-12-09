@@ -233,7 +233,7 @@ export default {
         watchEffect(()=>{
             listas.value[0].nombre = i18n.global.locale == 'en'? 'Personal Info': 'Información personal'
             listas.value[1].nombre = i18n.global.locale == 'en'? 'Permissions': 'Permisos'
-            listas.value[2].nombre = i18n.global.locale == 'en'? 'Company': 'Empresa'
+            listas.value[2].nombre = i18n.global.locale == 'en'? 'Platform': 'Plataforma'
             listas.value[2].opc[0].nombre = i18n.global.locale == 'en'? 'Users management': 'Gestión de usuarios'
             listas.value[2].opc[1].nombre = i18n.global.locale == 'en'? 'Invitations management': 'Tabla de Invitaciones'
             listas.value[2].opc[2].nombre = i18n.global.locale == 'en'? 'Subscriptions management': 'Tabla de Subscripciones'
