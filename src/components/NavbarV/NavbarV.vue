@@ -112,6 +112,7 @@ export default {
                     {nombre: 'Companies management', activo: false, name_link: 'CompaniesDashboard'},
                     {nombre: 'Apps management', activo: false, name_link: 'AppDashboard'},
                     {nombre: 'Licences management', activo: false, name_link: 'LicencesDashboard'},
+                    {nombre: 'LabelKeys management', activo: false, name_link: 'LabelKeyDashboard'},
                     {nombre: 'Permissions management', activo: false, name_link: 'PermissionsManagement'},
                    
                 ]},
@@ -240,7 +241,8 @@ export default {
             listas.value[2].opc[3].nombre = i18n.global.locale == 'en'? 'Companies management' : 'Gestión de empresas'
             listas.value[2].opc[4].nombre = i18n.global.locale == 'en'? 'Apps management': 'Gestión de aplicaciones'
             listas.value[2].opc[5].nombre = i18n.global.locale == 'en'? 'Licences management': 'Gestión de licencias'
-            listas.value[2].opc[6].nombre = i18n.global.locale == 'en'? 'Permissions management': 'Gestión de permisos'
+            listas.value[2].opc[6].nombre = i18n.global.locale == 'en'? 'LabelKeys management': 'Tabla de Label Keys'
+            listas.value[2].opc[7].nombre = i18n.global.locale == 'en'? 'Permissions management': 'Gestión de permisos'
 
             creating_company.value = store.state.creating_company
         })

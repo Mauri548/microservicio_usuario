@@ -116,6 +116,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "LicencesDashboard" */ '../views/licences/LicenceDashboard.vue')
       },
       {
+        path: '/LabelKeyDashboard',
+        name: 'LabelKeyDashboard',
+        component: () => import(/* webpackChunkName: "LicencesDashboard" */ '../views/LabelKeys/LabelKeyDashboard.vue')
+      },
+      {
         path: '/AppSuscription',
         name: 'AppSuscription',
         component: () => import(/* webpackChunkName: "AppSuscription" */ '../views/Apps/AppSuscription.vue')
