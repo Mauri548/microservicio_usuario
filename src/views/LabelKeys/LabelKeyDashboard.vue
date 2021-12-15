@@ -15,7 +15,8 @@
                 <tr class="has-text-centered row-table" v-for="labelKey in labelKeys" :key="labelKey.id">
                     <th @click="actionModal(labelKey)">{{labelKey.id}}</th>
                     <td @click="actionModal(labelKey)">{{labelKey.app.name}}</td>
-                    <td @click="actionModal(labelKey)">{{labelKey.name}}</td>               
+                    <td @click="actionModal(labelKey)">{{labelKey.label}}</td>   
+                    <td @click="actionModal(labelKey)">{{labelKey.typekey}}</td>    
                     <Modal class="modal-action" :buttonDefault="false" :data="labelKey" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete">
                         <button @click="ModalAdd('edit', labelKey)" class="button btn-crenein w-100 my-1">
                             <span class="icon is-small">
@@ -35,7 +36,7 @@
     </div>
  
     <!-- Ventana modal de formulario -->
-    <AddLabelKey :title="typeAction" v-show="addLicence" @closeModal="ModalAdd">
+    <AddLabelKey :title="typeAction" v-show="addLabelkey" @closeModal="ModalAdd">
         <div>
             <section class="modal-card-body">
                 <form id="form-create-app" action="" class="column">
@@ -116,14 +117,12 @@ export default {
         const titles = ref([])
         const labelKeys = ref([])
         const apps = ref([])
-        const addLicence = ref(false)
+        const addLabelkey = ref(false)
         const endpoint = store.state.url_backend
 
         const name = ref('')
         const selectedApp = ref()
-        const price_arg = ref(0)
-        const price_usd = ref(0)
-        const msg_error = ref({ name: '', price_usd: '', price_arg: '' })
+        const msg_error = ref({ name: '' })
         const typeAction = ref('licence.agregar')
         const licenceEdition = ref(0)
         const succesLoad = ref(false)
@@ -152,27 +151,33 @@ export default {
 
         /**
          * 
-         * Trae todas las licencias
+         * Trae todas las labelkeys
          * 
          */
-        const fetchLicenses = () => {
+        const fetchLabelkeys = () => {
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */ `
             query($page: Int,$first:Int!){
-                licenses(first: $first, page: $page) {
+                labelkeys(first: $first, page: $page) {
+                    paginatorInfo {
+                        count
+                        firstItem
+                        hasMorePages
+                        lastItem
+                        lastPage
+                        perPage
+                        total
+                        currentPage,
+                    }
                     data {
-                        id,
-                        name,
-                        price_arg,
-                        price_usd,
+                        id
+                        app_id
+                        label
+                        typekey
                         app {
-                            id,
+                            id
                             name
                         }
-                    }
-                    paginatorInfo {
-                        count, currentPage, firstItem, hasMorePages
-                        lastItem, lastPage, perPage, total
                     }
                 }
             }`,
@@ -181,11 +186,15 @@ export default {
                 first: store.state.cant
             })
             .then((data) => {
-                let paginacion = data.data.licenses.paginatorInfo
+                let paginacion = data.data.labelkeys.paginatorInfo
+                
                 labelKeys.value = []
-                data.data.licenses.data.forEach(element => {
-                    labelKeys.value.push({id:element.id, name:element.name, app: {id:element.app.id, name: element.app.name}, activo: false, modalDelete: false})
+                data.data.labelkeys.data.forEach(element => {
+                    labelKeys.value.push({id:element.id, label:element.label,typekey:element.typekey, app: {id:element.app.id, name: element.app.name}, activo: false, modalDelete: false})
                 })
+                console.log(paginacion)
+                console.log(labelKeys.value)
+
                 lastPage.value = paginacion.lastPage
                 count.value = paginacion.count
                 total.value = paginacion.total
@@ -193,7 +202,7 @@ export default {
                 firstItem.value = paginacion.firstItem
                 lastItem.value = paginacion.lastItem
                 perPage.value = paginacion.perPage
-                hasMorePages.value = paginacion.hasMorePages
+                hasMorePages.value = paginacion.hasMorePages 
                 loading.value = false
             })
             .catch(error => {
@@ -208,7 +217,7 @@ export default {
 
         watchEffect(() => {
             loading.value = true
-            fetchLicenses()
+            fetchLabelkeys()
         })
 
 
@@ -276,30 +285,11 @@ export default {
 
         /**
          * 
-         * Agrega un mensaje de error para los campos precio que sea menor a 0
-         * 
-         * @param price Variable donde esta el valor del precio
-         * @param key nombre del campo que se debe buscar
-         * 
-         */
-        const msgErrorPrice = (price, key='') => {
-            if (price < 0) {
-                msg_error.value[key] = i18n.global.locale=='es'? 'El precio no puede ser menor que 0' : 'The price cannot be less than 0'
-            }
-        }
-
-        /**
-         * 
          * Verifica que los campos no esten vacios
          * 
          */
         const fieldsIsEmpty = () => {
             isEmpty(name.value, msg_error.value, 'name')
-            if (isEmpty(price_arg.value)) price_arg.value = 0
-            if (isEmpty(price_usd.value)) price_usd.value = 0
-
-            msgErrorPrice(price_arg.value, 'price_arg')
-            msgErrorPrice(price_usd.value, 'price_usd')
         }
 
         // Funcion para crear una nueva licencia
@@ -320,8 +310,6 @@ export default {
                 company_user_id:localStorage.getItem('user_company_id'),
                 app_id: parseInt(selectedApp.value),
                 name: name.value,
-                price_arg: parseFloat(price_arg.value),
-                price_usd: parseFloat(price_usd.value)
             })
             .then((data) => {
                 let data_licence = data.data.createsLic_license
@@ -349,8 +337,6 @@ export default {
                 modifiesLic_license(company_user_id:$company_user_id,id: $id, input: {
                     name: $name,
                     app_id: $app_id,
-                    price_arg: $price_arg,
-                    price_usd: $price_usd
                 }) {
                     id, app_id, name, price_arg, price_usd
                 }
@@ -359,8 +345,7 @@ export default {
                 company_user_id:localStorage.getItem('user_company_id'),
                 id: licenceEdition.value,
                 name: name.value,
-                price_arg: parseFloat(price_arg.value),
-                price_usd: parseFloat(price_usd.value),
+
             })
             .then((data) => {
                 let res = data.data.modifiesLic_license
@@ -368,8 +353,6 @@ export default {
                 let lic_aux = licenses.value.find(licencia => licencia.id == res.id)
                 // Asignamos los valores al elemento para que se modifique en la vista del usuario
                 lic_aux.name = res.name
-                res.price_arg == 0? lic_aux.price_arg = null : lic_aux.price_arg = res.price_arg
-                res.price_usd == 0? lic_aux.price_usd = null : lic_aux.price_usd = res.price_usd
                 lic_aux.app.id = res.app_id
                 lic_aux.app.name = app.name
                 // Cerramos la ventana modal
@@ -393,27 +376,23 @@ export default {
         }
 
         const ModalAdd = (type, data) => {
-            addLicence.value = !addLicence.value
-            if (addLicence.value) {
+            addLabelkey.value = !addLabelkey.value
+            if (addLabelkey.value) {
                 resetErrorMessage(msg_error.value)
                 
                 fetchApps()
                 /*Verificamos el tipo de accion que se hara, si es editar o agregar para reutilizar un componente
                 modal */
                 if (type == 'add') {
-                    typeAction.value = 'licence.agregar'
+                    typeAction.value = 'labelkey.agregar'
                     document.getElementById('form-create-app').reset()
                     name.value = ''
-                    price_arg.value = null
-                    price_usd.value = null
                 } else {
                     actionModal(data)
                     licenceEdition.value = data.id
-                    typeAction.value = 'licence.editar'
+                    typeAction.value = 'labelkey.editar'
                     let aux = licenses.value.find(licence => licence.id == data.id)
                     name.value = aux.name
-                    price_arg.value = aux.price_arg
-                    price_usd.value = aux.price_usd
                 }
             }
         }
@@ -428,12 +407,12 @@ export default {
         }
 
         const actionModal = (data) => {
-            let aux = licenses.value.find(element => element.id == data.id)
+            let aux = labelKeys.value.find(element => element.id == data.id)
             aux.activo = !aux.activo
         }
 
         const actionModalDelete = (data) => {
-            let aux = licenses.value.find(element => element.id == data)
+            let aux = labelKeys.value.find(element => element.id == data)
             aux.activo = false
             aux.modalDelete = !aux.modalDelete
         }
@@ -450,7 +429,7 @@ export default {
         return {
             labelKeys,
             titles,
-            addLicence,
+            addLabelkey,
             apps,
             loading,
             ModalAdd,
@@ -460,8 +439,6 @@ export default {
             register,
             name,
             selectedApp,
-            price_arg,
-            price_usd,
             msg_error,
             typeAction,
             succesLoad,

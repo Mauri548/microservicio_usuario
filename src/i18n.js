@@ -144,6 +144,17 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             modalTitulo:'¿Desea cambiar de licencia?',
             modalParrafo:'Si es asi confirme y se le informara al area de administracion para que le cambien la licencia',
         },
+
+        labelkey:{
+            agregar: 'Agregar LabelKey',
+            editar: 'Editar LabelKey',
+            modalCarga:'Se cargo con exito el LabelKey.',
+            modalEdicion:'Se edito con exito el LabelKey.',
+            modalCargaError: 'Fallo al cargar el LabelKey, por favor intentelo mas tarde',
+            modalEdicionError: 'Fallo al editar el LabelKey, por favor intentelo mas tarde',
+
+        },
+
         createCompanyFinish: {
             initext: 'Enhorabuena, has creado tu empresa',
             subtext: 'Puedes suscribirte a una de las aplicaciones que tenemos',
@@ -300,6 +311,14 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             modalTitulo:'Do you want to change your license?',
             modalParrafo:'If so, confirm and the administration area will be informed to change the license.',
 
+        },
+        labelkey:{
+            agregar: 'Add LabelKey',
+            editar: 'Edit LabelKey',
+            modalCarga:'The LabelKey was successfully loaded.',
+            modalEdicion:'The LabelKey was successfully edited.',
+            modalCargaError: 'Failed to load LabelKey, please try again later',
+            modalEdicionError: 'Failed to edit LabelKey, please try again later',
         },
         createCompanyFinish: {
             initext: 'Congratulations you have created your company',
