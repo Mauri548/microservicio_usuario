@@ -40,11 +40,21 @@
         <div>
             <section class="modal-card-body">
                 <form id="form-create-app" action="" class="column">
-                    <CampoForm type="text" :place="$i18n.locale=='en'? 'Name': 'Nombre'" v-model="name" :error="msg_error.name" />
+                    <CampoForm type="text" v-model="name"
+                        :place="$i18n.locale=='en'? 'Name': 'Nombre'" 
+                        :error="msg_error.name" 
+                    />
 
                     <div class="select w-100 mb-4">
                         <select class="w-100 mb-4" v-model="selectedApp" >
-                            <option v-for="app in apps" :key="app.id" :value="app.id">{{app.name}}</option>
+                            <option v-for="app in apps" :key="app.id" :value="app">{{app.name}}</option>
+                        </select>
+                    </div>
+
+                    <div class="select w-100 mb-4">
+                        <select class="w-100 mb-4" v-model="selectedType" >
+                            <option value="level_v">level v</option>
+                            <option value="level_h">level h</option>
                         </select>
                     </div>
                 
@@ -114,30 +124,31 @@ export default {
     },
 
     setup() {
-        const titles = ref([])
-        const labelKeys = ref([])
-        const apps = ref([])
-        const addLabelkey = ref(false)
-        const endpoint = store.state.url_backend
-
-        const name = ref('')
-        const selectedApp = ref()
-        const msg_error = ref({ name: '' })
-        const typeAction = ref('licence.agregar')
-        const licenceEdition = ref(0)
-        const succesLoad = ref(false)
         const activeAlert = ref(false)
+        const addLabelkey = ref(false)
+        const apps = ref([])
+        const count = ref();
+        const currentPage = ref()
+        const endpoint = store.state.url_backend
+        const firstItem = ref()
+        const hasMorePages = ref()
+        const lastItem = ref()
+        const labelKeys = ref([])
+        const lastPage = ref();
+        const labelEdition = ref(0)
         const loading = ref(false)
         const loading_form = ref(false)
+        const msg_error = ref({ name: '' })
+        const name = ref('')
         const page = ref(1);
-        const count = ref();
-        const lastPage = ref();
-        const total = ref()
-        const currentPage = ref()
-        const firstItem = ref()
-        const lastItem = ref()
         const perPage = ref()
-        const hasMorePages = ref()
+        const selectedApp = ref()
+        const selectedType = ref('level_v')
+        const succesLoad = ref(false)
+        const titles = ref([])
+        const total = ref()
+        const typeAction = ref('licence.agregar')
+
         
         /**
          * 
@@ -219,8 +230,6 @@ export default {
             loading.value = true
             fetchLabelkeys()
         })
-
-
         
         /**
          * 
@@ -244,7 +253,7 @@ export default {
                 }
             }`)
             .then((data) => {
-                if (data.data.appsVisible.data) selectedApp.value = data.data.appsVisible.data[0].id
+                if (data.data.appsVisible.data) selectedApp.value = data.data.appsVisible.data[0]
                 data.data.appsVisible.data.forEach(element => {
                     apps.value.push({id: element.id, name: element.name})
                 })
@@ -261,7 +270,7 @@ export default {
             resetErrorMessage(msg_error.value)
 
             if (isValid()) {
-                typeAction.value == 'licence.agregar' ? await createLicence() : await editLicence()
+                typeAction.value == 'labelkey.agregar' ? await createLabelKey() : await editLabelKey()
             } else {
                 console.log('no valido')
             }
@@ -293,32 +302,36 @@ export default {
         }
 
         // Funcion para crear una nueva licencia
-        const createLicence = async () => {
+        const createLabelKey = async () => {
             const client = new GraphQLClient(endpoint)
             await client.rawRequest(/* GraphQL */ `
-            mutation($company_user_id:ID!,$app_id:Int!, $name:String!, $price_arg:Float, $price_usd: Float) {
-                createsLic_license(company_user_id:$company_user_id,input: {
+            mutation($company_user_id:ID!, $label: String!, $app_id: Int!, $typeKey: Typekey!) {
+                createsLic_labelkey(company_user_id: $company_user_id, input: {
+                    label: $label,
                     app_id: $app_id,
-                    name: $name,
-                    price_arg: $price_arg,
-                    price_usd: $price_usd
+                    typekey: $typeKey
                 }) {
-                    id, app_id, name, price_arg, price_usd,
+                    id, app_id, label, typekey
                 }
             }`,
             {
                 company_user_id:localStorage.getItem('user_company_id'),
-                app_id: parseInt(selectedApp.value),
-                name: name.value,
+                app_id: parseInt(selectedApp.value.id),
+                label: name.value,
+                typeKey: selectedType.value,
             })
             .then((data) => {
-                let data_licence = data.data.createsLic_license
-                // Buscamos el nombre de la app correspondiente
-                let app = apps.value.find(app => app.id == data_licence.app_id)
-                // Insertamos la nueva licencia creada en el array de licencias
-                licenses.value.push({id:data_licence.id, name:data_licence.name, price_arg: data_licence.price_arg == 0? null : data_licence.price_arg, 
-                        price_usd: data_licence.price_usd == 0? null : data_licence.price_usd , app: {id:data_licence.app_id, name: app.name}, activo: false, modalDelete: false})
-                // Cerramos la ventana modal
+                const label = data.data.createsLic_labelkey
+
+                labelKeys.value.push({
+                    id: label.id, 
+                    label: label.label,
+                    typekey: label.typekey, 
+                    app: {id: selectedApp.value.id, name: selectedApp.value.name}, 
+                    activo: false, 
+                    modalDelete: false
+                })
+
                 ModalAdd()
                 changeStateModal(true)
                 succesLoad.value = false
@@ -330,31 +343,35 @@ export default {
             })
         }
 
-        const editLicence = async () => {
+        const editLabelKey = async () => {
+            console.log('edit')
             const client = new GraphQLClient(endpoint)
             await client.rawRequest(/* GraphQL */ `
-            mutation($company_user_id:ID!,$id: ID!, $app_id: Int, $name: String, $price_arg: Float, $price_usd: Float) {
-                modifiesLic_license(company_user_id:$company_user_id,id: $id, input: {
-                    name: $name,
+            mutation($company_user_id:ID!, $id: ID!, $app_id: Int, $name: String, $typekey: Typekey) {
+                modifiesLic_labelkey(company_user_id: $company_user_id, id: $id, input: {
+                    label: $name,
                     app_id: $app_id,
+                    typekey: $typekey
                 }) {
-                    id, app_id, name, price_arg, price_usd
+                    id, app_id, label, typekey
                 }
             }`,
             {
                 company_user_id:localStorage.getItem('user_company_id'),
-                id: licenceEdition.value,
+                id: labelEdition.value,
                 name: name.value,
-
+                app_id: parseInt(selectedApp.value.id),
+                typekey: selectedType.value
             })
             .then((data) => {
-                let res = data.data.modifiesLic_license
-                let app = apps.value.find(app => app.id == res.app_id)
-                let lic_aux = licenses.value.find(licencia => licencia.id == res.id)
-                // Asignamos los valores al elemento para que se modifique en la vista del usuario
-                lic_aux.name = res.name
-                lic_aux.app.id = res.app_id
-                lic_aux.app.name = app.name
+                
+                const label = data.data.modifiesLic_labelkey
+                let aux = labelKeys.value.find(element => element.id == label.id)
+                aux.label = label.label
+                aux.typekey = label.typekey
+                aux.app.id = selectedApp.value.id
+                aux.app.name = selectedApp.value.name 
+
                 // Cerramos la ventana modal
                 ModalAdd()
                 changeStateModal(true)
@@ -363,6 +380,7 @@ export default {
             .catch(error => {
                 ModalAdd()
                 changeStateModal(false)
+                console.log(error.response)
             })
         }
 
@@ -389,20 +407,17 @@ export default {
                     name.value = ''
                 } else {
                     actionModal(data)
-                    licenceEdition.value = data.id
+                    labelEdition.value = data.id
                     typeAction.value = 'labelkey.editar'
-                    let aux = licenses.value.find(licence => licence.id == data.id)
-                    name.value = aux.name
+                    name.value = data.label
                 }
             }
         }
         const camb_pagina = (valorNext) => {
-            /* console.log('valor sig',valorNext) */
             page.value +=1
             
         }
         const atras = (valorNext) => {
-          /*   console.log('valor sig',valorNext) */
             if(valorNext==false) page.value -=1
         }
 
@@ -427,35 +442,34 @@ export default {
         }
 
         return {
-            labelKeys,
-            titles,
-            addLabelkey,
-            apps,
-            loading,
-            ModalAdd,
             actionModal,
             actionModalDelete,
-            createLicence,
-            register,
-            name,
-            selectedApp,
-            msg_error,
-            typeAction,
-            succesLoad,
             activeAlert,
-            loading_form,
-            //traer datos de paginacion
-            lastPage,
-            page,
-            count,
-            total,
-            currentPage,
-            firstItem,
-            lastItem, 
-            perPage,
-            hasMorePages,
+            addLabelkey,
+            apps,
             atras ,
             camb_pagina,
+            count,
+            currentPage,
+            firstItem,
+            hasMorePages,
+            labelKeys,
+            lastItem, 
+            lastPage,
+            loading,
+            loading_form,
+            ModalAdd,
+            msg_error,
+            name,
+            page,
+            perPage,
+            register,
+            selectedApp,
+            selectedType,
+            succesLoad,
+            titles,
+            total,
+            typeAction,
         }
     }
 
