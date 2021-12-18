@@ -1,7 +1,7 @@
 <template>
     <div class="conteiner-tablero mt-2 py-2">
         <div class="head-tablero">
-            <TitleBoard :title="$i18n.locale=='en'? 'LabelKeys' : 'LabelKeys'" />
+            <TitleBoard :title="$i18n.locale=='en'? 'Label Keys' : 'Label Keys'" />
 
             <hr>
             <div class="body-tablero my-3 px-4">
