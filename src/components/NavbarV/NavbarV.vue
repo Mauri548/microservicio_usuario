@@ -105,17 +105,18 @@ export default {
         const listas = ref([
                 {nombre: 'Personal Info', activo: false, link: true, name_link: 'PersonalForm'},
                 {nombre: 'Permissions', activo: false, link: true, name_link: 'PermissionsDashboard'},
-                {nombre: 'Company', activo: false, link: false, opc: [
+                {nombre: 'Platform', activo: false, link: false, opc: [
+                    {nombre: 'Apps management', activo: false, name_link: 'AppDashboard'},
+                    {nombre: 'Licences management', activo: false, name_link: 'LicencesDashboard'},
+                    {nombre: 'LabelKeys management', activo: false, name_link: 'LabelKeyDashboard'},
+                ]},
+                {nombre: 'company', activo: false, link: false, opc: [
                     {nombre: 'User management', activo: false, name_link: 'UserDashboard'},
                     {nombre: 'Invitations management', activo: false, name_link: 'InvitationsDashboard'},
                     {nombre: 'Subscriptions management', activo: false, name_link: 'SubscriptionsDashboard'},
                     {nombre: 'Companies management', activo: false, name_link: 'CompaniesDashboard'},
-                    {nombre: 'Apps management', activo: false, name_link: 'AppDashboard'},
-                    {nombre: 'Licences management', activo: false, name_link: 'LicencesDashboard'},
-                    {nombre: 'LabelKeys management', activo: false, name_link: 'LabelKeyDashboard'},
                     {nombre: 'Permissions management', activo: false, name_link: 'PermissionsManagement'},
-                   
-                ]},
+                ]}
             ])
         const route = useRoute()
 
@@ -235,14 +236,15 @@ export default {
             listas.value[0].nombre = i18n.global.locale == 'en'? 'Personal Info': 'Información personal'
             listas.value[1].nombre = i18n.global.locale == 'en'? 'Permissions': 'Permisos'
             listas.value[2].nombre = i18n.global.locale == 'en'? 'Platform': 'Plataforma'
-            listas.value[2].opc[0].nombre = i18n.global.locale == 'en'? 'Users management': 'Gestión de usuarios'
-            listas.value[2].opc[1].nombre = i18n.global.locale == 'en'? 'Invitations management': 'Tabla de Invitaciones'
-            listas.value[2].opc[2].nombre = i18n.global.locale == 'en'? 'Subscriptions management': 'Tabla de Subscripciones'
-            listas.value[2].opc[3].nombre = i18n.global.locale == 'en'? 'Companies management' : 'Gestión de empresas'
-            listas.value[2].opc[4].nombre = i18n.global.locale == 'en'? 'Apps management': 'Gestión de aplicaciones'
-            listas.value[2].opc[5].nombre = i18n.global.locale == 'en'? 'Licences management': 'Gestión de licencias'
-            listas.value[2].opc[6].nombre = i18n.global.locale == 'en'? 'LabelKeys management': 'Tabla de Label Keys'
-            listas.value[2].opc[7].nombre = i18n.global.locale == 'en'? 'Permissions management': 'Gestión de permisos'
+            listas.value[3].nombre = i18n.global.locale == 'en'? 'Company': 'Empresa'
+            listas.value[2].opc[0].nombre = i18n.global.locale == 'en'? 'Apps management': 'Gestión de aplicaciones'
+            listas.value[2].opc[1].nombre = i18n.global.locale == 'en'? 'Licences management': 'Gestión de licencias'
+            listas.value[2].opc[2].nombre = i18n.global.locale == 'en'? 'LabelKeys management': 'Tabla de Label Keys'
+            listas.value[3].opc[0].nombre = i18n.global.locale == 'en'? 'Users management': 'Gestión de usuarios'
+            listas.value[3].opc[1].nombre = i18n.global.locale == 'en'? 'Invitations management': 'Tabla de Invitaciones'
+            listas.value[3].opc[2].nombre = i18n.global.locale == 'en'? 'Subscriptions management': 'Tabla de Subscripciones'
+            listas.value[3].opc[3].nombre = i18n.global.locale == 'en'? 'Companies management' : 'Gestión de empresas'
+            listas.value[3].opc[4].nombre = i18n.global.locale == 'en'? 'Permissions management': 'Gestión de permisos'
 
             creating_company.value = store.state.creating_company
         })

@@ -73,17 +73,17 @@
         </div>
     </AddLabelKey>
 
- <!--    <ModalAlert :activador="activeAlert" :state="succesLoad">
+    <ModalAlert :activador="activeAlert" :state="succesLoad">
         <div v-if="succesLoad">
-            <p v-if="typeAction == 'licence.agregar'" v-t="'licence.modalCarga'"></p>
-            <p v-else v-t="'licence.modalEdicion'"></p>
+            <p v-if="typeAction == 'labelkey.agregar'" v-t="'labelkey.modalCarga'"></p>
+            <p v-else v-t="'labelkey.modalEdicion'"></p>
         </div>
         <div v-else>
-            <p v-if="typeAction == 'licence.agregar'" v-t="'licence.modalCargaError'"></p>
-            <p v-else v-t="'licence.modalEdicionError'"></p>
+            <p v-if="typeAction == 'labelkey.agregar'" v-t="'labelkey.modalCargaError'"></p>
+            <p v-else v-t="'labelkey.modalEdicionError'"></p>
         </div>
     </ModalAlert>
- -->
+
 </template>
 
 <script>
@@ -147,7 +147,7 @@ export default {
         const succesLoad = ref(false)
         const titles = ref([])
         const total = ref()
-        const typeAction = ref('licence.agregar')
+        const typeAction = ref('labelkey.agregar')
 
         
         /**
@@ -397,8 +397,12 @@ export default {
             addLabelkey.value = !addLabelkey.value
             if (addLabelkey.value) {
                 resetErrorMessage(msg_error.value)
+
+                console.log(apps.value)
                 
-                fetchApps()
+                if (apps.value.length == 0) {
+                    fetchApps()
+                }
                 /*Verificamos el tipo de accion que se hara, si es editar o agregar para reutilizar un componente
                 modal */
                 if (type == 'add') {
@@ -409,14 +413,16 @@ export default {
                     actionModal(data)
                     labelEdition.value = data.id
                     typeAction.value = 'labelkey.editar'
+                    selectedApp.value = data.app
                     name.value = data.label
+                    selectedType.value = data.typekey
                 }
             }
         }
         const camb_pagina = (valorNext) => {
             page.value +=1
-            
         }
+        
         const atras = (valorNext) => {
             if(valorNext==false) page.value -=1
         }
