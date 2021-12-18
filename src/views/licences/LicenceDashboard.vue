@@ -46,7 +46,7 @@
                     <CampoForm type="text" :place="$i18n.locale=='en'? 'Name': 'Nombre'" v-model="name" :error="msg_error.name" />
 
                     <div class="select w-100 mb-4">
-                        <select class="w-100 mb-4" v-model="selectedApp" >
+                        <select class="w-100 mb-4" v-model="selectedApp">
                             <option v-for="app in apps" :key="app.id" :value="app.id">{{app.name}}</option>
                         </select>
                     </div>
@@ -120,32 +120,32 @@ export default {
     },
 
     setup() {
-        const titles = ref([])
-        const licenses = ref([])
-        const apps = ref([])
-        const addLicence = ref(false)
-        const endpoint = store.state.url_backend
-
-        const name = ref('')
-        const selectedApp = ref()
-        const price_arg = ref(0)
-        const price_usd = ref(0)
-        const msg_error = ref({ name: '', price_usd: '', price_arg: '' })
-        const typeAction = ref('licence.agregar')
-        const licenceEdition = ref(0)
-        const succesLoad = ref(false)
         const activeAlert = ref(false)
+        const addLicence = ref(false)
+        const apps = ref([])
+        const count = ref();
+        const currentPage = ref()
+        const endpoint = store.state.url_backend
+        const firstItem = ref()
+        const hasMorePages = ref()
+        const lastItem = ref()
+        const lastPage = ref();
+        const licenses = ref([])
+        const licenceEdition = ref(0)
         const loading = ref(false)
         const loading_form = ref(false)
+        const msg_error = ref({ name: '', price_usd: '', price_arg: '' })
+        const name = ref('')
         const page = ref(1);
-        const count = ref();
-        const lastPage = ref();
-        const total = ref()
-        const currentPage = ref()
-        const firstItem = ref()
-        const lastItem = ref()
         const perPage = ref()
-        const hasMorePages = ref()
+        const price_arg = ref(0)
+        const price_usd = ref(0)
+        const selectedApp = ref()
+        const succesLoad = ref(false)
+        const titles = ref([])
+        const total = ref()
+        const typeAction = ref('licence.agregar')
+
         
         /**
          * 
@@ -226,10 +226,10 @@ export default {
          * Trae las app y lo almacena
          * 
          */
-        const fetchApps = () => {
+        const fetchApps = async () => {
             apps.value = []
             const cliente = new GraphQLClient(endpoint)
-            cliente.rawRequest(/* GraphQL */ `
+            await cliente.rawRequest(/* GraphQL */ `
             query {
                   appsVisible(first: 999, page: 1) {
                     data{
@@ -400,12 +400,14 @@ export default {
             },500)
         }
 
-        const ModalAdd = (type, data) => {
+        const ModalAdd = async (type, data) => {
             addLicence.value = !addLicence.value
             if (addLicence.value) {
                 resetErrorMessage(msg_error.value)
                 
-                fetchApps()
+                if (apps.value.length == 0) {
+                    await fetchApps()
+                }
                 /*Verificamos el tipo de accion que se hara, si es editar o agregar para reutilizar un componente
                 modal */
                 if (type == 'add') {
@@ -418,20 +420,18 @@ export default {
                     actionModal(data)
                     licenceEdition.value = data.id
                     typeAction.value = 'licence.editar'
-                    let aux = licenses.value.find(licence => licence.id == data.id)
-                    name.value = aux.name
-                    price_arg.value = aux.price_arg
-                    price_usd.value = aux.price_usd
+                    name.value = data.name
+                    selectedApp.value = data.app.id
+                    price_arg.value = data.price_arg
+                    price_usd.value = data.price_usd
                 }
             }
         }
         const camb_pagina = (valorNext) => {
-            /* console.log('valor sig',valorNext) */
             page.value +=1
             
         }
         const atras = (valorNext) => {
-          /*   console.log('valor sig',valorNext) */
             if(valorNext==false) page.value -=1
         }
 
@@ -456,37 +456,36 @@ export default {
         }
 
         return {
-            licenses,
-            titles,
-            addLicence,
-            apps,
-            loading,
-            ModalAdd,
             actionModal,
             actionModalDelete,
-            createLicence,
-            register,
-            name,
-            selectedApp,
-            price_arg,
-            price_usd,
-            msg_error,
-            typeAction,
-            succesLoad,
             activeAlert,
-            loading_form,
-            //traer datos de paginacion
-            lastPage,
-            page,
-            count,
-            total,
-            currentPage,
-            firstItem,
-            lastItem, 
-            perPage,
-            hasMorePages,
+            addLicence,
+            apps,
             atras ,
             camb_pagina,
+            count,
+            createLicence,
+            currentPage,
+            firstItem,
+            hasMorePages,
+            lastItem, 
+            lastPage,
+            licenses,
+            loading,
+            loading_form,
+            ModalAdd,
+            msg_error,
+            name,
+            page,
+            perPage,
+            price_arg,
+            price_usd,
+            register,
+            selectedApp,
+            succesLoad,
+            titles,
+            total,
+            typeAction,
         }
     }
 
