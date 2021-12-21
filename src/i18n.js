@@ -134,6 +134,7 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
         },
         licence: {
             agregar: 'Agregar Licencia',
+            agregarTope: 'Agregar Limites',
             editar: 'Editar Licencia',
             modalCarga:'Se cargo con exito la licencia.',
             modalEdicion:'Se edito con exito la licencia.',
@@ -301,6 +302,7 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
 
         licence: {
             agregar: 'Add Licence',
+            agregarTope: 'Add Limits',
             editar: 'Edit Licence',
             modalCarga:'The Licence was successfully loaded.',
             modalEdicion:'The Licence was successfully edited.',
@@ -310,7 +312,6 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             quiero:'To subscribe',
             modalTitulo:'Do you want to change your license?',
             modalParrafo:'If so, confirm and the administration area will be informed to change the license.',
-
         },
         labelkey:{
             agregar: 'Add LabelKey',

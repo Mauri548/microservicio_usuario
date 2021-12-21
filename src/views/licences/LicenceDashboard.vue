@@ -21,6 +21,13 @@
                     <td v-if="licence.price_usd" @click="actionModal(licence)">${{licence.price_usd}}</td>
                     <td v-else @click="actionModal(licence)">$0</td>
                     <Modal class="modal-action" :buttonDefault="false" :data="licence" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete">
+                        <button @click="ModalAddLabel('addLimits', licence)" class="button btn-crenein w-100 my-1">
+                            <span class="icon is-small">
+                                <i class="fas fa-pencil-alt"></i>
+                            </span>
+                            <span>{{$t('licence.agregarTope')}}</span>
+                        </button>
+                        
                         <button @click="ModalAdd('edit', licence)" class="button btn-crenein w-100 my-1">
                             <span class="icon is-small">
                                 <i class="fas fa-pencil-alt"></i>
@@ -38,7 +45,7 @@
          <Pagination @next="camb_pagina" @previous="atras" :lastPage=lastPage :currentPage=currentPage :count="count" :total="total" :firstItem="firstItem" :lastItem="lastItem" :perPage="perPage" :hasMorePages="hasMorePages" />
     </div>
 
-    <!-- Ventana modal de formulario -->
+    <!-- Ventana modal de formulario de agregar licencia-->
     <AddLicence :title="typeAction" v-show="addLicence" @closeModal="ModalAdd">
         <div>
             <section class="modal-card-body">
@@ -69,6 +76,36 @@
         </div>
     </AddLicence>
 
+    <!-- Ventana modal de formulario de agregar topes de licencia-->
+   <AddLabelKey :title="typeAction" v-show="addLimits" @closeModal="ModalAddLabel">
+        <div>
+            <section class="modal-card-body">
+                <form id="form-create-app" action="" class="column">
+
+            
+                    <div v-for="label in appsLabel" :key="label.id" >
+                        <CampoForm type="text" :place="label.name"/>         
+                    </div>
+
+                    <div class="column p-0 has-text-centered">
+                        <Button class="has-background-danger mr-2"
+                            @click="ModalAddLabel">
+                            {{$t('permisos.cancel')}}
+                        </Button>
+                        <Button :loading="loading_form" class="ml-2"
+                            @click="register">
+                            {{$t('permisos.guardar')}}
+                        </Button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </AddLabelKey>
+
+
+
+
+
     <ModalAlert :activador="activeAlert" :state="succesLoad">
         <div v-if="succesLoad">
             <p v-if="typeAction == 'licence.agregar'" v-t="'licence.modalCarga'"></p>
@@ -91,6 +128,7 @@ import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
 import ModalAlert from '../../components/Modals/ModalsAlert.vue'
 import AddLicence from './AddLicence.vue'
+import AddLabelKey from '../LabelKeys/AddLabelKey.vue'
 import CampoForm from '../../components/CampoForm.vue'
 import { ref, watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js'
@@ -113,6 +151,7 @@ export default {
         ActionModal,
         ModalAlert,
         AddLicence,
+        AddLabelKey,
         CampoForm,
         Loading,
         NoFoundData,
@@ -122,7 +161,9 @@ export default {
     setup() {
         const activeAlert = ref(false)
         const addLicence = ref(false)
+        const addLimits = ref(false)
         const apps = ref([])
+        const appsLabel = ref([])
         const count = ref();
         const currentPage = ref()
         const endpoint = store.state.url_backend
@@ -217,6 +258,7 @@ export default {
         watchEffect(() => {
             loading.value = true
             fetchLicenses()
+           /*  fetchAppsLabel() */
         })
 
 
@@ -249,6 +291,48 @@ export default {
                 })
             })
             .catch(error => console.log(error))
+        }
+        const fetchAppsLabel = (licenses) => {
+            appsLabel.value = []
+            const cliente = new GraphQLClient(endpoint)
+            cliente.rawRequest(/* GraphQL */ `
+            query($app_id:ID){
+                labelkeysxapp(first:999,page:1,app_id:$app_id){
+                    paginatorInfo {
+                    count
+                    firstItem
+                    hasMorePages
+                    lastItem
+                    lastPage
+                    perPage
+                    total
+                    }
+                    data {
+                        id
+                        app_id
+                        label
+                        typekey
+                        app {
+                            id
+                            name
+                        }
+                    }
+                }
+            }`,
+            {
+                app_id: licenses.app.id
+            },
+            {
+               authorization: `Bearer ${ localStorage.getItem('user_token') }` 
+            }).then((data) => {
+                
+                console.log(data.data.labelkeysxapp.data);
+                data.data.labelkeysxapp.data.forEach(element => {
+                    appsLabel.value.push({id:element.id , name: element.label})
+                }) 
+            }).catch(error => {
+                console.log(error)}
+            )
         }
 
         const register = async () => {
@@ -400,9 +484,34 @@ export default {
             },500)
         }
 
+
+        const ModalAddLabel = async (type, data) => {
+            
+            addLimits.value = !addLimits.value
+
+            if(type=="addLimits"){
+                
+                
+                if (type == 'addLimits') {
+                    fetchAppsLabel(data)
+                    typeAction.value = 'licence.agregarTope'
+                    document.getElementById('form-create-app').reset()
+                } 
+            }
+        }
+
+
+
+
+
+
+
         const ModalAdd = async (type, data) => {
+            
             addLicence.value = !addLicence.value
-            if (addLicence.value) {
+        
+            if (addLicence.value){
+                
                 resetErrorMessage(msg_error.value)
                 
                 if (apps.value.length == 0) {
@@ -416,7 +525,9 @@ export default {
                     name.value = ''
                     price_arg.value = null
                     price_usd.value = null
-                } else {
+                } 
+                
+                else {
                     actionModal(data)
                     licenceEdition.value = data.id
                     typeAction.value = 'licence.editar'
@@ -486,6 +597,10 @@ export default {
             titles,
             total,
             typeAction,
+            addLimits,
+            ModalAddLabel,
+            appsLabel,
+            fetchAppsLabel
         }
     }
 

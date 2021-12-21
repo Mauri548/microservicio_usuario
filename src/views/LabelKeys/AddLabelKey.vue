@@ -43,6 +43,11 @@ export default {
     left: 0;
     bottom: 0;
     z-index: 40;
+    margin-top: 120px;
+    /* width:350px;
+    height:500px;
+    margin: auto; */
+    
 
     display: flex;
     align-items: center;
@@ -55,9 +60,12 @@ export default {
 }
 .modal-card {
     margin: 0;
+    overflow: auto;
 }
+
 @media (min-width: 768px) {
     .modal-card {
+        overflow: auto;
         width: 100%;
     }
 }

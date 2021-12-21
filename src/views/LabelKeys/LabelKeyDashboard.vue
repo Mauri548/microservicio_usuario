@@ -35,7 +35,7 @@
          <Pagination @next="camb_pagina" @previous="atras" :lastPage=lastPage :currentPage=currentPage :count="count" :total="total" :firstItem="firstItem" :lastItem="lastItem" :perPage="perPage" :hasMorePages="hasMorePages" />
     </div>
  
-    <!-- Ventana modal de formulario -->
+    <!-- Ventana modal de formulario carga etiqueta -->
     <AddLabelKey :title="typeAction" v-show="addLabelkey" @closeModal="ModalAdd">
         <div>
             <section class="modal-card-body">
