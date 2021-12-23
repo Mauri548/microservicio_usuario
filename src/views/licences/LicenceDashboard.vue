@@ -79,32 +79,36 @@
     <!-- Ventana modal de formulario de agregar topes de licencia-->
    <AddLabelKey :title="typeAction" v-show="addLimits" @closeModal="ModalAddLabel">
         <div>
-            <section class="modal-card-body">
-                <form id="form-create-app" action="" class="column">
-
+            <section class="modal-card-body px-0">
+                <form id="form-create-app" action="" class="column px-0">
             
-                    <div v-for="label in appsLabel" :key="label.id" >
-                        <CampoForm type="text" :place="label.name"/>         
+                    <div v-if="appsLabel == 0" class="mb-5">
+                        <Loading/>
                     </div>
 
-                    <div class="column p-0 has-text-centered">
-                        <Button class="has-background-danger mr-2"
-                            @click="ModalAddLabel">
-                            {{$t('permisos.cancel')}}
-                        </Button>
-                        <Button :loading="loading_form" class="ml-2"
-                            @click="register">
-                            {{$t('permisos.guardar')}}
-                        </Button>
-                    </div>
+                    <ul v-for="label in appsLabel" :key="label.id">
+                        <li class="p-2 is-flex select-key" @click="hanldeLabelSelected(label)">
+                            <span class="column has-text-left ">{{label.name}}</span>
+                            <span class="column has-text-right  icon is-small">
+                                <i  class="fas fa-chevron-down"></i>
+                            </span>
+                        </li>
+                        <div class="my-4" v-show="label.selected" >
+                            <CampoForm class="mx-2" type="number" :place="label.name" v-model="tope" />
+                            <CampoForm class="mx-2" type="number" place="level-v" v-model="level_v" />
+                            <CampoForm class="mx-2" type="number" place="level-h" v-model="level_h" />
+                            <!-- pasar el label para crear uno nuevo -->
+                            <Button :loading="loading_form" class="ml-2"
+                                @click="addTope(label)"> 
+                                {{$t('permisos.guardar')}}
+                            </Button>
+                        </div>
+                    </ul>
+
                 </form>
             </section>
         </div>
     </AddLabelKey>
-
-
-
-
 
     <ModalAlert :activador="activeAlert" :state="succesLoad">
         <div v-if="succesLoad">
@@ -186,6 +190,14 @@ export default {
         const titles = ref([])
         const total = ref()
         const typeAction = ref('licence.agregar')
+        const selectLicense = ref(null)
+        const tope = ref(null)
+        const level_h = ref(null)
+        const level_v = ref(null)
+        const msg_error_label = ref({
+            tope: '', level_h: '', level_v: ''
+        })
+        
 
         
         /**
@@ -260,8 +272,6 @@ export default {
             fetchLicenses()
            /*  fetchAppsLabel() */
         })
-
-
         
         /**
          * 
@@ -292,6 +302,7 @@ export default {
             })
             .catch(error => console.log(error))
         }
+
         const fetchAppsLabel = (licenses) => {
             appsLabel.value = []
             const cliente = new GraphQLClient(endpoint)
@@ -316,6 +327,11 @@ export default {
                             id
                             name
                         }
+                        keys {
+                            top,
+                            level_h,
+                            level_v
+                        }
                     }
                 }
             }`,
@@ -325,10 +341,10 @@ export default {
             {
                authorization: `Bearer ${ localStorage.getItem('user_token') }` 
             }).then((data) => {
-                
-                console.log(data.data.labelkeysxapp.data);
+                console.log(data)
+                // console.log(data.data.labelkeysxapp.data);
                 data.data.labelkeysxapp.data.forEach(element => {
-                    appsLabel.value.push({id:element.id , name: element.label})
+                    appsLabel.value.push({id:element.id , name: element.label, selected: false})
                 }) 
             }).catch(error => {
                 console.log(error)}
@@ -359,9 +375,13 @@ export default {
          */
         const isValid = () => {
             fieldsIsEmpty()
-            
-            for (let i in msg_error.value) {
-                if (msg_error.value[i] != '') return false 
+
+            return checkMessageError(msg_error.value)
+        }
+
+        const checkMessageError = (list) => {
+            for (let i in list) {
+                if (list[i] != '') return false 
             }
             return true
         }
@@ -500,12 +520,6 @@ export default {
             }
         }
 
-
-
-
-
-
-
         const ModalAdd = async (type, data) => {
             
             addLicence.value = !addLicence.value
@@ -538,10 +552,12 @@ export default {
                 }
             }
         }
+
         const camb_pagina = (valorNext) => {
             page.value +=1
             
         }
+
         const atras = (valorNext) => {
             if(valorNext==false) page.value -=1
         }
@@ -549,6 +565,7 @@ export default {
         const actionModal = (data) => {
             let aux = licenses.value.find(element => element.id == data.id)
             aux.activo = !aux.activo
+            selectLicense.value = data.id
         }
 
         const actionModalDelete = (data) => {
@@ -566,11 +583,73 @@ export default {
             }
         }
 
+        const addTope = (label) => {
+            console.log(label) // id label
+            console.log(selectLicense.value) // id licence
+            console.log(tope.value)
+            console.log(level_h.value)
+            console.log(level_v.value)
+
+            resetErrorMessage(msg_error_label.value)
+
+            isEmpty(tope.value, msg_error_label.value, 'tope')
+            isEmpty(level_h.value, msg_error_label.value, 'level_h')
+            isEmpty(level_v.value, msg_error_label.value, 'level_v')
+
+            if (checkMessageError(msg_error_label.value)) {
+                createTopLabel(selectLicense.value, label.id, tope.value, level_v.value, level_h.value)
+            } else {
+                console.log('no valido')
+            }
+        }
+
+        const hanldeLabelSelected = (label) => {
+            appsLabel.value.map(item => item.selected = false)
+            label.selected = true
+            tope.value = null
+            level_h.value = null
+            level_v.value = null
+        }
+
+        const createTopLabel = async (licenseId, lableKeyId, top, level_v, level_h) => {
+            const client = new GraphQLClient(endpoint)
+            await client.rawRequest(/* GraphQL */`
+            mutation($company_user_id:ID!, $license_id: Int!, $labelkey_id: Int!, $top: Float!, $level_h: Int!, $level_v: Int!) {
+                createsLic_key(company_user_id: $company_user_id, input: {
+                    license_id: $license_id,
+                    labelkey_id: $labelkey_id,
+                    top: $top,
+                    level_h: $level_h,
+                    level_v: $level_v
+                }) {
+                    id
+                    license_id
+                    labelkey_id
+                    top
+                    level_h
+                    level_v
+                }
+            }`,
+            {
+                company_user_id:localStorage.getItem('user_company_id'),
+                license_id: parseInt(licenseId) ,
+                labelkey_id: parseInt(lableKeyId),
+                top: parseInt(top),
+                level_h: parseInt(level_h),
+                level_v: parseInt(level_v)
+            })
+            .then((data) => {
+                console.log(data)
+            })
+            .catch(error => console.log(error.response))
+        }
+
         return {
             actionModal,
             actionModalDelete,
             activeAlert,
             addLicence,
+            addTope,
             apps,
             atras ,
             camb_pagina,
@@ -578,6 +657,7 @@ export default {
             createLicence,
             currentPage,
             firstItem,
+            hanldeLabelSelected,
             hasMorePages,
             lastItem, 
             lastPage,
@@ -600,7 +680,10 @@ export default {
             addLimits,
             ModalAddLabel,
             appsLabel,
-            fetchAppsLabel
+            fetchAppsLabel,
+            tope,
+            level_h,
+            level_v,
         }
     }
 
@@ -614,5 +697,9 @@ export default {
     }
     .red {
         background-color: red;
+    }
+    .select-key:hover {
+        background: rgba(232,232,232,0.4);
+        cursor: pointer;
     }
 </style>
