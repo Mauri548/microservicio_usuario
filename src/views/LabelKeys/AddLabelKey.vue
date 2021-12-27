@@ -2,9 +2,9 @@
     <transition name="slide-down">
         <div class="conteiner-modal">
             <div class="body-modal">
-                <div class="modal-card " >
+                <div class="modal-card "  >
                     <header class="modal-card-head has-background-white " >
-                        <p class="modal-card-title has-text-centered blue-crenein" style="font-size:1.5em; font-weight:bold;">{{$t(title)}}</p>
+                        <p class="modal-card-title has-text-centered blue-crenein" style=" font-size:1.5em; font-weight:bold;">{{$t(title)}}</p>
                         <button class="delete" @click="closeModal"  aria-label="close"></button>
                     </header>
                     <!-- Aqui van los input del formulario y los botones -->
@@ -36,6 +36,8 @@ export default {
 </script>
 
 <style scoped>
+
+
 .conteiner-modal {
     position: absolute;
     top: 0;
@@ -44,11 +46,8 @@ export default {
     bottom: 0;
     z-index: 40;
     margin-top: 120px;
-    /* width:350px;
-    height:500px;
-    margin: auto; */
-    
 
+    
     display: flex;
     align-items: center;
     justify-content: center;
@@ -57,8 +56,10 @@ export default {
     background-color: #fff;
     box-shadow: 0 1px 6px 3px rgb(3 0 71 / 9%);
     border-radius: 15px;
+    width:19rem;
 }
 .modal-card {
+   
     margin: 0;
     overflow: auto;
 }

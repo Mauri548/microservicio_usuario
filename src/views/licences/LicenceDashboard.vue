@@ -98,7 +98,7 @@
                             <CampoForm class="mx-2" type="number" place="level-v" v-model="level_v" />
                             <CampoForm class="mx-2" type="number" place="level-h" v-model="level_h" />
                             <!-- pasar el label para crear uno nuevo -->
-                            <Button :loading="loading_form" class="ml-2"
+                            <Button :loading="loading_form" class="ancho mx-2"
                                 @click="addTope(label)"> 
                                 {{$t('permisos.guardar')}}
                             </Button>
@@ -111,14 +111,20 @@
     </AddLabelKey>
 
     <ModalAlert :activador="activeAlert" :state="succesLoad">
-        <div v-if="succesLoad">
-            <p v-if="typeAction == 'licence.agregar'" v-t="'licence.modalCarga'"></p>
-            <p v-else v-t="'licence.modalEdicion'"></p>
+        <div v-if="succesLoad ">
+            <p v-if="typeAction == 'licence.agregarTope'" v-t="'licence.modalCargaTope'"></p>
+            <p v-else-if="typeAction == 'licence.editarTope'" v-t="'licence.modalEdicionTope'"></p>
+            <p v-else-if="typeAction == 'licence.agregar'" v-t="'licence.modalCarga'"></p>
+            <p v-else-if="typeAction == 'licence.editar'"  v-t="'licence.modalEdicion'"></p>
         </div>
         <div v-else>
-            <p v-if="typeAction == 'licence.agregar'" v-t="'licence.modalCargaError'"></p>
-            <p v-else v-t="'licence.modalEdicionError'"></p>
+            <p v-if="typeAction == 'licence.agregarTope'" v-t="'licence.modalCargaErrorTope'"></p>
+            <p v-else-if="typeAction == 'licence.editarTope'" v-t="'licence.modalEdicionErrorTope'"></p>
+            <p v-else-if="typeAction == 'licence.agregar'" v-t="'licence.modalCargaError'"></p>
+            <p v-else-if="typeAction != 'licence.editarTope'" v-t="'licence.modalEdicionError'"></p>
         </div>
+
+     
     </ModalAlert>
 
 </template>
@@ -639,8 +645,16 @@ export default {
             })
             .then((data) => {
                 console.log(data)
+                ModalAddLabel()
+                changeStateModal(true)
+                succesLoad.value = false
             })
-            .catch(error => console.log(error.response))
+            .catch(error =>{
+                console.log(error.response)
+                ModalAddLabel()
+                changeStateModal(false)
+                console.log(error.response)
+            } )
         }
 
         return {
@@ -690,6 +704,10 @@ export default {
 </script>
 
 <style scoped>
+    .ancho{
+        width:17rem;
+        
+    }
     
     .modal-action:hover {
         cursor: default;

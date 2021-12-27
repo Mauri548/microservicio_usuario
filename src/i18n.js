@@ -135,11 +135,17 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
         licence: {
             agregar: 'Agregar Licencia',
             agregarTope: 'Agregar Limites',
+            editarTope:'Editar Limites',
             editar: 'Editar Licencia',
             modalCarga:'Se cargo con exito la licencia.',
             modalEdicion:'Se edito con exito la licencia.',
             modalCargaError: 'Fallo al cargar la licencia, por favor intentelo mas tarde',
             modalEdicionError: 'Fallo al editar la licencia, por favor intentelo mas tarde',
+
+            modalCargaTope:'Se cargo con exito el tope.',
+            modalEdicionTope:'Se edito con exito el tope.',
+            modalCargaErrorTope: 'Fallo al cargar el tope, por favor intentelo mas tarde',
+            modalEdicionErrorTope: 'Fallo al editar el tope, por favor intentelo mas tarde',
             tengo:'Esta suscrito',
             quiero:'Suscribirse',
             modalTitulo:'¿Desea cambiar de licencia?',
@@ -303,11 +309,20 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
         licence: {
             agregar: 'Add Licence',
             agregarTope: 'Add Limits',
+            editarTope: 'Edit Limits',
             editar: 'Edit Licence',
             modalCarga:'The Licence was successfully loaded.',
             modalEdicion:'The Licence was successfully edited.',
-            modalCargaError: 'Failed to load license, please try again later',
-            modalEdicionError: 'Failed to edit license, please try again later',
+            modalCargaError: 'Failed to load license, please try again later.',
+            modalEdicionError: 'Failed to edit license, please try again later.',
+
+
+            modalCargaTope:'The Limit was successfully loaded.',
+            modalEdicionTope:'The Limit was successfully edited.',
+            modalCargaErrorTope: 'Failed to load limit, please try again later.',
+            modalEdicionErrorTope: 'Failed to edit limit, please try again later.',
+
+
             tengo:'Is subscribed',
             quiero:'To subscribe',
             modalTitulo:'Do you want to change your license?',
