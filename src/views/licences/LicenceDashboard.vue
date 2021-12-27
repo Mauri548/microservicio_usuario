@@ -510,8 +510,7 @@ export default {
             addLimits.value = !addLimits.value
 
             if(type=="addLimits"){
-                
-                
+                actionModal(data)
                 if (type == 'addLimits') {
                     fetchAppsLabel(data)
                     typeAction.value = 'licence.agregarTope'
