@@ -38,6 +38,7 @@ export default {
     position: fixed;
     width: 100%;
     top: 80px;
+    z-index: 100;
 }
 .alert-msg {
     text-align: center;

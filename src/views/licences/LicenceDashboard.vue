@@ -27,6 +27,13 @@
                             </span>
                             <span>{{$t('licence.agregarTope')}}</span>
                         </button>
+
+                        <Button class="w-100 my-1" @click="ModalAddLabel('editLimits', licence)">
+                            <span class="icon is-small">
+                                <i class="fas fa-pencil-alt"></i>
+                            </span>
+                            <span>{{$t('licence.editarTope')}}</span>
+                        </Button>
                         
                         <button @click="ModalAdd('edit', licence)" class="button btn-crenein w-100 my-1">
                             <span class="icon is-small">
@@ -77,47 +84,37 @@
     </AddLicence>
 
     <!-- Ventana modal de formulario de agregar topes de licencia-->
-   <AddLabelKey :title="typeAction" v-show="addLimits" @closeModal="ModalAddLabel">
-        <div>
-            <section class="modal-card-body px-0">
-                <form id="form-create-app" action="" class="column px-0">
-            
-                    <div v-if="appsLabel == 0" class="mb-5">
-                        <Loading/>
-                    </div>
+   <AddLabelKey :title="typeAction" v-show="addLimits" @closeModal="ModalAddLabel('addLimits')">
+        <ModalAddLabelKey 
+            :Datas="appsLabel" 
+            :loading="loading_form"
+            @onHandleDataSelected="hanldeLabelSelected"
+            @onAddData="addTope"
+        />
+    </AddLabelKey>
 
-                    <ul v-for="label in appsLabel" :key="label.id">
-                        <li class="p-2 is-flex select-key" @click="hanldeLabelSelected(label)">
-                            <span class="column has-text-left ">{{label.name}}</span>
-                            <span class="column has-text-right  icon is-small">
-                                <i  class="fas fa-chevron-down"></i>
-                            </span>
-                        </li>
-                        <div class="my-4" v-show="label.selected" >
-                            <CampoForm class="mx-2" type="number" :place="label.name" v-model="tope" />
-                            <CampoForm class="mx-2" type="number" place="level-v" v-model="level_v" />
-                            <CampoForm class="mx-2" type="number" place="level-h" v-model="level_h" />
-                            <!-- pasar el label para crear uno nuevo -->
-                            <Button :loading="loading_form" class="ml-2"
-                                @click="addTope(label)"> 
-                                {{$t('permisos.guardar')}}
-                            </Button>
-                        </div>
-                    </ul>
-
-                </form>
-            </section>
-        </div>
+    <AddLabelKey :title="typeAction" v-show="editLimits" @closeModal="ModalAddLabel('editLimits')" >
+        <ModalAddLabelKey 
+            :Datas="labels"
+            :edit="true"
+            :loading="loading_form"
+            @onHandleDataSelected="hanldeLabelSelected"
+            @onAddData="addTope"
+        />
     </AddLabelKey>
 
     <ModalAlert :activador="activeAlert" :state="succesLoad">
         <div v-if="succesLoad">
             <p v-if="typeAction == 'licence.agregar'" v-t="'licence.modalCarga'"></p>
-            <p v-else v-t="'licence.modalEdicion'"></p>
+            <p v-if="typeAction == 'licence.editar'" v-t="'licence.modalEdicion'"></p>
+            <p v-if="typeAction == 'licence.agregarTope'" v-t="'licence.modalCargaLimit'"></p>
+            <p v-if="typeAction == 'licence.editarTope'" v-t="'licence.modalEdicionLimit'"></p>
         </div>
         <div v-else>
             <p v-if="typeAction == 'licence.agregar'" v-t="'licence.modalCargaError'"></p>
-            <p v-else v-t="'licence.modalEdicionError'"></p>
+            <p v-if="typeAction == 'licence.editar'" v-t="'licence.modalEdicionError'"></p>
+            <p v-if="typeAction == 'licence.agregarTope'" v-t="'licence.modalCargaLimitError'"></p>
+            <p v-if="typeAction == 'licence.editarTope'" v-t="'licence.modalEdicionLimitError'"></p>
         </div>
     </ModalAlert>
 
@@ -143,6 +140,7 @@ import isEmpty from '../../helper/FieldIsEmpty'
 import Loading from '../../components/loading.vue'
 import NoFoundData from '../../components/NoFoundData.vue'
 import Button from '../../components/Buttons/Button.vue'
+import ModalAddLabelKey from './ModalAddLabelKey.vue'
 
 
 export default {
@@ -160,6 +158,7 @@ export default {
         Loading,
         NoFoundData,
         Button,
+        ModalAddLabelKey,
     },
 
     setup() {
@@ -170,9 +169,11 @@ export default {
         const appsLabel = ref([])
         const count = ref();
         const currentPage = ref()
+        const editLimits = ref(false)
         const endpoint = store.state.url_backend
         const firstItem = ref()
         const hasMorePages = ref()
+        const labels = ref([])
         const lastItem = ref()
         const lastPage = ref();
         const licenses = ref([])
@@ -194,11 +195,6 @@ export default {
         const tope = ref(null)
         const level_h = ref(null)
         const level_v = ref(null)
-        const msg_error_label = ref({
-            tope: '', level_h: '', level_v: ''
-        })
-        
-
         
         /**
          * 
@@ -349,6 +345,42 @@ export default {
             }).catch(error => {
                 console.log(error)}
             )
+        }
+
+        const fetchLabelxLicenese = (license) => {
+            labels.value = []
+            const client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */ `
+            query($license_id: ID) {
+                keysxlicense(first: 999, page: 1, license_id: $license_id) {
+                    data {
+                        id
+                        top
+                        level_h
+                        level_v
+                        labelkey {
+                            label
+                        }
+                    }
+                }
+            }`,
+            {
+                license_id: license.id
+            })
+            .then((data) => {
+                console.log(data)
+                data.data.keysxlicense.data.forEach(label => {
+                    labels.value.push({
+                        id: label.id,
+                        name: label.labelkey.label,
+                        top: label.top, 
+                        level_h: label.level_h, 
+                        level_v: label.level_v, 
+                        selected: false
+                    })
+                })
+            })
+            .catch(error => console.log(error.response))
         }
 
         const register = async () => {
@@ -507,16 +539,24 @@ export default {
 
         const ModalAddLabel = async (type, data) => {
             
-            addLimits.value = !addLimits.value
-
-            if(type=="addLimits"){
+            if(type == "addLimits"){
+                addLimits.value = !addLimits.value
                 
-                
-                if (type == 'addLimits') {
+                if (addLimits.value) {
                     fetchAppsLabel(data)
                     typeAction.value = 'licence.agregarTope'
                     document.getElementById('form-create-app').reset()
                 } 
+            }
+
+            if (type == 'editLimits') {
+                editLimits.value = !editLimits.value
+
+                if (editLimits.value) {
+                    fetchLabelxLicenese(data)
+                    typeAction.value = 'licence.editarTope'
+                    document.getElementById('form-create-app').reset()
+                }
             }
         }
 
@@ -583,35 +623,31 @@ export default {
             }
         }
 
-        const addTope = (label) => {
-            console.log(label) // id label
-            console.log(selectLicense.value) // id licence
-            console.log(tope.value)
-            console.log(level_h.value)
-            console.log(level_v.value)
+        const addTope = async (label, tope, level_h, level_v, edit) => {
+            loading_form.value = true
 
-            resetErrorMessage(msg_error_label.value)
+            !edit ? await createTopLabel(selectLicense.value, label.id, tope, level_v, level_h) 
+            : await editTopLabel(label.id, selectLicense.value, tope, level_v, level_h)
 
-            isEmpty(tope.value, msg_error_label.value, 'tope')
-            isEmpty(level_h.value, msg_error_label.value, 'level_h')
-            isEmpty(level_v.value, msg_error_label.value, 'level_v')
-
-            if (checkMessageError(msg_error_label.value)) {
-                createTopLabel(selectLicense.value, label.id, tope.value, level_v.value, level_h.value)
-            } else {
-                console.log('no valido')
-            }
+            loading_form.value = false
         }
 
-        const hanldeLabelSelected = (label) => {
-            appsLabel.value.map(item => item.selected = false)
-            label.selected = true
-            tope.value = null
-            level_h.value = null
-            level_v.value = null
+        const hanldeLabelSelected = (label, edit) => {
+            if (!edit) {
+                appsLabel.value.map(item => item.selected = false)
+                label.selected = true
+            }
+            if (edit) {
+                labels.value.map(item => item.selected = false)
+                label.selected = true
+                tope.value = label.top
+                level_h.value = label.level_h
+                level_v.value = label.level_v
+            }            
         }
 
         const createTopLabel = async (licenseId, lableKeyId, top, level_v, level_h) => {
+            
             const client = new GraphQLClient(endpoint)
             await client.rawRequest(/* GraphQL */`
             mutation($company_user_id:ID!, $license_id: Int!, $labelkey_id: Int!, $top: Float!, $level_h: Int!, $level_v: Int!) {
@@ -639,9 +675,40 @@ export default {
                 level_v: parseInt(level_v)
             })
             .then((data) => {
-                console.log(data)
+                changeStateModal(true)
             })
-            .catch(error => console.log(error.response))
+            .catch(error => changeStateModal(false))
+        }
+
+        const editTopLabel = async (id, licenseId, top, level_v, level_h) => {
+            const client = new GraphQLClient(endpoint)
+            await client.rawRequest(/* GraphQL */ `
+            mutation($company_user_id:ID!, $id: ID!, $license_id: Int, $top: Float, $level_h: Int, $level_v: Int) {
+                modifiesLic_key(company_user_id: $company_user_id, id: $id, input: {
+                    license_id: $license_id,
+                    top: $top,
+                    level_h: $level_h,
+                    level_v: $level_v
+                }) {
+                    id
+                    license_id
+                    top
+                    level_h
+                    level_v
+                }
+            }`,
+            {
+                company_user_id:localStorage.getItem('user_company_id'),
+                id: parseInt(id),
+                license_id: parseInt(licenseId) ,
+                top: parseInt(top),
+                level_h: parseInt(level_h),
+                level_v: parseInt(level_v)
+            })
+            .then((data) => {
+                changeStateModal(true)
+            })
+            .catch(error => changeStateModal(false))
         }
 
         return {
@@ -656,9 +723,11 @@ export default {
             count,
             createLicence,
             currentPage,
+            editLimits,
             firstItem,
             hanldeLabelSelected,
             hasMorePages,
+            labels,
             lastItem, 
             lastPage,
             licenses,
@@ -698,8 +767,5 @@ export default {
     .red {
         background-color: red;
     }
-    .select-key:hover {
-        background: rgba(232,232,232,0.4);
-        cursor: pointer;
-    }
+    
 </style>
