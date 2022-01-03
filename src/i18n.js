@@ -135,6 +135,7 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
         licence: {
             agregar: 'Agregar Licencia',
             agregarTope: 'Agregar Limites',
+            verInfo:'Ver Informacion',
             editar: 'Editar Licencia',
             modalCarga:'Se cargo con exito la licencia.',
             modalEdicion:'Se edito con exito la licencia.',
@@ -303,6 +304,7 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
         licence: {
             agregar: 'Add Licence',
             agregarTope: 'Add Limits',
+            verInfo:'See Information',
             editar: 'Edit Licence',
             modalCarga:'The Licence was successfully loaded.',
             modalEdicion:'The Licence was successfully edited.',

@@ -21,6 +21,13 @@
                     <td v-if="licence.price_usd" @click="actionModal(licence)">${{licence.price_usd}}</td>
                     <td v-else @click="actionModal(licence)">$0</td>
                     <Modal class="modal-action" :buttonDefault="false" :data="licence" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete">
+                        <button @click="infoLicencia" class="button btn-crenein w-100 my-1">
+                            <span class="icon is-small">
+                                <i class="fas fa-pencil-alt"></i>
+                            </span>
+                            <span>{{$t('licence.verInfo')}}</span>
+                        </button>
+                        
                         <button @click="ModalAddLabel('addLimits', licence)" class="button btn-crenein w-100 my-1">
                             <span class="icon is-small">
                                 <i class="fas fa-pencil-alt"></i>
@@ -139,6 +146,7 @@ import isEmpty from '../../helper/FieldIsEmpty'
 import Loading from '../../components/loading.vue'
 import NoFoundData from '../../components/NoFoundData.vue'
 import Button from '../../components/Buttons/Button.vue'
+import { useRoute, useRouter } from 'vue-router'
 
 
 export default {
@@ -186,6 +194,8 @@ export default {
         const titles = ref([])
         const total = ref()
         const typeAction = ref('licence.agregar')
+        const router = useRouter()
+        const route = useRoute()
 
         
         /**
@@ -193,6 +203,13 @@ export default {
          * Cambia los titulos de la tabla segun el idioma que se seleccione
          * 
          */
+
+        const infoLicencia = () => {
+            router.push('/InfoLicence')
+        }
+
+
+
         const changeTitleByLanguage = () => {
             i18n.global.locale=='en'? titles.value = ['Name','App','Price ARG','Price USD']
             : titles.value = ['Nombre','Aplicación','Precio ARG','Precio USD']
@@ -567,6 +584,7 @@ export default {
         }
 
         return {
+            infoLicencia,
             actionModal,
             actionModalDelete,
             activeAlert,
