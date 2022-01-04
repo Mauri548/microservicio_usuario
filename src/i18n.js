@@ -141,14 +141,15 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             modalEdicion:'Se edito con exito la licencia.',
             modalCargaError: 'Fallo al cargar la licencia, por favor intentelo mas tarde',
             modalEdicionError: 'Fallo al editar la licencia, por favor intentelo mas tarde',
-            modalCargaLimit: 'Se cargo con exito el limite',
-            modalEdicionLimit: 'Se edito con exito el limite',
-            modalCargaLimitError: 'Fallo al cargar la limite, por favor intentelo mas tarde',
-            modalEdicionLimitError: 'Fallo al editar la limite, por favor intentelo mas tarde',
+            modalCargaLimit: 'Se cargo con exito los limites',
+            modalEdicionLimit: 'Se edito con exito los limites',
+            modalCargaLimitError: 'Fallo al cargar los limites, por favor intentelo mas tarde',
+            modalEdicionLimitError: 'Fallo al editar los limites, por favor intentelo mas tarde',
             tengo:'Esta suscrito',
             quiero:'Suscribirse',
             modalTitulo:'¿Desea cambiar de licencia?',
             modalParrafo:'Si es asi confirme y se le informara al area de administracion para que le cambien la licencia',
+            mensajeAclaracion: 'Los campos que queden vacios se autocompleta con el valor 1',
         },
 
         labelkey:{
@@ -158,7 +159,6 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             modalEdicion:'Se edito con exito el LabelKey.',
             modalCargaError: 'Fallo al cargar el LabelKey, por favor intentelo mas tarde',
             modalEdicionError: 'Fallo al editar el LabelKey, por favor intentelo mas tarde',
-
         },
 
         createCompanyFinish: {
@@ -314,14 +314,15 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             modalEdicion:'The Licence was successfully edited.',
             modalCargaError: 'Failed to load license, please try again later',
             modalEdicionError: 'Failed to edit license, please try again later',
-            modalCargaLimit: 'The Limit was successfully loaded.',
-            modalEdicionLimit: 'The Limit was successfully edited.',
-            modalCargaLimitError: 'Failed to load Limit, please try again later',
-            modalEdicionLimitError: 'Failed to edit Limit, please try again later',
+            modalCargaLimit: 'The Limits was successfully loaded.',
+            modalEdicionLimit: 'The Limits was successfully edited.',
+            modalCargaLimitError: 'Failed to load Limits, please try again later',
+            modalEdicionLimitError: 'Failed to edit Limits, please try again later',
             tengo:'Is subscribed',
             quiero:'To subscribe',
             modalTitulo:'Do you want to change your license?',
             modalParrafo:'If so, confirm and the administration area will be informed to change the license.',
+            mensajeAclaracion: 'The fields thath remain empty are autocompleted with the value 1'
         },
         labelkey:{
             agregar: 'Add LabelKey',

@@ -21,19 +21,42 @@
                     <td v-if="licence.price_usd" @click="actionModal(licence)">${{licence.price_usd}}</td>
                     <td v-else @click="actionModal(licence)">$0</td>
                     <Modal class="modal-action" :buttonDefault="false" :data="licence" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete">
-                        <button @click="ModalAddLabel('addLimits', licence)" class="button btn-crenein w-100 my-1">
+
+                        <router-link 
+                            :to="{
+                                name: 'AddLabelKey', 
+                                params: {
+                                    license_id: licence.id, 
+                                    license_name: licence.name,
+                                    app_id: licence.app.id,
+                                    add: true
+                                }
+                            }"
+                            class="button btn-crenein w-100 my-1"
+                            >
                             <span class="icon is-small">
                                 <i class="fas fa-pencil-alt"></i>
                             </span>
                             <span>{{$t('licence.agregarTope')}}</span>
-                        </button>
+                        </router-link>
 
-                        <Button class="w-100 my-1" @click="ModalAddLabel('editLimits', licence)">
+                        <router-link 
+                            :to="{
+                                name: 'AddLabelKey', 
+                                params: {
+                                    license_id: licence.id, 
+                                    license_name: licence.name,
+                                    app_id: licence.app.id,
+                                    add: false
+                                }
+                            }"
+                            class="button btn-crenein w-100 my-1"
+                            >
                             <span class="icon is-small">
                                 <i class="fas fa-pencil-alt"></i>
                             </span>
                             <span>{{$t('licence.editarTope')}}</span>
-                        </Button>
+                        </router-link>
                         
                         <button @click="ModalAdd('edit', licence)" class="button btn-crenein w-100 my-1">
                             <span class="icon is-small">
@@ -85,22 +108,22 @@
 
     <!-- Ventana modal de formulario de agregar topes de licencia-->
    <AddLabelKey :title="typeAction" v-show="addLimits" @closeModal="ModalAddLabel('addLimits')">
-        <ModalAddLabelKey 
+        <!-- <ModalAddLabelKey 
             :Datas="appsLabel" 
             :loading="loading_form"
             @onHandleDataSelected="hanldeLabelSelected"
             @onAddData="addTope"
-        />
+        /> -->
     </AddLabelKey>
 
     <AddLabelKey :title="typeAction" v-show="editLimits" @closeModal="ModalAddLabel('editLimits')" >
-        <ModalAddLabelKey 
+        <!-- <ModalAddLabelKey 
             :Datas="labels"
             :edit="true"
             :loading="loading_form"
             @onHandleDataSelected="hanldeLabelSelected"
             @onAddData="addTope"
-        />
+        /> -->
     </AddLabelKey>
 
     <ModalAlert :activador="activeAlert" :state="succesLoad">
@@ -716,7 +739,7 @@ export default {
             actionModalDelete,
             activeAlert,
             addLicence,
-            addTope,
+            // addTope,
             apps,
             atras ,
             camb_pagina,
@@ -725,7 +748,7 @@ export default {
             currentPage,
             editLimits,
             firstItem,
-            hanldeLabelSelected,
+            // hanldeLabelSelected,
             hasMorePages,
             labels,
             lastItem, 

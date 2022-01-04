@@ -129,19 +129,24 @@ const routes = [
       {
         path: '/InvitationsDashboard',
         name: 'InvitationsDashboard',
-        component: () => import(/* webpackCunkName: "LicencesDashboard" */ '../views/Invitations/InvitationsDashboard.vue')
+        component: () => import(/* webpackChunkName: "LicencesDashboard" */ '../views/Invitations/InvitationsDashboard.vue')
       }
       ,
       {
         path: '/UpdateSuscription/:id',
         name: 'UpdateSuscription',
-        component: () => import(/* webpackCunkName: "LicencesDashboard" */ '../views/Subscripciones/UpdateSuscription.vue')
+        component: () => import(/* webpackChunkName: "LicencesDashboard" */ '../views/Subscripciones/UpdateSuscription.vue')
       }
       ,
       {
         path: '/SubscriptionsDashboard',
         name: 'SubscriptionsDashboard',
-        component: () => import(/* webpackCunkName: "LicencesDashboard" */ '../views/Subscripciones/SubscriptionsDashboard.vue')
+        component: () => import(/* webpackChunkName: "LicencesDashboard" */ '../views/Subscripciones/SubscriptionsDashboard.vue')
+      },
+      {
+        path: '/AddLabelKey/:license_id/:license_name/:app_id/:add',
+        name: 'AddLabelKey',
+        component: () => import(/* webpackChunkName: "AddLabelKey" */ '../views/licences/AddLabelKey.vue')
       }
     ]
   },
