@@ -107,24 +107,9 @@
     </AddLicence>
 
     <!-- Ventana modal de formulario de agregar topes de licencia-->
-   <AddLabelKey :title="typeAction" v-show="addLimits" @closeModal="ModalAddLabel('addLimits')">
-        <!-- <ModalAddLabelKey 
-            :Datas="appsLabel" 
-            :loading="loading_form"
-            @onHandleDataSelected="hanldeLabelSelected"
-            @onAddData="addTope"
-        /> -->
-    </AddLabelKey>
+   <AddLabelKey :title="typeAction" v-show="addLimits" @closeModal="ModalAddLabel('addLimits')" />
 
-    <AddLabelKey :title="typeAction" v-show="editLimits" @closeModal="ModalAddLabel('editLimits')" >
-        <!-- <ModalAddLabelKey 
-            :Datas="labels"
-            :edit="true"
-            :loading="loading_form"
-            @onHandleDataSelected="hanldeLabelSelected"
-            @onAddData="addTope"
-        /> -->
-    </AddLabelKey>
+    <AddLabelKey :title="typeAction" v-show="editLimits" @closeModal="ModalAddLabel('editLimits')" />
 
     <ModalAlert :activador="activeAlert" :state="succesLoad">
         <div v-if="succesLoad">
@@ -163,7 +148,6 @@ import isEmpty from '../../helper/FieldIsEmpty'
 import Loading from '../../components/loading.vue'
 import NoFoundData from '../../components/NoFoundData.vue'
 import Button from '../../components/Buttons/Button.vue'
-import ModalAddLabelKey from './ModalAddLabelKey.vue'
 
 
 export default {
@@ -181,7 +165,6 @@ export default {
         Loading,
         NoFoundData,
         Button,
-        ModalAddLabelKey,
     },
 
     setup() {
@@ -646,100 +629,11 @@ export default {
             }
         }
 
-        const addTope = async (label, tope, level_h, level_v, edit) => {
-            loading_form.value = true
-
-            !edit ? await createTopLabel(selectLicense.value, label.id, tope, level_v, level_h) 
-            : await editTopLabel(label.id, selectLicense.value, tope, level_v, level_h)
-
-            loading_form.value = false
-        }
-
-        const hanldeLabelSelected = (label, edit) => {
-            if (!edit) {
-                appsLabel.value.map(item => item.selected = false)
-                label.selected = true
-            }
-            if (edit) {
-                labels.value.map(item => item.selected = false)
-                label.selected = true
-                tope.value = label.top
-                level_h.value = label.level_h
-                level_v.value = label.level_v
-            }            
-        }
-
-        const createTopLabel = async (licenseId, lableKeyId, top, level_v, level_h) => {
-            
-            const client = new GraphQLClient(endpoint)
-            await client.rawRequest(/* GraphQL */`
-            mutation($company_user_id:ID!, $license_id: Int!, $labelkey_id: Int!, $top: Float!, $level_h: Int!, $level_v: Int!) {
-                createsLic_key(company_user_id: $company_user_id, input: {
-                    license_id: $license_id,
-                    labelkey_id: $labelkey_id,
-                    top: $top,
-                    level_h: $level_h,
-                    level_v: $level_v
-                }) {
-                    id
-                    license_id
-                    labelkey_id
-                    top
-                    level_h
-                    level_v
-                }
-            }`,
-            {
-                company_user_id:localStorage.getItem('user_company_id'),
-                license_id: parseInt(licenseId) ,
-                labelkey_id: parseInt(lableKeyId),
-                top: parseInt(top),
-                level_h: parseInt(level_h),
-                level_v: parseInt(level_v)
-            })
-            .then((data) => {
-                changeStateModal(true)
-            })
-            .catch(error => changeStateModal(false))
-        }
-
-        const editTopLabel = async (id, licenseId, top, level_v, level_h) => {
-            const client = new GraphQLClient(endpoint)
-            await client.rawRequest(/* GraphQL */ `
-            mutation($company_user_id:ID!, $id: ID!, $license_id: Int, $top: Float, $level_h: Int, $level_v: Int) {
-                modifiesLic_key(company_user_id: $company_user_id, id: $id, input: {
-                    license_id: $license_id,
-                    top: $top,
-                    level_h: $level_h,
-                    level_v: $level_v
-                }) {
-                    id
-                    license_id
-                    top
-                    level_h
-                    level_v
-                }
-            }`,
-            {
-                company_user_id:localStorage.getItem('user_company_id'),
-                id: parseInt(id),
-                license_id: parseInt(licenseId) ,
-                top: parseInt(top),
-                level_h: parseInt(level_h),
-                level_v: parseInt(level_v)
-            })
-            .then((data) => {
-                changeStateModal(true)
-            })
-            .catch(error => changeStateModal(false))
-        }
-
         return {
             actionModal,
             actionModalDelete,
             activeAlert,
             addLicence,
-            // addTope,
             apps,
             atras ,
             camb_pagina,
@@ -748,7 +642,6 @@ export default {
             currentPage,
             editLimits,
             firstItem,
-            // hanldeLabelSelected,
             hasMorePages,
             labels,
             lastItem, 
