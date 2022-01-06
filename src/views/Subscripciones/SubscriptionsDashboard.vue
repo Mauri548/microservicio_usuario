@@ -12,7 +12,6 @@
         <div class="body-tablero px-4">
             <Board :datas="subscripciones" :titles="titles" >
                 <tr class="has-text-centered row-table" v-for="data in subscripciones" :key="data.id">
-                    <th @click="actionModal(data)">{{data.id}}</th>
                     <td @click="actionModal(data)">{{data.nombreApp}}</td>
                     <td @click="actionModal(data)">{{data.licence}}</td>
                     <td @click="actionModal(data)">{{data.companyName}}</td>

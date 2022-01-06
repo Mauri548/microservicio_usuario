@@ -9,7 +9,7 @@
         </div>
         <div class="body-tablero px-4">
             <!-- Componente de Tablero -->
-            <Board :datas="apps" :titles="titles">
+            <Board :datas="apps" :titles="titles" :showId="true">
                 <tr class="has-text-centered row-table" v-for="app in apps" :key="app.id">
                     <th @click="actionModal(app)" >{{app.id}}</th>
                     <td @click="actionModal(app)">{{app.nombre}}</td>

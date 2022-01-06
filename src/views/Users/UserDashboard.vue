@@ -12,7 +12,6 @@
         <div class="body-tablero px-4">
             <Board :datas="users" :titles="titles" >
                 <tr class="has-text-centered row-table" v-for="data in users" :key="data.id">
-                    <th @click="actionModal(data)">{{data.id}}</th>
                     <!-- <td @click="actionModal(data)">{{data.avatar}}</td> -->
                     <td @click="actionModal(data)">{{data.nombre}}</td>
                     <td @click="actionModal(data)">{{data.email}}</td>
