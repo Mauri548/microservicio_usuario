@@ -1,7 +1,7 @@
 <template>
     <div class="conteiner-tablero mt-2 py-2">
         <div class="head-tablero">
-            <TitleBoard :title="$i18n.locale=='en'? 'Label Keys' : 'Label Keys'" />
+            <TitleBoard :title="$i18n.locale=='en'? 'Not_events' : 'Not_events'" />
 
             <hr>
             <div class="body-tablero my-3 px-4">
@@ -11,38 +11,41 @@
             </div>
         </div>
         <div class="body-tablero px-4">
-            <Board :datas="labelKeys" :titles="titles">
-                <tr class="has-text-centered row-table" v-for="labelKey in labelKeys" :key="labelKey.id">
-                    <th @click="actionModal(labelKey)">{{labelKey.id}}</th>
-                    <td @click="actionModal(labelKey)">{{labelKey.app.name}}</td>
-                    <td @click="actionModal(labelKey)">{{labelKey.label}}</td>   
-                    <td @click="actionModal(labelKey)">{{labelKey.typekey}}</td>    
-                    <Modal class="modal-action" :buttonDefault="false" :data="labelKey" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete">
-                        <button @click="ModalAdd('edit', labelKey)" class="button btn-crenein w-100 my-1">
+            <Board :datas="events" :titles="titles">
+                <tr class="has-text-centered row-table" v-for="event in events" :key="event.id">
+                    <th @click="actionModal(licence)">{{event.id}}</th>
+                    <td @click="actionModal(event)">{{event.event}}</td>
+                    <td @click="actionModal(event)">{{event.app.name}}</td>
+                    <td @click="actionModal(event)">{{event.type}}</td>
+                    <td @click="actionModal(event)">{{event.observation}}</td>
+
+                    <Modal class="modal-action" :buttonDefault="false" :data="event" @onCloseModal="actionModal" @onOpenModalDelete="actionModalDelete">
+                        <button @click="ModalAdd('edit', event)" class="button btn-crenein w-100 my-1">
                             <span class="icon is-small">
                                 <i class="fas fa-pencil-alt"></i>
                             </span>
                             <span>{{$t('modal.editar')}}</span>
                         </button>
                     </Modal>
-                    <ActionModal :data="labelKey" @onCloseModalAction="actionModalDelete" />
+                    <ActionModal :data="event" @onCloseModalAction="actionModalDelete" />
                 </tr>
             </Board>
 
             <Loading v-show="loading"/>
-            <NoFoundData v-if="!loading && labelKeys.length == 0" />
+            <NoFoundData v-if="!loading && events.length == 0" />
         </div>
          <Pagination @next="camb_pagina" @previous="atras" :lastPage=lastPage :currentPage=currentPage :count="count" :total="total" :firstItem="firstItem" :lastItem="lastItem" :perPage="perPage" :hasMorePages="hasMorePages" />
     </div>
+
  
     <!-- Ventana modal de formulario carga etiqueta -->
-    <AddLabelKey :title="typeAction" v-show="addLabelkey" @closeModal="ModalAdd">
+    <AddNotEvent :title="typeAction" v-show="addNotEvent" @closeModal="ModalAdd">
         <div>
             <section class="modal-card-body">
                 <form id="form-create-app" action="" class="column">
-                    <CampoForm type="text" v-model="name"
-                        :place="$i18n.locale=='en'? 'Name': 'Nombre'" 
-                        :error="msg_error.name" 
+                    <CampoForm type="text" v-model="event"
+                        :place="$i18n.locale=='en'? 'Event name': 'Nombre del Evento'" 
+                        :error="msg_error.event" 
                     />
 
                     <div class="select w-100 mb-4">
@@ -53,10 +56,15 @@
 
                     <div class="select w-100 mb-4">
                         <select class="w-100 mb-4" v-model="selectedType" >
-                            <option value="level_v">level v</option>
-                            <option value="level_h">level h</option>
+                            <option value="error">error</option>
+                            <option value="alert">alert</option>
+                            <option value="notification">notification</option>
                         </select>
                     </div>
+
+                    <CampoForm type="text" v-model="observation"
+                        :place="$i18n.locale=='en'? 'Observation': 'Observacion'" 
+                    />
                 
                     <div class="column p-0 has-text-centered">
                         <Button class="has-background-danger mr-2"
@@ -71,16 +79,17 @@
                 </form>
             </section>
         </div>
-    </AddLabelKey>
+    </AddNotEvent>
+
 
     <ModalAlert :activador="activeAlert" :state="succesLoad">
         <div v-if="succesLoad">
-            <p v-if="typeAction == 'labelkey.agregar'" v-t="'labelkey.modalCarga'"></p>
-            <p v-else v-t="'labelkey.modalEdicion'"></p>
+            <p v-if="typeAction == 'event.agregar'" v-t="'event.modalCarga'"></p>
+            <p v-else v-t="'event.modalEdicion'"></p>
         </div>
         <div v-else>
-            <p v-if="typeAction == 'labelkey.agregar'" v-t="'labelkey.modalCargaError'"></p>
-            <p v-else v-t="'labelkey.modalEdicionError'"></p>
+            <p v-if="typeAction == 'event.agregar'" v-t="'event.modalCargaError'"></p>
+            <p v-else v-t="'event.modalEdicionError'"></p>
         </div>
     </ModalAlert>
 
@@ -94,7 +103,7 @@ import Pagination from '../../components/Board/Pagination.vue'
 import Modal from '../../components/Modal.vue'
 import ActionModal from '../../components/Modals/ActionsModal.vue'
 import ModalAlert from '../../components/Modals/ModalsAlert.vue'
-import AddLabelKey from './AddLabelKey.vue'
+import AddNotEvent from './AddNotEvent.vue'
 import CampoForm from '../../components/CampoForm.vue'
 import { ref, watchEffect } from '@vue/runtime-core'
 import i18n from '@/i18n.js'
@@ -116,39 +125,45 @@ export default {
         Modal,
         ActionModal,
         ModalAlert,
-        AddLabelKey,
         CampoForm,
         Loading,
         NoFoundData,
         Button,
+        AddNotEvent
     },
 
     setup() {
         const activeAlert = ref(false)
-        const addLabelkey = ref(false)
+        const addNotEvent = ref(false)
         const apps = ref([])
+        const appsLabel = ref([])
         const count = ref();
         const currentPage = ref()
+        const editLimits = ref(false)
         const endpoint = store.state.url_backend
         const firstItem = ref()
         const hasMorePages = ref()
+        const labels = ref([])
         const lastItem = ref()
-        const labelKeys = ref([])
         const lastPage = ref();
-        const labelEdition = ref(0)
+        const events = ref([])
+        const eventEdition = ref(0)
         const loading = ref(false)
         const loading_form = ref(false)
-        const msg_error = ref({ name: '' })
-        const name = ref('')
+        const msg_error = ref({ event: ''})
+        const event = ref('')
+        const observation = ref('')
         const page = ref(1);
         const perPage = ref()
-        const selectedApp = ref()
-        const selectedType = ref('level_v')
+        const selectedApp = ref('')
         const succesLoad = ref(false)
         const titles = ref([])
         const total = ref()
-        const typeAction = ref('labelkey.agregar')
-
+        const typeAction = ref('licence.agregar')
+        const selectLicense = ref(null)
+        const tope = ref(null)
+        const selectedType = ref('notification')
+       
         
         /**
          * 
@@ -156,39 +171,35 @@ export default {
          * 
          */
         const changeTitleByLanguage = () => {
-            i18n.global.locale=='en'? titles.value = ['App','Label','TypeKey']
-            : titles.value = ['Aplicación','Etiqueta','TypeKey']
+            i18n.global.locale =='en'? titles.value = ['Event','App','Type','Observation']
+            : titles.value = ['Evento','Aplicación','Tipo','Observacion']
         }
 
         /**
          * 
-         * Trae todas las labelkeys
+         * Trae todas las licencias
          * 
          */
-        const fetchLabelkeys = () => {
+        const fetchEvents = () => {
             const client = new GraphQLClient(endpoint)
             client.rawRequest(/* GraphQL */ `
             query($page: Int,$first:Int!){
-                labelkeys(first: $first, page: $page) {
-                    paginatorInfo {
-                        count
-                        firstItem
-                        hasMorePages
-                        lastItem
-                        lastPage
-                        perPage
-                        total
-                        currentPage,
-                    }
+                events(first: $first, page: $page) {
                     data {
-                        id
-                        app_id
-                        label
-                        typekey
+                        id,
+                        app_id,
+                        event,
+                        type,
+                        observation,
+                            
                         app {
-                            id
+                            id,
                             name
                         }
+                    }
+                    paginatorInfo {
+                        count, currentPage, firstItem, hasMorePages
+                        lastItem, lastPage, perPage, total
                     }
                 }
             }`,
@@ -197,15 +208,12 @@ export default {
                 first: store.state.cant
             })
             .then((data) => {
-                let paginacion = data.data.labelkeys.paginatorInfo
-                
-                labelKeys.value = []
-                data.data.labelkeys.data.forEach(element => {
-                    labelKeys.value.push({id:element.id, label:element.label,typekey:element.typekey, app: {id:element.app.id, name: element.app.name}, activo: false, modalDelete: false})
+                let paginacion = data.data.events.paginatorInfo
+                events.value = []
+                console.log(data.data.events.data)
+                data.data.events.data.forEach(element => {
+                    events.value.push({id:element.id,event:element.event, observation:element.observation,type:element.type, app: {id:element.app.id, name: element.app.name}, activo: false, modalDelete: false})
                 })
-                console.log(paginacion)
-                console.log(labelKeys.value)
-
                 lastPage.value = paginacion.lastPage
                 count.value = paginacion.count
                 total.value = paginacion.total
@@ -213,7 +221,7 @@ export default {
                 firstItem.value = paginacion.firstItem
                 lastItem.value = paginacion.lastItem
                 perPage.value = paginacion.perPage
-                hasMorePages.value = paginacion.hasMorePages 
+                hasMorePages.value = paginacion.hasMorePages
                 loading.value = false
             })
             .catch(error => {
@@ -228,7 +236,8 @@ export default {
 
         watchEffect(() => {
             loading.value = true
-            fetchLabelkeys()
+            fetchEvents()
+           /*  fetchAppsLabel() */
         })
         
         /**
@@ -236,10 +245,10 @@ export default {
          * Trae las app y lo almacena
          * 
          */
-        const fetchApps = () => {
+        const fetchApps = async () => {
             apps.value = []
             const cliente = new GraphQLClient(endpoint)
-            cliente.rawRequest(/* GraphQL */ `
+            await cliente.rawRequest(/* GraphQL */ `
             query {
                   appsVisible(first: 999, page: 1) {
                     data{
@@ -253,13 +262,19 @@ export default {
                 }
             }`)
             .then((data) => {
-                if (data.data.appsVisible.data) selectedApp.value = data.data.appsVisible.data[0]
+                /* console.log(data.data.appsVisible.data); */
+                if (data.data.appsVisible.data) selectedApp.value = data.data.appsVisible.data[0].id
+                /* console.log(selectedApp.value); */
                 data.data.appsVisible.data.forEach(element => {
                     apps.value.push({id: element.id, name: element.name})
                 })
+                /* console.log(apps.value) */
             })
             .catch(error => console.log(error))
         }
+
+
+      
 
         const register = async () => {
             succesLoad.value = true
@@ -268,9 +283,9 @@ export default {
                 e.preventDefault()
             })
             resetErrorMessage(msg_error.value)
-
+                 
             if (isValid()) {
-                typeAction.value == 'labelkey.agregar' ? await createLabelKey() : await editLabelKey()
+                typeAction.value == 'event.agregar' ? await createsNot_event() : await modifiesNot_event()
             } else {
                 console.log('no valido')
             }
@@ -285,12 +300,19 @@ export default {
          */
         const isValid = () => {
             fieldsIsEmpty()
-            
-            for (let i in msg_error.value) {
-                if (msg_error.value[i] != '') return false 
+
+            return checkMessageError(msg_error.value)
+        }
+
+        const checkMessageError = (list) => {
+            for (let i in list) {
+                if (list[i] != '') return false 
             }
             return true
         }
+
+        
+       
 
         /**
          * 
@@ -298,81 +320,92 @@ export default {
          * 
          */
         const fieldsIsEmpty = () => {
-            isEmpty(name.value, msg_error.value, 'name')
+            isEmpty(event.value, msg_error.value, 'event')
+
         }
 
-        // Funcion para crear una nueva licencia
-        const createLabelKey = async () => {
+        // Funcion para crear 
+        const createsNot_event = async () => {
            
             const client = new GraphQLClient(endpoint)
             await client.rawRequest(/* GraphQL */ `
-            mutation($company_user_id:ID!, $label: String!, $app_id: Int!, $typeKey: Typekey!) {
-                createsLic_labelkey(company_user_id: $company_user_id, input: {
-                    label: $label,
+            mutation($company_user_id:ID!,$app_id:ID!, $event:String!, $type: TypeEvent!,$observation:String) {
+                createsNot_event(company_user_id:$company_user_id,input: {
                     app_id: $app_id,
-                    typekey: $typeKey
+                    event: $event,
+                    type:$type,
+                    observation:$observation
                 }) {
-                    id, app_id, label, typekey
+                    id, app_id, event,type,observation
                 }
             }`,
             {
                 company_user_id:localStorage.getItem('user_company_id'),
                 app_id: parseInt(selectedApp.value.id),
-                label: name.value,
-                typeKey: selectedType.value,
+                event: event.value,
+                type: selectedType.value,
+                observation: observation.value
             })
             .then((data) => {
-                const label = data.data.createsLic_labelkey
-
-                labelKeys.value.push({
-                    id: label.id, 
-                    label: label.label,
-                    typekey: label.typekey, 
+                
+                // Insertamos el nuevo evento creada en el array de licencias
+                let event = data.data.createsNot_event
+                console.log(event);
+                events.value.push({
+                    id:event.id,
+                    event:event.event, 
+                    observation:event.observation,
+                    type:event.type, 
                     app: {id: selectedApp.value.id, name: selectedApp.value.name}, 
-                    activo: false, 
+                    activo: false,
                     modalDelete: false
-                })
-
+                }) 
+                
+                
+                // Cerramos la ventana modal
                 ModalAdd()
                 changeStateModal(true)
                 succesLoad.value = false
             })
             .catch(error => {
+
                 ModalAdd()
                 changeStateModal(false)
                 console.log(error.response)
             })
         }
 
-        const editLabelKey = async () => {
-            console.log('edit')
+        const modifiesNot_event = async () => {
+            console.log("funcion editar");
             const client = new GraphQLClient(endpoint)
             await client.rawRequest(/* GraphQL */ `
-            mutation($company_user_id:ID!, $id: ID!, $app_id: Int, $name: String, $typekey: Typekey) {
-                modifiesLic_labelkey(company_user_id: $company_user_id, id: $id, input: {
-                    label: $name,
+            mutation($company_user_id:ID!,$id: ID!, $app_id: ID!,$event:String!, $type: TypeEvent!,$observation:String) {
+                modifiesNot_event(company_user_id:$company_user_id,id: $id, input: {
                     app_id: $app_id,
-                    typekey: $typekey
+                    event: $event,
+                    type:$type,
+                    observation:$observation
                 }) {
-                    id, app_id, label, typekey
+                    id, app_id, event,type,observation
                 }
             }`,
             {
                 company_user_id:localStorage.getItem('user_company_id'),
-                id: labelEdition.value,
-                name: name.value,
+                id: eventEdition.value,
                 app_id: parseInt(selectedApp.value.id),
-                typekey: selectedType.value
+                event: event.value,
+                type: selectedType.value,
+                observation: observation.value
+          
             })
             .then((data) => {
-                
-                const label = data.data.modifiesLic_labelkey
-                let aux = labelKeys.value.find(element => element.id == label.id)
-                aux.label = label.label
-                aux.typekey = label.typekey
-                aux.app.id = selectedApp.value.id
-                aux.app.name = selectedApp.value.name 
-
+                let res = data.data.modifiesLic_license
+                let app = apps.value.find(app => app.id == res.app_id)
+                let event_aux = events.value.find(event => event.id == res.id)
+                // Asignamos los valores al elemento para que se modifique en la vista del usuario
+      
+                event_aux.app.id = res.app_id
+                event_aux.app.name = app.name
                 // Cerramos la ventana modal
                 ModalAdd()
                 changeStateModal(true)
@@ -394,48 +427,56 @@ export default {
             },500)
         }
 
-        const ModalAdd = (type, data) => {
-            addLabelkey.value = !addLabelkey.value
-            console.log(type);
-            if (addLabelkey.value) {
-                resetErrorMessage(msg_error.value)
 
-                console.log(apps.value)
+        
+
+        const ModalAdd = (type, data) => {
+            addNotEvent.value = !addNotEvent.value
+            /* console.log(selectedApp.value); */
+            console.log(addNotEvent.value);
+            console.log(type);
+            if (addNotEvent.value) {
+                resetErrorMessage(msg_error.value)
+               /*  console.log(apps.value) */
                 
                 if (apps.value.length == 0) {
                     fetchApps()
                 }
+                console.log(apps.value)
                 /*Verificamos el tipo de accion que se hara, si es editar o agregar para reutilizar un componente
                 modal */
                 if (type == 'add') {
-                    typeAction.value = 'labelkey.agregar'
+                    typeAction.value = 'event.agregar'
                     document.getElementById('form-create-app').reset()
-                    name.value = ''
+                    event.value = ''
                 } else {
                     actionModal(data)
-                    labelEdition.value = data.id
-                    typeAction.value = 'labelkey.editar'
+                    eventEdition.value = data.id
+                    typeAction.value = 'event.editar'
                     selectedApp.value = data.app
-                    name.value = data.label
-                    selectedType.value = data.typekey
+                    event.value = data.event
+                    selectedType.value = data.type
                 }
             }
         }
+
         const camb_pagina = (valorNext) => {
             page.value +=1
+            
         }
-        
+
         const atras = (valorNext) => {
             if(valorNext==false) page.value -=1
         }
 
         const actionModal = (data) => {
-            let aux = labelKeys.value.find(element => element.id == data.id)
+            let aux = events.value.find(element => element.id == data.id)
             aux.activo = !aux.activo
+            selectLicense.value = data.id
         }
 
         const actionModalDelete = (data) => {
-            let aux = labelKeys.value.find(element => element.id == data)
+            let aux = events.value.find(element => element.id == data)
             aux.activo = false
             aux.modalDelete = !aux.modalDelete
         }
@@ -453,31 +494,37 @@ export default {
             actionModal,
             actionModalDelete,
             activeAlert,
-            addLabelkey,
             apps,
             atras ,
             camb_pagina,
             count,
+            createsNot_event,
             currentPage,
+            editLimits,
             firstItem,
             hasMorePages,
-            labelKeys,
+            labels,
             lastItem, 
             lastPage,
+            events,
             loading,
             loading_form,
             ModalAdd,
             msg_error,
-            name,
+            event,
             page,
             perPage,
             register,
             selectedApp,
-            selectedType,
             succesLoad,
             titles,
             total,
             typeAction,
+            appsLabel,
+            tope,
+            addNotEvent ,
+            observation,
+            selectedType
         }
     }
 
@@ -492,4 +539,5 @@ export default {
     .red {
         background-color: red;
     }
+    
 </style>

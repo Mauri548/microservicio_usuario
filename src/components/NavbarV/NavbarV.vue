@@ -106,6 +106,7 @@ export default {
                 {nombre: 'Personal Info', activo: false, link: true, name_link: 'PersonalForm'},
                 {nombre: 'Permissions', activo: false, link: true, name_link: 'PermissionsDashboard'},
                 {nombre: 'Platform', activo: false, link: false, opc: [
+                    {nombre: 'Not_Events', activo: false, name_link: 'NotEventsDashboard'},
                     {nombre: 'Apps management', activo: false, name_link: 'AppDashboard'},
                     {nombre: 'Licences management', activo: false, name_link: 'LicencesDashboard'},
                     {nombre: 'LabelKeys management', activo: false, name_link: 'LabelKeyDashboard'},
@@ -237,9 +238,10 @@ export default {
             listas.value[1].nombre = i18n.global.locale == 'en'? 'Permissions': 'Permisos'
             listas.value[2].nombre = i18n.global.locale == 'en'? 'Platform': 'Plataforma'
             listas.value[3].nombre = i18n.global.locale == 'en'? 'Company': 'Empresa'
-            listas.value[2].opc[0].nombre = i18n.global.locale == 'en'? 'Apps management': 'Gestión de aplicaciones'
-            listas.value[2].opc[1].nombre = i18n.global.locale == 'en'? 'Licences management': 'Gestión de licencias'
-            listas.value[2].opc[2].nombre = i18n.global.locale == 'en'? 'LabelKeys management': 'Tabla de Label Keys'
+            listas.value[2].opc[0].nombre = i18n.global.locale == 'en'? 'Not Events': 'Not Events'
+            listas.value[2].opc[1].nombre = i18n.global.locale == 'en'? 'Apps management': 'Gestión de aplicaciones'
+            listas.value[2].opc[2].nombre = i18n.global.locale == 'en'? 'Licences management': 'Gestión de licencias'
+            listas.value[2].opc[3].nombre = i18n.global.locale == 'en'? 'LabelKeys management': 'Tabla de Label Keys'
             listas.value[3].opc[0].nombre = i18n.global.locale == 'en'? 'Users management': 'Gestión de usuarios'
             listas.value[3].opc[1].nombre = i18n.global.locale == 'en'? 'Invitations management': 'Tabla de Invitaciones'
             listas.value[3].opc[2].nombre = i18n.global.locale == 'en'? 'Subscriptions management': 'Tabla de Subscripciones'

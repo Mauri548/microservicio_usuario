@@ -106,6 +106,12 @@ const routes = [
         component: () => import(/* webpackChunkName: "AddApp" */ '../views/Apps/Add.vue')
       },
       {
+        path: '/NotEventsDashboard',
+        name: 'NotEventsDashboard',
+        component: () => import(/* webpackChunkName: "NotEventsDashboard" */ '../views/Events/NotEventsDashboard.vue')
+      },
+
+      {
         path: '/PermissionsManagement',
         name: 'PermissionsManagement',
         component: () => import(/* webpackChunkName: "PermissionsManagement" */ '../views/Permissions/PermissionsManagement.vue')

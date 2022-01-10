@@ -160,7 +160,14 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             modalCargaError: 'Fallo al cargar el LabelKey, por favor intentelo mas tarde',
             modalEdicionError: 'Fallo al editar el LabelKey, por favor intentelo mas tarde',
         },
-
+        event:{
+            agregar: 'Agregar Not_Event',
+            editar: 'Editar Not_Event',
+            modalCarga:'Se cargo con exito el Not_Event.',
+            modalEdicion:'Se edito con exito el Not_Event.',
+            modalCargaError: 'Fallo al cargar el Not_Event, por favor intentelo mas tarde',
+            modalEdicionError: 'Fallo al editar el Not_Event, por favor intentelo mas tarde',
+        },
         createCompanyFinish: {
             initext: 'Enhorabuena, has creado tu empresa',
             subtext: 'Puedes suscribirte a una de las aplicaciones que tenemos',
@@ -331,6 +338,14 @@ const messages = { // creo que un objeto en donde crearemos dos atributos en y e
             modalEdicion:'The LabelKey was successfully edited.',
             modalCargaError: 'Failed to load LabelKey, please try again later',
             modalEdicionError: 'Failed to edit LabelKey, please try again later',
+        },
+        event:{
+            agregar: 'Add Not_event',
+            editar: 'Edit Not_event',
+            modalCarga:'The Not_event was successfully loaded.',
+            modalEdicion:'The Not_event was successfully edited.',
+            modalCargaError: 'Failed to load Not_event, please try again later',
+            modalEdicionError: 'Failed to edit Not_event, please try again later',
         },
         createCompanyFinish: {
             initext: 'Congratulations you have created your company',
