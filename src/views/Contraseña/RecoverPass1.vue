@@ -1,62 +1,188 @@
 <template>
   
-    <div v-show="isMobile==false" class="column tam-box mt-2 container is-centered  ">
-        <div class="column title-box">
-            <h2 class="color-letras">Recover your password</h2>
+    <div v-show="isMobile==false" class="column tam-box mt-2 container  has-text-centered">
+        <div class="column title-box ">
+            
+            <h2 v-if="valorLocale=='en'" class="color-letras">Recover your password - Step 1</h2>
+            <h2 v-if="valorLocale=='es'" class="color-letras">Recupera tu contraseña - Paso 1</h2>
         </div>
         <div class="column is-centered cuadro-border">
             <form class="column  mx-5  px-0">
-                <CampoForm place="Email" type="text" />
+                <CampoForm v-if="valorLocale=='en'" place="Email" v-model="email" type="text"  :error="msg_error.email"/>
+                <CampoForm v-if="valorLocale=='es'" place="Correo" v-model="email" type="text" :error="msg_error.email"/>
             </form>
             <div class="column mx-5 ">
                 <div class="columns">
                     <div class="column px-0 is-flex-grow-0 ">
-                        <button class=" button color-btn has-background-danger ">Cancel</button>
+                        <button v-if="valorLocale=='en'" @click="volver" class=" button color-btn has-background-danger ">Cancel</button>
+                        <button v-if="valorLocale=='es'" @click="volver" class=" button color-btn has-background-danger ">Cancelar</button>
                     </div>
                     <div class="column has-text-right  px-0  " >
-                            <button class="button tam-btn color-btn title-box">Send</button>
+                        <button v-if="valorLocale=='en'" @click="validar" class="button tam-btn color-btn title-box">Send</button>
+                        <button v-if="valorLocale=='es'" @click="validar" class="button tam-btn color-btn title-box">Enviar</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div v-show="isMobile==true" class="column tam-box mt-2 container is-centered  ">
+    <div v-show="isMobile==true" class="column tam-box mt-2 container has-text-centered  ">
         <div class="column title-box">
-            <h2 class="color-letras">Recover your password</h2>
+            <h2 class="color-letras">{{$t('contraseña.msmRecupera')}}</h2>
         </div>
         <div class="column  cuadro-border" >
             <form class="column  mx-5  px-0" >
-                <CampoForm place="Email" type="text" />
-
-                <div class="column">
-                    <button class="button  color-btn title-box " style="width:100%">Send</button>
-                    <button class="button color-btn has-background-danger mt-2 " style="width:100%">Cancel</button>
+                <CampoForm v-if="valorLocale=='en'" place="Email" v-model="email" type="text"  :error="msg_error.email"/>
+                <CampoForm v-if="valorLocale=='es'" place="Correo" v-model="email" type="text" :error="msg_error.email"/>
+                <div class="column ">
+                    <button class="button  color-btn title-box " type="button" @click="validar" style="width:100%">{{$t('contraseña.enviar')}}</button>
+                    <button class="button color-btn has-background-danger mt-2 " @click="volver" style="width:100%">{{$t('contraseña.cancel')}}</button>
                 </div>
-              
-                
-                
             </form>
         </div>
     </div>
 
-
+   <!--  <ModalAlert :state="estado" :activador="carga_exitosa">
+       <p v-if="comprobar">{{mensaje}}</p>
+    </ModalAlert> -->
 </template>
 
 <script>
 import CampoForm from '../../components/CampoForm.vue'
-import { inject } from '@vue/runtime-core'
+import { inject, watchEffect } from '@vue/runtime-core'
+import { ref } from '@vue/reactivity'
+import {GraphQLClient} from 'graphql-request';
+import store from '@/store';
+import ModalAlert from '../../components/Modals/ModalsAlert.vue'
+import i18n from '@/i18n.js'
+import { useRouter } from 'vue-router';
+
 export default {
     
     name:'RecoverPass1',
     components:{
-        CampoForm
+        CampoForm,
+        ModalAlert,
     }, 
     setup(){
         const isMobile = inject('isMobile')
+        const valorLocale = ref('')
+        const langStorage = window.localStorage
+        const email = ref("")
+        const endpoint = store.state.url_backend
+        const msg_error = ref({ email: ''})
+        const carga_exitosa = ref(false)
+        const comprobar = ref(false)
+        const mensaje = ref("")
+        const router = useRouter()
+        const estado = ref(false)
+
+        watchEffect(()=>{
+            /* valorLocale.value = langStorage.getItem('lang') */
+            valorLocale.value = i18n.global.locale
+        })
+
+        const siguientePaso = () =>{
+            router.push({name: 'RecoverPass2'})
+        }
+        const volver = () => {
+            router.push({name: 'login'})
+        }
+        
+        const validadorFormato = () => {
+            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test(email.value)
+        }
+
+        const validar = () => {
+            msg_error.value.email = ''
+    
+            if (email.value == ""){
+                if(i18n.global.locale == 'en'){
+                    msg_error.value.email = 'Email is required'
+                }
+                if(i18n.global.locale == 'es'){
+                    msg_error.value.email  = 'El correo es requerido'
+                }
+            } 
+
+            if (email.value != ""){
+                console.log(validadorFormato(email.value)) 
+                if(!validadorFormato(email.value)) {
+                    if(i18n.global.locale == 'en'){
+                        msg_error.value.email = 'The email must have a correct format'
+                    }
+                    if(i18n.global.locale == 'es'){
+                        msg_error.value.email  = 'El email debe tener un formato correcto'
+                    }
+                }
+            }
+            
+            if (msg_error.value.email == '' &&  validadorFormato(email.value)){
+                console.log("Paso las validaciones")
+                forgotPass()
+            } else {
+                console.log('no paso')
+            } 
+        }
+        
+        const forgotPass = () => {
+            const client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */ `
+            mutation($email:String!){
+              		forgotPassword(input:{
+                        email:$email,
+                    }){
+                        status
+                        message
+                    }
+            }`,
+            {
+               email:email.value,
+            },
+            {
+               /* authorization: `Bearer ${localStorage.getItem('user-token')}`  */
+            })
+            .then((data) => {
+                console.log("Paso: ",data.data.forgotPassword)
+                mensaje.value = "El envio de correo para actualizar la contraseña fue un exito!"
+                comprobar.value = !comprobar.value 
+
+                setTimeout(() =>carga_exitosa.value = true ,500)
+                setTimeout(() =>estado.value = true ,2000)
+                setTimeout(() =>carga_exitosa.value = false ,2000)
+                setTimeout(() =>comprobar.value = !comprobar.value   ,2000)
+                siguientePaso()
+              
+            }).catch(error => {
+                console.log(error.response)
+                console.log(error.response.errors[0].message);
+                /* mensaje.value = error.response.errors[0].message */
+               
+                /* comprobar.value = !comprobar.value 
+                setTimeout(() => carga_exitosa.value = true ,500)
+                setTimeout(() =>estado.value = false  ,2000)
+                setTimeout(() =>carga_exitosa.value = false ,2000)
+                setTimeout(() =>comprobar.value = !comprobar.value   ,2000) */
+            })
+
+        }
+
+        
 
         return { 
-            isMobile
+            validadorFormato,
+            volver,
+            estado,
+            siguientePaso,
+            mensaje,
+            carga_exitosa,
+            comprobar,
+            msg_error ,
+            validar,
+            email,
+            isMobile,
+            valorLocale
         }
     }
 
@@ -93,7 +219,7 @@ export default {
     
 }
 .tam-btn{
-    width: 17rem;
+    width: 16rem;
 }
 
 .tam-box{

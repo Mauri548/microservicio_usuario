@@ -28,23 +28,28 @@
 
 <script>
 import { ref } from '@vue/reactivity'
+import store from '@/store';
+
 export default {
     name: 'ShowRows',
-
     setup () {
         const cantRows = ref([
             {valor: 50},{valor: 100},{valor: 200}
         ])
         const cantSelect = ref(50)
         const activo = ref(false)
+        
        
         const activar = () => {
             activo.value = !activo.value
+
         }
 
         const changeCantRow = (valor) => {
-            console.log(valor)
             cantSelect.value = valor
+            /* console.log(cantSelect.value) */
+            store.commit('mostrar_filas',cantSelect.value )
+            
         }
 
         // funcion que cerrara el desplegable con la class "select-row" cuando no se haga click a este

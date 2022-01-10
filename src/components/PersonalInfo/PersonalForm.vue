@@ -32,14 +32,16 @@
 
             <div class="column ">
                 <div v-show="$i18n.locale=='es'">
-                    <CampoForm   type="text" place="Correo" />
-                    <CampoForm   type="text" place="Nombre completo"/>
-                    <CampoForm   type="password" place="Contraseña"/> 
+                    
+                    <CampoForm   type="text" v-model="passVieja" place="Contraseña vieja" :error="msg_error.oldPass"/> 
+                    <CampoForm   type="text" v-model="passNueva" place="Contraseña nueva" :error="msg_error.newPass"/>  
+                    <CampoForm   type="text" v-model="passConfirm" place="Confirmar contraseña" :error="msg_error.confirmPass"/>  
                 </div>
                 <div v-show="$i18n.locale=='en'">
-                    <CampoForm   type="text" place="Email" />
-                    <CampoForm   type="text" place="Full name"/>
-                    <CampoForm   type="password" place="Password"/> 
+                    
+                    <CampoForm   type="text" v-model="passVieja" place="Old password" :error="msg_error.oldPass"/> 
+                    <CampoForm   type="text" v-model="passNueva" place="New password" :error="msg_error.newPass"/> 
+                    <CampoForm   type="text" v-model="passConfirm" place="Confirm Password" :error="msg_error.confirmPass"/> 
                 </div>
             </div>
             
@@ -49,7 +51,7 @@
                         <button class=" button  has-text-white has-background-danger " @click="volver"  style="font-weight:bold;">{{$t('personalForm.cancel')}}</button>
                     </div>
                     <div class="column   pl-0  ">
-                        <button class=" button has-text-white button1 "   style="background-color:#005395; font-weight:bold;">{{$t('personalForm.guardar')}}</button>
+                        <button class="button has-text-white button1" type="button" @click="validar" style="background-color:#005395; font-weight:bold;">{{$t('personalForm.guardar')}}</button>
                     </div>     
                 </div>
             </div>
@@ -64,8 +66,6 @@
                         <img class=" image  imgred" width="200" height="200" src="https://bulma.io/images/placeholders/128x128.png">
                 </div>
            
-
-
 
             <div class="file columns  has-name  is-right">
                 <label class="column file-label">
@@ -87,20 +87,29 @@
 
 
             <div class="column ">
-                <CampoForm   type="text" place="Email" />
-                <CampoForm   type="text" place="Full name"/>
-                <CampoForm   type="password" place="Password"/> 
+                <div v-show="$i18n.locale=='es'">
+                    <CampoForm   type="text" v-model="passVieja" place="Contraseña vieja" :error="msg_error.oldPass"/> 
+                    <CampoForm   type="text" v-model="passNueva" place="Contraseña nueva" :error="msg_error.newPass"/>  
+                    <CampoForm   type="text" v-model="passConfirm" place="Confirmar contraseña" :error="msg_error.confirmPass"/>  
+                </div>
+                <div v-show="$i18n.locale=='en'">
+                    <CampoForm   type="text" v-model="passVieja" place="Old password" :error="msg_error.oldPass"/> 
+                    <CampoForm   type="text" v-model="passNueva" place="New password" :error="msg_error.newPass"/> 
+                    <CampoForm   type="text" v-model="passConfirm" place="Confirm Password" :error="msg_error.confirmPass"/> 
+                </div>
             </div>
             <div class="column    ">
-                <button class=" button has-text-white button1 "  style="background-color:#005395; font-weight:bold;">Save</button>
+                <button class=" button has-text-white button1 "  type="button" @click="validar" style="background-color:#005395; font-weight:bold;">{{$t('personalForm.guardar')}}</button>
             </div>  
             <div class="column  ">
-                <button class=" button  button1 has-text-white has-background-danger " @click="volver" style="font-weight:bold;">Cancel</button>
+                <button class=" button  button1 has-text-white has-background-danger " @click="volver" style="font-weight:bold;">{{$t('personalForm.cancel')}}</button>
             </div> 
                       
         </form>
     </div>
-
+    <ModalAlert :activador="carga_exitosa">
+       <p v-if="comprobar">{{$t('contraseña.msmPassActualizado')}}</p>
+    </ModalAlert>
 
 </template>
 
@@ -109,20 +118,113 @@ import { useRouter } from 'vue-router';
 import CampoForm from '../../components/CampoForm.vue'
 import { inject } from '@vue/runtime-core'
 import {ref} from '@vue/reactivity'
+import {GraphQLClient} from 'graphql-request';
+import store from '@/store';
+import i18n from '@/i18n.js'
+import FetchMe from '../../helper/FetchMe'
+import ModalAlert from '../../components/Modals/ModalsAlert.vue'
+
 export default {
     name:'PersonalForm',
     components: {
         CampoForm,
+        ModalAlert,
     }, 
  
     setup(){
         const router = useRouter()
         const isMobile = inject('isMobile')
         const activo = ref(false)
-        
+        const passVieja = ref("")
+        const passNueva = ref("")
+        const passConfirm = ref("")
+        const endpoint = store.state.url_backend
+        const msg_error = ref({ oldPass: '',newPass: '',confirmPass: ''})
+        const carga_exitosa = ref(false)
+        const comprobar = ref(false)
+        FetchMe()
 
 
- 
+
+        const validar = () => {
+            msg_error.value.oldPass = ''
+            msg_error.value.newPass = ''
+            msg_error.value.confirmPass = ''
+
+            if (passVieja.value == ""){
+                if(i18n.global.locale == 'en'){
+                    msg_error.value.oldPass = 'Old password is required'
+                }
+                if(i18n.global.locale == 'es'){
+                    msg_error.value.oldPass = 'La contraseña vieja es requerido'
+                }
+            } 
+            
+            if (passNueva.value == ""){
+                if(i18n.global.locale == 'en'){
+                    msg_error.value.newPass = 'New password is required'
+                }
+                if(i18n.global.locale == 'es'){
+                    msg_error.value.newPass = 'La contraseña nueva es requerido'
+                }
+            } 
+            
+            if (passConfirm.value == ""){
+                if(i18n.global.locale == 'en'){
+                    msg_error.value.confirmPass = 'Confirm Password is required'
+                }
+                if(i18n.global.locale == 'es'){
+                    msg_error.value.confirmPass = 'Se requiere confirmar la contraseña nueva'
+                }
+            } 
+
+
+
+            if (msg_error.value.oldPass == '' && msg_error.value.newPass == '' && msg_error.value.confirmPass == ''){
+                console.log("Paso las validaciones")
+                updatePassword()
+            } else {
+                console.log('no paso')
+            } 
+        }
+
+     
+
+        const updatePassword = () => {
+            const client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */ `
+            mutation($old_password:String!,$password:String!, $password_confirmation:String!){
+              		updatePassword(input:{
+                        old_password:$old_password,
+                        password:$password,
+                        password_confirmation: $password_confirmation
+                    }){
+                        status
+                        message
+                    }
+            }`,
+            {
+                old_password:passVieja.value,
+                password:passNueva.value,
+                password_confirmation: passConfirm.value
+            },
+            {
+               authorization: `Bearer ${localStorage.getItem('user-token')}` 
+            })
+            .then((data) => {
+               
+                comprobar.value = !comprobar.value 
+                setTimeout(() => carga_exitosa.value = true ,500)
+                setTimeout(() =>carga_exitosa.value = false ,3000)
+                setTimeout(() =>comprobar.value = !comprobar.value   ,3000)
+              
+            }).catch(error => {
+                console.log(error.response);
+            })
+
+        }
+
+
 
 
         const Activar = () => {
@@ -135,6 +237,14 @@ export default {
 
 
         return{ 
+            carga_exitosa,
+            comprobar,
+            validar,
+            msg_error,
+            updatePassword,
+            passVieja,
+            passNueva,
+            passConfirm, 
             isMobile,
             activo,
             Activar,

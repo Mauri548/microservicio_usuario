@@ -11,19 +11,23 @@
 
 <script>
 import { ref } from '@vue/reactivity'
-import { onMounted, watch } from '@vue/runtime-core'
+import { watch } from '@vue/runtime-core'
 export default {
     name: 'SelectPermission',
-    props: ['data','title','assigned','appId'],
+    props: ['title','appId'],
     emits: ['onMovePermission'],
 
     setup(props,{emit}) {
         const permission_id = ref([])
 
-        // Emitimos el valor seleccionado en la lista de permiso
-        // pasando el id principal de la app, el de la lista de permiso y los permisos seleccionados
+        /**
+         * 
+         * Emite la id del permiso seleccionado
+         * Pasando el id de la app y el de los permisos seleccionados
+         * 
+         */
         watch(permission_id, () => {
-            emit("onMovePermission",permission_id.value, props.data.id, props.appId)
+            emit("onMovePermission",permission_id.value, props.appId)
         })
 
         return {

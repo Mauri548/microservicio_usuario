@@ -1,12 +1,12 @@
 <template>
-    <ul class="puntos mb-2">
+    <ul v-if="cantSection" class="puntos mb-2">
         <li class="punto activo" :class="type"></li>
-        <li v-for="i in cantSection -1" :key="i" class="punto" :class="type"></li>
+        <li v-for="i in cantSection-1" :key="i" class="punto" :class="type"></li>
     </ul>
 </template>
 
 <script>
-import { onMounted } from '@vue/runtime-core'
+import { onMounted, ref, watch, watchEffect } from '@vue/runtime-core'
 export default {
     name: 'CarrouselSection',
 
@@ -14,48 +14,35 @@ export default {
         size: Number,
         carrousel: String,
         type: String,
-        pos: Number
+        pos: Number,
+        cantSection: Number
     },
-    // props: ['size','carrousel','type','pos'],
 
     setup(props) {
-        let cantSection = 0
+        const carrousel = ref('')
 
-        // Calculamos la cantidad de secciones que tendra el carrousel
-        if (props.size != 0 ) {
-            if ((props.size % 3) > 0) {
-                cantSection = Math.trunc(props.size / 3) + 1
-            } else {
-                cantSection = Math.trunc(props.size / 3) 
-            }
-        } else {
-            cantSection = 1
-        }
-        // Calculamos el desplazamiento que hara por seccion
-        let desplazamiento = -(100/cantSection).toFixed(1)
-
-
-        // Hacer la misma funcion que en SelectApp pero que se pueda usar en ambas situaciones
         onMounted(() => {
-            const carrousel = document.querySelector(`.${props.carrousel}`)
-            const punto = document.querySelectorAll(`.${props.type}`)
-            
-            // Calculamos el width del carrousel dependiendo del tamaño del dispositivo
+            carrousel.value = document.querySelector(`.${props.carrousel}`)
+        })
+
+        /**
+         * Calcula el ancho del carrusel dependiendo del dispositivo
+         */
+        const calWidthCarrusel = () => {
             if (window.screen.width <= 768) {
-                if (props.type == 'app') {
-                    carrousel.style.width = `${(cantSection * 100)}%`
-                } else {
-                    carrousel.style.width = '95%'
-                }
-            } else {
-                
-                carrousel.style.width = `${(cantSection * 100)}%`
+                return (props.type == 'app')? `${(props.cantSection * 100)}%` : '95%'
             }
-            
+
+            return props.size <= 3? `${(props.cantSection * 100)}%` : `${(props.cantSection * 100)}%`
+        }
+
+        watchEffect(() => {
+            if (carrousel.value) {
+                carrousel.value.style.width = calWidthCarrusel()
+            }
         })
 
         return{
-            cantSection
         }
     }
 

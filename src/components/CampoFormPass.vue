@@ -1,35 +1,18 @@
 <template>
-       <div>
-           <!--  <div class="form-row"> -->
-               <!--  <input class="input" :type="type" required>
-                <label alt="Label" :data-placeholder="place" ></label> -->
-
-            <!--  <div class="form-row has-addons"> -->
-
-                 <div class="form-row columns is-mobile">
-
-                    <div class="column pr-0 is-flex-grow-0">
-                        <div class="control">
-                            <a class="button btn" @click="switchVisibility" >
-                               <!--  <i class="fas fa-lock"></i> -->
-                                 <i class="fas fa-eye"></i>
-                            </a>
-                        </div>
-                     </div>
-                     <div class="column pl-0">
-                        <div class="control">
-                            <input class="input" :type="type"  v-model="password">
-                            <label alt="Label" :data-placeholder="place" ></label>
-                        </div>
-                     </div>
-
-                 </div>
-                    
-                    
-               <!--  </div>  -->
-
-            <!-- </div> -->
-       </div>
+  	<div>
+		<div class="form-row columns is-mobile mb-1">
+			<div class="column">
+				<div class="control">
+					<input class="input" :type="type"  v-model="modelValue"
+					@input="$emit('update:modelValue', $event.target.value)"
+					:class="{'active': modelValue}"
+					>
+					<label alt="Label" :data-placeholder="place" style="color: grey"></label>
+				</div>
+				<p v-show="error != '' && error" class="msg-error">{{error}}</p>
+			</div>
+		</div>
+  	</div>
 </template>
 
 <script>
@@ -37,7 +20,7 @@ import {ref} from 'vue';
 export default {
 
     name:'CampoFormPass',
-    props: ['place','type'],
+    props: ['place','type','modelValue','error'],
 
     setup() {
 
@@ -64,6 +47,11 @@ export default {
 </script>
 
 <style scoped>
+
+.msg-error{
+  font-size: .7em;
+  color: red
+}
 
 form {
   /* Temp */
@@ -104,10 +92,10 @@ form .form-row input + label[data-placeholder]:after {
   padding: 0 0.25rem;
   background-color: rgba(255, 255, 255, 0);
 }
-form .form-row input:focus, form .form-row input:valid {
+form .form-row input:focus, form .form-row input.active {
   border: 1px solid #005395;
 }
-form .form-row input:focus + label[data-placeholder]:after, form .form-row input:valid + label[data-placeholder]:after {
+form .form-row input:focus + label[data-placeholder]:after, form .form-row input.active + label[data-placeholder]:after {
   transform: translate(-5%, -150%) scale(0.9, 0.9);
   color: #005395;
   background-color: white;

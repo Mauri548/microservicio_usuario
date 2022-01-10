@@ -7,6 +7,7 @@
 <script>
 import store from '@/store'
 import { provide, ref } from '@vue/runtime-core'
+import FetchMe from './helper/FetchMe'
 export default {
   created(){
     store.commit('onResize')
@@ -93,6 +94,11 @@ export default {
 .conteiner-tablero div hr {
   margin: 5px 0;
   background: #005395;
+}
+
+.row-table:hover {
+  cursor: pointer;
+  background-color: #82c1f12b;
 }
 
 @media (max-width: 1024px) {

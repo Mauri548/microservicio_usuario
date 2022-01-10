@@ -5,7 +5,7 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/Login/Login.vue')
   },
   {
     path: '/register',
@@ -47,6 +47,7 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home,
+    meta: {requiresAuth: true},
     children:[
       {
         path: '/PersonalForm',
@@ -56,11 +57,17 @@ const routes = [
       {
         path: '/CreateCompany',
         name: 'CreateCompany',
-        component: () => import(/* webpackChunkName: "CreateCompany" */ '../views/CreateCompany.vue')
+        component: () => import(/* webpackChunkName: "CreateCompany" */ '../views/CreateCompany/CreateCompany.vue')
+      },
+      {
+        path: '/CreateFinishedCompany',
+        name: 'CreateFinishedCompany',
+        component: () => import(/* webpackChunkName: "CreateFinishedCompany" */ '../views/CreateCompany/CreateCompanyFinish.vue')
       },
       {
         path: '/UserDashboard',
         name: 'UserDashboard',
+        alias: '/',
         component: () => import(/* webpackChunkName: "UserDashboard" */ '../views/Users/UserDashboard.vue')
       },
       {
@@ -74,7 +81,7 @@ const routes = [
         component: () => import(/* webpackChunkName: "CompaniesDashboard" */ '../views/Companies/CompaniesDashboard.vue')
       },
       {
-        path: '/EditCompany',
+        path: '/EditCompany/:id',
         name: 'EditCompany',
         component: () => import(/* webpackChunkName: "EditCompany" */ '../views/Companies/EditCompany.vue')
       },
@@ -106,7 +113,40 @@ const routes = [
       {
         path: '/LicencesDashboard',
         name: 'LicencesDashboard',
-        component: () => import(/* webpackCunkName: "LicencesDashboard" */ '../views/licences/LicenceDashboard.vue')
+        component: () => import(/* webpackChunkName: "LicencesDashboard" */ '../views/licences/LicenceDashboard.vue')
+      },
+      {
+        path: '/LabelKeyDashboard',
+        name: 'LabelKeyDashboard',
+        component: () => import(/* webpackChunkName: "LicencesDashboard" */ '../views/LabelKeys/LabelKeyDashboard.vue')
+      },
+      {
+        path: '/AppSuscription',
+        name: 'AppSuscription',
+        component: () => import(/* webpackChunkName: "AppSuscription" */ '../views/Apps/AppSuscription.vue')
+      }
+      ,
+      {
+        path: '/InvitationsDashboard',
+        name: 'InvitationsDashboard',
+        component: () => import(/* webpackChunkName: "LicencesDashboard" */ '../views/Invitations/InvitationsDashboard.vue')
+      }
+      ,
+      {
+        path: '/UpdateSuscription/:id',
+        name: 'UpdateSuscription',
+        component: () => import(/* webpackChunkName: "LicencesDashboard" */ '../views/Subscripciones/UpdateSuscription.vue')
+      }
+      ,
+      {
+        path: '/SubscriptionsDashboard',
+        name: 'SubscriptionsDashboard',
+        component: () => import(/* webpackChunkName: "LicencesDashboard" */ '../views/Subscripciones/SubscriptionsDashboard.vue')
+      },
+      {
+        path: '/AddLabelKey/:license_id/:license_name/:app_id/:add',
+        name: 'AddLabelKey',
+        component: () => import(/* webpackChunkName: "AddLabelKey" */ '../views/licences/AddLabelKey.vue')
       }
     ]
   },
@@ -116,6 +156,24 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+/**
+ * 
+ * Valida que el usuario este registrado para permitirte ingresar a la página
+ * de no estar registrado te redirecciona a login
+ * 
+ */
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (localStorage.getItem('user-token')) {
+      next()
+    } else {
+      next({name: "login"})
+    }
+  } else {
+    next()
+  }
 })
 
 export default router

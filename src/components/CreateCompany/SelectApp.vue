@@ -12,20 +12,24 @@
             <Arrow arrow="arrow-next" icon="fa-chevron-right" conteiner="conteiner-app" punto="app"
             :cantSection="cantSection" :desplazamiento="desplazamiento" />
 
-            <CarrouselSection :size="apps.length" carrousel="conteiner-app" type="app" :pos="0"/>
+            <CarrouselSection :size="apps.length" carrousel="conteiner-app" 
+                type="app" :pos="0" :cantSection="cantSection"
+            />
             
         </div>
         <div v-if="appSelect" class="description-app">
             <p>{{appSelect.observation}}</p>
         </div>
-        <SelectLicence v-if="appSelect" :app="appSelect" />
+        <!-- <SelectLicence v-if="appSelect" :app="appSelect" /> -->
+        <SelectLicence2 v-if="appSelect" :app="appSelect" />
+        
     </div>
 </template>
 
 <script>
 import { ref } from '@vue/reactivity'
 import { onMounted, watchEffect } from '@vue/runtime-core'
-import SelectLicence from './SelectLicence.vue'
+import SelectLicence2 from './SelectLicence2.vue'
 import CarrouselSection from './CarrouselSection.vue'
 import Arrow from './Arrow.vue'
 
@@ -33,8 +37,9 @@ export default {
     name: 'SelectApp',
     components: {
         CarrouselSection,
-        SelectLicence,
+        SelectLicence2,
         Arrow,
+       
     },
     props: ['apps'],
 
@@ -43,36 +48,54 @@ export default {
         const cantSection = ref(0)
         const desplazamiento = ref(0)
         const appSelect = ref(null)
+        const app = ref('')
+        const cant = ref(0)
 
-        // Calculamos la cantidad de secciones que tendra el carrousel
-        if ((props.apps.length % 3) > 0) {
-            cantSection.value = Math.trunc(props.apps.length / 3) + 1
-        } else if ((props.apps.length % 3) == 0) {
-            cantSection.value = 1
-        } else {
-            cantSection.value = Math.trunc(props.apps.length / 3) 
+        onMounted(() => {
+            app.value = document.querySelectorAll('.img-app')
+        })
+
+        /**
+         * Calcula la cantidad de secciones del carrusel
+         * 
+         * @param c cantidad de elementos por secciones que va a tener el carrusel
+         */
+        const calcCantSection = (c) => {
+            cant.value = c
+            let aux = 0
+            if ((props.apps.length / c) > 0) {
+                aux = Math.trunc(props.apps.length / c)
+                return props.apps.length % c != 0? aux+1 : aux
+            }
+
+            if ((props.apps.length / c) == 0) {
+                return 1
+            }
+
+            return Math.trunc(props.apps.length / c)
         }
-        // Calculamos el desplazamiento que hara por seccion
-        desplazamiento.value = -(100/cantSection.value).toFixed(1)
 
+        /**
+         * Calcula la cantidad de desplazamiento que tiene que hacer el carrusel
+         */
+        const calcDisplacement = () => {
+            return -(100/cantSection.value).toFixed(1)
+        }
 
-        // Dejare comentado esto de momento
-        // En teoría debería de calcular el tamaño para cada elemento o app
-        // onMounted(() =>  {
-        //     const imgApp = document.querySelectorAll('.img-app')
+        watchEffect(() => {
+            props.apps
 
-        //     // Caclulamos el tamaño para cada app
-        //     imgApp.forEach((cadaImage, i) => {
-        //         imgApp[i].style.width = `calc(33.3% / ${cantSection.value})`
-        //         // Agregamos el evento de seleccionar app
-        //         imgApp[i].addEventListener('click', () => {
-        //             imgApp.forEach((cadaImage, i) => {
-        //                 imgApp[i].classList.remove('activo')
-        //             })
-        //             imgApp[i].classList.add('activo')
-        //         })
-        //     })
-        // })
+            cantSection.value = window.screen.width > 425? calcCantSection(3) : calcCantSection(2)
+
+            desplazamiento.value = calcDisplacement()
+
+            if (app.value) {
+                app.value.forEach(item => {
+                    item.style.width = `calc((${100}%/${cant.value}) / ${cantSection.value})`
+                })
+            }
+
+        })
  
         const selectApp = (e) => {
             appSelect.value = e
@@ -100,8 +123,7 @@ export default {
 }
 
 .carrousel .conteiner-app {
-    /* width: 300%; */
-    width: 500%;
+    width: 100%;
     display: flex;
     flex-flow: row nowrap;
     justify-content: flex-start;
@@ -114,6 +136,9 @@ export default {
 .carrousel .img-app {
     width: calc(33.3% / 1);
     padding: 0.3em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .carrousel .img-app:hover {
@@ -140,41 +165,5 @@ export default {
         overflow: scroll;
     }
 }
-
-/* .arrow {
-    display: flex;
-    align-items: center;
-    width: 25px;
-    min-height: 80%;
-    position: absolute;
-    background-color: rgba(204,204,204,0.13);
-    z-index: 1;
-}
-
-.arrow-next {
-    top:0%;
-    right: 0%;
-    border-radius: 0 5px 5px 0;
-}
-
-.arrow-prev {
-    display: none;
-    border-radius: 5px 0 0 5px;
-}
-
-i {
-    font-size: 35px;
-    color: rgba(128,128,128,0.38)
-}
-
-.arrow:hover {
-    cursor: pointer;
-    background-color: rgba(204,204,204,0.3);
-}
-
-.arrow:hover i {
-    color: #005395
-} */
-
 
 </style>

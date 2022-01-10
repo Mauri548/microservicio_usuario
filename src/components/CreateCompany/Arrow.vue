@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from '@vue/runtime-core'
+import { onMounted, ref, watchEffect } from '@vue/runtime-core'
 export default {
     name: 'Arrow',
 
@@ -13,11 +13,22 @@ export default {
 
         const positionApp = ref(0)
         const positionLic = ref(0)
+        const arrowNext = ref('')
 
         onMounted(() => {
-            const arrowNext = document.querySelector(`.arrow-next.${props.punto}`)
-            if(props.cantSection == 1) {
-                arrowNext.style.display = 'none'
+            arrowNext.value = document.querySelector(`.arrow-next.${props.punto}`)
+        })
+
+        watchEffect(() => {
+            props.cantSection
+            if (arrowNext.value) {
+                if(props.cantSection == 1) {
+                    arrowNext.value.style.display = 'none'
+                } else {
+                    if (window.screen.width > 425) {
+                        arrowNext.value.style.display = 'flex'
+                    }
+                }
             }
         })
 
@@ -58,7 +69,8 @@ export default {
         const moveCarrousel = (carrousel,punto,arrowPrev,arrowNext) => {
             // calculamos el desplazamiento que hara el carrousel
             let operacion = null
-            props.punto == 'app' ? operacion = positionApp.value * props.desplazamiento : operacion = positionLic.value * props.desplazamiento
+            props.punto == 'app' ? operacion = positionApp.value * props.desplazamiento 
+            : operacion = positionLic.value * props.desplazamiento
 
             // movemos la posicion x del carrousel correspondiente            
             carrousel.style.transform = `translateX(${operacion}%)`
@@ -68,7 +80,6 @@ export default {
                 punto[index].classList.remove('activo')
             })
             props.punto == 'app' ? punto[positionApp.value].classList.add('activo') : punto[positionLic.value].classList.add('activo')
-
             // Mostramos o ocultamos la flecha del carrousel si esta en el comienzo o en el final
             if (props.punto == 'app') {
                 // Si el valor es igual a 0 ocultamos la flecha de prev y si es igual al valor maximo oculamos la flecha next

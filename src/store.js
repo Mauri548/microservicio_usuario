@@ -1,8 +1,9 @@
 import { createStore } from "vuex";
 
+
 const store = createStore({
     state(){
-
+        
         return {
             isMobile: false,
             isTablet: false,
@@ -10,7 +11,14 @@ const store = createStore({
             edicion_exitosa: false,
             cambio_lang: false,
             creating_company: false,
-            url_backend: 'https://dev_front_gateway_crenein_ms.crenein.com/graphql'
+            url_backend: process.env.VUE_APP_URL_BACKEND,
+            token: localStorage.getItem('user-token') || '',
+            status_error: false,
+            user_id: null | localStorage.getItem('user_id'),
+            company_id: null | localStorage.getItem('id_company_selected'),
+            comes_from_register : false,
+            active_menu_movile: false,
+            cant: 20,
 
         }
     },
@@ -21,10 +29,35 @@ const store = createStore({
             window.screen.width <= 768 ? state.isTablet = true : state.isTablet = false;
         },
 
+        setToken(state, token) {
+            state.token = token
+        },
+
+        setCompanyId(state, value) {
+            state.company_id = value
+        },
+
+        setUserId(state, value) {
+            state.user_id = value
+        },
+
+        setComesfromRegister(state, value) {
+            state.comes_from_register = value
+            console.log(state.comes_from_register)
+        },
+
         setCreatingCompany(state,data) {
             console.log(data)
             data ? state.creating_company = true : state.creating_company = false
             // state.creating_company = !state.creating_company
+        },
+
+        setStatusError(state,data) {
+            state.status_error = data
+        },
+
+        setActiveMenuMovile(state) {
+            state.active_menu_movile = !state.active_menu_movile
         },
 
         cambiarLan(state){
@@ -37,7 +70,27 @@ const store = createStore({
               /* console.log(state.cambio_lang) */
         },
 
+        /* paginacion(state, dato){
+            dato.info.count = dato.pageInfo.count
+            dato.info.pages = dato.pageInfo.lastPage
+            if (dato.pageInfo.currentPage + 1 > dato.pageInfo.lastPage) {
+                dato.info.next = null
+            } else {
+                dato.info.next = dato.pageInfo.currentPage + 1
+            }
+            if (dato.pageInfo.currentPage - 1 < 1) {
+                dato.info.prev = null
+            } else {
+                dato.info.prev = dato.pageInfo.currentPage - 1
+            }
+            dato.info.page = dato.pageInfo.currentPage
+            dato.info.total = dato.pageInfo.total
+        }, */
 
+        mostrar_filas(state,filas){
+            state.cant = filas
+            console.log(state.cant)
+        },
 
         verificar_carga(state,accion){
 
@@ -95,6 +148,26 @@ const store = createStore({
             }
 
             if(accion=='cargarPermission'){
+                if(state.carga_exitosa == true){
+                    state.carga_exitosa = false
+                    // console.log("llego el emnsaje con exito",state.carga_exitosa_ciudad)
+                }else{
+                    state.carga_exitosa = true
+                    // console.log("se cargo con exito",state.carga_exitosa_ciudad)
+                }
+            }
+
+            if(accion=='edicionSus'){
+                if(state.edicion_exitosa == true){
+                    state.edicion_exitosa = false
+                    // console.log("llego el emnsaje con exito",state.carga_exitosa_ciudad)
+                }else{
+                    state.edicion_exitosa = true
+                    // console.log("se cargo con exito",state.carga_exitosa_ciudad)
+                }
+            }
+
+            if(accion=='cargarSus'){
                 if(state.carga_exitosa == true){
                     state.carga_exitosa = false
                     // console.log("llego el emnsaje con exito",state.carga_exitosa_ciudad)

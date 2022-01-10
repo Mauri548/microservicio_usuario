@@ -1,6 +1,9 @@
 <template>
     <div class="prueba">
-        <button @click="activePermissionApp(data.id)" class="button btn-crenein button-permission-app ">
+        <button @click="activePermissionApp(data.id)" 
+            class="button btn-crenein button-permission-app"
+            :class="{'activo':data.activo}"
+        >
             <span >{{data.app}}</span>
             <span class="icon is-small">
                 <i class="fas fa-chevron-down"></i>
@@ -8,14 +11,14 @@
         </button>
 
         <!-- Lista de permisos para asignar o deshabilitar -->
-
         <ActionPermission v-if="isTablet" :data="data"
             @onActivePermissionApp="activePermissionApp"
-            @onActiveList="activeList"
             @onMoveAvailableToAssigned="moveAvailableToAssigned"
             @onMoveAssignedToAvailable="moveAssignedToAvailable"
             @onMoveAllAvailableToAssigned="moveAllAvailableToAssigned"
             @onMoveAllAssignedToAvailable="moveAllAssignedToAvailable"
+            @onSavePermission="savePermission"
+
         />
     </div>
 </template>
@@ -30,11 +33,11 @@ export default {
     },
     props: ['data'],
     emits: ['onActivePermissionApp',
-            'onActiveList',
             'onMoveAvailableToAssigned',
             'onMoveAssignedToAvailable',
             'onMoveAllAvailableToAssigned',
             'onMoveAllAssignedToAvailable',
+            'onSavePermission'
             ],
 
     setup(props,{emit}) {
@@ -43,11 +46,6 @@ export default {
         // Activamos el boton para mostrar la lista de permiso de esa app
         const activePermissionApp = (id) => {
             emit("onActivePermissionApp",id)
-        }
-
-        // emitimos la accion de activar la sublista de permisos
-        const activeList = (app, permission) => {
-            emit("onActiveList",app, permission)
         }
 
         // emitimos la accion de mover un elemento de la lista
@@ -70,14 +68,18 @@ export default {
             emit("onMoveAllAssignedToAvailable", id_app, id_permission)
         }
 
+        const savePermission = (id_app) => {
+            emit("onSavePermission", id_app)
+        }
+
         return {
             isTablet,
             activePermissionApp,
-            activeList,
             moveAvailableToAssigned,
             moveAssignedToAvailable,
             moveAllAvailableToAssigned,
             moveAllAssignedToAvailable,
+            savePermission
         }
     }
 }
@@ -89,6 +91,9 @@ export default {
 }
 .button-permission-app {
     width: 100%;
+}
+.button-permission-app.activo {
+    background: #0771c6;
 }
 @media (max-width: 768px) {
     .button-permission-app {

@@ -7,27 +7,21 @@
         </a>
         
         <div class="group-navbar">
-          <MenuApp v-show="isMobile" />
-          <a @click="OpenMenuNavbar" role="button" class="navbar-burger" :class="{'is-active':menuNavbar}" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-            <span aria-hidden="true"></span>
-          </a>
+          <MenuPerfil  style="width: 30px"/>
+          <MenuHamburger />
         </div>
         
       </div>
 
-      <div id="navbarBasicExample" class="navbar-menu" :class="{'is-active':menuNavbar}">
-        <!-- <div class="navbar-start"></div> -->
+      <div id="navbarBasicExample" class="navbar-menu">
 
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons" :class="{'buttons-mobile':isMobile}">
-              <!-- <button @click="cambiar" class="button blue-crenein has-text-weight-semibold">{{text}}</button> -->
-              <ButtonLang  />
+              <ButtonLang class="mb-2" />
               <SelectCompany/>
               <MenuApp v-show="!isMobile"/>
-              <MenuPerfil/>
+              <MenuPerfil />
             </div>
           </div>
         </div>
@@ -38,12 +32,13 @@
 
 <script>
 import { ref } from '@vue/reactivity'
-import { inject } from '@vue/runtime-core'
+import { inject, watchEffect } from '@vue/runtime-core'
 import SelectCompany from './SelectCompany.vue'
 import MenuApp from './MenuApp.vue'
 import MenuPerfil from './MenuPerfil.vue'
 import store from '@/store'
 import ButtonLang from '../../components/Buttons/ButtonLang.vue'
+import MenuHamburger from '../MenuHamburger.vue'
 
 
 export default {
@@ -54,37 +49,27 @@ export default {
     MenuApp,
     MenuPerfil,
     ButtonLang,
-    
+    MenuHamburger,
   },
 
 
   setup(){
     const optionActive = ref(false)
-    const menuNavbar = ref(false)
     const isMobile = inject('isMobile')
+    const isTablet = inject('isTablet')
     let Lan = store.state.cambio_lang
 
 
     const showOption = () => {
       optionActive.value = !optionActive.value
-      console.log(optionActive.value)
     }
 
-    
-
-    const OpenMenuNavbar = () => {
-      menuNavbar.value = !menuNavbar.value
-      /* console.log(menuNavbar.value) */
-    }
-
-    return{
-      
+    return{  
       Lan,
       optionActive,
       isMobile,
-      menuNavbar,
       showOption,
-      OpenMenuNavbar,
+      isTablet,
     }
   }
 
@@ -111,6 +96,12 @@ export default {
   justify-content: flex-end;
   align-items: center;
   margin-left: auto;
+}
+
+@media screen and (min-width: 1024px) {
+  .group-navbar {
+    display: none;
+  }
 }
 
 </style>

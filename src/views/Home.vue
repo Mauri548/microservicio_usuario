@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div style="position: relative">
       <Navbar />
-      <div class="contenedor-principal mt-5">
+      <div class="contenedor-principal">
           <NavbarV />
           <router-view/>
       </div> 
@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import { onMounted } from '@vue/runtime-core'
 // @ is an alias to /src
 import Navbar from '../components/Navbar/Navbar.vue'
 import NavbarV from '../components/NavbarV/NavbarV.vue'
@@ -22,7 +23,8 @@ export default {
     NavbarV,
     AddPermission,
     EditCompany,
-  }
+  },
+
 }
 </script>
 
