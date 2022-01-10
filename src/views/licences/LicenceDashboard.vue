@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="body-tablero px-4">
-            <Board :datas="licenses" :titles="titles">
+            <Board :datas="licenses" :titles="titles" :showId="true">
                 <tr class="has-text-centered row-table" v-for="licence in licenses" :key="licence.id">
                     <th @click="actionModal(licence)">{{licence.id}}</th>
                     <td @click="actionModal(licence)">{{licence.name}}</td>

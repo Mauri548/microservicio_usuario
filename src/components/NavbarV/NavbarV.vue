@@ -104,12 +104,13 @@ export default {
         
         const listas = ref([
                 {nombre: 'Personal Info', activo: false, link: true, name_link: 'PersonalForm'},
-                {nombre: 'Permissions', activo: false, link: true, name_link: 'PermissionsDashboard'},
+                // {nombre: 'Permissions', activo: false, link: true, name_link: 'PermissionsDashboard'},
                 {nombre: 'Platform', activo: false, link: false, opc: [
                     {nombre: 'Not_Events', activo: false, name_link: 'NotEventsDashboard'},
                     {nombre: 'Apps management', activo: false, name_link: 'AppDashboard'},
                     {nombre: 'Licences management', activo: false, name_link: 'LicencesDashboard'},
                     {nombre: 'LabelKeys management', activo: false, name_link: 'LabelKeyDashboard'},
+                    {nombre: 'Permissions', activo: false, name_link: 'PermissionsDashboard'},
                 ]},
                 {nombre: 'company', activo: false, link: false, opc: [
                     {nombre: 'User management', activo: false, name_link: 'UserDashboard'},
@@ -247,6 +248,7 @@ export default {
             listas.value[3].opc[2].nombre = i18n.global.locale == 'en'? 'Subscriptions management': 'Tabla de Subscripciones'
             listas.value[3].opc[3].nombre = i18n.global.locale == 'en'? 'Companies management' : 'Gestión de empresas'
             listas.value[3].opc[4].nombre = i18n.global.locale == 'en'? 'Permissions management': 'Gestión de permisos'
+
 
             creating_company.value = store.state.creating_company
         })

@@ -3,7 +3,7 @@
         <table class="table is-bordered w-100">
             <thead class="fondo-crenein">
                 <tr>
-                    <th>ID</th>
+                    <th v-if="showId">ID</th>
                     <th v-for="title in titles" :key="title.id">{{title}}</th>
                 </tr>
             </thead>
@@ -25,7 +25,7 @@ export default {
         ActionModal,
     },
 
-    props: ['datas','titles'],
+    props: ['datas','titles','showId'],
 
 }
 </script>
