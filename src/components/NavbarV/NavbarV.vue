@@ -104,7 +104,6 @@ export default {
         
         const listas = ref([
                 {nombre: 'Personal Info', activo: false, link: true, name_link: 'PersonalForm'},
-                {nombre: 'Permissions', activo: false, link: true, name_link: 'PermissionsDashboard'},
                 {nombre: 'Platform', activo: false, link: false, opc: [
                     {nombre: 'Not_Events', activo: false, name_link: 'NotEventsDashboard'},
                     {nombre: 'Apps management', activo: false, name_link: 'AppDashboard'},
@@ -236,18 +235,18 @@ export default {
         // Cambiamos el texto en ingles o español dependiendo de la variable i18n
         watchEffect(()=>{
             listas.value[0].nombre = i18n.global.locale == 'en'? 'Personal Info': 'Información personal'
-            listas.value[1].nombre = i18n.global.locale == 'en'? 'Permissions': 'Permisos'
-            listas.value[2].nombre = i18n.global.locale == 'en'? 'Platform': 'Plataforma'
-            listas.value[3].nombre = i18n.global.locale == 'en'? 'Company': 'Empresa'
-            listas.value[2].opc[0].nombre = i18n.global.locale == 'en'? 'Not Events': 'Not Events'
-            listas.value[2].opc[1].nombre = i18n.global.locale == 'en'? 'Apps management': 'Gestión de aplicaciones'
-            listas.value[2].opc[2].nombre = i18n.global.locale == 'en'? 'Licences management': 'Gestión de licencias'
-            listas.value[2].opc[3].nombre = i18n.global.locale == 'en'? 'LabelKeys management': 'Tabla de Label Keys'
-            listas.value[3].opc[0].nombre = i18n.global.locale == 'en'? 'Users management': 'Gestión de usuarios'
-            listas.value[3].opc[1].nombre = i18n.global.locale == 'en'? 'Invitations management': 'Tabla de Invitaciones'
-            listas.value[3].opc[2].nombre = i18n.global.locale == 'en'? 'Subscriptions management': 'Tabla de Subscripciones'
-            listas.value[3].opc[3].nombre = i18n.global.locale == 'en'? 'Companies management' : 'Gestión de empresas'
-            listas.value[3].opc[4].nombre = i18n.global.locale == 'en'? 'Permissions management': 'Gestión de permisos'
+            listas.value[1].nombre = i18n.global.locale == 'en'? 'Platform': 'Plataforma'
+            listas.value[2].nombre = i18n.global.locale == 'en'? 'Company': 'Empresa'
+            listas.value[1].opc[0].nombre = i18n.global.locale == 'en'? 'Not Events': 'Not Events'
+            listas.value[1].opc[1].nombre = i18n.global.locale == 'en'? 'Apps management': 'Gestión de aplicaciones'
+            listas.value[1].opc[2].nombre = i18n.global.locale == 'en'? 'Licences management': 'Gestión de licencias'
+            listas.value[1].opc[3].nombre = i18n.global.locale == 'en'? 'LabelKeys management': 'Tabla de Label Keys'
+            listas.value[1].opc[4].nombre = i18n.global.locale == 'en'? 'Permissions': 'Permisos'
+            listas.value[2].opc[0].nombre = i18n.global.locale == 'en'? 'Users management': 'Gestión de usuarios'
+            listas.value[2].opc[1].nombre = i18n.global.locale == 'en'? 'Invitations management': 'Tabla de Invitaciones'
+            listas.value[2].opc[2].nombre = i18n.global.locale == 'en'? 'Subscriptions management': 'Tabla de Subscripciones'
+            listas.value[2].opc[3].nombre = i18n.global.locale == 'en'? 'Companies management' : 'Gestión de empresas'
+            listas.value[2].opc[4].nombre = i18n.global.locale == 'en'? 'Permissions management': 'Gestión de permisos'
 
 
             creating_company.value = store.state.creating_company
