@@ -13,7 +13,7 @@
         <div class="body-tablero px-4">
             <Board :datas="events" :titles="titles">
                 <tr class="has-text-centered row-table" v-for="event in events" :key="event.id">
-                    <th @click="actionModal(licence)">{{event.id}}</th>
+              
                     <td @click="actionModal(event)">{{event.event}}</td>
                     <td @click="actionModal(event)">{{event.app.name}}</td>
                     <td @click="actionModal(event)">{{event.type}}</td>
@@ -399,7 +399,7 @@ export default {
           
             })
             .then((data) => {
-                let res = data.data.modifiesLic_license
+                let res = data.data.modifiesNot_event
                 let app = apps.value.find(app => app.id == res.app_id)
                 let event_aux = events.value.find(event => event.id == res.id)
                 // Asignamos los valores al elemento para que se modifique en la vista del usuario
