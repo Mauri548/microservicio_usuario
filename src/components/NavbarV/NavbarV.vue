@@ -104,7 +104,7 @@ export default {
         
         const listas = ref([
                 {nombre: 'Personal Info', activo: false, link: true, name_link: 'PersonalForm'},
-                // {nombre: 'Permissions', activo: false, link: true, name_link: 'PermissionsDashboard'},
+                {nombre: 'Permissions', activo: false, link: true, name_link: 'PermissionsDashboard'},
                 {nombre: 'Platform', activo: false, link: false, opc: [
                     {nombre: 'Not_Events', activo: false, name_link: 'NotEventsDashboard'},
                     {nombre: 'Apps management', activo: false, name_link: 'AppDashboard'},
