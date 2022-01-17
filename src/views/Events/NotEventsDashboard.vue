@@ -162,7 +162,7 @@ export default {
         const typeAction = ref('licence.agregar')
         const selectLicense = ref(null)
         const tope = ref(null)
-        const selectedType = ref('notification')
+        const selectedType = ref('')
        
         
         /**
@@ -376,6 +376,7 @@ export default {
         }
 
         const modifiesNot_event = async () => {
+            console.log(selectedApp.value)
             console.log("funcion editar");
             const client = new GraphQLClient(endpoint)
             await client.rawRequest(/* GraphQL */ `
@@ -390,6 +391,7 @@ export default {
                 }
             }`,
             {
+                
                 company_user_id:localStorage.getItem('user_company_id'),
                 id: eventEdition.value,
                 app_id: parseInt(selectedApp.value.id),
@@ -449,13 +451,16 @@ export default {
                     typeAction.value = 'event.agregar'
                     document.getElementById('form-create-app').reset()
                     event.value = ''
+                    selectedType.value = ''
                 } else {
                     actionModal(data)
                     eventEdition.value = data.id
                     typeAction.value = 'event.editar'
                     selectedApp.value = data.app
                     event.value = data.event
+                    observation.value = data.observation
                     selectedType.value = data.type
+                    console.log(selectedApp.value);
                 }
             }
         }
