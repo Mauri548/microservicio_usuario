@@ -27,7 +27,7 @@
                             <span>{{$t('modal.editar')}}</span>
                         </button>
                     </Modal>
-                    <ActionModal :data="event" @onCloseModalAction="actionModalDelete" />
+                    <ActionModal :data="event" @onCloseModalAction="actionModalDelete" @onDeleteModal="removeNot_event"/>
                 </tr>
             </Board>
 
@@ -131,7 +131,7 @@ export default {
         Button,
         AddNotEvent
     },
-
+  
     setup() {
         const activeAlert = ref(false)
         const addNotEvent = ref(false)
@@ -147,6 +147,7 @@ export default {
         const lastItem = ref()
         const lastPage = ref();
         const events = ref([])
+        const actualizar = ref(false)
         const eventEdition = ref(0)
         const loading = ref(false)
         const loading_form = ref(false)
@@ -237,7 +238,6 @@ export default {
         watchEffect(() => {
             loading.value = true
             fetchEvents()
-           /*  fetchAppsLabel() */
         })
         
         /**
@@ -272,9 +272,6 @@ export default {
             })
             .catch(error => console.log(error))
         }
-
-
-      
 
         const register = async () => {
             succesLoad.value = true
@@ -311,9 +308,6 @@ export default {
             return true
         }
 
-        
-       
-
         /**
          * 
          * Verifica que los campos no esten vacios
@@ -326,7 +320,7 @@ export default {
 
         // Funcion para crear 
         const createsNot_event = async () => {
-           
+
             const client = new GraphQLClient(endpoint)
             await client.rawRequest(/* GraphQL */ `
             mutation($company_user_id:ID!,$app_id:ID!, $event:String!, $type: TypeEvent!,$observation:String) {
@@ -350,7 +344,7 @@ export default {
                 
                 // Insertamos el nuevo evento creada en el array de licencias
                 let event = data.data.createsNot_event
-                console.log(event);
+                /* console.log(event); */
                 events.value.push({
                     id:event.id,
                     event:event.event, 
@@ -376,8 +370,8 @@ export default {
         }
 
         const modifiesNot_event = async () => {
-            console.log(selectedApp.value)
-            console.log("funcion editar");
+           /*  console.log(selectedApp.value) */
+            /* console.log("funcion editar"); */
             const client = new GraphQLClient(endpoint)
             await client.rawRequest(/* GraphQL */ `
             mutation($company_user_id:ID!,$id: ID!, $app_id: ID!,$event:String!, $type: TypeEvent!,$observation:String) {
@@ -405,9 +399,10 @@ export default {
                 let app = apps.value.find(app => app.id == res.app_id)
                 let event_aux = events.value.find(event => event.id == res.id)
                 // Asignamos los valores al elemento para que se modifique en la vista del usuario
-      
                 event_aux.app.id = res.app_id
                 event_aux.app.name = app.name
+                event_aux.observation = res.observation
+                event_aux.event = res.event
                 // Cerramos la ventana modal
                 ModalAdd()
                 changeStateModal(true)
@@ -419,6 +414,42 @@ export default {
                 console.log(error.response)
             })
         }
+
+        const removeNot_event = async (data) => {
+            let aux = events.value.find(element => element.id == data)
+            /* console.log(aux); */
+            aux.activo = false
+            aux.modalDelete = !aux.modalDelete
+            const client = new GraphQLClient(endpoint)
+            await client.rawRequest(/* GraphQL */ `
+            mutation($company_user_id:ID!,$id: ID!) {
+                removeNot_event(company_user_id:$company_user_id,id: $id, input: {
+                    app_id
+                    event
+                    type
+                    observation
+                }) 
+            }`,
+            {
+                company_user_id:localStorage.getItem('user_company_id'),
+                id: aux.id,
+            })
+            .then((data) => {
+                console.log(data.data.removeNot_event);
+                
+                let event_aux = events.value.find(event => event.id == aux.id)
+                // buscar la forma de eliminar el obejto de la lista 
+               /*  ModalAdd() */
+                changeStateModal(true)
+                succesLoad.value = false
+            })
+            .catch(error => {
+              /*   ModalAdd() */
+                changeStateModal(false)
+                console.log(error.response)
+            })
+        }
+
 
         // Cambia el estado para mostrar la ventana modal de succes o failed
         const changeStateModal =(state) => {
@@ -435,8 +466,8 @@ export default {
         const ModalAdd = (type, data) => {
             addNotEvent.value = !addNotEvent.value
             /* console.log(selectedApp.value); */
-            console.log(addNotEvent.value);
-            console.log(type);
+           /*  console.log(addNotEvent.value);
+            console.log(type); */
             if (addNotEvent.value) {
                 resetErrorMessage(msg_error.value)
                /*  console.log(apps.value) */
@@ -460,7 +491,7 @@ export default {
                     event.value = data.event
                     observation.value = data.observation
                     selectedType.value = data.type
-                    console.log(selectedApp.value);
+                    /* console.log(selectedApp.value); */
                 }
             }
         }
@@ -482,8 +513,11 @@ export default {
 
         const actionModalDelete = (data) => {
             let aux = events.value.find(element => element.id == data)
+            /* console.log(aux); */
             aux.activo = false
             aux.modalDelete = !aux.modalDelete
+
+            
         }
 
         // Cambia el estado de la ventana modal luego de 3s para hacer el efecto de animación y darle tiempo al usuario de leer
@@ -529,7 +563,10 @@ export default {
             tope,
             addNotEvent ,
             observation,
-            selectedType
+            selectedType,
+            actualizar,
+            fetchApps ,
+            removeNot_event
         }
     }
 

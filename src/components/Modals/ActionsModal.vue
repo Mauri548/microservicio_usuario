@@ -14,6 +14,7 @@
                         <h1 class="modal-card-title">{{$t('modal.actionsModal.msmPregunta')}}</h1> 
                         <p>{{$t('modal.actionsModal.msmAccion')}} {{data.id}} </p>
                     </div>
+
                 </section>
                 <footer class="column modal-card-foot">
                     <div>

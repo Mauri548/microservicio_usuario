@@ -112,6 +112,32 @@ export default {
          * Crea la consulta para crear la invitación de un usuario
          * 
          */
+
+        const sendEmail_invitation = (id) => {
+            console.log("id en el metodo de enviar "+ id);
+            const client = new GraphQLClient(endpoint)
+            client.rawRequest(/* GraphQL */`
+            query($id: ID) {
+                sendEmail_invitation(id: $id) 
+            }`,
+            {
+               id:parseInt(id)
+            },
+            {
+                authorization: `Bearer ${localStorage.getItem('user-token')}`
+            })
+            .then((data) => {
+                console.log(data)
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+
+        }
+
+
+
+
         const createInvitation = () => {
             console.log(localStorage.getItem('user_company_id'))
             const client = new GraphQLClient(endpoint)
@@ -121,7 +147,7 @@ export default {
                     name: $name,
                     email: $email,
                 }) {
-                    name, email, use_company_id
+                    name, email, use_user_id
                 }
             }`,
             {
@@ -133,7 +159,9 @@ export default {
                 authorization: `Bearer ${localStorage.getItem('user-token')}`
             })
             .then((data) => {
-                console.log(data)
+                let id = data.data.createsUse_invitation.use_user_id
+                sendEmail_invitation(id) 
+                console.log(data.data.createsUse_invitation.use_user_id)
                 normalizeState()
                 deliveryStatus.value = true
             })
@@ -157,7 +185,7 @@ export default {
 
         return{ 
             email, name, msg_error, sending, activeAlert, deliveryStatus,
-            sendInvitation, changeValue
+            sendInvitation, changeValue,sendEmail_invitation
         }
     }
 
