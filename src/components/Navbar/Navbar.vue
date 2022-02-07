@@ -14,10 +14,10 @@
       </div>
 
       <div id="navbarBasicExample" class="navbar-menu">
-
         <div class="navbar-end">
           <div class="navbar-item">
             <div class="buttons" :class="{'buttons-mobile':isMobile}">
+              <ButtonNotifications class="mt-2 mb-2 mr-2"/>
               <ButtonLang class="mb-2" />
               <SelectCompany/>
               <MenuApp v-show="!isMobile"/>
@@ -39,6 +39,8 @@ import MenuPerfil from './MenuPerfil.vue'
 import store from '@/store'
 import ButtonLang from '../../components/Buttons/ButtonLang.vue'
 import MenuHamburger from '../MenuHamburger.vue'
+import ButtonNotifications from '../../components/Buttons/ButtonNotifications.vue'
+
 
 
 export default {
@@ -49,6 +51,7 @@ export default {
     MenuApp,
     MenuPerfil,
     ButtonLang,
+    ButtonNotifications,
     MenuHamburger,
   },
 

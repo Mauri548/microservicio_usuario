@@ -38,6 +38,7 @@
                 </div>
 
                 <ButtonLang class="mb-0" />
+                <ButtonNotifications class="mb-0" />
 
                 <div class="group-navbar">
                     <MenuApp />
@@ -82,6 +83,7 @@ import i18n from '@/i18n.js'
 import MenuApp from '../Navbar/MenuApp.vue'
 import MenuHamburger from '../MenuHamburger.vue'
 import ButtonLang from '../Buttons/ButtonLang.vue'
+import ButtonNotifications from '../Buttons/ButtonNotifications.vue'
 
 export default {
     name:'NavbarV',
@@ -90,6 +92,7 @@ export default {
         MenuApp,
         MenuHamburger,
         ButtonLang,
+        ButtonNotifications,
     },
 
     setup(){
