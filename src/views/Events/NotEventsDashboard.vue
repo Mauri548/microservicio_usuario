@@ -211,7 +211,7 @@ export default {
             .then((data) => {
                 let paginacion = data.data.events.paginatorInfo
                 events.value = []
-                console.log(data.data.events.data)
+                /* console.log(data.data.events.data) */
                 data.data.events.data.forEach(element => {
                     events.value.push({id:element.id,event:element.event, observation:element.observation,type:element.type, app: {id:element.app.id, name: element.app.name}, activo: false, modalDelete: false})
                 })
